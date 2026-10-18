@@ -57,21 +57,81 @@
     somLigado = !somLigado;
     $('btn-som').textContent = somLigado ? '🔊' : '🔇';
     $('btn-som').setAttribute('aria-label', somLigado ? 'Som ligado' : 'Som desligado');
-    if (!somLigado && window.speechSynthesis) speechSynthesis.cancel();
+    if (!somLigado) pararVoz();
   };
 
-  // ---------- Voz: lê a palavra em português ----------
-  function falar(texto) {
-    if (!somLigado || !window.speechSynthesis) return;
+  // ---------- Voz ----------
+  // 1) Se existir a gravação do Davi (audio/palavras/<nome>.mp3, .m4a ou .wav), toca a gravação.
+  // 2) Senão, usa a voz do aparelho com o tom mais agudo, para soar como criança.
+  //    (a lista de arquivos para gravar está em GRAVAR.md)
+  const EXTENSOES = ['mp3', 'm4a', 'wav'];
+  const naoExiste = new Set();   // arquivos que já sabemos que não existem (não tenta de novo)
+  let audioAtual = null;
+
+  // nome do arquivo de cada palavra: minúsculo e sem acento; avó e avô ficam diferentes
+  function arquivoDaPalavra(palavra) {
+    const especiais = { 'avó': 'avo-agudo', 'avô': 'avo-circunflexo' };
+    const p = palavra.toLowerCase();
+    return especiais[p] || p.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-');
+  }
+
+  function tocarGravacao(pasta, nome) {
+    return new Promise((ok) => {
+      const tentativas = EXTENSOES.map((e) => `audio/${pasta}/${nome}.${e}`).filter((s) => !naoExiste.has(s));
+      const tentar = () => {
+        const src = tentativas.shift();
+        if (!src) return ok(false);
+        const a = new Audio(src);
+        let resolvido = false;
+        const falhou = (marcar) => { if (resolvido) return; resolvido = true; if (marcar) naoExiste.add(src); tentar(); };
+        a.onerror = () => falhou(true);
+        a.play()
+          .then(() => { if (resolvido) return; resolvido = true; audioAtual = a; ok(true); })
+          .catch((e) => {
+            if (e && e.name === 'NotAllowedError') { resolvido = true; ok(false); return; }   // navegador bloqueou o som
+            falhou(true);
+          });
+      };
+      tentar();
+    });
+  }
+
+  function vozDoAparelho(texto) {
+    if (!window.speechSynthesis) return;
     speechSynthesis.cancel();
     const f = new SpeechSynthesisUtterance(texto);
     f.lang = 'pt-BR';
-    f.rate = 0.8;
-    const voz = speechSynthesis.getVoices().find((v) => v.lang && v.lang.toLowerCase().startsWith('pt'));
-    if (voz) f.voice = voz;
+    f.rate = 0.92;
+    f.pitch = 1.6;   // tom mais agudo: parece voz de criança
+    const vozes = speechSynthesis.getVoices().filter((v) => v.lang && v.lang.toLowerCase().startsWith('pt'));
+    // vozes mais suaves soam mais infantis com o tom agudo
+    const preferida = vozes.find((v) => /francisca|luciana|thalita|maria|vitoria|female|feminina/i.test(v.name))
+      || vozes.find((v) => /pt.br/i.test(v.lang)) || vozes[0];
+    if (preferida) f.voice = preferida;
     speechSynthesis.speak(f);
   }
   if (window.speechSynthesis) speechSynthesis.getVoices();
+
+  function pararVoz() {
+    if (audioAtual) { audioAtual.pause(); audioAtual = null; }
+    if (window.speechSynthesis) speechSynthesis.cancel();
+  }
+
+  // palavra: gravação do Davi ou, se não houver, a voz do aparelho
+  async function falar(palavra) {
+    if (!somLigado) return;
+    pararVoz();
+    if (await tocarGravacao('palavras', arquivoDaPalavra(palavra))) return;
+    vozDoAparelho(palavra);
+  }
+
+  // frase gravada pelo Davi; sem gravação, só fala com a voz do aparelho se houver 'texto'
+  async function frase(nome, texto) {
+    if (!somLigado) return;
+    pararVoz();
+    if (await tocarGravacao('frases', nome)) return;
+    if (texto) vozDoAparelho(texto);
+  }
 
   // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
   const ENFEITES = {
@@ -133,6 +193,7 @@
     try { localStorage.setItem(CHAVE_ALUNO, aluno); } catch (err) { /* sem armazenamento */ }
     SOM.certo();
     telaInicio();
+    frase('ola');   // apresentação gravada pelo Davi (se existir)
   };
 
   $('btn-trocar').onclick = () => {
@@ -178,6 +239,7 @@
     $('tela-regra').style.setProperty('--c', m.cor);
     $('regra-texto').innerHTML = m.regra;
     davi('davi-regra', 'oi');
+    frase('regra-' + m.id);   // o Davi lê o segredo da missão (se gravado)
     mostrar('tela-regra');
   }
 
@@ -298,6 +360,7 @@
       botao.classList.add('errada');
       botao.disabled = true;
       davi('davi-jogo', 'pensando', 'balanca');
+      frase('tente-de-novo');
       if (m.tipo === 'detetive') {
         balao(`Hmm… <b>${String(escolha).toUpperCase()}</b> está certinha! O monstro é outra. 🔍`, 'errado');
       } else {
@@ -370,7 +433,7 @@
     desenharRelatorio(rel, n);
     mostrar('tela-fim');
     soltarConfete();
-    falar(n === 3 ? `Parabéns, ${aluno}! Missão perfeita!` : `Parabéns, ${aluno}! Missão cumprida!`);
+    frase(n === 3 ? 'missao-perfeita' : 'missao-cumprida', n === 3 ? `Parabéns, ${aluno}! Missão perfeita!` : `Parabéns, ${aluno}! Missão cumprida!`);
   }
 
   function soltarConfete() {

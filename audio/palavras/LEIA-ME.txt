@@ -1,0 +1,2 @@
+Coloque aqui as gravacoes das palavras (ex.: cachorro.m4a).
+A lista completa com os nomes esta em GRAVAR.md.

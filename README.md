@@ -32,6 +32,12 @@ dica do Davi quando a criança erra e **estrelas** no fim (salvas no aparelho).
   e a lista de palavras com o jeito certo e o que o aluno tentou.
 - O relatório pode ser baixado em **PDF** (gerado no próprio aparelho com a biblioteca jsPDF, em `vendor/`).
 
+## Voz
+
+- Sem gravações, o jogo usa a voz do aparelho com o tom mais agudo (voz de criança).
+- Com as **gravações do Davi** em `audio/palavras/` e `audio/frases/`, o jogo toca a voz dele.
+  A lista completa de palavras, frases e nomes de arquivo está em **`GRAVAR.md`**.
+
 ## Como jogar
 
 Abra o `index.html` no navegador.
