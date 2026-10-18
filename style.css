@@ -619,3 +619,120 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
 
 .credito { display: flex; flex-direction: column; gap: 2px; align-items: center; }
 .credito-projeto { color: var(--roxo); font-weight: 800; }
+
+/* ---------- Plenix, o mascote ---------- */
+.plenix {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 234 / 370;
+}
+
+.plenix-corpo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform-origin: 50% 96%;            /* gira apoiado nos pés */
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* acenando: balança suave */
+.plenix-oi .plenix-corpo { animation: px-oi 2.2s ease-in-out infinite; }
+@keyframes px-oi {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(3deg) translateY(-3px); }
+}
+
+/* pensando: inclina devagar, de um lado para o outro */
+.plenix-pensando .plenix-corpo { animation: px-pensando 3s ease-in-out infinite; }
+@keyframes px-pensando {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+.px-duvida {
+  position: absolute;
+  top: 6%;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: clamp(18px, 3vw, 30px);
+  color: #f0a500;
+  -webkit-text-stroke: 1.5px #5b1650;
+  paint-order: stroke fill;
+  opacity: 0;
+  animation: px-duvida 2.4s ease-in-out infinite;
+}
+.px-duvida.d1 { right: -4%; animation-delay: 0s; }
+.px-duvida.d2 { right: 12%; top: -2%; animation-delay: 0.8s; font-size: clamp(14px, 2.4vw, 24px); }
+.px-duvida.d3 { left: -2%; animation-delay: 1.6s; }
+@keyframes px-duvida {
+  0% { opacity: 0; transform: translateY(10px) scale(0.6); }
+  25% { opacity: 1; }
+  80% { opacity: 1; transform: translateY(-14px) scale(1) rotate(10deg); }
+  100% { opacity: 0; transform: translateY(-20px) scale(1); }
+}
+
+/* acertou: pula e comemora */
+.plenix-acertou .plenix-corpo { animation: px-pulo 0.7s cubic-bezier(.3, 1.6, .5, 1) 2; }
+@keyframes px-pulo {
+  0% { transform: translateY(0) scale(1, 1); }
+  20% { transform: translateY(0) scale(1.06, 0.92); }
+  50% { transform: translateY(-14%) scale(0.96, 1.05) rotate(-4deg); }
+  80% { transform: translateY(0) scale(1.04, 0.96); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+.px-brilho {
+  position: absolute;
+  left: 45%;
+  top: 30%;
+  font-size: clamp(16px, 2.6vw, 26px);
+  opacity: 0;
+  animation: px-estouro 1.1s ease-out forwards;
+}
+.px-brilho.b0 { --dx: -150%; --dy: -160%; }
+.px-brilho.b1 { --dx: 140%; --dy: -190%; animation-delay: 0.1s; }
+.px-brilho.b2 { --dx: 180%; --dy: -40%; animation-delay: 0.2s; }
+.px-brilho.b3 { --dx: -190%; --dy: -30%; animation-delay: 0.15s; }
+.px-brilho.b4 { --dx: 30%; --dy: -260%; animation-delay: 0.05s; }
+.px-brilho.b5 { --dx: -60%; --dy: -250%; animation-delay: 0.25s; }
+@keyframes px-estouro {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.3); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.3) rotate(160deg); }
+}
+
+/* triste: cabisbaixo e mais apagado, com uma lágrima */
+.plenix-triste .plenix-corpo { animation: px-triste 0.6s ease forwards, px-suspiro 2.6s ease-in-out 0.6s infinite; }
+@keyframes px-triste {
+  to { transform: rotate(-5deg) translateY(4%) scale(0.96); filter: saturate(0.55) brightness(0.9); }
+}
+@keyframes px-suspiro {
+  0%, 100% { transform: rotate(-5deg) translateY(4%) scale(0.96); filter: saturate(0.55) brightness(0.9); }
+  50% { transform: rotate(-3deg) translateY(5%) scale(0.95); filter: saturate(0.55) brightness(0.9); }
+}
+.px-lagrima {
+  position: absolute;
+  left: 34%;
+  top: 22%;
+  width: 7%;
+  aspect-ratio: 0.75;
+  background: #5bc0ff;
+  border: 2px solid #1d6fa8;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  transform: rotate(0deg);
+  opacity: 0;
+  animation: px-lagrima 1.6s ease-in 0.4s infinite;
+}
+@keyframes px-lagrima {
+  0% { opacity: 0; transform: translateY(0) scale(0.5); }
+  20% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(260%) scale(1); }
+}
+
+/* festa: fim da missão */
+.plenix-festa .plenix-corpo { animation: px-pulo 0.8s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+.plenix-festa .px-brilho { animation: px-estouro 1.4s ease-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .plenix-corpo, .px-duvida, .px-brilho, .px-lagrima { animation: none !important; }
+}

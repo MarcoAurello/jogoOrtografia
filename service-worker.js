@@ -1,6 +1,6 @@
 // Guarda os arquivos do jogo para funcionar offline.
 // Ao mudar qualquer arquivo do jogo, aumente a VERSAO para os aparelhos baixarem a nova.
-const VERSAO = 'ortografia-pleno-v6';
+const VERSAO = 'ortografia-pleno-v7';
 
 const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
   .flatMap((id) => Array.from({ length: 10 }, (_, i) => `./assets/figuras/${id}-${i}.jpg`));
@@ -11,7 +11,8 @@ const ARQUIVOS = [
   './style.css',
   './jogo.js',
   './dados.js',
-  './davi.js',
+  './plenix.js',
+  './assets/plenix.png',
   './vendor/jspdf.umd.min.js',
   './manifest.json',
   './assets/logo-pleno.png',

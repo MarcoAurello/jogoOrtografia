@@ -19,7 +19,7 @@ Quando existe a gravação, o jogo toca a voz do Davi. Quando não existe, ele u
 > Dica: os nomes são sempre em minúsculas e **sem acento** (pássaro → `passaro`).
 > Só **avó** e **avô** têm nomes especiais para não se misturarem.
 
-Por segurança, nas gravações o Davi fala só o **primeiro nome** (como na apresentação abaixo).
+O Davi empresta a voz para o **Plenix**, o mascote do Pleno. Nas gravações não é preciso dizer o nome dele.
 
 ---
 
@@ -27,7 +27,7 @@ Por segurança, nas gravações o Davi fala só o **primeiro nome** (como na apr
 
 | Quando toca | O que falar | Nome do arquivo |
 |---|---|---|
-| Logo depois de entrar no jogo | "Olá! Eu sou o Davi Miguel, aluno do quarto ano. Vamos aprender as palavras que mais erramos?" | `ola` |
+| Logo depois de entrar no jogo | "Olá! Eu sou o Plenix, o mascote do Pleno. Vamos aprender as palavras que mais erramos?" | `ola` |
 | Quando a criança erra | "Quase! Tente de novo!" | `tente-de-novo` |
 | Fim da missão com 3 estrelas | "Parabéns! Missão perfeita!" | `missao-perfeita` |
 | Fim da missão | "Parabéns! Missão cumprida!" | `missao-cumprida` |

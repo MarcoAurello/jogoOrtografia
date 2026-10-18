@@ -153,10 +153,10 @@
   $('moldura').innerHTML = POSICOES.map(([tipo, cor, x, y, giro], i) =>
     `<div class="enfeite" style="left:${x}%;top:${y}%;transform:rotate(${giro}deg);--giro:${giro}deg;animation-delay:${(i % 6) * -1}s">${ENFEITES[tipo](cor)}</div>`).join('');
 
-  // ---------- Davi ----------
-  function davi(area, humor, efeito) {
-    $(area).innerHTML = daviSVG(humor);
-    if (efeito) { $(area).classList.remove('pula', 'balanca'); void $(area).offsetWidth; $(area).classList.add(efeito); }
+  // ---------- Plenix, o mascote ----------
+  // estado: 'oi', 'pensando', 'acertou', 'triste' ou 'festa' (as animações estão no style.css)
+  function mascote(area, estado) {
+    $(area).innerHTML = plenixHTML(estado);
   }
 
 
@@ -167,7 +167,7 @@
   }
 
   function telaLogin() {
-    davi('davi-login', 'oi');
+    mascote('davi-login', 'oi');
     $('erro-login').textContent = '';
     $('login-senha').value = '';
     if (!$('login-nome').value) $('login-nome').value = ultimoNome;
@@ -178,7 +178,7 @@
   function telaInicio() {
     if (!aluno) return telaLogin();
     $('nome-saudacao').textContent = aluno;
-    davi('davi-inicio', 'oi');
+    mascote('davi-inicio', 'oi');
     mostrar('tela-inicio');
   }
 
@@ -188,7 +188,7 @@
     if (nome.length < 2) { $('erro-login').textContent = 'Digite o seu nome.'; return; }
     if ($('login-senha').value.trim() !== SENHA_TURMA) {
       $('erro-login').textContent = 'Senha incorreta. Peça a senha para o professor! 🔒';
-      davi('davi-login', 'pensando', 'balanca');
+      mascote('davi-login', 'triste');
       SOM.errado();
       return;
     }
@@ -243,7 +243,7 @@
     $('regra-titulo').textContent = m.titulo;
     $('tela-regra').style.setProperty('--c', m.cor);
     $('regra-texto').innerHTML = m.regra;
-    davi('davi-regra', 'oi');
+    mascote('davi-regra', 'oi');
     frase('regra-' + m.id);   // o Davi lê o segredo da missão (se gravado)
     mostrar('tela-regra');
   }
@@ -300,7 +300,7 @@
     $('etiqueta-missao').hidden = !missao.todas;
     $('etiqueta-missao').textContent = `${m.icone} ${m.titulo}`;
     $('etiqueta-missao').style.setProperty('--c', m.cor);
-    davi('davi-jogo', 'feliz');
+    mascote('davi-jogo', 'pensando');   // enquanto o aluno analisa a questão
 
     if (m.tipo === 'detetive') {
       $('figura').textContent = '🔍';
@@ -354,7 +354,7 @@
       } else {
         balao(`${sortear(ELOGIOS)} 🎉 Escreve-se <b>${certa.toUpperCase()}</b>.`, 'certo');
       }
-      davi('davi-jogo', 'festa', 'pula');
+      mascote('davi-jogo', 'acertou');
       falar(certa);
       $('btn-proxima').textContent = idx === fila.length - 1 ? 'Ver resultado ⭐' : 'Próxima ➜';
       $('btn-proxima').hidden = false;
@@ -364,7 +364,13 @@
       errosNaPergunta.push(comoEscreveu(item, escolha));
       botao.classList.add('errada');
       botao.disabled = true;
-      davi('davi-jogo', 'pensando', 'balanca');
+      mascote('davi-jogo', 'triste');
+      // depois de um tempinho, volta a pensar junto com a criança
+      const pergunta = idx;
+      clearTimeout(mascote.timer);
+      mascote.timer = setTimeout(() => {
+        if (idx === pergunta && $('btn-proxima').hidden && $('tela-pergunta').classList.contains('ativa')) mascote('davi-jogo', 'pensando');
+      }, 2600);
       frase('tente-de-novo');
       if (m.tipo === 'detetive') {
         balao(`Hmm… <b>${String(escolha).toUpperCase()}</b> está certinha! O monstro é outra. 🔍`, 'errado');
@@ -434,7 +440,7 @@
     $('fim-titulo').textContent = n === 3 ? 'Missão perfeita!' : 'Missão cumprida!';
     $('fim-estrelas').innerHTML = estrelasTexto(n);
     $('fim-texto').textContent = `${aluno}, você acertou ${rel.dePrimeiraN} de ${rel.respondidas} de primeira em "${missao.titulo}"!`;
-    davi('davi-fim', 'festa', 'pula');
+    mascote('davi-fim', 'festa');
     desenharRelatorio(rel, n);
     mostrar('tela-fim');
     soltarConfete();

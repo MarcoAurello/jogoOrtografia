@@ -1,7 +1,8 @@
 # Jogo de Ortografia do Pleno
 
 Jogo educativo para crianças em alfabetização, feito para o **Colégio Pleno**.
-O **Davi Miguel**, aluno do quarto ano (personagem de uniforme: blusa cinza e calça roxa), guia as missões e explica
+O **Plenix**, o mascote robô do Pleno, guia as missões, comemora os acertos, fica triste com os erros
+e pensa junto com o aluno, explicando
 cada regra da ortografia do português de um jeito simples.
 
 Feito com HTML, CSS e JavaScript puro, sem instalação. Funciona no computador, no tablet e no celular.
@@ -48,7 +49,8 @@ Abra o `index.html` no navegador.
 - `index.html`, `style.css` — páginas e visual (cores do Pleno)
 - `jogo.js` — telas, perguntas, sons, voz e estrelas
 - `dados.js` — banco de palavras e regras de cada missão (fácil de aumentar)
-- `davi.js` — desenho do Davi em SVG, com expressões
+- `plenix.js` + `assets/plenix.png` — o mascote Plenix e seus estados (acenando, pensando, acertou, triste, festa; animações no `style.css`)
+- `ferramentas/plenix.ps1` — recorta o Plenix comparando as imagens de fundo azul e roxo (em `assets/plenix-original/`)
 - `assets/logo-pleno.png` — logo do colégio
 - `ferramentas/logo.ps1` — recorta o logo e deixa o fundo transparente
 
