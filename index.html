@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#a2238e">
+  <meta name="author" content="Davi Miguel">
+  <meta name="description" content="Jogo educativo de ortografia para crianças, com o Davi Miguel.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Ortografia Pleno">
+  <title>Jogo de Ortografia do Pleno</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- moldura de lápis, livros e estrelas -->
+  <div class="moldura" id="moldura" aria-hidden="true"></div>
+
+  <main class="app">
+    <header class="topo">
+      <img class="logo" src="assets/logo-pleno.png" alt="Colégio Pleno">
+      <button class="btn-icone" id="btn-som" type="button" aria-label="Som ligado">🔊</button>
+    </header>
+
+    <!-- Início -->
+    <section class="tela ativa" id="tela-inicio">
+      <h1 class="titulo">
+        <span class="cor-amarelo">JOGO DE</span>
+        <span class="cor-azul">ORTOGRAFIA</span>
+        <span class="cor-roxo">DO PLENO</span>
+      </h1>
+      <div class="cena">
+        <div class="davi-area grande" id="davi-inicio"></div>
+        <div class="balao balao-esq">
+          Olá, eu sou o <b>Davi Miguel</b>, aluno do <b>quarto ano</b>! 😄<br>
+          Vamos aprender as palavras que mais erramos?
+        </div>
+      </div>
+      <button class="btn-grande" id="btn-jogar" type="button">▶ JOGAR</button>
+      <button class="btn-sec btn-instalar" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
+      <p class="link-privacidade"><a href="privacidade.html">Política de privacidade</a></p>
+    </section>
+
+    <!-- Ajuda para instalar quando o navegador não abre a instalação sozinho -->
+    <section class="tela" id="tela-instalar">
+      <div class="cartao">
+        <h2 class="subtitulo">📲 Instalar o jogo</h2>
+        <ol class="passos" id="passos-instalar"></ol>
+        <button class="btn-grande" id="btn-fechar-instalar" type="button">OK</button>
+      </div>
+    </section>
+
+    <!-- Escolha da missão -->
+    <section class="tela" id="tela-missoes">
+      <h2 class="subtitulo">Escolha uma missão</h2>
+      <div class="grade-missoes" id="grade-missoes"></div>
+      <p class="total-estrelas" id="total-estrelas"></p>
+      <button class="btn-sec" id="voltar-inicio" type="button">← Início</button>
+    </section>
+
+    <!-- Regra da missão -->
+    <section class="tela" id="tela-regra">
+      <div class="cartao cartao-regra">
+        <div class="regra-topo">
+          <span class="regra-icone" id="regra-icone"></span>
+          <h2 class="subtitulo" id="regra-titulo"></h2>
+        </div>
+        <div class="cena cena-regra">
+          <div class="davi-area" id="davi-regra"></div>
+          <div class="balao balao-esq">
+            <span class="balao-rotulo">Segredo do Davi</span>
+            <p id="regra-texto"></p>
+          </div>
+        </div>
+        <div class="linha-botoes">
+          <button class="btn-grande" id="btn-comecar" type="button">Começar ▶</button>
+          <button class="btn-sec" id="regra-voltar" type="button">← Missões</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pergunta -->
+    <section class="tela" id="tela-pergunta">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="sair-missao" type="button">← Missões</button>
+        <span class="barra-titulo" id="barra-titulo"></span>
+        <div class="progresso" id="progresso"></div>
+      </div>
+      <div class="jogo-grade">
+        <div class="cena cena-jogo">
+          <div class="davi-area" id="davi-jogo"></div>
+          <div class="balao balao-cima" id="balao-jogo"></div>
+        </div>
+        <div class="cartao cartao-pergunta">
+          <div class="figura" id="figura"></div>
+          <button class="btn-ouvir" id="btn-ouvir" type="button">🔊 Ouvir a palavra</button>
+          <p class="enunciado" id="enunciado"></p>
+          <div class="palavra" id="palavra"></div>
+          <div class="opcoes" id="opcoes"></div>
+          <button class="btn-grande btn-proxima" id="btn-proxima" type="button" hidden>Próxima ➜</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fim da missão -->
+    <section class="tela" id="tela-fim">
+      <div class="cartao cartao-fim">
+        <h2 class="subtitulo" id="fim-titulo">Missão cumprida!</h2>
+        <div class="estrelas-fim" id="fim-estrelas"></div>
+        <p class="fim-texto" id="fim-texto"></p>
+        <div class="davi-area grande" id="davi-fim"></div>
+        <div class="linha-botoes">
+          <button class="btn-grande" id="btn-repetir" type="button">↻ Jogar de novo</button>
+          <button class="btn-sec" id="btn-outras" type="button">Outras missões</button>
+        </div>
+      </div>
+      <div class="confete" id="confete" aria-hidden="true"></div>
+    </section>
+  </main>
+
+  <footer class="credito">Developed by <b>Davi Miguel</b></footer>
+
+  <script src="davi.js"></script>
+  <script src="dados.js"></script>
+  <script src="jogo.js"></script>
+  <script>
+    // Instala o service worker (funcionar offline / virar app)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js'));
+    }
+  </script>
+</body>
+</html>

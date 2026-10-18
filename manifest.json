@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "Jogo de Ortografia do Pleno",
+  "short_name": "Ortografia Pleno",
+  "description": "Jogo educativo de ortografia para crianças: S ou SS, Ç ou C, R ou RR, M ou N, G ou J, X ou CH, acentos e o Detetive de Erros, com o Davi Miguel.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fff3b0",
+  "theme_color": "#a2238e",
+  "categories": ["education", "kids", "games"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
