@@ -22,7 +22,7 @@ Feito com HTML, CSS e JavaScript puro, sem instalação. Funciona no computador,
 | 🌟 Todas as palavras | as 80 palavras misturadas (dá para terminar no meio e ver o relatório) |
 
 Cada missão tem 10 palavras com figura, botão para **ouvir a palavra** (voz do navegador),
-dica do Davi quando a criança erra e **estrelas** no fim (salvas no aparelho).
+dica do Plenix quando a criança erra e **estrelas** no fim (salvas no aparelho).
 
 ## Entrada e relatório
 
@@ -58,8 +58,6 @@ Abra o `index.html` no navegador.
 Para criar mais perguntas, basta adicionar itens no `dados.js`.
 
 ---
-
-Projeto desenvolvido por **Davi Miguel** — 4º ano — Colégio Pleno.
 
 © **Marco Nunes** — Todos os direitos reservados.
 
