@@ -66,7 +66,8 @@ Para criar mais perguntas, basta adicionar itens no `dados.js`.
 O jogo pode ser instalado no celular (botão **📲 Instalar app** na tela inicial) e funciona offline.
 Inclui `manifest.json`, `service-worker.js`, ícones em `icons/` e `privacidade.html` (exigida pela Google Play).
 
-Ao alterar qualquer arquivo do jogo, aumente a `VERSAO` em `service-worker.js`
+Ao alterar qualquer arquivo do jogo, aumente a `VERSAO` em `service-worker.js` e o número `?v=`
+nos arquivos do `index.html` (style.css, plenix.js, dados.js, jogo.js) e do `service-worker.js`,
 para os aparelhos baixarem a versão nova.
 
 - `assets/figuras/` — figuras das palavras, recortadas do cartaz por `ferramentas/figuras.ps1`

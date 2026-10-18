@@ -1,6 +1,6 @@
 // Guarda os arquivos do jogo para funcionar offline.
 // Ao mudar qualquer arquivo do jogo, aumente a VERSAO para os aparelhos baixarem a nova.
-const VERSAO = 'ortografia-pleno-v10';
+const VERSAO = 'ortografia-pleno-v11';
 
 const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
   .flatMap((id) => Array.from({ length: 10 }, (_, i) => `./assets/figuras/${id}-${i}.jpg`));
@@ -8,10 +8,10 @@ const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
 const ARQUIVOS = [
   './',
   './index.html',
-  './style.css',
-  './jogo.js',
-  './dados.js',
-  './plenix.js',
+  './style.css?v=11',
+  './jogo.js?v=11',
+  './dados.js?v=11',
+  './plenix.js?v=11',
   './assets/plenix.png',
   './vendor/jspdf.umd.min.js',
   './manifest.json',
@@ -58,12 +58,16 @@ self.addEventListener('fetch', (e) => {
 
   if (url.origin !== location.origin) return;
 
-  // Arquivos do jogo: tenta a rede (versão mais nova) e cai para o cache offline
+  // Arquivos do jogo: sempre confere com o servidor (sem usar cópia velha do navegador)
+  // e só usa o cache quando estiver sem internet
+  const pedido = e.request.mode === 'navigate' ? e.request : new Request(e.request, { cache: 'no-cache' });
   e.respondWith(
-    fetch(e.request)
+    fetch(pedido)
       .then((resposta) => {
-        const copia = resposta.clone();
-        caches.open(VERSAO).then((cache) => cache.put(e.request, copia));
+        if (resposta.ok) {
+          const copia = resposta.clone();
+          caches.open(VERSAO).then((cache) => cache.put(e.request, copia));
+        }
         return resposta;
       })
       .catch(() => caches.match(e.request, { ignoreSearch: true }).then((r) => r || caches.match('./index.html')))
