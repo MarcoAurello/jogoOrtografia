@@ -1,19 +1,18 @@
-/* Plenix, o mascote do Pleno — imagem recortada (assets/plenix.png) + animações em CSS.
-   estados:
-     'oi'       acenando (início, regras)
-     'pensando' enquanto o aluno analisa a questão (balança e solta "?")
-     'acertou'  pula e comemora com estrelas
-     'triste'   errou: fica cabisbaixo, com uma lágrima
-     'festa'    fim da missão: pula sem parar com confete */
+/* Plenix, o mascote do Pleno — pixel art animada pela folha de sprites
+   (assets/plenix/plenix_spritesheet_1x.png: 4 quadros de 40x50 por linha).
+   linhas da folha: 0 andando · 1 festejando · 2 triste · 3 pensando
+   estados usados no jogo:
+     'oi'       andando (início, entrada, regras)
+     'pensando' enquanto o aluno analisa a questão
+     'acertou'  festejando
+     'triste'   errou
+     'festa'    fim da missão: festejando com confete */
 function plenixHTML(estado = 'oi') {
-  const efeitos = {
-    pensando: '<span class="px-duvida d1">?</span><span class="px-duvida d2">?</span><span class="px-duvida d3">?</span>',
-    acertou: ['⭐', '✨', '⭐', '✨', '💜', '⭐'].map((e, i) => `<span class="px-brilho b${i}">${e}</span>`).join(''),
-    triste: '<span class="px-lagrima"></span>',
-    festa: ['🎉', '⭐', '✨', '💛', '💙', '💜'].map((e, i) => `<span class="px-brilho b${i}">${e}</span>`).join(''),
-  };
+  const confete = estado === 'festa'
+    ? ['🎉', '⭐', '✨', '💛', '💙', '💜'].map((e, i) => `<span class="px-brilho b${i}">${e}</span>`).join('')
+    : '';
   return `<div class="plenix plenix-${estado}" role="img" aria-label="Plenix">
-    <img class="plenix-corpo" src="assets/plenix.png" alt="" draggable="false">
-    ${efeitos[estado] || ''}
+    <div class="plenix-sprite"></div>
+    ${confete}
   </div>`;
 }
