@@ -41,9 +41,10 @@
           <span>Seu primeiro nome</span>
           <input type="text" id="login-nome" maxlength="40" placeholder="Digite seu nome" required>
         </label>
-        <label class="campo">
+        <!-- campo de senha: aparece só se PEDIR_SENHA = true no jogo.js -->
+        <label class="campo" id="campo-senha" hidden>
           <span>Senha</span>
-          <input type="password" id="login-senha" maxlength="40" placeholder="Senha da turma" required>
+          <input type="password" id="login-senha" maxlength="40" placeholder="Senha da turma">
         </label>
         <p class="erro-login" id="erro-login" role="alert"></p>
         <button class="btn-grande" type="submit">Entrar ▶</button>

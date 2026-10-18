@@ -15,6 +15,7 @@
   // ---------- Aluno (nome + senha da turma) ----------
   // A senha é conferida no próprio aparelho: é uma "portinha" para as crianças, não uma proteção real.
   const SENHA_TURMA = 'alunoPleno';
+  const PEDIR_SENHA = false;   // por enquanto só o nome; troque para true para voltar a pedir a senha
   const CHAVE_ALUNO = 'pleno-ortografia:aluno';
   // sempre pede nome e senha ao abrir o jogo; o último nome já vem preenchido para facilitar
   let aluno = null;
@@ -170,6 +171,8 @@
     mascote('davi-login', 'oi');
     $('erro-login').textContent = '';
     $('login-senha').value = '';
+    $('campo-senha').hidden = !PEDIR_SENHA;
+    $('login-senha').required = PEDIR_SENHA;
     if (!$('login-nome').value) $('login-nome').value = ultimoNome;
     mostrar('tela-login');
     setTimeout(() => $('login-nome').focus(), 300);
@@ -186,7 +189,7 @@
     e.preventDefault();
     const nome = $('login-nome').value.trim().replace(/\s+/g, ' ');
     if (nome.length < 2) { $('erro-login').textContent = 'Digite o seu nome.'; return; }
-    if ($('login-senha').value.trim() !== SENHA_TURMA) {
+    if (PEDIR_SENHA && $('login-senha').value.trim() !== SENHA_TURMA) {
       $('erro-login').textContent = 'Senha incorreta. Peça a senha para o professor! 🔒';
       mascote('davi-login', 'triste');
       SOM.errado();
