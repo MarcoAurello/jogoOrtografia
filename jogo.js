@@ -481,7 +481,8 @@
     for (let i = 1; i <= paginas; i++) {
       doc.setPage(i);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...CINZA);
-      doc.text('Jogo de Ortografia do Pleno - © Marco Nunes - Todos os direitos reservados', L, 290);
+      doc.text('Projeto desenvolvido por Davi Miguel - 4º ano - Colégio Pleno', L, 286);
+      doc.text('© Marco Nunes - Todos os direitos reservados', L, 290);
       doc.text(`${i}/${paginas}`, L + LARG, 290, { align: 'right' });
     }
     doc.save(`relatorio-${nomeArquivo(aluno)}-${nomeArquivo(mis.titulo)}.pdf`);

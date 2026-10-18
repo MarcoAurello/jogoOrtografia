@@ -49,6 +49,8 @@ Para criar mais perguntas, basta adicionar itens no `dados.js`.
 
 ---
 
+Projeto desenvolvido por **Davi Miguel** — 4º ano — Colégio Pleno.
+
 © **Marco Nunes** — Todos os direitos reservados.
 
 ## App (PWA)

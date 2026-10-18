@@ -616,3 +616,6 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
   #tela-fim { display: block !important; }
   .relatorio { box-shadow: none; }
 }
+
+.credito { display: flex; flex-direction: column; gap: 2px; align-items: center; }
+.credito-projeto { color: var(--roxo); font-weight: 800; }
