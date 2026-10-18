@@ -1,10 +1,12 @@
-/* Davi, o personagem guia — desenhado em SVG (sem foto).
-   Cabelo azul espetado, janelinha nos dentes
-   e o uniforme do Colégio Pleno: blusa cinza e calça roxa.
+/* Davi Miguel, o personagem guia — desenhado em SVG (sem foto).
+   Cabelo castanho-escuro com franjinha caída de lado, olhos castanhos,
+   sorrisão com as janelinhas nos dentes e o uniforme do Colégio Pleno:
+   blusa cinza e calça roxa.
    humor: 'oi' (acenando), 'feliz', 'pensando', 'festa' (braços para cima) */
 function daviSVG(humor = 'feliz') {
-  const pele = '#f2c4a0', peleSombra = '#e2a77f';
-  const cabelo = '#1d3a78', cabeloBrilho = '#3d6cc4';
+  const pele = '#e9b48c', peleSombra = '#d49670', peleLuz = '#f3c9a6';
+  const cabelo = '#3a2417', cabeloMeio = '#4e3120', cabeloBrilho = '#6e4a32';
+  const iris = '#5a3820', contorno = '#2a1a10';
   const blusa = '#a7abb0', blusaSombra = '#8d9196';
   const calca = '#a2238e', calcaSombra = '#7f1a70';
 
@@ -23,31 +25,38 @@ function daviSVG(humor = 'feliz') {
     : humor === 'oi' ? bracoBaixo(-1) + `<g class="davi-aceno">${bracoCima(1)}</g>`
     : bracoBaixo(-1) + bracoBaixo(1);
 
-  // olhos
+  // olho castanho grande (dx/dy: para onde ele olha)
+  const olho = (cx, dx = 0, dy = 0) => `
+    <ellipse cx="${cx}" cy="93" rx="10" ry="8.5" fill="#fff"/>
+    <circle cx="${cx + dx}" cy="${93 + dy}" r="6.2" fill="${iris}"/>
+    <circle cx="${cx + dx}" cy="${93 + dy}" r="3" fill="${contorno}"/>
+    <circle cx="${cx + dx + 2}" cy="${91 + dy}" r="1.9" fill="#fff"/>
+    <path d="M${cx - 10.5} 91 Q${cx} 76 ${cx + 10.5} 91" stroke="${contorno}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+
+  // olhos sorrindo (feliz) ou abertos
   const olhos = humor === 'feliz' || humor === 'festa'
-    ? `<path d="M74 92 Q82 82 90 92" stroke="#2b1d16" stroke-width="5" fill="none" stroke-linecap="round"/>
-       <path d="M110 92 Q118 82 126 92" stroke="#2b1d16" stroke-width="5" fill="none" stroke-linecap="round"/>`
-    : humor === 'pensando'
-      ? `<circle cx="84" cy="88" r="7" fill="#2b1d16"/><circle cx="120" cy="88" r="7" fill="#2b1d16"/>
-         <circle cx="86" cy="85" r="2.4" fill="#fff"/><circle cx="122" cy="85" r="2.4" fill="#fff"/>`
-      : `<circle cx="82" cy="91" r="7" fill="#2b1d16"/><circle cx="118" cy="91" r="7" fill="#2b1d16"/>
-         <circle cx="84" cy="88" r="2.4" fill="#fff"/><circle cx="120" cy="88" r="2.4" fill="#fff"/>`;
+    ? `<path d="M72 95 Q82 85 92 95" stroke="${contorno}" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+       <path d="M108 95 Q118 85 128 95" stroke="${contorno}" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+       <path d="M74 99 Q82 103 90 99 M110 99 Q118 103 126 99" stroke="${peleSombra}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+    : humor === 'pensando' ? olho(82, 3, -2) + olho(118, 3, -2)
+      : olho(82, 1) + olho(118, 1);
 
   const sobrancelhas = humor === 'pensando'
-    ? `<path d="M72 76 Q82 70 92 76" stroke="#1d2a4a" stroke-width="4" fill="none" stroke-linecap="round"/>
-       <path d="M108 72 Q118 68 128 74" stroke="#1d2a4a" stroke-width="4" fill="none" stroke-linecap="round"/>`
-    : `<path d="M72 78 Q82 73 92 78" stroke="#1d2a4a" stroke-width="4" fill="none" stroke-linecap="round"/>
-       <path d="M108 78 Q118 73 128 78" stroke="#1d2a4a" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+    ? `<path d="M71 79 Q82 74 92 78" stroke="${cabelo}" stroke-width="4" fill="none" stroke-linecap="round"/>
+       <path d="M108 75 Q118 71 129 76" stroke="${cabelo}" stroke-width="4" fill="none" stroke-linecap="round"/>`
+    : `<path d="M71 80 Q82 75 92 79" stroke="${cabelo}" stroke-width="4" fill="none" stroke-linecap="round"/>
+       <path d="M108 79 Q118 75 129 80" stroke="${cabelo}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
 
-  // boca: sorriso grande com a janelinha nos dentes (ou boquinha de dúvida)
+  // boca: sorrisão aberto mostrando os dentinhos, com as janelinhas
+  const dentes = [[79, 6], [86, 6], [100, 7], [108, 6], [115, 6]]   // o vão em 93 é a janelinha
+    .map(([x, w]) => `<rect x="${x}" y="110" width="${w}" height="${x === 100 ? 6 : 5}" rx="1.4" fill="#fff"/>`).join('');
   const boca = humor === 'pensando'
-    ? `<path d="M88 116 Q100 112 112 117" stroke="#7a2a2a" stroke-width="4" fill="none" stroke-linecap="round"/>`
-    : `<path d="M76 108 Q100 136 124 108 Z" fill="#7a2a2a"/>
-       <path d="M80 109 L96 109 L96 115 L80 113 Z" fill="#fff"/>
-       <path d="M104 109 L120 109 L120 113 L104 115 Z" fill="#fff"/>
-       <path d="M88 124 Q100 130 112 124 Q100 121 88 124 Z" fill="#e8737a"/>`;
+    ? `<path d="M88 117 Q100 113 112 118" stroke="#7a2a2a" stroke-width="4" fill="none" stroke-linecap="round"/>`
+    : `<path d="M74 108 Q100 140 126 108 Q100 113 74 108 Z" fill="#6e2424"/>
+       ${dentes}
+       <path d="M88 127 Q100 133 112 127 Q100 123 88 127 Z" fill="#e8737a"/>`;
 
-  return `<svg class="davi davi-${humor}" viewBox="0 -26 200 346" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Davi">
+  return `<svg class="davi davi-${humor}" viewBox="0 -26 200 346" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Davi Miguel">
     <!-- sombra no chão -->
     <ellipse cx="100" cy="312" rx="62" ry="7" fill="rgba(0,0,0,.15)"/>
     <!-- tênis -->
@@ -71,19 +80,24 @@ function daviSVG(humor = 'feliz') {
     <rect x="88" y="122" width="24" height="16" rx="6" fill="${peleSombra}"/>
     <!-- cabeça grande (estilo desenho infantil) -->
     <g transform="translate(100 84) scale(1.26) translate(-100 -88)">
-    <!-- orelhas e cabeça -->
-    <circle cx="48" cy="92" r="11" fill="${pele}"/><circle cx="152" cy="92" r="11" fill="${pele}"/>
-    <circle cx="48" cy="92" r="5" fill="${peleSombra}"/><circle cx="152" cy="92" r="5" fill="${peleSombra}"/>
-    <ellipse cx="100" cy="88" rx="52" ry="50" fill="${pele}"/>
-    <!-- cabelo azul espetado -->
-    <path d="M47 84 Q42 44 68 32 L64 14 L84 26 L90 8 L104 24 L116 7 L122 26 L140 14 L138 34 Q160 48 153 84 Q146 60 124 56 Q112 48 100 54 Q86 48 74 56 Q54 62 47 84 Z" fill="${cabelo}"/>
-    <path d="M70 40 L76 24 M96 32 L98 16 M118 30 L122 16 M134 42 L142 30" stroke="${cabeloBrilho}" stroke-width="4" stroke-linecap="round"/>
-    ${sobrancelhas}
-    ${olhos}
-    <!-- bochechas e nariz -->
-    <circle cx="68" cy="106" r="7" fill="#ff8fa0" opacity=".45"/><circle cx="132" cy="106" r="7" fill="#ff8fa0" opacity=".45"/>
-    <path d="M97 98 Q100 104 104 98" stroke="${peleSombra}" stroke-width="3" fill="none" stroke-linecap="round"/>
-    ${boca}
+      <!-- cabelo de trás (volume) -->
+      <path d="M44 90 Q38 46 70 30 Q100 16 132 30 Q164 46 156 90 Z" fill="${cabelo}"/>
+      <!-- orelhas -->
+      <ellipse cx="48" cy="95" rx="10" ry="12" fill="${pele}"/><ellipse cx="152" cy="95" rx="10" ry="12" fill="${pele}"/>
+      <ellipse cx="49" cy="95" rx="4.5" ry="6" fill="${peleSombra}"/><ellipse cx="151" cy="95" rx="4.5" ry="6" fill="${peleSombra}"/>
+      <!-- rosto redondinho -->
+      <path d="M50 86 Q50 40 100 40 Q150 40 150 86 Q150 120 128 132 Q114 140 100 140 Q86 140 72 132 Q50 120 50 86 Z" fill="${pele}"/>
+      <ellipse cx="100" cy="64" rx="30" ry="14" fill="${peleLuz}" opacity=".45"/>
+      <!-- franjinha castanha caída de lado -->
+      <path d="M46 84 Q42 44 74 32 Q104 20 134 34 Q158 46 155 80 Q150 64 140 58 Q136 68 126 64 Q122 74 110 70 Q104 78 94 72 Q86 80 78 72 Q68 78 62 70 Q54 74 50 86 Z" fill="${cabeloMeio}"/>
+      <path d="M58 52 Q80 34 110 36 M70 62 Q92 44 124 46 M100 30 Q124 30 142 46" stroke="${cabeloBrilho}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/>
+      <path d="M110 70 Q118 58 126 64 M94 72 Q100 60 110 70 M78 72 Q84 62 94 72" stroke="${cabelo}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      ${sobrancelhas}
+      ${olhos}
+      <!-- bochechas e nariz -->
+      <circle cx="68" cy="108" r="7" fill="#ff8f8f" opacity=".35"/><circle cx="132" cy="108" r="7" fill="#ff8f8f" opacity=".35"/>
+      <path d="M96 99 Q100 106 105 100" stroke="${peleSombra}" stroke-width="3" fill="none" stroke-linecap="round"/>
+      ${boca}
     </g>
   </svg>`;
 }
