@@ -736,3 +736,24 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
 @media (prefers-reduced-motion: reduce) {
   .plenix-corpo, .px-duvida, .px-brilho, .px-lagrima { animation: none !important; }
 }
+
+/* ---------- Botãozinho do WhatsApp (tela inicial) ---------- */
+.btn-whats {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  margin: 14px auto 0;
+  padding: 8px 16px 8px 12px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background: #25d366;
+  border-radius: 999px;
+  box-shadow: 0 4px 0 #128c4a;
+  transition: transform 0.1s;
+}
+.btn-whats:hover { transform: translateY(-2px); }
+.btn-whats:active { transform: translateY(3px); box-shadow: 0 1px 0 #128c4a; }
