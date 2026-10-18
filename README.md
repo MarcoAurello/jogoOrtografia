@@ -25,7 +25,8 @@ dica do Davi quando a criança erra e **estrelas** no fim (salvas no aparelho).
 
 ## Entrada e relatório
 
-- Ao abrir, o aluno digita o **primeiro nome** e a **senha da turma: `alunoPleno`**.
+- **Sempre que o jogo abre**, o aluno digita o **primeiro nome** e a **senha da turma: `alunoPleno`**
+  (o último nome já vem preenchido).
   A senha é conferida no próprio aparelho (uma "portinha" para as crianças, não uma proteção de segurança).
 - As estrelas ficam salvas **por aluno** no aparelho; "Trocar aluno" permite outra criança usar.
 - No fim de cada missão aparece o **relatório para revisar**: principais dificuldades (por regra)

@@ -16,8 +16,10 @@
   // A senha é conferida no próprio aparelho: é uma "portinha" para as crianças, não uma proteção real.
   const SENHA_TURMA = 'alunoPleno';
   const CHAVE_ALUNO = 'pleno-ortografia:aluno';
+  // sempre pede nome e senha ao abrir o jogo; o último nome já vem preenchido para facilitar
   let aluno = null;
-  try { aluno = localStorage.getItem(CHAVE_ALUNO) || null; } catch (e) { aluno = null; }
+  let ultimoNome = '';
+  try { ultimoNome = localStorage.getItem(CHAVE_ALUNO) || ''; } catch (e) { ultimoNome = ''; }
 
   // ---------- Estrelas salvas no aparelho (separadas por aluno) ----------
   const chaveEstrelas = () => 'pleno-ortografia:estrelas:' + (aluno || '').trim().toLowerCase();
@@ -168,6 +170,7 @@
     davi('davi-login', 'oi');
     $('erro-login').textContent = '';
     $('login-senha').value = '';
+    if (!$('login-nome').value) $('login-nome').value = ultimoNome;
     mostrar('tela-login');
     setTimeout(() => $('login-nome').focus(), 300);
   }
@@ -190,6 +193,7 @@
       return;
     }
     aluno = nome;
+    ultimoNome = aluno;
     try { localStorage.setItem(CHAVE_ALUNO, aluno); } catch (err) { /* sem armazenamento */ }
     SOM.certo();
     telaInicio();
@@ -198,6 +202,7 @@
 
   $('btn-trocar').onclick = () => {
     aluno = null;
+    ultimoNome = '';
     try { localStorage.removeItem(CHAVE_ALUNO); } catch (e) { /* sem armazenamento */ }
     $('login-nome').value = '';
     telaLogin();
