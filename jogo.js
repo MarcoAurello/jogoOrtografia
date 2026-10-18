@@ -1,4 +1,4 @@
-/* Jogo de Ortografia do Pleno — Developed by Davi Miguel */
+/* Jogo de Ortografia do Pleno — © Marco Nunes. Todos os direitos reservados. */
 (() => {
   const $ = (id) => document.getElementById(id);
   const embaralhar = (lista) => {
@@ -8,13 +8,24 @@
   };
   const sortear = (lista) => lista[Math.floor(Math.random() * lista.length)];
 
-  // ---------- Estrelas salvas no aparelho ----------
-  const CHAVE = 'pleno-ortografia:estrelas';
-  const lerEstrelas = () => { try { return JSON.parse(localStorage.getItem(CHAVE)) || {}; } catch (e) { return {}; } };
+  // escapa texto digitado (nome do aluno) antes de colocar no HTML
+  const seguro = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const semHTML = (t) => String(t).replace(/<[^>]+>/g, '');
+
+  // ---------- Aluno (nome + senha da turma) ----------
+  // A senha é conferida no próprio aparelho: é uma "portinha" para as crianças, não uma proteção real.
+  const SENHA_TURMA = 'alunoPleno';
+  const CHAVE_ALUNO = 'pleno-ortografia:aluno';
+  let aluno = null;
+  try { aluno = localStorage.getItem(CHAVE_ALUNO) || null; } catch (e) { aluno = null; }
+
+  // ---------- Estrelas salvas no aparelho (separadas por aluno) ----------
+  const chaveEstrelas = () => 'pleno-ortografia:estrelas:' + (aluno || '').trim().toLowerCase();
+  const lerEstrelas = () => { try { return JSON.parse(localStorage.getItem(chaveEstrelas())) || {}; } catch (e) { return {}; } };
   const salvarEstrelas = (id, n) => {
     const e = lerEstrelas();
     e[id] = Math.max(e[id] || 0, n);
-    try { localStorage.setItem(CHAVE, JSON.stringify(e)); } catch (err) { /* sem armazenamento */ }
+    try { localStorage.setItem(chaveEstrelas(), JSON.stringify(e)); } catch (err) { /* sem armazenamento */ }
   };
   const estrelasTexto = (n) => [1, 2, 3].map((i) => `<span class="${i <= n ? '' : 'apagada'}">⭐</span>`).join('');
 
@@ -86,35 +97,79 @@
     if (efeito) { $(area).classList.remove('pula', 'balanca'); void $(area).offsetWidth; $(area).classList.add(efeito); }
   }
 
+
   // ---------- Telas ----------
   function mostrar(id) {
     document.querySelectorAll('.tela').forEach((t) => t.classList.toggle('ativa', t.id === id));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function telaInicio() { davi('davi-inicio', 'oi'); mostrar('tela-inicio'); }
+  function telaLogin() {
+    davi('davi-login', 'oi');
+    $('erro-login').textContent = '';
+    $('login-senha').value = '';
+    mostrar('tela-login');
+    setTimeout(() => $('login-nome').focus(), 300);
+  }
+
+  function telaInicio() {
+    if (!aluno) return telaLogin();
+    $('nome-saudacao').textContent = aluno;
+    davi('davi-inicio', 'oi');
+    mostrar('tela-inicio');
+  }
+
+  $('form-login').onsubmit = (e) => {
+    e.preventDefault();
+    const nome = $('login-nome').value.trim().replace(/\s+/g, ' ');
+    if (nome.length < 2) { $('erro-login').textContent = 'Digite o seu nome.'; return; }
+    if ($('login-senha').value.trim() !== SENHA_TURMA) {
+      $('erro-login').textContent = 'Senha incorreta. Peça a senha para o professor! 🔒';
+      davi('davi-login', 'pensando', 'balanca');
+      SOM.errado();
+      return;
+    }
+    aluno = nome;
+    try { localStorage.setItem(CHAVE_ALUNO, aluno); } catch (err) { /* sem armazenamento */ }
+    SOM.certo();
+    telaInicio();
+  };
+
+  $('btn-trocar').onclick = () => {
+    aluno = null;
+    try { localStorage.removeItem(CHAVE_ALUNO); } catch (e) { /* sem armazenamento */ }
+    $('login-nome').value = '';
+    telaLogin();
+  };
+
+  // missão especial com as palavras de todas as missões, misturadas
+  const TODAS = {
+    id: 'todas', titulo: 'Todas as palavras', icone: '🌟', cor: '#f08a24', todas: true,
+    regra: 'Aqui aparecem as <b>80 palavras</b> de todas as missões, misturadas! Use todos os segredos que você aprendeu. Se cansar, toque em <b>Terminar e ver relatório</b> quando quiser.',
+  };
 
   function telaMissoes() {
     const estrelas = lerEstrelas();
-    $('grade-missoes').innerHTML = MISSOES.map((m) => `
-      <button class="missao" style="--c:${m.cor}" data-id="${m.id}" type="button">
+    $('grade-missoes').innerHTML = [...MISSOES, TODAS].map((m) => `
+      <button class="missao${m.todas ? ' missao-todas' : ''}" style="--c:${m.cor}" data-id="${m.id}" type="button">
         <span class="missao-icone">${m.icone}</span>
         <span class="missao-titulo">${m.titulo}</span>
         <span class="missao-estrelas">${estrelasTexto(estrelas[m.id] || 0)}</span>
       </button>`).join('');
-    const total = Object.values(estrelas).reduce((s, n) => s + n, 0);
-    $('total-estrelas').textContent = `Você já ganhou ${total} de ${MISSOES.length * 3} estrelas ⭐`;
+    const total = MISSOES.reduce((s, m) => s + (estrelas[m.id] || 0), 0);
+    $('total-estrelas').textContent = `${aluno}, você já ganhou ${total} de ${MISSOES.length * 3} estrelas nas missões ⭐`;
     mostrar('tela-missoes');
   }
 
   $('grade-missoes').onclick = (e) => {
     const b = e.target.closest('.missao'); if (!b) return;
     SOM.clique();
-    telaRegra(MISSOES.find((m) => m.id === b.dataset.id));
+    telaRegra(b.dataset.id === 'todas' ? TODAS : MISSOES.find((m) => m.id === b.dataset.id));
   };
 
   // ---------- Missão ----------
-  let missao = null, fila = [], idx = 0, errosNaPergunta = 0, errosTotal = 0, acertosDePrimeira = 0;
+  // fila: lista de { m: missão da palavra, p: pergunta }; resultados: o que aconteceu em cada uma
+  let missao = null, fila = [], idx = 0, errosNaPergunta = [], resultados = [];
 
   function telaRegra(m) {
     missao = m;
@@ -127,18 +182,21 @@
   }
 
   function comecarMissao() {
-    fila = embaralhar(missao.perguntas);
-    idx = 0; errosTotal = 0; acertosDePrimeira = 0;
+    fila = missao.todas
+      ? embaralhar(MISSOES.flatMap((m) => m.perguntas.map((p) => ({ m, p }))))
+      : embaralhar(missao.perguntas).map((p) => ({ m: missao, p }));
+    idx = 0; resultados = [];
     $('barra-titulo').textContent = `${missao.icone} ${missao.titulo}`;
     $('tela-pergunta').style.setProperty('--c', missao.cor);
+    $('btn-terminar').hidden = !missao.todas;
     mostrar('tela-pergunta');
     mostrarPergunta();
   }
 
-  // palavra certa de cada pergunta (para ouvir e para mostrar no fim)
-  function palavraCerta(p) {
-    if (missao.tipo === 'completar') return p.molde.replace('_', p.resp.toLowerCase());
-    if (missao.tipo === 'escolher') return p.resp;
+  // palavra certa de cada pergunta (para ouvir, mostrar e pôr no relatório)
+  function palavraCerta({ m, p }) {
+    if (m.tipo === 'completar') return p.molde.replace('_', p.resp.toLowerCase());
+    if (m.tipo === 'escolher') return p.resp;
     return p.certa;
   }
 
@@ -149,80 +207,81 @@
   }
 
   function desenharProgresso() {
-    $('progresso').innerHTML = fila.map((_, i) => `<i class="${i < idx ? 'feita' : i === idx ? 'atual' : ''}"></i>`).join('');
+    if (fila.length > 12) {
+      const pct = Math.round((idx / fila.length) * 100);
+      $('progresso').innerHTML = `<span class="progresso-barra"><b style="width:${pct}%"></b></span><span class="progresso-num">${idx + 1}/${fila.length}</span>`;
+    } else {
+      $('progresso').innerHTML = fila.map((_, i) => `<i class="${i < idx ? 'feita' : i === idx ? 'atual' : ''}"></i>`).join('');
+    }
+  }
+
+  function botaoOpcao(texto, classe, cor, aoTocar) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'opcao' + (classe ? ' ' + classe : ''); b.textContent = texto;
+    b.style.setProperty('--c', cor);
+    b.onclick = aoTocar;
+    $('opcoes').append(b);
   }
 
   function mostrarPergunta() {
-    const p = fila[idx];
-    errosNaPergunta = 0;
+    const { m, p } = fila[idx];
+    errosNaPergunta = [];
     desenharProgresso();
     $('btn-proxima').hidden = true;
     $('opcoes').innerHTML = '';
     $('palavra').innerHTML = '';
+    $('etiqueta-missao').hidden = !missao.todas;
+    $('etiqueta-missao').textContent = `${m.icone} ${m.titulo}`;
+    $('etiqueta-missao').style.setProperty('--c', m.cor);
     davi('davi-jogo', 'feliz');
 
-    if (missao.tipo === 'detetive') {
+    if (m.tipo === 'detetive') {
       $('figura').textContent = '🔍';
       $('btn-ouvir').hidden = true;
       $('enunciado').textContent = 'Qual palavra está escrita ERRADA?';
       balao('Uma dessas palavras é um <b>monstro da escrita</b>! Toque nela para capturar. 👾');
-      for (const w of embaralhar(p.palavras)) {
-        const b = document.createElement('button');
-        b.type = 'button'; b.className = 'opcao palavra-op'; b.textContent = w;
-        b.style.setProperty('--c', missao.cor);
-        b.onclick = () => responder(b, w === p.errada);
-        $('opcoes').append(b);
-      }
+      for (const w of embaralhar(p.palavras)) botaoOpcao(w, 'palavra-op', m.cor, (e) => responder(e.currentTarget, w === p.errada, w));
       return;
     }
 
-    // figura do cartaz (foto/ilustração) quando existe; senão, o emoji
     if (p.img) $('figura').innerHTML = `<img src="${p.img}" alt="" width="240" height="240">`;
     else $('figura').textContent = p.fig;
     $('btn-ouvir').hidden = false;
 
-    if (missao.tipo === 'completar') {
+    if (m.tipo === 'completar') {
       $('enunciado').textContent = 'Qual letra completa a palavra?';
       const [antes, depois] = p.molde.split('_');
-      const letras = [...antes].map((l) => `<span class="letra">${l.toUpperCase()}</span>`).join('')
-        + `<span class="letra lacuna" id="lacuna">?</span>`
+      $('palavra').innerHTML = [...antes].map((l) => `<span class="letra">${l.toUpperCase()}</span>`).join('')
+        + '<span class="letra lacuna" id="lacuna">?</span>'
         + [...depois].map((l) => `<span class="letra">${l.toUpperCase()}</span>`).join('');
-      $('palavra').innerHTML = letras;
       balao('Olhe a figura, ouça a palavra e escolha a letra que falta! 👀');
-      for (const op of missao.opcoes) {
-        const b = document.createElement('button');
-        b.type = 'button'; b.className = 'opcao'; b.textContent = op;
-        b.style.setProperty('--c', missao.cor);
-        b.onclick = () => responder(b, op === p.resp, op);
-        $('opcoes').append(b);
-      }
+      for (const op of m.opcoes) botaoOpcao(op, '', m.cor, (e) => responder(e.currentTarget, op === p.resp, op));
     } else {
       $('enunciado').textContent = 'Qual é o jeito certo de escrever?';
       balao('Olhe bem os <b>acentos</b> e o <b>til</b>! ✨');
-      for (const op of embaralhar(p.opcoes)) {
-        const b = document.createElement('button');
-        b.type = 'button'; b.className = 'opcao palavra-op'; b.textContent = op;
-        b.style.setProperty('--c', missao.cor);
-        b.onclick = () => responder(b, op === p.resp);
-        $('opcoes').append(b);
-      }
+      for (const op of embaralhar(p.opcoes)) botaoOpcao(op, 'palavra-op', m.cor, (e) => responder(e.currentTarget, op === p.resp, op));
     }
   }
 
-  function responder(botao, acertou, letra) {
-    const p = fila[idx];
+  // como ficaria a palavra com a escolha errada (para o relatório)
+  function comoEscreveu({ m, p }, escolha) {
+    if (m.tipo === 'completar') return p.molde.replace('_', escolha.toLowerCase());
+    return escolha;
+  }
+
+  function responder(botao, acertou, escolha) {
+    const item = fila[idx], { m, p } = item;
     if (acertou) {
       SOM.certo();
-      if (errosNaPergunta === 0) acertosDePrimeira++;
+      resultados.push({ m, p, certa: palavraCerta(item), erros: errosNaPergunta.slice() });
       document.querySelectorAll('#opcoes .opcao').forEach((b) => { b.disabled = true; });
-      botao.classList.add(missao.tipo === 'detetive' ? 'monstro' : 'certa');
-      const certa = palavraCerta(p);
-      if (missao.tipo === 'completar') {
-        const lacuna = $('lacuna');
-        lacuna.textContent = letra;
-        lacuna.classList.add('preenchida');
+      botao.classList.add(m.tipo === 'detetive' ? 'monstro' : 'certa');
+      const certa = palavraCerta(item);
+      if (m.tipo === 'completar') {
+        $('lacuna').textContent = escolha;
+        $('lacuna').classList.add('preenchida');
       }
-      if (missao.tipo === 'detetive') {
+      if (m.tipo === 'detetive') {
         $('palavra').innerHTML = [...certa].map((l) => `<span class="letra lacuna preenchida">${l.toUpperCase()}</span>`).join('');
         balao(`👾 Monstro capturado! O certo é <b>${certa.toUpperCase()}</b>.<br>${p.dica}`, 'certo');
       } else {
@@ -235,14 +294,14 @@
       $('btn-proxima').focus({ preventScroll: true });
     } else {
       SOM.errado();
-      errosNaPergunta++; errosTotal++;
+      errosNaPergunta.push(comoEscreveu(item, escolha));
       botao.classList.add('errada');
       botao.disabled = true;
       davi('davi-jogo', 'pensando', 'balanca');
-      if (missao.tipo === 'detetive') {
-        balao(`Hmm… <b>${botao.textContent.toUpperCase()}</b> está certinha! O monstro é outra. 🔍`, 'errado');
+      if (m.tipo === 'detetive') {
+        balao(`Hmm… <b>${String(escolha).toUpperCase()}</b> está certinha! O monstro é outra. 🔍`, 'errado');
       } else {
-        balao(`Quase! Tente de novo. 💡<br>${missao.regra}`, 'errado');
+        balao(`Quase! Tente de novo. 💡<br>${m.regra}`, 'errado');
       }
     }
   }
@@ -253,17 +312,65 @@
     else fimDaMissao();
   }
 
+  // ---------- Relatório de dificuldades ----------
+  function montarRelatorio() {
+    const respondidas = resultados.length;
+    const dePrimeiraN = resultados.filter((r) => r.erros.length === 0).length;
+    const comErro = resultados.filter((r) => r.erros.length > 0);
+    // agrupa por regra (missão), da que teve mais erros para a que teve menos
+    const grupos = [];
+    for (const r of comErro) {
+      let g = grupos.find((x) => x.m.id === r.m.id);
+      if (!g) { g = { m: r.m, itens: [] }; grupos.push(g); }
+      g.itens.push(r);
+    }
+    grupos.sort((a, b) => b.itens.length - a.itens.length);
+    return { respondidas, dePrimeiraN, comErro, grupos };
+  }
+
+  function desenharRelatorio(rel, estrelas) {
+    const data = new Date().toLocaleDateString('pt-BR');
+    $('relatorio-info').innerHTML = `<b>Aluno:</b> ${seguro(aluno)} · <b>Data:</b> ${data} · <b>Missão:</b> ${seguro(missao.titulo)}<br>`
+      + `<b>Acertos de primeira:</b> ${rel.dePrimeiraN} de ${rel.respondidas} · <b>Estrelas:</b> ${estrelas} de 3`;
+
+    if (!rel.comErro.length) {
+      $('relatorio-conteudo').innerHTML = '<p class="relatorio-ok">🎉 Nenhuma dificuldade nesta missão! Você acertou tudo de primeira.</p>';
+      return;
+    }
+    const blocos = rel.grupos.map((g) => `
+      <div class="dificuldade" style="--c:${g.m.cor}">
+        <h4>${g.m.icone} ${g.m.titulo} <span class="qtd-erros">${g.itens.length} ${g.itens.length === 1 ? 'palavra' : 'palavras'}</span></h4>
+        <p class="dica-regra">${g.m.regra}</p>
+      </div>`).join('');
+    const linhas = rel.comErro.map((r) => `
+      <tr><td class="certo">${r.certa.toUpperCase()}</td><td class="escreveu">${r.erros.map((e) => seguro(String(e).toUpperCase())).join(', ')}</td></tr>`).join('');
+    $('relatorio-conteudo').innerHTML = `
+      <h4 class="relatorio-sub">Principais dificuldades</h4>
+      ${blocos}
+      <h4 class="relatorio-sub">Palavras para revisar</h4>
+      <table class="tabela-revisar">
+        <thead><tr><th>Jeito certo</th><th>Você tentou</th></tr></thead>
+        <tbody>${linhas}</tbody>
+      </table>`;
+  }
+
+  let ultimoRelatorio = null;
+
   function fimDaMissao() {
-    const n = errosTotal <= 1 ? 3 : errosTotal <= 4 ? 2 : 1;
-    salvarEstrelas(missao.id, n);
+    const rel = montarRelatorio();
+    const taxa = rel.respondidas ? rel.dePrimeiraN / rel.respondidas : 0;
+    const n = taxa >= 0.9 ? 3 : taxa >= 0.6 ? 2 : 1;
+    if (rel.respondidas) salvarEstrelas(missao.id, n);
+    ultimoRelatorio = { rel, estrelas: n, missao, data: new Date() };
     SOM.vitoria();
     $('fim-titulo').textContent = n === 3 ? 'Missão perfeita!' : 'Missão cumprida!';
     $('fim-estrelas').innerHTML = estrelasTexto(n);
-    $('fim-texto').textContent = `Você acertou ${acertosDePrimeira} de ${fila.length} de primeira na missão "${missao.titulo}"!`;
+    $('fim-texto').textContent = `${aluno}, você acertou ${rel.dePrimeiraN} de ${rel.respondidas} de primeira em "${missao.titulo}"!`;
     davi('davi-fim', 'festa', 'pula');
+    desenharRelatorio(rel, n);
     mostrar('tela-fim');
     soltarConfete();
-    falar(n === 3 ? 'Parabéns! Missão perfeita!' : 'Parabéns! Missão cumprida!');
+    falar(n === 3 ? `Parabéns, ${aluno}! Missão perfeita!` : `Parabéns, ${aluno}! Missão cumprida!`);
   }
 
   function soltarConfete() {
@@ -281,16 +388,117 @@
     setTimeout(() => { c.innerHTML = ''; }, 5500);
   }
 
+  // ---------- PDF do relatório (gerado no próprio aparelho) ----------
+  // fontes padrão do PDF não têm emoji: tira tudo que não for letra latina
+  const paraPDF = (t) => semHTML(t).replace(/&amp;/g, '&').replace(/[^\u0000-ÿ]/g, '').replace(/\s+/g, ' ').trim();
+  const nomeArquivo = (t) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase();
+
+  function imagemComoDataURL(src) {
+    return new Promise((ok, falha) => {
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        c.width = img.naturalWidth; c.height = img.naturalHeight;
+        c.getContext('2d').drawImage(img, 0, 0);
+        try { ok({ url: c.toDataURL('image/png'), w: img.naturalWidth, h: img.naturalHeight }); } catch (e) { falha(e); }
+      };
+      img.onerror = falha;
+      img.src = src;
+    });
+  }
+
+  async function baixarPDF() {
+    if (!ultimoRelatorio) return;
+    const lib = window.jspdf;
+    if (!lib || !lib.jsPDF) { window.print(); return; }   // sem a biblioteca: usa "Salvar como PDF" do navegador
+    const { rel, estrelas, missao: mis, data } = ultimoRelatorio;
+    const doc = new lib.jsPDF({ unit: 'mm', format: 'a4' });
+    const ROXO = [162, 35, 142], TEXTO = [59, 33, 72], CINZA = [120, 106, 128];
+    const L = 18, LARG = 210 - 2 * L;
+    let y = 16;
+
+    const novaPaginaSePrecisar = (altura) => { if (y + altura > 278) { doc.addPage(); y = 20; } };
+    const paragrafo = (texto, tam = 11, estilo = 'normal', cor = TEXTO, recuo = 0) => {
+      doc.setFont('helvetica', estilo); doc.setFontSize(tam); doc.setTextColor(...cor);
+      const linhas = doc.splitTextToSize(paraPDF(texto), LARG - recuo);
+      for (const l of linhas) { novaPaginaSePrecisar(tam * 0.5); doc.text(l, L + recuo, y); y += tam * 0.45; }
+    };
+
+    // cabeçalho com o logo
+    try {
+      const logo = await imagemComoDataURL('assets/logo-pleno.png');
+      doc.addImage(logo.url, 'PNG', L, y - 2, 28, 28 * logo.h / logo.w, undefined, 'FAST');
+    } catch (e) { /* sem logo */ }
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.setTextColor(...ROXO);
+    doc.text('Relatório de Ortografia', L + 34, y + 7);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.setTextColor(...CINZA);
+    doc.text('Jogo de Ortografia do Pleno', L + 34, y + 14);
+    y += 30;
+    doc.setDrawColor(...ROXO); doc.setLineWidth(0.6); doc.line(L, y, L + LARG, y); y += 8;
+
+    paragrafo(`Aluno: ${aluno}`, 12, 'bold');
+    paragrafo(`Data: ${data.toLocaleDateString('pt-BR')}    Missão: ${mis.titulo}`, 11);
+    paragrafo(`Acertos de primeira: ${rel.dePrimeiraN} de ${rel.respondidas}    Estrelas: ${estrelas} de 3`, 11);
+    y += 4;
+
+    if (!rel.comErro.length) {
+      paragrafo('Parabéns! Nenhuma dificuldade nesta missão: todas as palavras certas de primeira.', 13, 'bold', ROXO);
+    } else {
+      novaPaginaSePrecisar(14);
+      paragrafo('Principais dificuldades', 15, 'bold', ROXO); y += 1;
+      for (const g of rel.grupos) {
+        novaPaginaSePrecisar(24);
+        paragrafo(`${g.m.titulo} - ${g.itens.length} ${g.itens.length === 1 ? 'palavra' : 'palavras'} com erro`, 12, 'bold');
+        paragrafo(`Regra: ${g.m.regra}`, 10.5, 'normal', TEXTO, 4);
+        paragrafo(`Palavras: ${g.itens.map((r) => r.certa).join(', ')}`, 10.5, 'italic', CINZA, 4);
+        y += 3;
+      }
+
+      // tabela: jeito certo x o que o aluno tentou
+      y += 2; novaPaginaSePrecisar(20);
+      paragrafo('Palavras para revisar', 15, 'bold', ROXO); y += 1;
+      const col2 = L + 70;
+      const cabecalho = () => {
+        doc.setFillColor(...ROXO); doc.rect(L, y - 5, LARG, 8, 'F');
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(255, 255, 255);
+        doc.text('Jeito certo', L + 3, y); doc.text('O aluno tentou', col2 + 3, y);
+        y += 7;
+      };
+      cabecalho();
+      rel.comErro.forEach((r, i) => {
+        if (y + 8 > 278) { doc.addPage(); y = 20; cabecalho(); }
+        if (i % 2 === 0) { doc.setFillColor(248, 238, 247); doc.rect(L, y - 5, LARG, 8, 'F'); }
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(30, 120, 70);
+        doc.text(paraPDF(r.certa.toUpperCase()), L + 3, y);
+        doc.setFont('helvetica', 'normal'); doc.setTextColor(200, 50, 60);
+        doc.text(paraPDF(r.erros.map((e) => String(e).toUpperCase()).join(', ')), col2 + 3, y);
+        y += 8;
+      });
+    }
+
+    // rodapé em todas as páginas
+    const paginas = doc.getNumberOfPages();
+    for (let i = 1; i <= paginas; i++) {
+      doc.setPage(i);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...CINZA);
+      doc.text('Jogo de Ortografia do Pleno - © Marco Nunes - Todos os direitos reservados', L, 290);
+      doc.text(`${i}/${paginas}`, L + LARG, 290, { align: 'right' });
+    }
+    doc.save(`relatorio-${nomeArquivo(aluno)}-${nomeArquivo(mis.titulo)}.pdf`);
+  }
+
   // ---------- Botões ----------
   $('btn-jogar').onclick = () => { SOM.clique(); telaMissoes(); };
   $('voltar-inicio').onclick = telaInicio;
   $('btn-comecar').onclick = () => { SOM.clique(); comecarMissao(); };
   $('regra-voltar').onclick = telaMissoes;
   $('sair-missao').onclick = telaMissoes;
+  $('btn-terminar').onclick = () => { if (resultados.length) fimDaMissao(); else telaMissoes(); };
   $('btn-proxima').onclick = proxima;
   $('btn-ouvir').onclick = () => falar(palavraCerta(fila[idx]));
   $('btn-repetir').onclick = () => comecarMissao();
   $('btn-outras').onclick = telaMissoes;
+  $('btn-pdf').onclick = () => { baixarPDF().catch(() => window.print()); };
 
   // ---------- Instalar como app ----------
   let pedidoInstalacao = null;

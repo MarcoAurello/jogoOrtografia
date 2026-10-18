@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#a2238e">
-  <meta name="author" content="Davi Miguel">
+  <meta name="author" content="Marco Nunes">
   <meta name="description" content="Jogo educativo de ortografia para crianças, com o Davi Miguel.">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -28,8 +28,30 @@
       <button class="btn-icone" id="btn-som" type="button" aria-label="Som ligado">🔊</button>
     </header>
 
+    <!-- Entrada: nome do aluno e senha -->
+    <section class="tela" id="tela-login">
+      <h1 class="titulo titulo-menor">
+        <span class="cor-amarelo">JOGO DE</span>
+        <span class="cor-azul">ORTOGRAFIA</span>
+        <span class="cor-roxo">DO PLENO</span>
+      </h1>
+      <form class="cartao cartao-login" id="form-login" autocomplete="off">
+        <div class="davi-area" id="davi-login"></div>
+        <label class="campo">
+          <span>Seu primeiro nome</span>
+          <input type="text" id="login-nome" maxlength="40" placeholder="Digite seu nome" required>
+        </label>
+        <label class="campo">
+          <span>Senha</span>
+          <input type="password" id="login-senha" maxlength="40" placeholder="Senha da turma" required>
+        </label>
+        <p class="erro-login" id="erro-login" role="alert"></p>
+        <button class="btn-grande" type="submit">Entrar ▶</button>
+      </form>
+    </section>
+
     <!-- Início -->
-    <section class="tela ativa" id="tela-inicio">
+    <section class="tela" id="tela-inicio">
       <h1 class="titulo">
         <span class="cor-amarelo">JOGO DE</span>
         <span class="cor-azul">ORTOGRAFIA</span>
@@ -38,12 +60,16 @@
       <div class="cena">
         <div class="davi-area grande" id="davi-inicio"></div>
         <div class="balao balao-esq">
-          Olá, eu sou o <b>Davi Miguel</b>, aluno do <b>quarto ano</b>! 😄<br>
+          Oi, <b id="nome-saudacao"></b>! 👋<br>
+          Eu sou o <b>Davi Miguel</b>, aluno do <b>quarto ano</b>! 😄<br>
           Vamos aprender as palavras que mais erramos?
         </div>
       </div>
       <button class="btn-grande" id="btn-jogar" type="button">▶ JOGAR</button>
-      <button class="btn-sec btn-instalar" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
+      <div class="linha-botoes">
+        <button class="btn-sec btn-instalar" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
+        <button class="btn-sec" id="btn-trocar" type="button">👤 Trocar aluno</button>
+      </div>
       <p class="link-privacidade"><a href="privacidade.html">Política de privacidade</a></p>
     </section>
 
@@ -90,6 +116,7 @@
       <div class="barra">
         <button class="btn-sec btn-pequeno" id="sair-missao" type="button">← Missões</button>
         <span class="barra-titulo" id="barra-titulo"></span>
+        <button class="btn-sec btn-pequeno" id="btn-terminar" type="button" hidden>⏹ Terminar e ver relatório</button>
         <div class="progresso" id="progresso"></div>
       </div>
       <div class="jogo-grade">
@@ -98,6 +125,7 @@
           <div class="balao balao-cima" id="balao-jogo"></div>
         </div>
         <div class="cartao cartao-pergunta">
+          <span class="etiqueta-missao" id="etiqueta-missao" hidden></span>
           <div class="figura" id="figura"></div>
           <button class="btn-ouvir" id="btn-ouvir" type="button">🔊 Ouvir a palavra</button>
           <p class="enunciado" id="enunciado"></p>
@@ -108,24 +136,35 @@
       </div>
     </section>
 
-    <!-- Fim da missão -->
+    <!-- Fim da missão + relatório de dificuldades -->
     <section class="tela" id="tela-fim">
       <div class="cartao cartao-fim">
         <h2 class="subtitulo" id="fim-titulo">Missão cumprida!</h2>
         <div class="estrelas-fim" id="fim-estrelas"></div>
         <p class="fim-texto" id="fim-texto"></p>
-        <div class="davi-area grande" id="davi-fim"></div>
+        <div class="davi-area" id="davi-fim"></div>
+      </div>
+
+      <div class="cartao relatorio" id="relatorio">
+        <h3 class="relatorio-titulo">📋 Relatório para revisar</h3>
+        <p class="relatorio-info" id="relatorio-info"></p>
+        <div id="relatorio-conteudo"></div>
         <div class="linha-botoes">
-          <button class="btn-grande" id="btn-repetir" type="button">↻ Jogar de novo</button>
-          <button class="btn-sec" id="btn-outras" type="button">Outras missões</button>
+          <button class="btn-grande" id="btn-pdf" type="button">📄 Baixar PDF</button>
         </div>
+      </div>
+
+      <div class="linha-botoes">
+        <button class="btn-grande" id="btn-repetir" type="button">↻ Jogar de novo</button>
+        <button class="btn-sec" id="btn-outras" type="button">Outras missões</button>
       </div>
       <div class="confete" id="confete" aria-hidden="true"></div>
     </section>
   </main>
 
-  <footer class="credito">Developed by <b>Davi Miguel</b></footer>
+  <footer class="credito">© <b>Marco Nunes</b> — Todos os direitos reservados</footer>
 
+  <script src="vendor/jspdf.umd.min.js"></script>
   <script src="davi.js"></script>
   <script src="dados.js"></script>
   <script src="jogo.js"></script>

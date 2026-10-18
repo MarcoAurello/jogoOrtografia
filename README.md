@@ -18,9 +18,19 @@ Feito com HTML, CSS e JavaScript puro, sem instalação. Funciona no computador,
 | X ou CH? | X e CH com o mesmo som; depois de ai/ei/ou quase sempre X (caixa) |
 | Acentos e til | pão, mão, avó e avô, café… |
 | Detetive de Erros | achar a "palavra monstro" (ssapo, çebola, tanbor…) |
+| 🌟 Todas as palavras | as 80 palavras misturadas (dá para terminar no meio e ver o relatório) |
 
 Cada missão tem 10 palavras com figura, botão para **ouvir a palavra** (voz do navegador),
 dica do Davi quando a criança erra e **estrelas** no fim (salvas no aparelho).
+
+## Entrada e relatório
+
+- Ao abrir, o aluno digita o **primeiro nome** e a **senha da turma: `alunoPleno`**.
+  A senha é conferida no próprio aparelho (uma "portinha" para as crianças, não uma proteção de segurança).
+- As estrelas ficam salvas **por aluno** no aparelho; "Trocar aluno" permite outra criança usar.
+- No fim de cada missão aparece o **relatório para revisar**: principais dificuldades (por regra)
+  e a lista de palavras com o jeito certo e o que o aluno tentou.
+- O relatório pode ser baixado em **PDF** (gerado no próprio aparelho com a biblioteca jsPDF, em `vendor/`).
 
 ## Como jogar
 
@@ -39,7 +49,7 @@ Para criar mais perguntas, basta adicionar itens no `dados.js`.
 
 ---
 
-Developed by **Davi Miguel**.
+© **Marco Nunes** — Todos os direitos reservados.
 
 ## App (PWA)
 

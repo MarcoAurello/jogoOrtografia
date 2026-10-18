@@ -1,6 +1,6 @@
 /* Davi Miguel, o personagem guia — desenhado em SVG (sem foto).
    Cabelo castanho-escuro com franjinha caída de lado, olhos castanhos,
-   sorrisão com as janelinhas nos dentes e o uniforme do Colégio Pleno:
+   sorrisão com dentes branquinhos e o uniforme do Colégio Pleno:
    blusa cinza e calça roxa.
    humor: 'oi' (acenando), 'feliz', 'pensando', 'festa' (braços para cima) */
 function daviSVG(humor = 'feliz') {
@@ -47,9 +47,9 @@ function daviSVG(humor = 'feliz') {
     : `<path d="M71 80 Q82 75 92 79" stroke="${cabelo}" stroke-width="4" fill="none" stroke-linecap="round"/>
        <path d="M108 79 Q118 75 129 80" stroke="${cabelo}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
 
-  // boca: sorrisão aberto mostrando os dentinhos, com as janelinhas
-  const dentes = [[79, 6], [86, 6], [100, 7], [108, 6], [115, 6]]   // o vão em 93 é a janelinha
-    .map(([x, w]) => `<rect x="${x}" y="110" width="${w}" height="${x === 100 ? 6 : 5}" rx="1.4" fill="#fff"/>`).join('');
+  // boca: sorrisão aberto com uma fileira de dentes branquinha e alinhada
+  const dentes = `<path d="M77 109.2 Q100 114.6 123 109.2 L121.5 115.5 Q100 121.5 78.5 115.5 Z" fill="#fff"/>`
+    + [86, 93, 100, 107, 114].map((x) => `<line x1="${x}" y1="${x === 100 ? 112.6 : 112}" x2="${x}" y2="${x === 100 ? 118.6 : 117.6}" stroke="#e9e1dc" stroke-width="0.9"/>`).join('');
   const boca = humor === 'pensando'
     ? `<path d="M88 117 Q100 113 112 118" stroke="#7a2a2a" stroke-width="4" fill="none" stroke-linecap="round"/>`
     : `<path d="M74 108 Q100 140 126 108 Q100 113 74 108 Z" fill="#6e2424"/>
