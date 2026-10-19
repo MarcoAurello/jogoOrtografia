@@ -73,3 +73,8 @@ para os aparelhos baixarem a versão nova.
 
 - `assets/figuras/` — figuras das palavras, recortadas do cartaz por `ferramentas/figuras.ps1`
 - `ferramentas/icones.ps1` — gera os ícones do app
+
+## Publicar na VPS (Dokploy)
+
+O `Dockerfile` monta um nginx que serve o jogo em `/ortografia/`. No Dokploy: Build Type **Dockerfile**,
+domínio com path `/ortografia`, **Strip Path desligado**, porta **80** e HTTPS (Let's Encrypt).

@@ -1,0 +1,13 @@
+# só os arquivos do jogo entram no servidor; originais e ferramentas ficam de fora
+.git
+.gitignore
+Dockerfile
+.dockerignore
+README.md
+GRAVAR.md
+ferramentas
+assets/cartaz-original.png
+assets/logo-original.png
+assets/plenix-original
+assets/plenix.png
+**/LEIA-ME.txt
