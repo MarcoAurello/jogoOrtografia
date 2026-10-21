@@ -79,6 +79,24 @@ powershell -ExecutionPolicy Bypass -File ferramentas\versao.ps1
 - `assets/figuras/` — figuras das palavras, recortadas do cartaz por `ferramentas/figuras.ps1`
 - `ferramentas/icones.ps1` — gera os ícones do app
 
+## Relatório por e-mail (grátis, com Google Apps Script)
+
+Na tela inicial, **🧑‍🏫 Área do professor** (senha `app0707`, em `SENHA_PROFESSOR` no `jogo.js`) guarda no aparelho
+o e-mail do professor. No fim de cada missão, o relatório vai para esse e-mail, mesmo que o aluno não baixe o PDF.
+Sem internet, o relatório fica numa fila no aparelho e é enviado quando a conexão voltar.
+
+O envio é feito por `ferramentas/relatorio-email.gs`, publicado uma vez na sua conta Google:
+
+1. Crie uma planilha no Google Drive (ela guarda uma cópia de cada relatório na aba "Relatórios")
+   e abra **Extensões → Apps Script**. Apague o que estiver lá e cole o conteúdo de `ferramentas/relatorio-email.gs`.
+2. **Implantar → Nova implantação → Tipo: App da Web**. Executar como: **Eu**. Quem pode acessar: **Qualquer pessoa**.
+   Autorize o acesso ao Gmail e à planilha quando o Google pedir.
+3. Copie o endereço do app da Web (termina em `/exec`) e cole em `URL_RELATORIO` no `jogo.js`.
+   Rode `ferramentasersao.ps1` e publique o jogo.
+
+Limite gratuito: cerca de 100 e-mails por dia numa conta Gmail comum (1.500 no Google Workspace).
+Ao mudar o script, use **Implantar → Gerenciar implantações → editar → Nova versão** para o endereço continuar o mesmo.
+
 ## Publicar na VPS (Dokploy)
 
 O `Dockerfile` monta um nginx que serve o jogo em `/ortografia/`. No Dokploy: Build Type **Dockerfile**,

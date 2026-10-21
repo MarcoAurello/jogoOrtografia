@@ -577,6 +577,11 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
 .campo input:focus { border-color: var(--primaria); box-shadow: 0 0 0 4px rgba(21, 101, 192, 0.15); }
 .erro-login { min-height: 1.3em; color: var(--vermelho); font-weight: 800; text-align: center; }
 .cartao-login .btn-grande { margin-top: 2px; }
+.professor-ajuda { font-weight: 700; line-height: 1.5; text-align: center; }
+.aviso-ok { color: var(--verde); }
+.envio-email { margin: -4px auto 12px; padding: 8px 14px; max-width: 560px; text-align: center; font-weight: 800; border-radius: 14px; background: #e6f6fd; color: var(--primaria-escura); }
+.envio-email.ok { background: #eaf8ef; color: #1d6b3d; }
+.envio-email.erro { background: #fdecea; color: #b42318; }
 
 /* ---------- Missão "Todas as palavras" e progresso em barra ---------- */
 .missao-todas { background: linear-gradient(160deg, #fff7d6, #ffe58a); }

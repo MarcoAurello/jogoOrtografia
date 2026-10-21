@@ -211,6 +211,59 @@
     telaLogin();
   };
 
+  // ---------- Área do professor: e-mail que recebe os relatórios ----------
+  // A senha também é conferida no próprio aparelho: só evita que os alunos mexam.
+  const SENHA_PROFESSOR = 'app0707';
+  const CHAVE_EMAIL = 'pleno-ortografia:email-professor';
+  const lerEmail = () => { try { return localStorage.getItem(CHAVE_EMAIL) || ''; } catch (e) { return ''; } };
+  const emailValido = (t) => /^[^\s@<>,;]+@[^\s@<>,;]+\.[a-z]{2,}$/i.test(t);
+
+  function avisoProfessor(texto, ok) {
+    $('aviso-email').textContent = texto;
+    $('aviso-email').classList.toggle('aviso-ok', !!ok);
+  }
+
+  function telaProfessor() {
+    $('form-senha-professor').hidden = false;
+    $('form-email-professor').hidden = true;
+    $('professor-senha').value = '';
+    $('erro-professor').textContent = '';
+    mostrar('tela-professor');
+    setTimeout(() => $('professor-senha').focus(), 300);
+  }
+
+  $('form-senha-professor').onsubmit = (e) => {
+    e.preventDefault();
+    if ($('professor-senha').value.trim() !== SENHA_PROFESSOR) {
+      $('erro-professor').textContent = 'Senha incorreta. 🔒';
+      SOM.errado();
+      return;
+    }
+    SOM.certo();
+    $('form-senha-professor').hidden = true;
+    $('form-email-professor').hidden = false;
+    $('professor-email').value = lerEmail();
+    if (!URL_RELATORIO) avisoProfessor('O envio por e-mail ainda não foi ligado no jogo (falta o endereço do script).');
+    else avisoProfessor(lerEmail() ? 'Os relatórios estão indo para este e-mail.' : 'Nenhum e-mail salvo: os relatórios não são enviados.', !!lerEmail());
+    $('professor-email').focus();
+  };
+
+  $('form-email-professor').onsubmit = (e) => {
+    e.preventDefault();
+    const email = $('professor-email').value.trim().toLowerCase();
+    if (!emailValido(email)) { avisoProfessor('Digite um e-mail válido, como nome@exemplo.com.'); return; }
+    try { localStorage.setItem(CHAVE_EMAIL, email); } catch (err) { avisoProfessor('Este aparelho não deixa salvar o e-mail.'); return; }
+    SOM.certo();
+    avisoProfessor(`Salvo! Os relatórios vão para ${email}. ✔`, true);
+    enviarFila();
+  };
+
+  $('btn-remover-email').onclick = () => {
+    try { localStorage.removeItem(CHAVE_EMAIL); } catch (e) { /* sem armazenamento */ }
+    $('professor-email').value = '';
+    avisoProfessor('Pronto: os relatórios não serão mais enviados por e-mail.');
+  };
+
   // missão especial com as palavras de todas as missões, misturadas
   const TODAS = {
     id: 'todas', titulo: 'Todas as palavras', icone: '🌟', cor: '#1565c0', todas: true,
@@ -431,6 +484,66 @@
       </table>`;
   }
 
+  // ---------- Relatório por e-mail (Google Apps Script: ferramentas/relatorio-email.gs) ----------
+  // Endereço do script publicado (veja "Relatório por e-mail" no README). Vazio: não envia.
+  const URL_RELATORIO = '';
+  const CHAVE_RELATORIO = 'jogo-ortografia';   // a mesma CHAVE do script
+  // relatórios que ainda não foram enviados ficam numa fila no aparelho (sem internet, vão depois)
+  const CHAVE_FILA = 'pleno-ortografia:fila-relatorios';
+  const lerFila = () => { try { return JSON.parse(localStorage.getItem(CHAVE_FILA)) || []; } catch (e) { return []; } };
+  const salvarFila = (f) => { try { localStorage.setItem(CHAVE_FILA, JSON.stringify(f.slice(-50))); } catch (e) { /* sem armazenamento */ } };
+  const resultadoEnvio = {};   // id do relatório -> 'ok' ou 'erro'
+  let enviando = false;
+
+  // devolve '' se enviou, ou o erro do script; sem internet, a promessa falha
+  async function postarRelatorio(dados) {
+    const r = await fetch(URL_RELATORIO, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(dados) });
+    const j = await r.json();
+    return j.ok ? '' : (j.erro || 'erro');
+  }
+
+  // envia a fila, do mais antigo para o mais novo
+  async function enviarFila() {
+    if (enviando || !URL_RELATORIO) return;
+    enviando = true;
+    try {
+      for (let item = lerFila()[0]; item; item = lerFila()[0]) {
+        let erro;
+        try { erro = await postarRelatorio(item); } catch (e) { break; }   // sem internet: tenta depois
+        if (erro === 'cota') break;                                         // passou do limite do dia: tenta depois
+        salvarFila(lerFila().filter((r) => r.id !== item.id));
+        resultadoEnvio[item.id] = erro ? 'erro' : 'ok';
+      }
+    } finally { enviando = false; }
+  }
+
+  async function enviarRelatorioPorEmail({ rel, estrelas, missao: mis, data }) {
+    const aviso = $('envio-email');
+    aviso.hidden = true;
+    const para = lerEmail();
+    if (!URL_RELATORIO || !para || !rel.respondidas) return;
+    const id = `${data.getTime()}-${Math.random().toString(36).slice(2, 8)}`;
+    salvarFila([...lerFila(), {
+      id, chave: CHAVE_RELATORIO, para, aluno, missao: mis.titulo, data: data.toLocaleDateString('pt-BR'),
+      acertos: rel.dePrimeiraN, total: rel.respondidas, estrelas,
+      grupos: rel.grupos.map((g) => ({ titulo: g.m.titulo, qtd: g.itens.length, regra: semHTML(g.m.regra) })),
+      palavras: rel.comErro.map((r) => ({ certa: r.certa, tentou: r.erros })),
+    }]);
+    aviso.className = 'envio-email';
+    aviso.textContent = '📧 Enviando o relatório para o professor…';
+    aviso.hidden = false;
+    await enviarFila();
+    if (resultadoEnvio[id] === 'ok') {
+      aviso.className = 'envio-email ok';
+      aviso.textContent = `📧 Relatório enviado para ${para}.`;
+    } else if (resultadoEnvio[id] === 'erro') {
+      aviso.className = 'envio-email erro';
+      aviso.textContent = 'Não foi possível enviar o relatório. Peça ao professor para conferir o e-mail na Área do professor.';
+    } else {
+      aviso.textContent = '📧 Sem internet agora: o relatório será enviado ao professor quando houver conexão.';
+    }
+  }
+
   let ultimoRelatorio = null;
 
   function fimDaMissao() {
@@ -445,6 +558,7 @@
     $('fim-texto').textContent = `${aluno}, você acertou ${rel.dePrimeiraN} de ${rel.respondidas} de primeira em "${missao.titulo}"!`;
     mascote('davi-fim', 'festa');
     desenharRelatorio(rel, n);
+    enviarRelatorioPorEmail(ultimoRelatorio);
     mostrar('tela-fim');
     soltarConfete();
     frase(n === 3 ? 'missao-perfeita' : 'missao-cumprida', n === 3 ? `Parabéns, ${aluno}! Missão perfeita!` : `Parabéns, ${aluno}! Missão cumprida!`);
@@ -611,6 +725,12 @@
     mostrar('tela-instalar');
   };
   $('btn-fechar-instalar').onclick = telaInicio;
+  $('btn-professor').onclick = () => { SOM.clique(); telaProfessor(); };
+  $('professor-voltar').onclick = telaInicio;
+
+  // relatórios que ficaram sem enviar: tenta ao abrir o jogo e quando a internet voltar
+  window.addEventListener('online', enviarFila);
+  enviarFila();
 
   telaInicio();
 })();
