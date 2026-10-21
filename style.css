@@ -1103,3 +1103,16 @@ body { background: var(--fundo); }
   .jogo-card-nome { font-size: 18px; }
   .jogo-card-texto { font-size: 13px; }
 }
+
+/* ---------- Filtro dos jogos por tema (tela inicial) ---------- */
+.filtro-temas { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 18px auto 0; }
+.filtro-tema {
+  padding: 8px 18px;
+  font-size: 17px; font-weight: 600;
+  color: var(--primaria-escura);
+  background: var(--branco);
+  border: 2px solid var(--primaria);
+  border-radius: 999px;
+}
+.filtro-tema.ativo { color: var(--branco); background: var(--primaria); }
+.filtro-temas + .escolha-jogos { margin-top: 12px; }

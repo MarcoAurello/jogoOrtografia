@@ -1592,6 +1592,20 @@
   $('btn-repetir').onclick = () => (missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
   $('btn-outras').onclick = () => (missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
   $('btn-tiro').onclick = () => { SOM.clique(); telaTiroMenu(); };
+
+  // filtro dos jogos por tema na tela inicial (a escolha fica guardada no aparelho)
+  const CHAVE_TEMA = 'pleno-ortografia:tema';
+  function filtrarTema(tema) {
+    document.querySelectorAll('.filtro-tema').forEach((b) => b.classList.toggle('ativo', b.dataset.tema === tema));
+    document.querySelectorAll('.escolha-jogos .jogo-card').forEach((c) => { c.hidden = tema !== 'todos' && c.dataset.tema !== tema; });
+    try { localStorage.setItem(CHAVE_TEMA, tema); } catch (e) { /* sem armazenamento */ }
+  }
+  $('filtro-temas').onclick = (e) => {
+    const b = e.target.closest('.filtro-tema'); if (!b) return;
+    SOM.clique();
+    filtrarTema(b.dataset.tema);
+  };
+  try { filtrarTema(localStorage.getItem(CHAVE_TEMA) || 'todos'); } catch (e) { filtrarTema('todos'); }
   $('tiro-voltar').onclick = telaInicio;
   $('btn-tiro-comecar').onclick = () => { SOM.clique(); comecarTiro(); };
   $('tiro-sair').onclick = telaTiroMenu;

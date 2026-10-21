@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=25">
+  <link rel="stylesheet" href="style.css?v=26">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -66,23 +66,28 @@
           Escolha um jogo e vamos aprender juntos!
         </div>
       </div>
+      <div class="filtro-temas" id="filtro-temas" role="group" aria-label="Filtrar jogos por tema">
+        <button class="filtro-tema ativo" type="button" data-tema="todos">Todos</button>
+        <button class="filtro-tema" type="button" data-tema="portugues">📚 Português</button>
+        <button class="filtro-tema" type="button" data-tema="matematica">🔢 Matemática</button>
+      </div>
       <div class="escolha-jogos">
-        <button class="jogo-card" id="btn-jogar" type="button" style="--c:#1565c0">
+        <button class="jogo-card" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
           <span class="jogo-card-icone">📚</span>
           <span class="jogo-card-nome">Jogo de Ortografia</span>
           <span class="jogo-card-texto">Missões com os segredos da escrita</span>
         </button>
-        <button class="jogo-card" id="btn-chuva" type="button" style="--c:#e53935">
+        <button class="jogo-card" id="btn-chuva" type="button" data-tema="portugues" style="--c:#e53935">
           <span class="jogo-card-icone">🌧️</span>
           <span class="jogo-card-nome">Chuva de Erros</span>
           <span class="jogo-card-texto">Pegue as palavras antes que sumam!</span>
         </button>
-        <button class="jogo-card" id="btn-mat" type="button" style="--c:#0b3d91">
+        <button class="jogo-card" id="btn-mat" type="button" data-tema="matematica" style="--c:#0b3d91">
           <span class="jogo-card-icone">🔢</span>
           <span class="jogo-card-nome">Chuva de Matemática</span>
           <span class="jogo-card-texto">Responda a conta antes que ela caia!</span>
         </button>
-        <button class="jogo-card" id="btn-tiro" type="button" style="--c:#0a8fc2">
+        <button class="jogo-card" id="btn-tiro" type="button" data-tema="matematica" style="--c:#0a8fc2">
           <span class="jogo-card-icone">🎯</span>
           <span class="jogo-card-nome">Tiro Certo</span>
           <span class="jogo-card-texto">Ache o ângulo e derrube o míssil!</span>
@@ -327,9 +332,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=25"></script>
-  <script src="dados.js?v=25"></script>
-  <script src="jogo.js?v=25"></script>
+  <script src="plenix.js?v=26"></script>
+  <script src="dados.js?v=26"></script>
+  <script src="jogo.js?v=26"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
