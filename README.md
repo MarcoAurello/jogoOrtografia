@@ -12,10 +12,11 @@ São cinco jogos, escolhidos na tela inicial (com filtro por tema: Português ou
 
 ## Peso Certo (medidas de massa)
 
-Balança de dois pratos: o objeto fica no prato da esquerda e o aluno coloca pesos no da direita (tocando ou arrastando)
-até a soma ser exatamente o peso do objeto. A soma não aparece, só a inclinação; quando equilibra, aparece a conta
-(ex.: `1 dg + 5 cg + 5 cg = 200 mg`). Os pesos ficam em prateleiras com plaquinhas de valor, e o tamanho de cada peso
-acompanha o quanto ele pesa. Passou do ponto: perde 1 de 3 vidas e o último peso volta. Tocar num peso do prato o devolve.
+Balança de dois pratos: o objeto fica no prato da esquerda e o aluno coloca no da direita (tocando ou arrastando) os pesos
+que acha que equilibram o objeto e toca em **⚖️ Testar**. Até o teste a balança fica travada e reta (🔒), sem dar pista.
+No teste ela destrava: se equilibrou, aparece a conta (ex.: `1 dg + 5 cg + 5 cg = 200 mg`); se faltou ou passou,
+perde 1 de 3 vidas, vê para que lado a balança pendeu e pode ajustar os pesos e testar de novo. Os pesos ficam em
+prateleiras com plaquinhas de valor, o tamanho de cada peso acompanha o quanto ele pesa, e tocar num peso do prato o devolve.
 Níveis escolhidos no menu: Fácil (kg e g), Médio (g, dag e hg) e Difícil (mg, cg e dg, às vezes em g com vírgula).
 O estoque tem de 6 a 8 pesos e sempre uma combinação exata. O botão "📏 Tabela" mostra a escada de conversão, e o
 relatório diz quantas vezes ela foi usada. Sprites desenhados por `ferramentas/balanca-sprites.py` (em `assets/balanca/`).

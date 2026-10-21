@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=27">
+  <link rel="stylesheet" href="style.css?v=28">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -223,9 +223,9 @@
       <div class="cena cena-regra">
         <div class="davi-area" id="davi-peso"></div>
         <div class="balao balao-esq">
-          Coloque pesos no prato da <b>direita</b> até a balança ficar <b>reta</b>!
-          A soma dos pesos tem que ser igual ao peso do objeto. Cuidado: os pesos vêm em
-          unidades diferentes (<b>kg, hg, dag, g, dg, cg, mg</b>). Passou do ponto? Perde uma vida! ❤️
+          Coloque no prato da <b>direita</b> os pesos que você acha que equilibram o objeto e toque em
+          <b>⚖️ Testar</b>. A balança fica travada até o teste! Cuidado: os pesos vêm em
+          unidades diferentes (<b>kg, hg, dag, g, dg, cg, mg</b>). Errou o teste? Perde uma vida! ❤️
         </div>
       </div>
       <div class="cartao cartao-chuva">
@@ -252,6 +252,7 @@
         <canvas id="peso-canvas"></canvas>
       </div>
       <p class="peso-msg" id="peso-msg"></p>
+      <button class="btn-grande" id="btn-peso-testar" type="button" hidden>⚖️ Testar</button>
       <button class="btn-grande" id="btn-peso-proximo" type="button" hidden>Próximo objeto ➜</button>
       <h3 class="peso-rotulo">No prato da direita <small>(toque para tirar)</small></h3>
       <div class="peso-lista peso-prato" id="peso-prato"></div>
@@ -395,9 +396,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=27"></script>
-  <script src="dados.js?v=27"></script>
-  <script src="jogo.js?v=27"></script>
+  <script src="plenix.js?v=28"></script>
+  <script src="dados.js?v=28"></script>
+  <script src="jogo.js?v=28"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

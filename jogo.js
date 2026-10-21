@@ -1240,8 +1240,9 @@
 
   // ---------- Peso Certo ----------
   // Balança de dois pratos: o objeto fica no prato da esquerda e o aluno coloca pesos (em unidades diferentes)
-  // no prato da direita até a soma ser exatamente o peso do objeto. A soma não aparece: só a inclinação.
-  // Passou do ponto: a balança pisca vermelho, perde 1 vida e o último peso volta. 10 objetos ou até acabarem as 3 vidas.
+  // no prato da direita e toca em "Testar": até lá a balança fica travada e reta, sem dar pista.
+  // No teste ela destrava: equilibrou, acertou; faltou ou passou, perde 1 vida e pode ajustar os pesos e testar de novo.
+  // 10 objetos ou até acabarem as 3 vidas.
   const PESO = { OBJETOS: 10, VIDAS: 3 };
   const FATOR = { kg: 1e6, hg: 1e5, dag: 1e4, g: 1e3, dg: 100, cg: 10, mg: 1 };   // tudo em miligramas
   const ORDEM_UNIDADES = ['kg', 'hg', 'dag', 'g', 'dg', 'cg', 'mg'];
@@ -1360,7 +1361,8 @@
     peso.objeto = { indice, nome: NOMES_OBJETO[indice], alvo: alvo.v, u: alvo.u, rotulo: comUnidade(alvo.v, alvo.u),
       estoque: montarEstoque(alvo.v, nivel), prato: [], erros: [], resolvido: false };
     $('btn-peso-proximo').hidden = true;
-    msgPeso(`${peso.objeto.nome}: <b>${peso.objeto.rotulo}</b>. Coloque pesos até a balança ficar reta!`);
+    peso.testando = false;
+    msgPeso(`${peso.objeto.nome}: <b>${peso.objeto.rotulo}</b>. Coloque os pesos que você acha certos e toque em <b>Testar</b>!`);
     desenharListasPeso();
     hudPeso();
   }
@@ -1415,6 +1417,7 @@
       prat.insertAdjacentHTML('beforeend', `<div class="prateleira-tabua"><span class="prateleira-placa">${grupo.rotulo}</span></div>`);
       $('peso-estoque').append(prat);
     }
+    $('btn-peso-testar').hidden = !o.prato.length || o.resolvido || peso.travado;
     $('peso-prato').innerHTML = '';
     for (const p of o.prato) {
       const b = botaoPeso(p, true);
@@ -1461,11 +1464,19 @@
     if (!o || o.resolvido || peso.travado || o.prato.some((x) => x.id === p.id)) return;
     o.prato.push(p);
     tocar([[520, 0.06], [390, 0.08]]);
-    const soma = somaPrato();
     desenharListasPeso();
+    msgPeso('Quando achar que está certo, toque em <b>⚖️ Testar</b>.');
+  }
+
+  // destrava a balança e mostra o resultado
+  function testarPeso() {
+    const o = peso && peso.objeto;
+    if (!o || o.resolvido || peso.travado || !o.prato.length) return;
+    peso.testando = true;
+    $('btn-peso-testar').hidden = true;
+    const soma = somaPrato();
     if (soma === o.alvo) equilibrou();
-    else if (soma > o.alvo) passouDoPonto();
-    else msgPeso('Ainda falta peso… ⬅️ a balança pende para o objeto.');
+    else errouTeste(soma < o.alvo ? 'faltou' : 'passou');
   }
 
   function tirarPeso(p) {
@@ -1474,12 +1485,13 @@
     o.prato = o.prato.filter((x) => x.id !== p.id);
     SOM.clique();
     desenharListasPeso();
-    msgPeso('Peso tirado. Continue tentando!');
+    msgPeso('Peso tirado. Ajuste e toque em <b>⚖️ Testar</b>.');
   }
 
   function equilibrou() {
     const o = peso.objeto;
     o.resolvido = true;
+    $('btn-peso-testar').hidden = true;
     peso.equilibrados++;
     const ganhou = 100 + (o.erros.length ? 0 : 50) + peso.vidas * 10;
     peso.pontos += ganhou;
@@ -1499,12 +1511,14 @@
     $('btn-peso-proximo').hidden = false;
   }
 
-  function passouDoPonto() {
+  function errouTeste(tipo) {
     const o = peso.objeto;
-    o.erros.push(`${o.prato.map((p) => p.rotulo).join(' + ')} (passou de ${o.rotulo})`);
+    o.erros.push(`${o.prato.map((p) => p.rotulo).join(' + ')} (${tipo === 'faltou' ? 'faltou para' : 'passou de'} ${o.rotulo})`);
     peso.vidas--;
     peso.travado = true;
-    msgPeso('Passou do ponto! ➡️ A balança pendeu para os pesos. Perdeu uma vida.', 'erro');
+    msgPeso(tipo === 'faltou'
+      ? 'Errou: faltou peso! ⬅️ A balança pendeu para o objeto. Perdeu uma vida.'
+      : 'Errou: passou do ponto! ➡️ A balança pendeu para os pesos. Perdeu uma vida.', 'erro');
     $('peso-arena').classList.remove('erro');
     void $('peso-arena').offsetWidth;
     $('peso-arena').classList.add('erro');
@@ -1520,11 +1534,12 @@
         terminarPeso('vidas');
         return;
       }
-      o.prato.pop();   // o último peso volta para o estoque
+      // trava de novo: os pesos continuam no prato para o aluno ajustar e testar outra vez
       peso.travado = false;
+      peso.testando = false;
       desenharListasPeso();
-      msgPeso('O último peso voltou. Tente outra combinação!');
-    }, 1300);
+      msgPeso('A balança travou de novo. Ajuste os pesos e teste outra vez!');
+    }, 1800);
   }
 
   function categoriaDoObjeto(o) {
@@ -1549,8 +1564,8 @@
     peso.t += dt;
     // inclinação: positiva = prato da esquerda (objeto) mais pesado
     const o = peso.objeto;
-    let alvoInc = 0;
-    if (o) {
+    let alvoInc = 0;   // travada e reta enquanto o aluno monta a combinação
+    if (o && (peso.testando || o.resolvido)) {
       const soma = somaPrato();
       alvoInc = soma === o.alvo ? 0 : soma < o.alvo ? 0.32 * Math.min(1, (o.alvo - soma) / o.alvo * 1.5 + 0.15) : -0.32 * Math.min(1, (soma - o.alvo) / o.alvo * 1.5 + 0.25);
     }
@@ -1629,9 +1644,14 @@
       }
     }
 
-    // ponteiro sobre o eixo: verde e de pé quando está equilibrada
+    // travada: cadeado no eixo; no teste, o ponteiro fica verde e de pé quando equilibra
+    const travada = o && !peso.testando && !o.resolvido;
+    if (travada) {
+      g.font = `${Math.round(16 * k)}px sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.fillText('🔒', cx, cy - 16 * k);
+    }
     g.save(); g.translate(cx, cy); g.rotate(a);
-    g.fillStyle = Math.abs(peso.inclinacao) < 0.01 ? '#2e9e5b' : '#e53935';
+    g.fillStyle = travada ? 'rgba(0, 0, 0, 0)' : Math.abs(peso.inclinacao) < 0.01 ? '#2e9e5b' : '#e53935';
     g.beginPath(); g.moveTo(-3 * k, -7 * k); g.lineTo(3 * k, -7 * k); g.lineTo(0, -24 * k); g.closePath(); g.fill();
     g.restore();
 
@@ -1647,6 +1667,7 @@
   $('btn-tabela').onclick = () => { if (!peso) return; peso.tabela++; SOM.clique(); $('peso-tabela').hidden = false; };
   $('btn-tabela-fechar').onclick = () => { $('peso-tabela').hidden = true; };
   $('peso-tabela').onclick = (e) => { if (e.target === $('peso-tabela')) $('peso-tabela').hidden = true; };
+  $('btn-peso-testar').onclick = () => testarPeso();
   $('btn-peso-proximo').onclick = () => { $('peso-arena').classList.remove('certo'); novoObjeto(); };
 
   // ---------- Textos do relatório de cada jogo ----------
