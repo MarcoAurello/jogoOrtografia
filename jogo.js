@@ -806,7 +806,7 @@
 
     // cabeçalho com o logo
     try {
-      const logo = await imagemComoDataURL('assets/logo-pe.png');
+      const logo = await imagemComoDataURL('assets/logo-pg.png');
       doc.addImage(logo.url, 'PNG', L, y - 2, 28, 28 * logo.h / logo.w, undefined, 'FAST');
     } catch (e) { /* sem logo */ }
     doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.setTextColor(...AZUL);

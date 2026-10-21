@@ -1,6 +1,6 @@
 // Guarda os arquivos do jogo para funcionar offline.
 // Ao mudar qualquer arquivo do jogo, aumente a VERSAO para os aparelhos baixarem a nova.
-const VERSAO = 'ortografia-pleno-v19';
+const VERSAO = 'ortografia-pleno-v20';
 
 const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
   .flatMap((id) => Array.from({ length: 10 }, (_, i) => `./assets/figuras/${id}-${i}.jpg`));
@@ -8,14 +8,14 @@ const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
 const ARQUIVOS = [
   './',
   './index.html',
-  './style.css?v=19',
-  './jogo.js?v=19',
-  './dados.js?v=19',
-  './plenix.js?v=19',
+  './style.css?v=20',
+  './jogo.js?v=20',
+  './dados.js?v=20',
+  './plenix.js?v=20',
   './assets/plenix/plenix_spritesheet_1x.png',
   './vendor/jspdf.umd.min.js',
   './manifest.json',
-  './assets/logo-pe.png',
+  './assets/logo-pg.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',

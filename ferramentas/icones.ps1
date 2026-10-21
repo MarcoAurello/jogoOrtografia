@@ -1,10 +1,10 @@
-# Gera os ícones do app: fundo em degradê pastel, logo da Secretaria de Educação e "ABC" em amarelo.
+# Gera os ícones do app: fundo em degradê pastel, logo da Pedagogia Gamificada e "ABC" em amarelo.
 # Uso: powershell -ExecutionPolicy Bypass -File ferramentas\icones.ps1
 Add-Type -AssemblyName System.Drawing
 $raiz = Split-Path $PSScriptRoot -Parent
 $saida = Join-Path $raiz 'icons'
 New-Item -ItemType Directory -Force $saida | Out-Null
-$logo = [System.Drawing.Image]::FromFile((Join-Path $raiz 'assets\logo-pe.png'))
+$logo = [System.Drawing.Image]::FromFile((Join-Path $raiz 'assets\logo-pg.png'))
 
 function Icone($tamanho, $escala, $arquivo, $cantos) {
   $bmp = New-Object System.Drawing.Bitmap $tamanho, $tamanho
