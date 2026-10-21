@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Jogo de Ortografia do Pleno",
-  "short_name": "Ortografia Pleno",
+  "name": "Jogo de Ortografia",
+  "short_name": "Ortografia",
   "description": "Jogo educativo de ortografia para crianças: S ou SS, Ç ou C, R ou RR, M ou N, G ou J, X ou CH, acentos e o Detetive de Erros, com o Davi Miguel.",
   "lang": "pt-BR",
   "start_url": "./",

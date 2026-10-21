@@ -1,4 +1,4 @@
-/* Jogo de Ortografia do Pleno — © Marco Nunes. Todos os direitos reservados. */
+/* Jogo de Ortografia — © Marco Nunes. Todos os direitos reservados. */
 (() => {
   const $ = (id) => document.getElementById(id);
   const embaralhar = (lista) => {
@@ -509,7 +509,7 @@
     doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.setTextColor(...AZUL);
     doc.text('Relatório de Ortografia', L + 34, y + 7);
     doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.setTextColor(...CINZA);
-    doc.text('Jogo de Ortografia do Pleno', L + 34, y + 14);
+    doc.text('Jogo de Ortografia', L + 34, y + 14);
     y += 30;
     doc.setDrawColor(...AZUL); doc.setLineWidth(0.6); doc.line(L, y, L + LARG, y); y += 8;
 
