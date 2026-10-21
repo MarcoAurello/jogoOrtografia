@@ -53,7 +53,7 @@ palavras que só se decidem dentro de uma frase (mas/mais, mau/mal, onde/aonde, 
 
 ## Jogo de Ortografia: níveis
 
-O aluno escolhe só o nível (as missões por regra não aparecem mais); cada rodada tem 10 perguntas misturando regras:
+O aluno escolhe só o nível (as missões por regra não aparecem mais); cada rodada tem 20 perguntas misturando regras:
 
 - **Fácil:** as palavras com figura das missões abaixo (completar a letra, acentos e Detetive de Erros).
 - **Médio:** as palavras da Chuva de Erros do dia a dia (S/SS/C/Ç/Z, G/J, X/CH, R/RR, M antes de P e B, H, acentos).

@@ -295,7 +295,7 @@
   // O aluno escolhe só o nível; cada rodada mistura palavras de várias regras.
   // Fácil: as palavras com figura das missões. Médio e Difícil: as palavras da Chuva de Erros
   // (o jeito certo e o errado), em perguntas de escolher a certa e de achar o "monstro" escrito errado.
-  const PERGUNTAS_POR_RODADA = 10;
+  const PERGUNTAS_POR_RODADA = 20;
   // as categorias da Chuva viram regras do Jogo de Ortografia (o mesmo id agrupa os dois tipos no relatório)
   const regraDaChuva = (c, tipo) => ({ ...c, id: 'c-' + c.id, tipo });
   const paresDaChuva = (filtro) => CHUVA_CATEGORIAS.flatMap((c) => c.pares.filter(([certa]) => filtro(c, certa)).map(([certa, errada]) => ({ c, certa, errada })));
