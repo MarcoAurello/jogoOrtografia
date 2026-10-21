@@ -7,7 +7,16 @@ cada regra da ortografia do português de um jeito simples.
 
 Feito com HTML, CSS e JavaScript puro, sem instalação. Funciona no computador, no tablet e no celular.
 
-São dois jogos, escolhidos na tela inicial: **Jogo de Ortografia** (as missões abaixo) e **Chuva de Erros**.
+São três jogos, escolhidos na tela inicial: **Jogo de Ortografia** (as missões abaixo), **Chuva de Erros** e **Chuva de Matemática**.
+
+## Chuva de Matemática
+
+O aluno escolhe as operações (adição, subtração, multiplicação, divisão). Uma conta cai de cada vez e ele toca
+na resposta certa entre 4 opções (no computador, também pelas teclas 1 a 4) antes que ela chegue ao chão.
+Cada acerto sobe um nível (de 1 a 10: números e tabuadas maiores) e cada erro ou conta que cai desce um.
+Contas mais difíceis caem mais devagar (de 7 a 12 s). A rodada tem 20 contas e termina com estrelas, pontos,
+nível alcançado e o relatório (PDF e e-mail) com as contas para revisar, agrupadas por operação.
+As faixas de números de cada nível estão em `FAIXAS` e `FATORES` no `jogo.js`.
 
 ## Chuva de Erros
 

@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -77,6 +77,11 @@
           <span class="jogo-card-nome">Chuva de Erros</span>
           <span class="jogo-card-texto">Pegue as palavras antes que sumam!</span>
         </button>
+        <button class="jogo-card" id="btn-mat" type="button" style="--c:#0b3d91">
+          <span class="jogo-card-icone">🔢</span>
+          <span class="jogo-card-nome">Chuva de Matemática</span>
+          <span class="jogo-card-texto">Responda a conta antes que ela caia!</span>
+        </button>
       </div>
       <div class="linha-botoes">
         <button class="btn-sec btn-instalar" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
@@ -124,6 +129,40 @@
         <div class="chuva-info"><span id="chuva-restam"></span><span id="chuva-velocidade"></span></div>
         <div class="chuva-contagem" id="chuva-contagem"></div>
       </div>
+    </section>
+
+    <!-- Chuva de Matemática: escolha das operações -->
+    <section class="tela" id="tela-mat-menu">
+      <h2 class="subtitulo">🔢 Chuva de Matemática</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-mat"></div>
+        <div class="balao balao-esq">
+          As contas vão cair do céu, <b>uma de cada vez</b>! Toque na resposta certa antes que a conta chegue ao chão.
+          Acertou? A próxima fica <b>mais difícil</b>. Errou? Ela fica <b>mais fácil</b>. 🧠
+        </div>
+      </div>
+      <div class="cartao cartao-chuva">
+        <h3 class="chuva-pergunta">Quais contas vão cair?</h3>
+        <div class="mat-ops" id="mat-ops"></div>
+        <p class="erro-login" id="mat-erro" role="alert"></p>
+        <button class="btn-grande" id="btn-mat-comecar" type="button">Começar ▶</button>
+      </div>
+      <button class="btn-sec" id="mat-voltar" type="button">← Início</button>
+    </section>
+
+    <!-- Chuva de Matemática: o jogo -->
+    <section class="tela" id="tela-mat">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="mat-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="mat-nivel"></span>
+        <span class="chuva-placar"><span id="mat-pontos">0</span> pts <span class="chuva-combo" id="mat-combo"></span></span>
+      </div>
+      <div class="chuva-arena mat-arena" id="mat-arena">
+        <div class="conta-caindo" id="mat-conta" hidden></div>
+        <div class="chuva-info"><span id="mat-restam"></span><span id="mat-tempo"></span></div>
+        <div class="chuva-contagem" id="mat-contagem"></div>
+      </div>
+      <div class="mat-respostas" id="mat-respostas"></div>
     </section>
 
     <!-- Área do professor: senha e e-mail que recebe os relatórios -->
@@ -245,9 +284,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=20"></script>
-  <script src="dados.js?v=20"></script>
-  <script src="jogo.js?v=20"></script>
+  <script src="plenix.js?v=21"></script>
+  <script src="dados.js?v=21"></script>
+  <script src="jogo.js?v=21"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

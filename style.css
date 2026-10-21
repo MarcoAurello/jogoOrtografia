@@ -909,3 +909,43 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
   .chuva-arena { height: 62vh; }
   .chuva-placar { font-size: 18px; }
 }
+
+/* ---------- Chuva de Matemática ---------- */
+.mat-ops { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.mat-ops .chuva-modo { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.mat-op-sinal { font-family: 'Fredoka', sans-serif; font-size: 34px; font-weight: 700; line-height: 1; }
+.mat-arena { height: min(48vh, 430px); }
+.conta-caindo {
+  position: absolute; top: 0; left: 50%; z-index: 1;
+  padding: 10px 26px;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(30px, 6vw, 46px);
+  color: var(--primaria-escura); white-space: nowrap;
+  background: var(--branco);
+  border: 4px solid var(--primaria);
+  border-radius: 24px;
+  box-shadow: 0 5px 0 rgba(11, 46, 102, 0.25);
+  will-change: transform;
+}
+.conta-caindo.acertou { background: var(--verde); border-color: #1d6b3d; color: var(--branco); animation: gota-pegou 0.9s ease-out forwards; }
+.conta-caindo.errou { background: #fdecea; border-color: var(--vermelho); color: #b42318; }
+.mat-respostas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 14px; }
+.mat-resposta {
+  padding: 14px 6px;
+  font-family: 'Fredoka', sans-serif; font-size: clamp(26px, 4.5vw, 36px); font-weight: 700;
+  color: var(--branco);
+  background: var(--primaria);
+  border-radius: 20px;
+  box-shadow: 0 6px 0 var(--primaria-escura);
+  transition: transform 0.1s;
+}
+.mat-resposta:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--primaria-escura); }
+.mat-resposta:disabled { cursor: default; }
+.mat-resposta.certa { background: var(--verde); box-shadow: 0 6px 0 #1d6b3d; }
+.mat-resposta.errada { background: var(--vermelho); box-shadow: 0 6px 0 #8e1b1b; animation: tremer 0.4s ease; }
+.mat-resposta.apagada { opacity: 0.45; }
+
+@media (max-width: 720px) {
+  .mat-ops { grid-template-columns: repeat(2, 1fr); }
+  .mat-arena { height: 42vh; }
+  .mat-respostas { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+}

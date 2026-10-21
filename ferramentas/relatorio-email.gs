@@ -17,6 +17,7 @@ function doPost(e) {
     if (MailApp.getRemainingDailyQuota() < 1) return resposta({ ok: false, erro: 'cota' });
 
     const aluno = texto(d.aluno, 40);
+    const assunto = d.assunto === 'Matemática' ? 'Matemática' : 'Ortografia';
     const missao = texto(d.missao, 60);
     const data = texto(d.data, 20);
     const grupos = lista(d.grupos).map((g) => ({ titulo: texto(g.titulo, 60), qtd: Number(g.qtd) || 0, regra: texto(g.regra, 400) }));
@@ -26,8 +27,8 @@ function doPost(e) {
     MailApp.sendEmail({
       to: para,
       name: 'Jogos Educacionais',
-      subject: `Relatório de Ortografia: ${aluno} (${missao})`,
-      htmlBody: montarEmail({ aluno, missao, data, acertos, total, estrelas, grupos, palavras }),
+      subject: `Relatório de ${assunto}: ${aluno} (${missao})`,
+      htmlBody: montarEmail({ assunto, aluno, missao, data, acertos, total, estrelas, grupos, palavras }),
     });
     guardarNaPlanilha([new Date(), para, aluno, missao, acertos, total, estrelas,
       palavras.map((p) => `${p.certa} (${p.tentou.join(', ')})`).join('; ')]);
@@ -40,17 +41,17 @@ function doPost(e) {
 function montarEmail(r) {
   const h = esc;
   const dificuldades = r.grupos.length
-    ? r.grupos.map((g) => `<p style="margin:10px 0 2px"><b>${h(g.titulo)}</b>: ${g.qtd} ${g.qtd === 1 ? 'palavra' : 'palavras'} com erro</p>`
+    ? r.grupos.map((g) => `<p style="margin:10px 0 2px"><b>${h(g.titulo)}</b>: ${g.qtd} ${r.assunto === 'Matemática' ? 'conta' : 'palavra'}${g.qtd === 1 ? '' : 's'} com erro</p>`
       + `<p style="margin:0;color:#475569">${h(g.regra)}</p>`).join('')
     : '<p>Nenhuma dificuldade nesta missão: todas as palavras certas de primeira! 🎉</p>';
   const linhas = r.palavras.map((p) => `<tr><td style="padding:6px 10px;color:#1e7846;font-weight:bold">${h(p.certa.toUpperCase())}</td>`
     + `<td style="padding:6px 10px;color:#c8323c;text-decoration:line-through">${h(p.tentou.join(', ').toUpperCase())}</td></tr>`).join('');
   const tabela = linhas
-    ? `<h3 style="color:#1565c0">Palavras para revisar</h3><table style="border-collapse:collapse;border:1px solid #dce9f8">`
-      + `<tr style="background:#1565c0;color:#fff"><th style="padding:6px 10px;text-align:left">Jeito certo</th><th style="padding:6px 10px;text-align:left">O aluno tentou</th></tr>${linhas}</table>`
+    ? `<h3 style="color:#1565c0">${r.assunto === 'Matemática' ? 'Contas' : 'Palavras'} para revisar</h3><table style="border-collapse:collapse;border:1px solid #dce9f8">`
+      + `<tr style="background:#1565c0;color:#fff"><th style="padding:6px 10px;text-align:left">${r.assunto === 'Matemática' ? 'Conta certa' : 'Jeito certo'}</th><th style="padding:6px 10px;text-align:left">${r.assunto === 'Matemática' ? 'O aluno respondeu' : 'O aluno tentou'}</th></tr>${linhas}</table>`
     : '';
   return `<div style="font-family:Arial,sans-serif;color:#13294b;max-width:640px">`
-    + `<h2 style="color:#1565c0;margin-bottom:4px">Relatório de Ortografia</h2>`
+    + `<h2 style="color:#1565c0;margin-bottom:4px">Relatório de ${r.assunto}</h2>`
     + `<p style="margin-top:0;color:#64748b">Jogos Educacionais: treinando palavras que mais erramos</p>`
     + `<p><b>Aluno:</b> ${h(r.aluno)}<br><b>Missão:</b> ${h(r.missao)}<br><b>Data:</b> ${h(r.data)}<br>`
     + `<b>Acertos de primeira:</b> ${r.acertos} de ${r.total} · <b>Estrelas:</b> ${r.estrelas} de 3</p>`
