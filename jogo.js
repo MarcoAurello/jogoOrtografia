@@ -138,17 +138,17 @@
 
   // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
   const ENFEITES = {
-    lapis: (c) => `<svg viewBox="0 0 40 120" width="34"><rect x="8" y="22" width="24" height="70" rx="3" fill="${c}" stroke="#5b1650" stroke-width="3"/><rect x="8" y="10" width="24" height="14" rx="3" fill="#ff8fb1" stroke="#5b1650" stroke-width="3"/><rect x="8" y="22" width="24" height="6" fill="#c9c9c9" stroke="#5b1650" stroke-width="2"/><path d="M8 92 L20 116 L32 92 Z" fill="#f6d2a4" stroke="#5b1650" stroke-width="3"/><path d="M16 108 L20 116 L24 108 Z" fill="#5b1650"/></svg>`,
-    livro: (c) => `<svg viewBox="0 0 80 90" width="56"><rect x="8" y="6" width="62" height="78" rx="6" fill="${c}" stroke="#5b1650" stroke-width="3.5"/><rect x="62" y="10" width="10" height="70" rx="3" fill="#fff" stroke="#5b1650" stroke-width="3"/><rect x="18" y="20" width="38" height="16" rx="3" fill="#fff" opacity=".85"/><line x1="16" y1="6" x2="16" y2="84" stroke="#5b1650" stroke-width="3"/></svg>`,
-    estrela: (c) => `<svg viewBox="0 0 60 60" width="40"><path d="M30 4 L37 22 L56 22 L41 34 L47 54 L30 42 L13 54 L19 34 L4 22 L23 22 Z" fill="${c}" stroke="#5b1650" stroke-width="3.5" stroke-linejoin="round"/></svg>`,
-    bolinha: (c) => `<svg viewBox="0 0 60 40" width="46"><path d="M8 24 Q4 6 24 8 Q36 2 48 12 Q60 26 44 32 Q30 40 18 34 Q10 32 8 24 Z" fill="${c}" stroke="#5b1650" stroke-width="3"/></svg>`,
-    brilho: (c) => `<svg viewBox="0 0 40 40" width="24"><path d="M20 2 Q22 18 38 20 Q22 22 20 38 Q18 22 2 20 Q18 18 20 2 Z" fill="${c}" stroke="#5b1650" stroke-width="2.5"/></svg>`,
+    lapis: (c) => `<svg viewBox="0 0 40 120" width="34"><rect x="8" y="22" width="24" height="70" rx="3" fill="${c}" stroke="#0b2e66" stroke-width="3"/><rect x="8" y="10" width="24" height="14" rx="3" fill="#e53935" stroke="#0b2e66" stroke-width="3"/><rect x="8" y="22" width="24" height="6" fill="#c9c9c9" stroke="#0b2e66" stroke-width="2"/><path d="M8 92 L20 116 L32 92 Z" fill="#f6d2a4" stroke="#0b2e66" stroke-width="3"/><path d="M16 108 L20 116 L24 108 Z" fill="#0b2e66"/></svg>`,
+    livro: (c) => `<svg viewBox="0 0 80 90" width="56"><rect x="8" y="6" width="62" height="78" rx="6" fill="${c}" stroke="#0b2e66" stroke-width="3.5"/><rect x="62" y="10" width="10" height="70" rx="3" fill="#fff" stroke="#0b2e66" stroke-width="3"/><rect x="18" y="20" width="38" height="16" rx="3" fill="#fff" opacity=".85"/><line x1="16" y1="6" x2="16" y2="84" stroke="#0b2e66" stroke-width="3"/></svg>`,
+    estrela: (c) => `<svg viewBox="0 0 60 60" width="40"><path d="M30 4 L37 22 L56 22 L41 34 L47 54 L30 42 L13 54 L19 34 L4 22 L23 22 Z" fill="${c}" stroke="#0b2e66" stroke-width="3.5" stroke-linejoin="round"/></svg>`,
+    bolinha: (c) => `<svg viewBox="0 0 60 40" width="46"><path d="M8 24 Q4 6 24 8 Q36 2 48 12 Q60 26 44 32 Q30 40 18 34 Q10 32 8 24 Z" fill="${c}" stroke="#0b2e66" stroke-width="3"/></svg>`,
+    brilho: (c) => `<svg viewBox="0 0 40 40" width="24"><path d="M20 2 Q22 18 38 20 Q22 22 20 38 Q18 22 2 20 Q18 18 20 2 Z" fill="${c}" stroke="#0b2e66" stroke-width="2.5"/></svg>`,
   };
   const POSICOES = [
     ['bolinha', '#f7df1c', 1, 3, -20], ['lapis', '#f7df1c', 9, 1, 35], ['brilho', '#3cc8e8', 17, 4, 0], ['livro', '#3cc8e8', 22, 1, -8],
     ['estrela', '#f7df1c', 36, 2, 10], ['estrela', '#f7df1c', 70, 2, -10], ['lapis', '#f7df1c', 63, 1, -35], ['livro', '#3cc8e8', 80, 1, 8],
-    ['bolinha', '#a2238e', 92, 3, 15], ['bolinha', '#a2238e', 1, 32, 20], ['lapis', '#ff8fb1', 1, 55, -10], ['bolinha', '#a2238e', 2, 84, -15],
-    ['lapis', '#f7df1c', 95, 55, 15], ['bolinha', '#f7df1c', 94, 32, -20], ['bolinha', '#a2238e', 95, 85, 10], ['brilho', '#a2238e', 8, 92, 0],
+    ['bolinha', '#e53935', 92, 3, 15], ['bolinha', '#1565c0', 1, 32, 20], ['lapis', '#e53935', 1, 55, -10], ['bolinha', '#e53935', 2, 84, -15],
+    ['lapis', '#f7df1c', 95, 55, 15], ['bolinha', '#f7df1c', 94, 32, -20], ['bolinha', '#1565c0', 95, 85, 10], ['brilho', '#e53935', 8, 92, 0],
     ['estrela', '#3cc8e8', 88, 92, 12], ['brilho', '#f7df1c', 50, 96, 0],
   ];
   $('moldura').innerHTML = POSICOES.map(([tipo, cor, x, y, giro], i) =>
@@ -213,7 +213,7 @@
 
   // missão especial com as palavras de todas as missões, misturadas
   const TODAS = {
-    id: 'todas', titulo: 'Todas as palavras', icone: '🌟', cor: '#f08a24', todas: true,
+    id: 'todas', titulo: 'Todas as palavras', icone: '🌟', cor: '#1565c0', todas: true,
     regra: 'Aqui aparecem as <b>80 palavras</b> de todas as missões, misturadas! Use todos os segredos que você aprendeu. Se cansar, toque em <b>Terminar e ver relatório</b> quando quiser.',
   };
 
@@ -453,7 +453,7 @@
   function soltarConfete() {
     const c = $('confete');
     c.innerHTML = '';
-    const itens = ['⭐', '🎉', '✨', '💜', '💛', '💙'];
+    const itens = ['⭐', '🎉', '✨', '❤️', '💛', '💙'];
     for (let i = 0; i < 36; i++) {
       const s = document.createElement('span');
       s.textContent = sortear(itens);
@@ -490,7 +490,7 @@
     if (!lib || !lib.jsPDF) { window.print(); return; }   // sem a biblioteca: usa "Salvar como PDF" do navegador
     const { rel, estrelas, missao: mis, data } = ultimoRelatorio;
     const doc = new lib.jsPDF({ unit: 'mm', format: 'a4' });
-    const ROXO = [162, 35, 142], TEXTO = [59, 33, 72], CINZA = [120, 106, 128];
+    const AZUL = [21, 101, 192], TEXTO = [19, 41, 75], CINZA = [100, 116, 139];
     const L = 18, LARG = 210 - 2 * L;
     let y = 16;
 
@@ -503,15 +503,15 @@
 
     // cabeçalho com o logo
     try {
-      const logo = await imagemComoDataURL('assets/logo-pleno.png');
+      const logo = await imagemComoDataURL('assets/logo-pe.png');
       doc.addImage(logo.url, 'PNG', L, y - 2, 28, 28 * logo.h / logo.w, undefined, 'FAST');
     } catch (e) { /* sem logo */ }
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.setTextColor(...ROXO);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.setTextColor(...AZUL);
     doc.text('Relatório de Ortografia', L + 34, y + 7);
     doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.setTextColor(...CINZA);
     doc.text('Jogo de Ortografia do Pleno', L + 34, y + 14);
     y += 30;
-    doc.setDrawColor(...ROXO); doc.setLineWidth(0.6); doc.line(L, y, L + LARG, y); y += 8;
+    doc.setDrawColor(...AZUL); doc.setLineWidth(0.6); doc.line(L, y, L + LARG, y); y += 8;
 
     paragrafo(`Aluno: ${aluno}`, 12, 'bold');
     paragrafo(`Data: ${data.toLocaleDateString('pt-BR')}    Missão: ${mis.titulo}`, 11);
@@ -519,10 +519,10 @@
     y += 4;
 
     if (!rel.comErro.length) {
-      paragrafo('Parabéns! Nenhuma dificuldade nesta missão: todas as palavras certas de primeira.', 13, 'bold', ROXO);
+      paragrafo('Parabéns! Nenhuma dificuldade nesta missão: todas as palavras certas de primeira.', 13, 'bold', AZUL);
     } else {
       novaPaginaSePrecisar(14);
-      paragrafo('Principais dificuldades', 15, 'bold', ROXO); y += 1;
+      paragrafo('Principais dificuldades', 15, 'bold', AZUL); y += 1;
       for (const g of rel.grupos) {
         novaPaginaSePrecisar(24);
         paragrafo(`${g.m.titulo} - ${g.itens.length} ${g.itens.length === 1 ? 'palavra' : 'palavras'} com erro`, 12, 'bold');
@@ -533,10 +533,10 @@
 
       // tabela: jeito certo x o que o aluno tentou
       y += 2; novaPaginaSePrecisar(20);
-      paragrafo('Palavras para revisar', 15, 'bold', ROXO); y += 1;
+      paragrafo('Palavras para revisar', 15, 'bold', AZUL); y += 1;
       const col2 = L + 70;
       const cabecalho = () => {
-        doc.setFillColor(...ROXO); doc.rect(L, y - 5, LARG, 8, 'F');
+        doc.setFillColor(...AZUL); doc.rect(L, y - 5, LARG, 8, 'F');
         doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(255, 255, 255);
         doc.text('Jeito certo', L + 3, y); doc.text('O aluno tentou', col2 + 3, y);
         y += 7;
@@ -544,7 +544,7 @@
       cabecalho();
       rel.comErro.forEach((r, i) => {
         if (y + 8 > 278) { doc.addPage(); y = 20; cabecalho(); }
-        if (i % 2 === 0) { doc.setFillColor(248, 238, 247); doc.rect(L, y - 5, LARG, 8, 'F'); }
+        if (i % 2 === 0) { doc.setFillColor(234, 243, 252); doc.rect(L, y - 5, LARG, 8, 'F'); }
         doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(30, 120, 70);
         doc.text(paraPDF(r.certa.toUpperCase()), L + 3, y);
         doc.setFont('helvetica', 'normal'); doc.setTextColor(200, 50, 60);

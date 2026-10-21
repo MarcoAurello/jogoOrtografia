@@ -1,10 +1,10 @@
-# Gera os ícones do app: fundo em degradê pastel, logo do Pleno e "ABC" em roxo.
+# Gera os ícones do app: fundo em degradê pastel, logo da Secretaria de Educação e "ABC" em amarelo.
 # Uso: powershell -ExecutionPolicy Bypass -File ferramentas\icones.ps1
 Add-Type -AssemblyName System.Drawing
 $raiz = Split-Path $PSScriptRoot -Parent
 $saida = Join-Path $raiz 'icons'
 New-Item -ItemType Directory -Force $saida | Out-Null
-$logo = [System.Drawing.Image]::FromFile((Join-Path $raiz 'assets\logo-pleno.png'))
+$logo = [System.Drawing.Image]::FromFile((Join-Path $raiz 'assets\logo-pe.png'))
 
 function Icone($tamanho, $escala, $arquivo, $cantos) {
   $bmp = New-Object System.Drawing.Bitmap $tamanho, $tamanho
@@ -15,7 +15,7 @@ function Icone($tamanho, $escala, $arquivo, $cantos) {
   $g.Clear([System.Drawing.Color]::Transparent)
 
   $area = New-Object System.Drawing.Rectangle 0, 0, $tamanho, $tamanho
-  $fundo = New-Object System.Drawing.Drawing2D.LinearGradientBrush $area, ([System.Drawing.Color]::FromArgb(255, 255, 243, 176)), ([System.Drawing.Color]::FromArgb(255, 240, 217, 255)), 45
+  $fundo = New-Object System.Drawing.Drawing2D.LinearGradientBrush $area, ([System.Drawing.Color]::FromArgb(255, 255, 246, 199)), ([System.Drawing.Color]::FromArgb(255, 184, 216, 255)), 45
   $forma = New-Object System.Drawing.Drawing2D.GraphicsPath
   if ($cantos) {
     $r = $tamanho * 0.22
@@ -33,14 +33,14 @@ function Icone($tamanho, $escala, $arquivo, $cantos) {
   $ly = ($tamanho - $bloco) / 2
   $g.DrawImage($logo, [float](($tamanho - $lw) / 2), [float]$ly, [float]$lw, [float]$lh)
 
-  # "ABC" embaixo, com contorno roxo-escuro
+  # "ABC" embaixo, com contorno azul-escuro
 
   $fonte = New-Object System.Drawing.Font('Arial Black', [float]$fs, [System.Drawing.FontStyle]::Bold, [System.Drawing.GraphicsUnit]::Pixel)
   $caminho = New-Object System.Drawing.Drawing2D.GraphicsPath
   $fmt = New-Object System.Drawing.StringFormat
   $fmt.Alignment = 'Center'
   $caminho.AddString('ABC', $fonte.FontFamily, [int]$fonte.Style, [float]$fs, (New-Object System.Drawing.RectangleF 0, ([float]($ly + $lh + $tamanho * 0.01)), $tamanho, $tamanho), $fmt)
-  $caneta = New-Object System.Drawing.Pen ([System.Drawing.Color]::FromArgb(255, 91, 22, 80)), ([float]($tamanho * 0.025))
+  $caneta = New-Object System.Drawing.Pen ([System.Drawing.Color]::FromArgb(255, 11, 46, 102)), ([float]($tamanho * 0.025))
   $caneta.LineJoin = 'Round'
   $g.DrawPath($caneta, $caminho)
   $g.FillPath((New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255, 247, 223, 28))), $caminho)

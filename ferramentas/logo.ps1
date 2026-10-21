@@ -1,8 +1,10 @@
 # Recorta o logo do Colégio Pleno da captura de tela: tira o fundo claro (vira transparente)
 # e corta as bordas vazias. Uso: powershell -ExecutionPolicy Bypass -File ferramentas\logo.ps1
+# Para outro logo: ... ferramentas\logo.ps1 assets\logo-pe-original.png assets\logo-pe.png
+param([string]$Entrada = 'assets\logo-original.png', [string]$Saida = 'assets\logo-pleno.png')
 $raiz = Split-Path $PSScriptRoot -Parent
-$entrada = Join-Path $raiz 'assets\logo-original.png'
-$saida = Join-Path $raiz 'assets\logo-pleno.png'
+$entrada = Join-Path $raiz $Entrada
+$saida = Join-Path $raiz $Saida
 
 Add-Type -ReferencedAssemblies System.Drawing -TypeDefinition @'
 using System;

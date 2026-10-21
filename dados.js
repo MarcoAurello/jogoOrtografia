@@ -15,7 +15,7 @@ const MISSOES = [
     ],
   },
   {
-    id: 'c-cedilha', titulo: 'Ç ou C?', icone: '🤡', cor: '#a2238e', tipo: 'completar', opcoes: ['Ç', 'C'],
+    id: 'c-cedilha', titulo: 'Ç ou C?', icone: '🤡', cor: '#e53935', tipo: 'completar', opcoes: ['Ç', 'C'],
     regra: 'O <b>Ç</b> só anda de mãos dadas com <b>A, O e U</b>: palha<b>ç</b>o, a<b>ç</b>úcar, cabe<b>ç</b>a. Com <b>E e I</b> usamos o C normal: <b>c</b>edo, <b>c</b>irco. Nenhuma palavra começa com Ç!',
     perguntas: [
       { molde: 'palha_o', resp: 'Ç', fig: '🤡' }, { molde: 'a_úcar', resp: 'Ç', fig: '🍬' },
@@ -26,7 +26,7 @@ const MISSOES = [
     ],
   },
   {
-    id: 'r-rr', titulo: 'R ou RR?', icone: '🐶', cor: '#f0a500', tipo: 'completar', opcoes: ['R', 'RR'],
+    id: 'r-rr', titulo: 'R ou RR?', icone: '🐶', cor: '#e0a100', tipo: 'completar', opcoes: ['R', 'RR'],
     regra: 'Um <b>R</b> sozinho entre vogais faz a língua tremer: ara<b>r</b>a, jaca<b>r</b>é. Dois <b>RR</b> juntinhos fazem o som forte: cacho<b>rr</b>o, te<b>rr</b>a. Nenhuma palavra começa com RR!',
     perguntas: [
       { molde: 'cacho_o', resp: 'RR', fig: '🐶' }, { molde: 'ca_o', resp: 'RR', fig: '🚗' },
@@ -37,7 +37,7 @@ const MISSOES = [
     ],
   },
   {
-    id: 'm-n', titulo: 'M ou N?', icone: '🥁', cor: '#2e9e5b', tipo: 'completar', opcoes: ['M', 'N'],
+    id: 'm-n', titulo: 'M ou N?', icone: '🥁', cor: '#1e4fb8', tipo: 'completar', opcoes: ['M', 'N'],
     regra: '<b>Antes de P e B, só M no meu coração!</b> Ta<b>m</b>bor, ca<b>m</b>po. Antes das outras letras, usamos o <b>N</b>: de<b>n</b>te, ve<b>n</b>to.',
     perguntas: [
       { molde: 'ta_bor', resp: 'M', fig: '🥁' }, { molde: 'ca_po', resp: 'M', fig: '🌾' },
@@ -48,7 +48,7 @@ const MISSOES = [
     ],
   },
   {
-    id: 'g-j', titulo: 'G ou J?', icone: '🦒', cor: '#e8484f', tipo: 'completar', opcoes: ['G', 'J'],
+    id: 'g-j', titulo: 'G ou J?', icone: '🦒', cor: '#c62828', tipo: 'completar', opcoes: ['G', 'J'],
     regra: 'Com <b>A, O e U</b>, o G tem som de "guê": <b>g</b>ato. Com <b>E e I</b>, o G pode ter som de "jê": <b>g</b>elo, <b>g</b>irafa. Mas o <b>J</b> também aparece: <b>j</b>anela, <b>j</b>iboia. Na dúvida, lembre da palavra que você já viu escrita!',
     perguntas: [
       { molde: '_irafa', resp: 'G', fig: '🦒' }, { molde: '_elo', resp: 'G', fig: '🧊' },
@@ -59,7 +59,7 @@ const MISSOES = [
     ],
   },
   {
-    id: 'x-ch', titulo: 'X ou CH?', icone: '☕', cor: '#7b4fc9', tipo: 'completar', opcoes: ['X', 'CH'],
+    id: 'x-ch', titulo: 'X ou CH?', icone: '☕', cor: '#0b3d91', tipo: 'completar', opcoes: ['X', 'CH'],
     regra: '<b>X</b> e <b>CH</b> podem ter o mesmo som: <b>ch</b>uva e <b>x</b>ícara. Uma dica que ajuda muito: depois de <b>ai, ei, ou</b>, quase sempre é <b>X</b>: cai<b>x</b>a, pei<b>x</b>e.',
     perguntas: [
       { molde: '_uva', resp: 'CH', fig: '🌧️' }, { molde: '_ave', resp: 'CH', fig: '🔑' },
@@ -70,7 +70,7 @@ const MISSOES = [
     ],
   },
   {
-    id: 'acentos', titulo: 'Acentos e til', icone: '🍞', cor: '#0aa3a3', tipo: 'escolher',
+    id: 'acentos', titulo: 'Acentos e til', icone: '🍞', cor: '#0a8fc2', tipo: 'escolher',
     regra: 'O <b>til (~)</b> deixa o som "pelo nariz": p<b>ã</b>o, m<b>ã</b>o. O <b>acento</b> muda o som da vogal: av<b>ó</b> (a vovó) e av<b>ô</b> (o vovô) são pessoas diferentes! Sem eles, a palavra fica errada.',
     perguntas: [
       { opcoes: ['pão', 'pao'], resp: 'pão', fig: '🍞' }, { opcoes: ['mão', 'mao'], resp: 'mão', fig: '✋' },
@@ -81,7 +81,7 @@ const MISSOES = [
     ],
   },
   {
-    id: 'detetive', titulo: 'Detetive de Erros', icone: '🔍', cor: '#d6336c', tipo: 'detetive',
+    id: 'detetive', titulo: 'Detetive de Erros', icone: '🔍', cor: '#e07b00', tipo: 'detetive',
     regra: 'Caça aos <b>monstros da escrita</b>! Em cada rodada, uma palavra está escrita errada. Lembre: nenhuma palavra começa com <b>SS, Ç ou RR</b>, e antes de <b>P e B</b> vem <b>M</b>. Ache o monstro!',
     perguntas: [
       { palavras: ['mesa', 'osso', 'ssapo'], errada: 'ssapo', certa: 'sapo', dica: 'Nenhuma palavra começa com SS!' },

@@ -9,7 +9,7 @@
      'festa'    fim da missão: festejando com confete */
 function plenixHTML(estado = 'oi') {
   const confete = estado === 'festa'
-    ? ['🎉', '⭐', '✨', '💛', '💙', '💜'].map((e, i) => `<span class="px-brilho b${i}">${e}</span>`).join('')
+    ? ['🎉', '⭐', '✨', '💛', '💙', '❤️'].map((e, i) => `<span class="px-brilho b${i}">${e}</span>`).join('')
     : '';
   return `<div class="plenix plenix-${estado}" role="img" aria-label="Plenix">
     <div class="plenix-sprite"></div>
