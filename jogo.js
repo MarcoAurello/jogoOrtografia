@@ -211,19 +211,55 @@
     telaLogin();
   };
 
-  // ---------- Área do professor: e-mail que recebe os relatórios ----------
-  // A senha também é conferida no próprio aparelho: só evita que os alunos mexam.
+  // ---------- Área do professor: e-mails dos relatórios e questionários da aula ----------
+  // Tudo fica na planilha do Google, pelo script (ferramentas/relatorio-email.gs): aba "Configuração" com os e-mails
+  // e uma aba "Q: nome" para cada questionário. O aparelho guarda só uma cópia, para funcionar sem internet.
+  // A senha é conferida aqui (para os alunos não mexerem) e de novo no script, que é quem grava na planilha.
   const SENHA_PROFESSOR = 'app0707';
-  const CHAVE_EMAIL = 'pleno-ortografia:email-professor';
-  const CHAVE_EMAILS_JOGOS = 'pleno-ortografia:emails-jogos';   // { jogo: e-mail } só dos jogos com e-mail próprio
+  const CHAVE_CONFIG = 'pleno-ortografia:config-emails';         // cópia da aba "Configuração" { jogo: e-mail }
+  const CHAVE_EMAIL = 'pleno-ortografia:email-professor';        // versões antigas: e-mail só no aparelho
+  const CHAVE_EMAILS_JOGOS = 'pleno-ortografia:emails-jogos';
   const JOGOS_EMAIL = [['ortografia', '📚 Jogo de Ortografia'], ['chuva', '🌧️ Chuva de Erros'], ['matematica', '🔢 Chuva de Matemática'],
-    ['tiro', '🎯 Tiro Certo'], ['peso', '⚖️ Peso Certo']];
-  const lerEmail = () => { try { return localStorage.getItem(CHAVE_EMAIL) || ''; } catch (e) { return ''; } };
-  const lerEmailsJogos = () => { try { return JSON.parse(localStorage.getItem(CHAVE_EMAILS_JOGOS)) || {}; } catch (e) { return {}; } };
+    ['tiro', '🎯 Tiro Certo'], ['peso', '⚖️ Peso Certo'], ['questionario', '📝 Questionário da aula']];
+  let senhaProfessor = '';   // a senha digitada, mandada ao script para gravar na planilha
+  const lerJSON = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) || padrao; } catch (e) { return padrao; } };
+  const gravarJSON = (chave, valor) => { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) { /* sem armazenamento */ } };
   const emailValido = (t) => /^[^\s@<>,;]+@[^\s@<>,;]+\.[a-z]{2,}$/i.test(t);
-  const jogoDaMissao = (mis) => (mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
+  const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
+
+  // e-mails conhecidos neste aparelho: os da planilha (copiados) por cima dos antigos, salvos só aqui
+  function configEmails() {
+    let antigo = {};
+    try { antigo = { ...lerJSON(CHAVE_EMAILS_JOGOS, {}), ...(localStorage.getItem(CHAVE_EMAIL) ? { geral: localStorage.getItem(CHAVE_EMAIL) } : {}) }; } catch (e) { /* sem armazenamento */ }
+    return { ...antigo, ...lerJSON(CHAVE_CONFIG, {}) };
+  }
   // o e-mail próprio do jogo, ou o geral
-  const emailDoJogo = (mis) => lerEmailsJogos()[jogoDaMissao(mis)] || lerEmail();
+  const emailDoJogo = (mis) => { const c = configEmails(); return c[jogoDaMissao(mis)] || c.geral || ''; };
+
+  // conversa com o script do Google: leituras por GET, gravações (com a senha) por POST
+  async function lerDoScript(acao, extra = '') {
+    const r = await fetch(`${URL_RELATORIO}?acao=${acao}${extra}`);
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.erro || 'erro');
+    return j;
+  }
+  async function gravarNoScript(dados) {
+    const r = await fetch(URL_RELATORIO, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ chave: CHAVE_RELATORIO, senha: senhaProfessor, ...dados }) });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.erro || 'erro');
+    return j;
+  }
+
+  // traz a aba "Configuração" para o aparelho (ao abrir o jogo e na Área do professor)
+  async function sincronizarConfig() {
+    if (!URL_RELATORIO) return false;
+    try {
+      const { config } = await lerDoScript('config');
+      gravarJSON(CHAVE_CONFIG, config || {});
+      return true;
+    } catch (e) { return false; }
+  }
 
   function avisoProfessor(texto, ok) {
     $('aviso-email').textContent = texto;
@@ -233,13 +269,23 @@
   function telaProfessor() {
     $('form-senha-professor').hidden = false;
     $('form-email-professor').hidden = true;
+    $('painel-questionarios').hidden = true;
     $('professor-senha').value = '';
     $('erro-professor').textContent = '';
     mostrar('tela-professor');
     setTimeout(() => $('professor-senha').focus(), 300);
   }
 
-  $('form-senha-professor').onsubmit = (e) => {
+  function preencherEmails() {
+    const c = configEmails();
+    $('professor-email').value = c.geral || '';
+    $('campos-emails-jogos').innerHTML = JOGOS_EMAIL.map(([id, nome]) => `
+      <label class="campo campo-jogo"><span>${nome}</span>
+        <input type="email" data-jogo="${id}" maxlength="120" placeholder="usa o e-mail geral" value="${seguro(c[id] || '')}"></label>`).join('');
+    $('emails-jogos').open = JOGOS_EMAIL.some(([id]) => c[id]);
+  }
+
+  $('form-senha-professor').onsubmit = async (e) => {
     e.preventDefault();
     if ($('professor-senha').value.trim() !== SENHA_PROFESSOR) {
       $('erro-professor').textContent = 'Senha incorreta. 🔒';
@@ -247,47 +293,191 @@
       return;
     }
     SOM.certo();
+    senhaProfessor = $('professor-senha').value.trim();
     $('form-senha-professor').hidden = true;
     $('form-email-professor').hidden = false;
-    $('professor-email').value = lerEmail();
-    const porJogo = lerEmailsJogos();
-    $('campos-emails-jogos').innerHTML = JOGOS_EMAIL.map(([id, nome]) => `
-      <label class="campo campo-jogo"><span>${nome}</span>
-        <input type="email" data-jogo="${id}" maxlength="120" placeholder="usa o e-mail geral" value="${seguro(porJogo[id] || '')}"></label>`).join('');
-    $('emails-jogos').open = Object.keys(porJogo).length > 0;
-    const algum = lerEmail() || Object.keys(porJogo).length;
-    if (!URL_RELATORIO) avisoProfessor('O envio por e-mail ainda não foi ligado no jogo (falta o endereço do script).');
-    else avisoProfessor(algum ? 'Os relatórios estão indo para os e-mails abaixo.' : 'Nenhum e-mail salvo: os relatórios não são enviados.', !!algum);
-    $('professor-email').focus();
+    $('painel-questionarios').hidden = false;
+    preencherEmails();
+    if (!URL_RELATORIO) { avisoProfessor('O envio por e-mail ainda não foi ligado no jogo (falta o endereço do script).'); return; }
+    avisoProfessor('Buscando os e-mails na planilha…');
+    const ok = await sincronizarConfig();
+    preencherEmails();
+    const algum = Object.keys(configEmails()).length;
+    if (!ok) avisoProfessor('Sem conexão com a planilha: mostrando o que está salvo neste aparelho.');
+    else avisoProfessor(algum ? 'Os relatórios vão para os e-mails abaixo (salvos na planilha).' : 'Nenhum e-mail salvo: os relatórios não são enviados.', !!algum);
+    listarQuestionariosProfessor();
   };
 
-  $('form-email-professor').onsubmit = (e) => {
+  $('form-email-professor').onsubmit = async (e) => {
     e.preventDefault();
-    const email = $('professor-email').value.trim().toLowerCase();
-    const porJogo = {};
+    const config = {};
+    const geral = $('professor-email').value.trim().toLowerCase();
+    if (geral && !emailValido(geral)) { avisoProfessor('Digite um e-mail geral válido, como nome@exemplo.com.'); return; }
+    if (geral) config.geral = geral;
     for (const campo of document.querySelectorAll('#campos-emails-jogos input')) {
       const v = campo.value.trim().toLowerCase();
       if (!v) continue;
       if (!emailValido(v)) { avisoProfessor(`O e-mail de "${campo.closest('label').querySelector('span').textContent}" não é válido.`); campo.focus(); return; }
-      porJogo[campo.dataset.jogo] = v;
+      config[campo.dataset.jogo] = v;
     }
-    if (email && !emailValido(email)) { avisoProfessor('Digite um e-mail geral válido, como nome@exemplo.com.'); return; }
-    if (!email && !Object.keys(porJogo).length) { avisoProfessor('Digite pelo menos um e-mail.'); return; }
+    if (!Object.keys(config).length) { avisoProfessor('Digite pelo menos um e-mail.'); return; }
+    avisoProfessor('Salvando na planilha…');
     try {
-      if (email) localStorage.setItem(CHAVE_EMAIL, email); else localStorage.removeItem(CHAVE_EMAIL);
-      localStorage.setItem(CHAVE_EMAILS_JOGOS, JSON.stringify(porJogo));
-    } catch (err) { avisoProfessor('Este aparelho não deixa salvar o e-mail.'); return; }
-    SOM.certo();
-    const semEmail = JOGOS_EMAIL.filter(([id]) => !porJogo[id] && !email).map(([, nome]) => nome);
-    avisoProfessor(`Salvo! ✔${semEmail.length ? ` Sem e-mail (não enviam): ${semEmail.join(', ')}.` : ''}`, true);
-    enviarFila();
+      const j = await gravarNoScript({ acao: 'salvarConfig', config });
+      gravarJSON(CHAVE_CONFIG, j.config || config);
+      try { localStorage.removeItem(CHAVE_EMAIL); localStorage.removeItem(CHAVE_EMAILS_JOGOS); } catch (err) { /* sem armazenamento */ }
+      SOM.certo();
+      const semEmail = config.geral ? [] : JOGOS_EMAIL.filter(([id]) => !config[id]).map(([, nome]) => nome);
+      avisoProfessor(`Salvo na planilha! Vale para todos os aparelhos. ✔${semEmail.length ? ` Sem e-mail (não enviam): ${semEmail.join(', ')}.` : ''}`, true);
+      enviarFila();
+    } catch (err) {
+      avisoProfessor(String(err.message) === 'senha'
+        ? 'A planilha não aceitou a senha: confira a SENHA_PROFESSOR no script do Google.'
+        : 'Não deu para salvar na planilha (sem internet ou script desatualizado). Tente de novo.');
+    }
   };
 
-  $('btn-remover-email').onclick = () => {
-    try { localStorage.removeItem(CHAVE_EMAIL); localStorage.removeItem(CHAVE_EMAILS_JOGOS); } catch (e) { /* sem armazenamento */ }
-    $('professor-email').value = '';
-    document.querySelectorAll('#campos-emails-jogos input').forEach((c) => { c.value = ''; });
-    avisoProfessor('Pronto: os relatórios não serão mais enviados por e-mail.');
+  $('btn-remover-email').onclick = async () => {
+    try {
+      await gravarNoScript({ acao: 'salvarConfig', config: {} });
+      gravarJSON(CHAVE_CONFIG, {});
+      try { localStorage.removeItem(CHAVE_EMAIL); localStorage.removeItem(CHAVE_EMAILS_JOGOS); } catch (e) { /* sem armazenamento */ }
+      preencherEmails();
+      avisoProfessor('Pronto: os relatórios não serão mais enviados por e-mail.');
+    } catch (err) { avisoProfessor('Não deu para apagar na planilha (sem internet?). Tente de novo.'); }
+  };
+
+  // ---------- Questionários da aula: cadastro pelo professor ----------
+  function avisoQuiz(texto, ok) {
+    $('aviso-quiz').textContent = texto;
+    $('aviso-quiz').classList.toggle('aviso-ok', !!ok);
+  }
+
+  async function listarQuestionariosProfessor() {
+    const caixa = $('lista-quiz-prof');
+    caixa.innerHTML = '<p class="quiz-status">Buscando questionários…</p>';
+    try {
+      const { lista } = await lerDoScript('questionarios');
+      gravarJSON(CHAVE_QUIZ_LISTA, lista);
+      caixa.innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhum questionário ainda. Crie o primeiro abaixo!</p>';
+      for (const q of lista) {
+        const item = document.createElement('div');
+        item.className = 'quiz-item';
+        item.innerHTML = `<span class="quiz-item-nome">${seguro(q.titulo)}</span><span class="quiz-item-qtd">${q.perguntas} pergunta${q.perguntas === 1 ? '' : 's'}</span>`;
+        const apagar = document.createElement('button');
+        apagar.type = 'button';
+        apagar.className = 'quiz-excluir';
+        apagar.textContent = '🗑️ Excluir';
+        apagar.onclick = async () => {
+          if (!window.confirm(`Excluir o questionário "${q.titulo}"? A aba dele será apagada da planilha.`)) return;
+          try { await gravarNoScript({ acao: 'excluirQuestionario', id: q.id }); listarQuestionariosProfessor(); }
+          catch (e) { avisoQuiz('Não deu para excluir (sem internet?). Tente de novo.'); }
+        };
+        item.append(apagar);
+        caixa.append(item);
+      }
+    } catch (e) {
+      caixa.innerHTML = '<p class="quiz-status">Não deu para buscar os questionários (sem internet ou script desatualizado).</p>';
+    }
+  }
+
+  // editor de perguntas: um bloco por pergunta (1 certa e até 3 erradas)
+  function blocoPergunta(q = { pergunta: '', certa: '', erradas: [] }) {
+    const div = document.createElement('div');
+    div.className = 'quiz-bloco';
+    const n = $('quiz-editor').children.length + 1;
+    div.innerHTML = `<div class="quiz-bloco-topo"><span>Pergunta ${n}</span><button class="quiz-tirar" type="button">✕ tirar</button></div>
+      <input class="q-pergunta" maxlength="300" placeholder="Pergunta" value="${seguro(q.pergunta)}">
+      <input class="q-certa certa" maxlength="160" placeholder="✔ Resposta certa" value="${seguro(q.certa)}">
+      ${[0, 1, 2].map((i) => `<input class="q-errada errada" maxlength="160" placeholder="✘ Resposta errada ${i + 1}" value="${seguro(q.erradas[i] || '')}">`).join('')}`;
+    div.querySelector('.quiz-tirar').onclick = () => { div.remove(); renumerarPerguntas(); };
+    $('quiz-editor').append(div);
+  }
+  function renumerarPerguntas() {
+    [...$('quiz-editor').children].forEach((b, i) => { b.querySelector('.quiz-bloco-topo span').textContent = `Pergunta ${i + 1}`; });
+  }
+  $('btn-quiz-mais').onclick = () => blocoPergunta();
+
+  // planilha enviada pelo professor: A pergunta, B certa, C a E erradas (a primeira linha pode ser cabeçalho)
+  function linhasParaPerguntas(linhas) {
+    const limpas = linhas.map((l) => (l || []).map((c) => String(c == null ? '' : c).trim()));
+    if (limpas.length && /pergunta/i.test(limpas[0][0] || '')) limpas.shift();
+    return limpas.filter((l) => l[0] && l[1] && (l[2] || l[3] || l[4]))
+      .map((l) => ({ pergunta: l[0], certa: l[1], erradas: [l[2], l[3], l[4]].filter(Boolean) }));
+  }
+  function lerCSV(texto) {
+    const sep = (texto.split('\n')[0].match(/;/g) || []).length > (texto.split('\n')[0].match(/,/g) || []).length ? ';' : texto.includes('\t') ? '\t' : ',';
+    const linhas = [];
+    let linha = [], campo = '', aspas = false;
+    for (let i = 0; i < texto.length; i++) {
+      const c = texto[i];
+      if (aspas) {
+        if (c === '"' && texto[i + 1] === '"') { campo += '"'; i++; } else if (c === '"') aspas = false; else campo += c;
+      } else if (c === '"') aspas = true;
+      else if (c === sep) { linha.push(campo); campo = ''; }
+      else if (c === '\n' || c === '\r') { if (c === '\r' && texto[i + 1] === '\n') i++; linha.push(campo); linhas.push(linha); linha = []; campo = ''; }
+      else campo += c;
+    }
+    if (campo || linha.length) { linha.push(campo); linhas.push(linha); }
+    return linhas;
+  }
+  // a biblioteca de planilhas (.xlsx) só é baixada quando o professor envia uma
+  function carregarLeitorXLSX() {
+    if (window.XLSX) return Promise.resolve(window.XLSX);
+    return new Promise((ok, falha) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+      s.onload = () => ok(window.XLSX);
+      s.onerror = falha;
+      document.head.append(s);
+    });
+  }
+  $('quiz-arquivo').onchange = async (e) => {
+    const arquivo = e.target.files[0];
+    if (!arquivo) return;
+    avisoQuiz('Lendo a planilha…');
+    try {
+      let linhas;
+      if (/\.(csv|txt)$/i.test(arquivo.name)) linhas = lerCSV(await arquivo.text());
+      else {
+        const XLSX = await carregarLeitorXLSX();
+        const livro = XLSX.read(await arquivo.arrayBuffer(), { type: 'array' });
+        linhas = XLSX.utils.sheet_to_json(livro.Sheets[livro.SheetNames[0]], { header: 1, defval: '' });
+      }
+      const perguntas = linhasParaPerguntas(linhas);
+      if (!perguntas.length) { avisoQuiz('Não achei perguntas: confira as colunas (A pergunta, B certa, C a E erradas).'); return; }
+      $('quiz-editor').innerHTML = '';
+      perguntas.forEach((q) => blocoPergunta(q));
+      if (!$('quiz-nome').value.trim()) $('quiz-nome').value = arquivo.name.replace(/\.[^.]+$/, '');
+      avisoQuiz(`${perguntas.length} pergunta${perguntas.length === 1 ? '' : 's'} lida${perguntas.length === 1 ? '' : 's'}. Confira abaixo e toque em Salvar.`, true);
+    } catch (err) {
+      avisoQuiz('Não consegui ler o arquivo. Use .xlsx ou .csv (e internet para .xlsx).');
+    }
+    e.target.value = '';
+  };
+
+  $('btn-quiz-salvar').onclick = async () => {
+    const titulo = $('quiz-nome').value.trim();
+    if (!titulo) { avisoQuiz('Dê um nome ao questionário.'); $('quiz-nome').focus(); return; }
+    const perguntas = [...$('quiz-editor').children].map((b) => ({
+      pergunta: b.querySelector('.q-pergunta').value.trim(),
+      certa: b.querySelector('.q-certa').value.trim(),
+      erradas: [...b.querySelectorAll('.q-errada')].map((i) => i.value.trim()).filter(Boolean),
+    })).filter((q) => q.pergunta || q.certa);
+    const incompleta = perguntas.findIndex((q) => !q.pergunta || !q.certa || !q.erradas.length);
+    if (!perguntas.length) { avisoQuiz('Adicione pelo menos uma pergunta.'); return; }
+    if (incompleta >= 0) { avisoQuiz(`A pergunta ${incompleta + 1} precisa do texto, da resposta certa e de pelo menos uma errada.`); return; }
+    avisoQuiz('Salvando na planilha…');
+    try {
+      await gravarNoScript({ acao: 'salvarQuestionario', titulo, perguntas });
+      SOM.certo();
+      avisoQuiz(`Questionário "${titulo}" salvo! Os alunos já podem jogar. ✔`, true);
+      $('quiz-nome').value = '';
+      $('quiz-editor').innerHTML = '';
+      listarQuestionariosProfessor();
+    } catch (err) {
+      avisoQuiz(String(err.message) === 'senha' ? 'A planilha não aceitou a senha: confira a SENHA_PROFESSOR no script.' : 'Não deu para salvar (sem internet ou script desatualizado). Tente de novo.');
+    }
   };
 
   // missão especial com as palavras de todas as missões, misturadas
@@ -1722,8 +1912,115 @@
   $('btn-peso-testar').onclick = () => testarPeso();
   $('btn-peso-proximo').onclick = () => { $('peso-arena').classList.remove('certo'); novoObjeto(); };
 
+  // ---------- Questionário da aula (aluno) ----------
+  // Os questionários vêm da planilha do professor (pelo script). Uma pergunta por vez, as respostas
+  // sempre embaralhadas; no fim, o resultado e o relatório. Fica uma cópia no aparelho para jogar sem internet.
+  const CHAVE_QUIZ_LISTA = 'pleno-ortografia:questionarios';
+  const chaveQuiz = (id) => `pleno-ortografia:questionario:${id}`;
+  let quiz = null;   // o questionário em andamento
+
+  async function telaQuizMenu() {
+    quiz = null;
+    mascote('davi-quiz', 'oi');
+    mostrar('tela-quiz-menu');
+    const desenhar = (lista, aviso) => {
+      $('quiz-status').textContent = aviso || (lista.length ? '' : 'O professor ainda não criou nenhum questionário.');
+      $('lista-quiz').innerHTML = '';
+      for (const q of lista) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'quiz-item';
+        b.innerHTML = `<span class="quiz-item-nome">📝 ${seguro(q.titulo)}</span><span class="quiz-item-qtd">${q.perguntas} pergunta${q.perguntas === 1 ? '' : 's'}</span>`;
+        b.onclick = () => { SOM.clique(); comecarQuiz(q.id); };
+        $('lista-quiz').append(b);
+      }
+    };
+    const copia = lerJSON(CHAVE_QUIZ_LISTA, []);
+    desenhar(copia, URL_RELATORIO ? 'Buscando questionários…' : 'Os questionários ainda não foram ligados no jogo.');
+    if (!URL_RELATORIO) return;
+    try {
+      const { lista } = await lerDoScript('questionarios');
+      gravarJSON(CHAVE_QUIZ_LISTA, lista);
+      if ($('tela-quiz-menu').classList.contains('ativa')) desenhar(lista);
+    } catch (e) {
+      desenhar(copia, copia.length ? 'Sem internet: mostrando os questionários salvos neste aparelho.' : 'Sem internet: não deu para buscar os questionários.');
+    }
+  }
+
+  async function comecarQuiz(id) {
+    $('quiz-status').textContent = 'Abrindo…';
+    let q = null;
+    try { q = (await lerDoScript('questionario', `&id=${encodeURIComponent(id)}`)).questionario; gravarJSON(chaveQuiz(id), q); }
+    catch (e) { q = lerJSON(chaveQuiz(id), null); }
+    if (!q || !q.perguntas.length) { $('quiz-status').textContent = 'Não deu para abrir este questionário agora (sem internet?).'; return; }
+    const regra = { id: 'quiz-' + q.id, titulo: q.titulo.slice(0, 40), icone: '📝', cor: '#7b4fc9',
+      regra: 'Reveja estas perguntas com a turma: compare a resposta certa com a que o aluno marcou.' };
+    missao = { id: 'quiz-' + q.id, quiz: true, quizId: q.id, icone: '📝', cor: '#7b4fc9', titulo: `Questionário: ${q.titulo}` };
+    resultados = [];
+    quiz = { q, regra, idx: 0, acertos: 0 };
+    $('quiz-titulo').textContent = `📝 ${q.titulo}`;
+    mostrar('tela-quiz');
+    mostrarPerguntaQuiz();
+  }
+
+  function mostrarPerguntaQuiz() {
+    const { q, idx } = quiz;
+    const p = q.perguntas[idx];
+    $('quiz-contador').textContent = `${idx + 1} de ${q.perguntas.length}`;
+    $('quiz-texto').textContent = p.pergunta;
+    $('quiz-feedback').textContent = '';
+    $('quiz-feedback').className = 'peso-msg';
+    $('btn-quiz-proxima').hidden = true;
+    $('quiz-opcoes').innerHTML = '';
+    for (const resposta of embaralhar([p.certa, ...p.erradas])) {   // as respostas sempre embaralhadas
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'quiz-opcao';
+      b.textContent = resposta;
+      b.onclick = () => responderQuiz(resposta, b);
+      $('quiz-opcoes').append(b);
+    }
+  }
+
+  function responderQuiz(resposta, botao) {
+    const p = quiz.q.perguntas[quiz.idx];
+    const botoes = [...document.querySelectorAll('#quiz-opcoes .quiz-opcao')];
+    botoes.forEach((b) => { b.disabled = true; });
+    const acertou = resposta === p.certa;
+    if (acertou) {
+      quiz.acertos++;
+      botao.classList.add('certa');
+      $('quiz-feedback').textContent = `✔ ${sortear(ELOGIOS)}`;
+      $('quiz-feedback').className = 'peso-msg certo';
+      SOM.certo();
+    } else {
+      botao.classList.add('errada');
+      botoes.forEach((b) => { if (b.textContent === p.certa) b.classList.add('certa'); else if (b !== botao) b.classList.add('apagada'); });
+      $('quiz-feedback').textContent = `✘ A resposta certa é: ${p.certa}`;
+      $('quiz-feedback').className = 'peso-msg erro';
+      SOM.errado();
+    }
+    resultados.push({ m: quiz.regra, certa: `${p.pergunta} → ${p.certa}`, erros: acertou ? [] : [resposta] });
+    $('btn-quiz-proxima').textContent = quiz.idx === quiz.q.perguntas.length - 1 ? 'Ver resultado ⭐' : 'Próxima ➜';
+    $('btn-quiz-proxima').hidden = false;
+    $('btn-quiz-proxima').focus({ preventScroll: true });
+  }
+
+  $('btn-quiz-proxima').onclick = () => {
+    quiz.idx++;
+    if (quiz.idx < quiz.q.perguntas.length) { mostrarPerguntaQuiz(); return; }
+    const { acertos } = quiz, total = quiz.q.perguntas.length;
+    fimDaMissao();
+    const n = ultimoRelatorio.estrelas;
+    $('fim-titulo').textContent = n === 3 ? 'Mandou muito bem!' : 'Questionário concluído!';
+    $('fim-texto').textContent = `${aluno}, você acertou ${acertos} de ${total} perguntas de "${quiz.q.titulo}"!`;
+  };
+
   // ---------- Textos do relatório de cada jogo ----------
   function textosRelatorio(mis) {
+    if (mis.quiz) return { tipo: 'questionario', assunto: 'Questionário da aula', unidade: 'pergunta', revisar: 'Perguntas para revisar',
+      certo: 'Pergunta e resposta certa', tentou: 'Você respondeu', tentouPdf: 'O aluno respondeu', porRegra: 'Acertos',
+      niveis: 'Nível', atividade: 'Atividade', outras: '📝 Outro questionário' };
     if (mis.peso) return { tipo: 'medidas', assunto: 'Medidas de massa', unidade: 'objeto', revisar: 'Objetos para revisar',
       certo: 'Objeto e peso', tentou: 'Passou do ponto com', tentouPdf: 'Passou do ponto com', porRegra: 'Acertos por unidade',
       niveis: 'Nível', atividade: 'Atividade', outras: '⚖️ Peso Certo' };
@@ -1848,6 +2145,7 @@
   function desenharRelatorio(rel, estrelas) {
     const data = new Date().toLocaleDateString('pt-BR');
     const tx = textosRelatorio(missao);
+    const caixa = (s) => (missao.quiz ? s : s.toUpperCase());   // palavras em caixa alta; perguntas do questionário como estão
     $('relatorio-info').innerHTML = `<b>Aluno:</b> ${seguro(aluno)} · <b>Data:</b> ${data} · <b>${tx.atividade}:</b> ${seguro(missao.titulo)}<br>`
       + `<b>Acertos de primeira:</b> ${rel.dePrimeiraN} de ${rel.respondidas} · <b>Estrelas:</b> ${estrelas} de 3`
       + (missao.extra ? `<br>${seguro(missao.extra)}` : '');
@@ -1865,7 +2163,7 @@
         <p class="dica-regra">${g.m.regra}</p>
       </div>`).join('');
     const linhas = rel.comErro.map((r) => `
-      <tr><td class="certo">${r.certa.toUpperCase()}</td><td class="escreveu">${r.erros.map((e) => seguro(String(e).toUpperCase())).join(', ')}</td></tr>`).join('');
+      <tr><td class="certo">${seguro(caixa(r.certa))}</td><td class="escreveu">${r.erros.map((e) => seguro(caixa(String(e)))).join(', ')}</td></tr>`).join('');
     $('relatorio-conteudo').innerHTML = `
       <h4 class="relatorio-sub">Principais dificuldades</h4>
       ${blocos}
@@ -1917,7 +2215,7 @@
     if (!URL_RELATORIO || !para || !rel.respondidas) return;
     const id = `${data.getTime()}-${Math.random().toString(36).slice(2, 8)}`;
     salvarFila([...lerFila(), {
-      id, chave: CHAVE_RELATORIO, para, aluno, tipo: textosRelatorio(mis).tipo, assunto: textosRelatorio(mis).assunto, missao: mis.titulo, data: data.toLocaleDateString('pt-BR'),
+      id, chave: CHAVE_RELATORIO, para, jogo: jogoDaMissao(mis), aluno, tipo: textosRelatorio(mis).tipo, assunto: textosRelatorio(mis).assunto, missao: mis.titulo, data: data.toLocaleDateString('pt-BR'),
       acertos: rel.dePrimeiraN, total: rel.respondidas, estrelas,
       grupos: rel.grupos.map((g) => ({ titulo: g.m.titulo, qtd: g.itens.length, regra: semHTML(g.m.regra) })),
       palavras: rel.comErro.map((r) => ({ certa: r.certa, tentou: r.erros })),
@@ -2074,14 +2372,20 @@
         y += 7;
       };
       cabecalho();
+      const caixa = (s) => (mis.quiz ? s : s.toUpperCase());
       rel.comErro.forEach((r, i) => {
-        if (y + 8 > 278) { doc.addPage(); y = 20; cabecalho(); }
-        if (i % 2 === 0) { doc.setFillColor(232, 246, 248); doc.rect(L, y - 5, LARG, 8, 'F'); }
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(30, 120, 70);
-        doc.text(paraPDF(r.certa.toUpperCase()), L + 3, y);
+        // textos longos (perguntas do questionário) quebram em várias linhas dentro da coluna
+        doc.setFontSize(11);
+        const esquerda = doc.splitTextToSize(paraPDF(caixa(r.certa)), col2 - L - 6);
+        const direita = doc.splitTextToSize(paraPDF(r.erros.map((e) => caixa(String(e))).join(', ')), L + LARG - col2 - 6);
+        const alt = Math.max(esquerda.length, direita.length) * 5 + 3;
+        if (y + alt > 278) { doc.addPage(); y = 20; cabecalho(); }
+        if (i % 2 === 0) { doc.setFillColor(232, 246, 248); doc.rect(L, y - 5, LARG, alt, 'F'); }
+        doc.setFont('helvetica', 'bold'); doc.setTextColor(30, 120, 70);
+        doc.text(esquerda, L + 3, y);
         doc.setFont('helvetica', 'normal'); doc.setTextColor(200, 50, 60);
-        doc.text(paraPDF(r.erros.map((e) => String(e).toUpperCase()).join(', ')), col2 + 3, y);
-        y += 8;
+        doc.text(direita, col2 + 3, y);
+        y += alt;
       });
     }
 
@@ -2105,8 +2409,8 @@
   $('btn-terminar').onclick = () => { if (resultados.length) fimDaMissao(); else telaMissoes(); };
   $('btn-proxima').onclick = proxima;
   $('btn-ouvir').onclick = () => falar(palavraCerta(fila[idx]));
-  $('btn-repetir').onclick = () => (missao.peso ? comecarPeso() : missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
-  $('btn-outras').onclick = () => (missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
+  $('btn-repetir').onclick = () => (missao.quiz ? comecarQuiz(missao.quizId) : missao.peso ? comecarPeso() : missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
+  $('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
   $('btn-tiro').onclick = () => { SOM.clique(); telaTiroMenu(); };
 
   // filtro dos jogos por tema na tela inicial (a escolha fica guardada no aparelho)
@@ -2129,6 +2433,9 @@
   $('peso-voltar').onclick = telaInicio;
   $('btn-peso-comecar').onclick = () => { SOM.clique(); comecarPeso(); };
   $('peso-sair').onclick = telaPesoMenu;
+  $('btn-quiz').onclick = () => { SOM.clique(); telaQuizMenu(); };
+  $('quiz-voltar').onclick = telaInicio;
+  $('quiz-sair').onclick = telaQuizMenu;
   $('btn-mat').onclick = () => { SOM.clique(); telaMatMenu(); };
   $('mat-voltar').onclick = telaInicio;
   $('btn-mat-comecar').onclick = () => { SOM.clique(); comecarMat(); };
@@ -2137,7 +2444,7 @@
   $('chuva-voltar').onclick = telaInicio;
   $('btn-chuva-comecar').onclick = () => { SOM.clique(); comecarChuva(); };
   $('chuva-sair').onclick = telaChuvaMenu;
-  $('btn-pdf').onclick = () => { baixarPDF().catch(() => window.print()); };
+  $('btn-pdf').onclick = () => { baixarPDF().catch((e) => { console.error('PDF:', e); window.print(); }); };
 
   // ---------- Instalar como app ----------
   let pedidoInstalacao = null;
@@ -2178,7 +2485,7 @@
 
   // relatórios que ficaram sem enviar: tenta ao abrir o jogo e quando a internet voltar
   window.addEventListener('online', enviarFila);
-  enviarFila();
+  sincronizarConfig().then(enviarFila);
 
   telaInicio();
 })();

@@ -1201,3 +1201,43 @@ body { background: var(--fundo); }
 /* níveis do Jogo de Ortografia */
 #grade-missoes { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); max-width: 760px; margin: 0 auto; }
 .missao-descricao { font-size: 15px; font-weight: 700; color: var(--cinza-texto); text-align: center; }
+
+/* ---------- Questionário da aula ---------- */
+.quiz-status { min-height: 1.4em; margin: 0 0 8px; text-align: center; font-weight: 800; color: var(--cinza-texto); }
+.lista-quiz { display: flex; flex-direction: column; gap: 10px; }
+.quiz-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  text-align: left; color: var(--texto);
+  background: var(--branco);
+  border: 2px solid #dbeef1; border-left: 6px solid #7b4fc9; border-radius: 12px;
+}
+button.quiz-item:hover { border-color: #7b4fc9; }
+.quiz-item-nome { flex: 1; font-family: 'Fredoka', sans-serif; font-size: 19px; font-weight: 600; }
+.quiz-item-qtd { font-size: 14px; font-weight: 700; color: var(--cinza-texto); white-space: nowrap; }
+.quiz-excluir { padding: 6px 10px; font-size: 15px; font-weight: 700; color: #b42318; background: #fdecea; border-radius: 8px; }
+.quiz-cartao { max-width: 720px; margin: 0 auto; }
+.quiz-pergunta { margin: 4px 0 16px; font-family: 'Fredoka', sans-serif; font-size: clamp(22px, 3.6vw, 30px); font-weight: 600; line-height: 1.3; color: var(--texto); text-align: center; }
+.quiz-opcoes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.quiz-opcao {
+  padding: 14px 12px; min-height: 64px;
+  font-size: clamp(17px, 2.4vw, 21px); font-weight: 700; line-height: 1.25;
+  color: var(--texto); background: var(--branco);
+  border: 3px solid #cfe3e7; border-radius: 14px;
+  box-shadow: 0 3px 0 #cfe3e7;
+}
+.quiz-opcao:hover:not(:disabled) { border-color: var(--primaria); }
+.quiz-opcao:disabled { cursor: default; }
+.quiz-opcao.certa { color: var(--branco); background: var(--verde); border-color: #1d6b3d; box-shadow: 0 3px 0 #1d6b3d; }
+.quiz-opcao.errada { color: var(--branco); background: var(--vermelho); border-color: #8e1b1b; box-shadow: 0 3px 0 #8e1b1b; animation: tremer 0.4s ease; }
+.quiz-opcao.apagada { opacity: 0.45; }
+#btn-quiz-proxima { margin-top: 6px; }
+.quiz-bloco { padding: 10px; margin-top: 10px; background: var(--branco); border: 2px solid #dbeef1; border-radius: 12px; }
+.quiz-bloco-topo { display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--primaria-escura); }
+.quiz-bloco input { width: 100%; margin-top: 6px; padding: 8px 10px; font: 700 15px 'Nunito', sans-serif; color: var(--texto); border: 2px solid #cfe3e7; border-radius: 10px; }
+.quiz-bloco input.certa { border-color: var(--verde); background: #f0faf3; }
+.quiz-bloco input.errada { border-color: #f3b6b0; background: #fff7f6; }
+.quiz-tirar { padding: 2px 8px; font-size: 14px; color: #b42318; background: transparent; }
+@media (max-width: 720px) {
+  .quiz-opcoes { grid-template-columns: 1fr; }
+}

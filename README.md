@@ -7,8 +7,14 @@ cada regra da ortografia do português de um jeito simples.
 
 Feito com HTML, CSS e JavaScript puro, sem instalação. Funciona no computador, no tablet e no celular.
 
-São cinco jogos, escolhidos na tela inicial (com filtro por tema: Português ou Matemática): **Jogo de Ortografia**
-(as missões abaixo), **Chuva de Erros**, **Chuva de Matemática**, **Tiro Certo** e **Peso Certo**. Lema: *o aluno joga, o professor analisa*.
+São seis jogos, escolhidos na tela inicial (com filtro por tema: Português, Matemática ou Questionários): **Jogo de Ortografia**,
+**Chuva de Erros**, **Chuva de Matemática**, **Tiro Certo**, **Peso Certo** e **Questionário da aula**. Lema: *o aluno joga, o professor analisa*.
+
+## Questionário da aula
+
+O professor cria questionários na Área do professor (ou numa aba "Q: nome" da planilha). O aluno escolhe um,
+responde uma pergunta por vez com as 4 respostas sempre embaralhadas e vê na hora se acertou (e qual era a certa).
+No fim aparecem estrelas, o resultado e o relatório (tela, PDF e e-mail) com as perguntas que errou.
 
 ## Peso Certo (medidas de massa)
 
@@ -134,16 +140,27 @@ powershell -ExecutionPolicy Bypass -File ferramentas\versao.ps1
 - `assets/figuras/` — figuras das palavras, recortadas do cartaz por `ferramentas/figuras.ps1`
 - `ferramentas/icones.ps1` — gera os ícones do app
 
-## Relatório por e-mail (grátis, com Google Apps Script)
+## Planilha do professor: e-mails, questionários e relatórios (grátis, com Google Apps Script)
 
-Na tela inicial, **🧑‍🏫 Área do professor** (senha `app0707`, em `SENHA_PROFESSOR` no `jogo.js`) guarda no aparelho
-um e-mail geral e, se quiser, um e-mail diferente para cada jogo (em branco, o jogo usa o geral). No fim de cada atividade, o relatório vai para o e-mail do jogo, mesmo que o aluno não baixe o PDF.
+Não há banco de dados: uma planilha do Google guarda tudo, por meio do script `ferramentas/relatorio-email.gs`.
+
+| Aba da planilha | O que guarda |
+|---|---|
+| **Configuração** | os e-mails que recebem os relatórios: `geral` e, se quiser, um por jogo (`ortografia`, `chuva`, `matematica`, `tiro`, `peso`, `questionario`) |
+| **Q: nome** (uma por questionário) | coluna A a pergunta, B a resposta certa, C a E as respostas erradas (a 1ª linha pode ser cabeçalho) |
+| **Relatórios** | uma linha por relatório enviado |
+
+Na tela inicial, **🧑‍🏫 Área do professor** (senha `app0707`, em `SENHA_PROFESSOR` no `jogo.js` e no script) salva os
+e-mails na aba "Configuração" e cria ou exclui questionários (enviando uma planilha `.xlsx`/`.csv` ou digitando as
+perguntas). Tudo vale para todos os aparelhos; cada aparelho guarda uma cópia para funcionar sem internet.
+No fim de cada atividade, o relatório vai para o e-mail do jogo (ou o geral), mesmo que o aluno não baixe o PDF.
 Sem internet, o relatório fica numa fila no aparelho e é enviado quando a conexão voltar.
+Também dá para criar um questionário direto na planilha: é só criar uma aba com o nome começando por `Q: `.
 
-O envio é feito por `ferramentas/relatorio-email.gs`, publicado uma vez na sua conta Google:
+Para publicar o script (uma vez):
 
-1. Crie uma planilha no Google Drive (ela guarda uma cópia de cada relatório na aba "Relatórios")
-   e abra **Extensões → Apps Script**. Apague o que estiver lá e cole o conteúdo de `ferramentas/relatorio-email.gs`.
+1. Crie uma planilha no Google Drive e abra **Extensões → Apps Script**. Apague o que estiver lá e cole o
+   conteúdo de `ferramentas/relatorio-email.gs`.
 2. **Implantar → Nova implantação → Tipo: App da Web**. Executar como: **Eu**. Quem pode acessar: **Qualquer pessoa**.
    Autorize o acesso ao Gmail e à planilha quando o Google pedir.
 3. Copie o endereço do app da Web (termina em `/exec`) e cole em `URL_RELATORIO` no `jogo.js`.

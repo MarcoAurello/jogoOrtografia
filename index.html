@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=31">
+  <link rel="stylesheet" href="style.css?v=32">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -70,6 +70,7 @@
         <button class="filtro-tema ativo" type="button" data-tema="todos">Todos</button>
         <button class="filtro-tema" type="button" data-tema="portugues">📚 Português</button>
         <button class="filtro-tema" type="button" data-tema="matematica">🔢 Matemática</button>
+        <button class="filtro-tema" type="button" data-tema="questionario">📝 Questionários</button>
       </div>
       <div class="escolha-jogos">
         <button class="jogo-card" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
@@ -96,6 +97,11 @@
           <span class="jogo-card-icone">⚖️</span>
           <span class="jogo-card-nome">Peso Certo</span>
           <span class="jogo-card-texto">Equilibre a balança com os pesos!</span>
+        </button>
+        <button class="jogo-card" id="btn-quiz" type="button" data-tema="questionario" style="--c:#7b4fc9">
+          <span class="jogo-card-icone">📝</span>
+          <span class="jogo-card-nome">Questionário da aula</span>
+          <span class="jogo-card-texto">Responda as perguntas do professor!</span>
         </button>
       </div>
       <div class="linha-botoes">
@@ -271,6 +277,38 @@
       </div>
     </section>
 
+    <!-- Questionário da aula: lista dos questionários do professor -->
+    <section class="tela" id="tela-quiz-menu">
+      <h2 class="subtitulo">📝 Questionário da aula</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-quiz"></div>
+        <div class="balao balao-esq">
+          Escolha o questionário que o professor preparou. Leia cada pergunta com calma e toque na
+          <b>resposta certa</b>. No fim, você vê como foi! 📝
+        </div>
+      </div>
+      <div class="cartao cartao-chuva">
+        <p class="quiz-status" id="quiz-status"></p>
+        <div class="lista-quiz" id="lista-quiz"></div>
+      </div>
+      <button class="btn-sec" id="quiz-voltar" type="button">← Início</button>
+    </section>
+
+    <!-- Questionário da aula: as perguntas -->
+    <section class="tela" id="tela-quiz">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="quiz-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="quiz-titulo"></span>
+        <span class="chuva-placar" id="quiz-contador"></span>
+      </div>
+      <div class="cartao quiz-cartao">
+        <p class="quiz-pergunta" id="quiz-texto"></p>
+        <div class="quiz-opcoes" id="quiz-opcoes"></div>
+        <p class="peso-msg" id="quiz-feedback"></p>
+        <button class="btn-grande" id="btn-quiz-proxima" type="button" hidden>Próxima ➜</button>
+      </div>
+    </section>
+
     <!-- Área do professor: senha e e-mail que recebe os relatórios -->
     <section class="tela" id="tela-professor">
       <h2 class="subtitulo">🧑‍🏫 Área do professor</h2>
@@ -297,6 +335,24 @@
         <button class="btn-grande" type="submit">Salvar ✔</button>
         <button class="btn-sec" id="btn-remover-email" type="button">Parar de enviar</button>
       </form>
+      <div class="cartao cartao-login" id="painel-questionarios" hidden>
+        <h3 class="chuva-pergunta">📝 Questionários da aula</h3>
+        <p class="professor-ajuda">Ficam guardados na planilha do Google: uma aba <b>"Q: nome"</b> para cada questionário.</p>
+        <div class="lista-quiz" id="lista-quiz-prof"></div>
+        <details class="emails-jogos" id="novo-questionario">
+          <summary>➕ Novo questionário</summary>
+          <label class="campo campo-jogo"><span>Nome do questionário</span>
+            <input type="text" id="quiz-nome" maxlength="80" placeholder="Ex.: Ciências – Sistema Solar"></label>
+          <label class="campo campo-jogo"><span>📄 Enviar planilha (.xlsx ou .csv)</span>
+            <input type="file" id="quiz-arquivo" accept=".xlsx,.xls,.csv,.txt"></label>
+          <p class="professor-ajuda">Na planilha: coluna <b>A</b> a pergunta, <b>B</b> a resposta certa e <b>C, D, E</b> as respostas erradas.
+            Depois de enviar, as perguntas aparecem abaixo para conferir. Também dá para digitar.</p>
+          <div id="quiz-editor"></div>
+          <button class="btn-sec" id="btn-quiz-mais" type="button">✍️ Adicionar pergunta</button>
+          <p class="erro-login" id="aviso-quiz" role="status"></p>
+          <button class="btn-grande" id="btn-quiz-salvar" type="button">Salvar questionário ✔</button>
+        </details>
+      </div>
       <button class="btn-sec" id="professor-voltar" type="button">← Início</button>
     </section>
 
@@ -396,9 +452,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=31"></script>
-  <script src="dados.js?v=31"></script>
-  <script src="jogo.js?v=31"></script>
+  <script src="plenix.js?v=32"></script>
+  <script src="dados.js?v=32"></script>
+  <script src="jogo.js?v=32"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
