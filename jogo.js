@@ -674,7 +674,7 @@
 
   // ---------- Relatório por e-mail (Google Apps Script: ferramentas/relatorio-email.gs) ----------
   // Endereço do script publicado (veja "Relatório por e-mail" no README). Vazio: não envia.
-  const URL_RELATORIO = '';
+  const URL_RELATORIO = 'https://script.google.com/macros/s/AKfycbxxB1N45s1h1WhumDe_3q2dgnRf1J9dRewn_HDgxGi-EEDrdaD5l_QOobTUVE7VcjVj/exec';
   const CHAVE_RELATORIO = 'jogo-ortografia';   // a mesma CHAVE do script
   // relatórios que ainda não foram enviados ficam numa fila no aparelho (sem internet, vão depois)
   const CHAVE_FILA = 'pleno-ortografia:fila-relatorios';
