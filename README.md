@@ -53,6 +53,7 @@ Abra o `index.html` no navegador.
 - `plenix.js` + `assets/plenix/plenix_spritesheet_1x.png` — o Plenix em pixel art (folha 4x4: andando, festejando, triste, pensando), animado no `style.css`
 - `assets/plenix/*.gif` — as mesmas animações em GIF (fundo branco), para usar em outros materiais
 - `ferramentas/plenix.ps1` — recorta o Plenix comparando as imagens de fundo azul e roxo (em `assets/plenix-original/`)
+- `ferramentas/plenix-farda.py` — veste o Plenix com a farda da Rede Estadual (camisa branca, gola azul, faixa amarela, vermelha e azul) a partir de `assets/plenix-original/plenix_spritesheet_original.png`
 - `assets/logo-pleno.png` — logo do colégio
 - `ferramentas/logo.ps1` — recorta o logo e deixa o fundo transparente
 

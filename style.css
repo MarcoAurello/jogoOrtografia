@@ -542,6 +542,19 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
 
 /* ---------- Entrada (nome e senha) ---------- */
 .titulo-menor { font-size: clamp(30px, 6vw, 56px); }
+.slogan {
+  display: table;
+  margin: -2px auto 14px;
+  padding: 6px 18px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  font-size: clamp(16px, 2.6vw, 22px);
+  text-align: center;
+  color: var(--primaria-escura);
+  background: var(--amarelo);
+  border-radius: 999px;
+  box-shadow: 0 4px 0 var(--vermelho);
+}
 .cartao-login {
   max-width: 420px;
   margin: 0 auto;
