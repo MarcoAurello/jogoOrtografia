@@ -744,6 +744,7 @@
     if (mat.feitas >= MAT.CONTAS) { terminarMat(); return; }
     const c = gerarConta(sortear(mat.ops), mat.nivel);
     c.vida = 6 + mat.nivel * 0.6;   // contas mais difíceis caem mais devagar
+    c.nivel = mat.nivel;
     c.nasceu = mat.t;
     mat.conta = c;
     mat.feitas++;
@@ -784,7 +785,7 @@
       mat.nivelMax = Math.max(mat.nivelMax, mat.nivel);
       botao.classList.add('certa');
       el.classList.add('acertou');
-      resultados.push({ m: c.op, certa: `${c.texto} = ${c.res}`, erros: [] });
+      resultados.push({ m: c.op, certa: `${c.texto} = ${c.res}`, erros: [], nivel: c.nivel });
       SOM.certo();
     } else {
       mat.combo = 0;
@@ -793,7 +794,7 @@
       if (certoEl) certoEl.classList.add('certa');
       botoes.forEach((b) => { if (b !== botao && b !== certoEl) b.classList.add('apagada'); });
       el.classList.add('errou');
-      resultados.push({ m: c.op, certa: `${c.texto} = ${c.res}`, erros: [valor == null ? 'não respondeu a tempo' : `${c.texto} = ${valor}`] });
+      resultados.push({ m: c.op, certa: `${c.texto} = ${c.res}`, erros: [valor == null ? 'não respondeu a tempo' : `${c.texto} = ${valor}`], nivel: c.nivel });
       SOM.errado();
     }
     hudMat();
@@ -844,17 +845,137 @@
       g.itens.push(r);
     }
     grupos.sort((a, b) => b.itens.length - a.itens.length);
-    return { respondidas, dePrimeiraN, comErro, grupos };
+    // todas as regras que apareceram, com quantas deram certo de primeira e quantas tiveram erro
+    const porRegra = [];
+    for (const r of resultados) {
+      let x = porRegra.find((o) => o.m.id === r.m.id);
+      if (!x) { x = { m: r.m, total: 0, erros: 0 }; porRegra.push(x); }
+      x.total++;
+      if (r.erros.length) x.erros++;
+    }
+    porRegra.sort((a, b) => b.erros - a.erros || b.total - a.total);
+    const niveis = resultados.filter((r) => r.nivel).map((r) => ({ n: r.nivel, ok: !r.erros.length }));
+    return { respondidas, dePrimeiraN, comErro, grupos, porRegra, niveis };
+  }
+
+  // ---------- Gráficos do relatório ----------
+  // Desenhados num canvas no próprio aparelho; a mesma imagem aparece na tela e no PDF.
+  const COR_OK = '#2e9e5b', COR_ERRO = '#e53935', COR_TEXTO = '#13294b', COR_GRADE = '#dce9f8', COR_LINHA = '#1565c0';
+  const fonteGrafico = (tam, peso = 700) => `${peso} ${tam}px Nunito, Arial, sans-serif`;
+
+  function novoGrafico(w, h, titulo) {
+    const c = document.createElement('canvas');
+    c.width = w * 2; c.height = h * 2;   // dobro do tamanho: fica nítido na tela e no PDF
+    const g = c.getContext('2d');
+    g.scale(2, 2);
+    g.fillStyle = '#ffffff'; g.fillRect(0, 0, w, h);
+    g.textBaseline = 'middle';
+    g.fillStyle = COR_TEXTO; g.font = fonteGrafico(16, 800); g.textAlign = 'left';
+    g.fillText(titulo, 14, 20);
+    return { c, g, w, h };
+  }
+
+  function legendaGrafico(g, w, y, itens, tam = 13) {
+    g.font = fonteGrafico(tam);
+    const larguras = itens.map(([, texto]) => 18 + g.measureText(texto).width);
+    let x = (w - larguras.reduce((s, l) => s + l + 18, -18)) / 2;
+    itens.forEach(([cor, texto], i) => {
+      g.fillStyle = cor; g.beginPath(); g.arc(x + 6, y, 6, 0, Math.PI * 2); g.fill();
+      g.fillStyle = COR_TEXTO; g.textAlign = 'left'; g.fillText(texto, x + 16, y);
+      x += larguras[i] + 18;
+    });
+  }
+
+  // rosca: quanto o aluno acertou de primeira
+  function graficoResultado(rel) {
+    const { c, g, w } = novoGrafico(300, 240, 'Resultado');
+    const ok = rel.dePrimeiraN, erro = rel.respondidas - ok, total = rel.respondidas || 1;
+    const cx = w / 2, cy = 122, raio = 72;
+    let inicio = -Math.PI / 2;
+    for (const [v, cor] of [[ok, COR_OK], [erro, COR_ERRO]]) {
+      if (!v) continue;
+      const fim = inicio + (v / total) * Math.PI * 2;
+      g.beginPath(); g.arc(cx, cy, raio, inicio, fim); g.arc(cx, cy, raio - 26, fim, inicio, true); g.closePath();
+      g.fillStyle = cor; g.fill();
+      inicio = fim;
+    }
+    g.fillStyle = COR_TEXTO; g.textAlign = 'center';
+    g.font = fonteGrafico(28, 800); g.fillText(`${Math.round((ok / total) * 100)}%`, cx, cy - 6);
+    g.font = fonteGrafico(12); g.fillText('de primeira', cx, cy + 18);
+    legendaGrafico(g, w, 222, [[COR_OK, `${ok} ${ok === 1 ? 'acerto' : 'acertos'}`], [COR_ERRO, `${erro} com erro`]]);
+    return c;
+  }
+
+  // barras: acertos e erros em cada regra (ou operação)
+  function graficoPorRegra(rel, titulo) {
+    const linhas = rel.porRegra;
+    const w = 440, h = 64 + linhas.length * 32 + 30;
+    const { c, g } = novoGrafico(w, h, titulo);
+    const x0 = 170, x1 = w - 56, maior = Math.max(...linhas.map((l) => l.total), 1);
+    linhas.forEach((l, i) => {
+      const y = 56 + i * 32;
+      g.font = fonteGrafico(13); g.fillStyle = COR_TEXTO; g.textAlign = 'right';
+      let rotulo = l.m.titulo;
+      while (g.measureText(rotulo).width > x0 - 22 && rotulo.length > 4) rotulo = rotulo.slice(0, -2) + '…';
+      g.fillText(rotulo, x0 - 10, y);
+      const larg = (x1 - x0) / maior;
+      const acertos = l.total - l.erros;
+      g.fillStyle = COR_OK; g.fillRect(x0, y - 10, acertos * larg, 20);
+      g.fillStyle = COR_ERRO; g.fillRect(x0 + acertos * larg, y - 10, l.erros * larg, 20);
+      g.fillStyle = COR_TEXTO; g.textAlign = 'left'; g.font = fonteGrafico(12, 800);
+      g.fillText(`${acertos}/${l.total}`, x0 + l.total * larg + 6, y);
+    });
+    legendaGrafico(g, w, h - 18, [[COR_OK, 'certo de primeira'], [COR_ERRO, 'com erro']]);
+    return c;
+  }
+
+  // linha: o nível de cada conta da Chuva de Matemática
+  function graficoNiveis(rel) {
+    const pts = rel.niveis, w = 640, h = 280;
+    const { c, g } = novoGrafico(w, h, 'Nível em cada conta');
+    const x0 = 46, x1 = w - 20, yTopo = 46, yBase = 210;
+    const yDe = (n) => yBase - ((n - 1) / (MAT.NIVEL_MAX - 1)) * (yBase - yTopo);
+    const xDe = (i) => (pts.length === 1 ? (x0 + x1) / 2 : x0 + (i * (x1 - x0)) / (pts.length - 1));
+    g.font = fonteGrafico(16); g.textAlign = 'right';
+    for (const n of [1, 4, 7, 10]) {
+      g.strokeStyle = COR_GRADE; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(x0, yDe(n)); g.lineTo(x1, yDe(n)); g.stroke();
+      g.fillStyle = COR_TEXTO; g.fillText(String(n), x0 - 10, yDe(n));
+    }
+    g.strokeStyle = COR_LINHA; g.lineWidth = 3; g.lineJoin = 'round';
+    g.beginPath();
+    pts.forEach((p, i) => (i ? g.lineTo(xDe(i), yDe(p.n)) : g.moveTo(xDe(i), yDe(p.n))));
+    g.stroke();
+    g.textAlign = 'center';
+    pts.forEach((p, i) => {
+      g.fillStyle = p.ok ? COR_OK : COR_ERRO;
+      g.beginPath(); g.arc(xDe(i), yDe(p.n), 7, 0, Math.PI * 2); g.fill();
+      g.fillStyle = COR_TEXTO; g.font = fonteGrafico(14); g.fillText(String(i + 1), xDe(i), yBase + 18);
+    });
+    legendaGrafico(g, w, h - 20, [[COR_OK, 'acertou (o nível sobe)'], [COR_ERRO, 'errou (o nível desce)']], 17);
+    return c;
+  }
+
+  function graficosDoRelatorio(rel, mis) {
+    if (!rel.respondidas) return [];
+    const graficos = [{ c: graficoResultado(rel), alt: `Resultado: ${rel.dePrimeiraN} de ${rel.respondidas} certas de primeira` }];
+    const titulo = mis.matematica ? 'Acertos por operação' : 'Acertos por regra';
+    if (rel.porRegra.length) graficos.push({ c: graficoPorRegra(rel, titulo), alt: titulo });
+    if (rel.niveis.length) graficos.push({ c: graficoNiveis(rel), alt: 'Nível em cada conta', largo: true });
+    return graficos.map((x) => ({ url: x.c.toDataURL('image/png'), w: x.c.width, h: x.c.height, alt: x.alt, largo: !!x.largo }));
   }
 
   function desenharRelatorio(rel, estrelas) {
     const data = new Date().toLocaleDateString('pt-BR');
-    $('relatorio-info').innerHTML = `<b>Aluno:</b> ${seguro(aluno)} · <b>Data:</b> ${data} · <b>Missão:</b> ${seguro(missao.titulo)}<br>`
+    $('relatorio-info').innerHTML = `<b>Aluno:</b> ${seguro(aluno)} · <b>Data:</b> ${data} · <b>${missao.chuva || missao.matematica ? 'Atividade' : 'Missão'}:</b> ${seguro(missao.titulo)}<br>`
       + `<b>Acertos de primeira:</b> ${rel.dePrimeiraN} de ${rel.respondidas} · <b>Estrelas:</b> ${estrelas} de 3`;
+    const graficos = graficosDoRelatorio(rel, missao);
+    $('relatorio-graficos').innerHTML = graficos.map((x) =>
+      `<img class="grafico${x.largo ? ' grafico-largo' : ''}" src="${x.url}" alt="${seguro(x.alt)}">`).join('');
 
     if (!rel.comErro.length) {
-      $('relatorio-conteudo').innerHTML = '<p class="relatorio-ok">🎉 Nenhuma dificuldade nesta missão! Você acertou tudo de primeira.</p>';
-      return;
+      $('relatorio-conteudo').innerHTML = '<p class="relatorio-ok">🎉 Nenhuma dificuldade nesta atividade! Você acertou tudo de primeira.</p>';
+      return graficos;
     }
     const blocos = rel.grupos.map((g) => `
       <div class="dificuldade" style="--c:${g.m.cor}">
@@ -871,6 +992,7 @@
         <thead><tr><th>${missao.matematica ? 'Conta certa' : 'Jeito certo'}</th><th>${missao.matematica ? 'Você respondeu' : 'Você tentou'}</th></tr></thead>
         <tbody>${linhas}</tbody>
       </table>`;
+    return graficos;
   }
 
   // ---------- Relatório por e-mail (Google Apps Script: ferramentas/relatorio-email.gs) ----------
@@ -913,10 +1035,12 @@
     if (!URL_RELATORIO || !para || !rel.respondidas) return;
     const id = `${data.getTime()}-${Math.random().toString(36).slice(2, 8)}`;
     salvarFila([...lerFila(), {
-      id, chave: CHAVE_RELATORIO, para, aluno, assunto: mis.matematica ? 'Matemática' : 'Ortografia', missao: mis.titulo, data: data.toLocaleDateString('pt-BR'),
+      id, chave: CHAVE_RELATORIO, para, aluno, tipo: mis.matematica ? 'matematica' : 'ortografia', assunto: mis.matematica ? 'Matemática' : 'Ortografia', missao: mis.titulo, data: data.toLocaleDateString('pt-BR'),
       acertos: rel.dePrimeiraN, total: rel.respondidas, estrelas,
       grupos: rel.grupos.map((g) => ({ titulo: g.m.titulo, qtd: g.itens.length, regra: semHTML(g.m.regra) })),
       palavras: rel.comErro.map((r) => ({ certa: r.certa, tentou: r.erros })),
+      porRegra: rel.porRegra.map((x) => ({ titulo: x.m.titulo, total: x.total, erros: x.erros })),
+      niveis: rel.niveis,
     }]);
     aviso.className = 'envio-email';
     aviso.textContent = '📧 Enviando o relatório para o professor…';
@@ -947,7 +1071,7 @@
     $('fim-texto').textContent = `${aluno}, você acertou ${rel.dePrimeiraN} de ${rel.respondidas} de primeira em "${missao.titulo}"!`;
     mascote('davi-fim', 'festa');
     $('btn-outras').textContent = missao.matematica ? '🔢 Outras contas' : missao.chuva ? '🌧️ Outra chuva' : 'Outras missões';
-    desenharRelatorio(rel, n);
+    ultimoRelatorio.graficos = desenharRelatorio(rel, n);
     enviarRelatorioPorEmail(ultimoRelatorio);
     mostrar('tela-fim');
     soltarConfete();
@@ -1018,12 +1142,31 @@
     doc.setDrawColor(...AZUL); doc.setLineWidth(0.6); doc.line(L, y, L + LARG, y); y += 8;
 
     paragrafo(`Aluno: ${aluno}`, 12, 'bold');
-    paragrafo(`Data: ${data.toLocaleDateString('pt-BR')}    Missão: ${mis.titulo}`, 11);
+    paragrafo(`Data: ${data.toLocaleDateString('pt-BR')}    ${mis.chuva || mis.matematica ? 'Atividade' : 'Missão'}: ${mis.titulo}`, 11);
     paragrafo(`Acertos de primeira: ${rel.dePrimeiraN} de ${rel.respondidas}    Estrelas: ${estrelas} de 3`, 11);
     y += 4;
 
+    // gráficos: os pequenos lado a lado, o de níveis na largura toda
+    const graficos = ultimoRelatorio.graficos || [];
+    const pequenos = graficos.filter((x) => !x.largo), largos = graficos.filter((x) => x.largo);
+    if (pequenos.length) {
+      const larguras = pequenos.length === 1 ? [70] : [62, LARG - 62 - 6];
+      const alturas = pequenos.map((x, i) => (larguras[i] * x.h) / x.w);
+      novaPaginaSePrecisar(Math.max(...alturas) + 4);
+      let x = L;
+      pequenos.forEach((g, i) => { doc.addImage(g.url, 'PNG', x, y, larguras[i], alturas[i], undefined, 'FAST'); x += larguras[i] + 6; });
+      y += Math.max(...alturas) + 4;
+    }
+    for (const g of largos) {
+      const alt = (LARG * g.h) / g.w;
+      novaPaginaSePrecisar(alt + 4);
+      doc.addImage(g.url, 'PNG', L, y, LARG, alt, undefined, 'FAST');
+      y += alt + 4;
+    }
+    y += 2;
+
     if (!rel.comErro.length) {
-      paragrafo('Parabéns! Nenhuma dificuldade nesta missão: todas as palavras certas de primeira.', 13, 'bold', AZUL);
+      paragrafo('Parabéns! Nenhuma dificuldade nesta atividade: todas as respostas certas de primeira.', 13, 'bold', AZUL);
     } else {
       novaPaginaSePrecisar(14);
       paragrafo('Principais dificuldades', 15, 'bold', AZUL); y += 1;

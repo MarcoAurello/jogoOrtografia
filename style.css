@@ -605,6 +605,10 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
 .relatorio { margin-top: 16px; }
 .relatorio-titulo { font-family: 'Fredoka', sans-serif; font-size: 26px; color: var(--primaria); text-align: center; }
 .relatorio-info { margin: 6px 0 12px; text-align: center; line-height: 1.6; }
+.graficos { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 4px 0 14px; }
+.grafico { width: 100%; max-width: 300px; height: auto; border: 2px solid #dce9f8; border-radius: 16px; }
+.grafico + .grafico { max-width: 440px; }
+.grafico-largo, .grafico + .grafico.grafico-largo { max-width: 640px; }
 .relatorio-sub { margin: 16px 0 8px; font-family: 'Fredoka', sans-serif; font-size: 20px; color: var(--primaria-escura); }
 .relatorio-ok { padding: 14px; text-align: center; font-size: 19px; font-weight: 800; color: var(--verde); background: #eaf8ef; border-radius: 16px; }
 .dificuldade { margin-bottom: 10px; padding: 12px 14px; background: #fff; border-left: 7px solid var(--c); border-radius: 14px; box-shadow: 0 3px 0 rgba(11, 46, 102, 0.12); }
