@@ -801,3 +801,111 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
 @media (prefers-reduced-motion: reduce) {
   .plenix .plenix-sprite { animation: none !important; }
 }
+
+/* ---------- Escolha do jogo (tela inicial) ---------- */
+.escolha-jogos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+  max-width: 640px;
+  margin: 18px auto 0;
+}
+.jogo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 14px 14px;
+  color: var(--branco);
+  background: var(--c);
+  border-radius: 26px;
+  box-shadow: 0 7px 0 var(--primaria-escura);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.jogo-card:hover { transform: translateY(-3px) rotate(-1deg); }
+.jogo-card:active { transform: translateY(5px); box-shadow: 0 2px 0 var(--primaria-escura); }
+.jogo-card-icone { font-size: 42px; line-height: 1; }
+.jogo-card-nome { font-family: 'Fredoka', sans-serif; font-size: clamp(22px, 3.4vw, 28px); font-weight: 700; }
+.jogo-card-texto { font-weight: 800; font-size: 15px; opacity: 0.92; }
+
+/* ---------- Chuva de Erros: menu ---------- */
+.cartao-chuva { max-width: 760px; margin: 0 auto; }
+.chuva-pergunta { font-family: 'Fredoka', sans-serif; font-size: 22px; color: var(--primaria); text-align: center; margin: 4px 0 10px; }
+.chuva-modos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.chuva-modo, .chuva-cat {
+  padding: 12px 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--texto);
+  background: var(--branco);
+  border: 3px solid #a9c4e6;
+  border-radius: 18px;
+  transition: transform 0.1s;
+}
+.chuva-modo.ativo, .chuva-cat.ativo { color: var(--branco); background: var(--c, var(--primaria)); border-color: var(--primaria-escura); transform: scale(1.03); }
+.chuva-categorias { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.chuva-cat { font-size: 16px; padding: 10px 8px; }
+
+/* ---------- Chuva de Erros: jogo ---------- */
+.chuva-placar { margin-left: auto; font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 700; color: var(--primaria-escura); }
+.chuva-combo { color: var(--vermelho); }
+.chuva-arena {
+  position: relative;
+  height: min(68vh, 620px);
+  overflow: hidden;
+  border-radius: 26px;
+  background: linear-gradient(180deg, #cfe5ff 0%, #eaf4ff 70%, #fff6c7 100%);
+  border: 4px solid var(--primaria);
+  box-shadow: var(--sombra);
+  touch-action: manipulation;
+  user-select: none;
+}
+.chuva-info {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  display: flex; justify-content: space-between;
+  padding: 6px 14px;
+  font-weight: 800; color: var(--primaria-escura);
+  background: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+}
+.chuva-contagem {
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fredoka', sans-serif; font-size: clamp(60px, 14vw, 120px); font-weight: 700;
+  color: var(--amarelo);
+  -webkit-text-stroke: 0.06em var(--primaria-escura); paint-order: stroke fill;
+  pointer-events: none;
+}
+.chuva-contagem:empty { display: none; }
+.gota {
+  position: absolute; top: 0; left: 0; z-index: 1;
+  padding: 8px 16px;
+  font: 800 clamp(18px, 2.6vw, 24px) 'Nunito', sans-serif;
+  color: var(--texto);
+  white-space: nowrap;
+  background: var(--branco);
+  border: 3px solid var(--primaria);
+  border-radius: 999px;
+  box-shadow: 0 4px 0 rgba(11, 46, 102, 0.25);
+  will-change: transform, opacity;
+}
+.gota::before { content: '💧'; font-size: 0.8em; margin-right: 4px; }
+.gota.pegou { background: var(--verde); border-color: #1d6b3d; color: var(--branco); animation: gota-pegou 0.35s ease-out forwards; }
+.gota.errou { background: var(--vermelho); border-color: #8e1b1b; color: var(--branco); animation: gota-errou 0.4s ease-out forwards; }
+.gota.escapou { border-color: var(--vermelho); color: var(--vermelho); }
+.gota.pegou::before, .gota.errou::before { content: none; }
+@keyframes gota-pegou { 0% { scale: 1; } 40% { scale: 1.25; } 100% { scale: 0.4; opacity: 0; } }
+@keyframes gota-errou { 0%, 100% { translate: 0; } 20%, 60% { translate: -8px; } 40%, 80% { translate: 8px; } 100% { opacity: 0; } }
+.ponto-voando {
+  position: absolute; z-index: 2; pointer-events: none;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 22px;
+  animation: ponto-sobe 0.7s ease-out forwards;
+}
+@keyframes ponto-sobe { to { transform: translateY(-40px); opacity: 0; } }
+.chuva-arena.tremer { animation: tremer 0.3s ease; }
+
+@media (max-width: 720px) {
+  .chuva-modos { grid-template-columns: 1fr; }
+  .chuva-arena { height: 62vh; }
+  .chuva-placar { font-size: 18px; }
+}

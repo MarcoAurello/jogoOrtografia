@@ -1,4 +1,4 @@
-# Jogo de Ortografia
+# Jogos das Palavras
 
 Jogo educativo para crianças em alfabetização, feito para o **Colégio Pleno**.
 O **Plenix**, o mascote robô do Pleno, guia as missões, comemora os acertos, fica triste com os erros
@@ -7,7 +7,20 @@ cada regra da ortografia do português de um jeito simples.
 
 Feito com HTML, CSS e JavaScript puro, sem instalação. Funciona no computador, no tablet e no celular.
 
-## Missões
+São dois jogos, escolhidos na tela inicial: **Jogo de Ortografia** (as missões abaixo) e **Chuva de Erros**.
+
+## Chuva de Erros
+
+As palavras caem na tela e o aluno toca só nas escritas **certas** ou só nas **erradas** (ele escolhe antes).
+Cada palavra fica de 2 a 5 segundos na tela: quanto mais rápido o aluno pega, mais rápido elas caem;
+quando ele erra ou deixa passar, a chuva fica mais lenta. Cada rodada tem até 30 palavras, metade certa e metade errada,
+de uma categoria ou de todas. No fim aparecem estrelas, pontos e o mesmo relatório (PDF e e-mail) das missões.
+
+As palavras estão em `CHUVA_CATEGORIAS` no `dados.js`, como pares `['jeito certo', 'jeito errado']`.
+Ficaram de fora os pares em que o "errado" também é uma palavra que existe (caro/carro, ora, pais...) e as
+palavras que só se decidem dentro de uma frase (mas/mais, mau/mal, onde/aonde, porque/por que...).
+
+## Jogo de Ortografia: missões
 
 | Missão | O que treina |
 |---|---|

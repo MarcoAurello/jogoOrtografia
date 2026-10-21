@@ -109,3 +109,81 @@ for (const m of MISSOES) {
     if (!SEM_FIGURA.includes(`${m.id}-${i}`)) p.img = `assets/figuras/${m.id}-${i}.jpg`;
   });
 }
+
+/* Chuva de Erros: pares [jeito certo, jeito errado]. As palavras caem na tela e o aluno toca
+   só nas certas ou só nas erradas. Ficaram de fora os pares em que o "errado" também é uma
+   palavra que existe (caro/carro, coreto, ora, país/pais, viajem, fero, aros) e as palavras
+   que só se decidem numa frase (mas/mais, mau/mal, há/a, onde/aonde, porque, sessão/seção...). */
+const CHUVA_CATEGORIAS = [
+  {
+    id: 's-z', titulo: 'S, SS, C, Ç e Z', icone: '🐍', cor: '#0095d9',
+    regra: 'Um <b>S</b> entre vogais tem som de <b>Z</b>: ca<b>s</b>a, avi<b>s</b>o. Para o som forte, usamos <b>SS, C ou Ç</b>: pa<b>ss</b>eio, <b>c</b>idade, a<b>ç</b>úcar. Na dúvida, lembre da palavra escrita!',
+    pares: [['casa', 'caza'], ['certeza', 'certesa'], ['cidade', 'sidade'], ['açúcar', 'asúcar'], ['necessário', 'nescessário'],
+      ['exceção', 'excessão'], ['assunto', 'asunto'], ['passeio', 'paceio'], ['profissão', 'profisão'], ['pesquisa', 'pesquiza'],
+      ['análise', 'analize'], ['aviso', 'avizo'], ['princesa', 'princeza'], ['beleza', 'belesa'], ['natureza', 'naturesa'],
+      ['começar', 'comesar'], ['cansaço', 'cansasso'], ['doce', 'dosse'], ['crescer', 'crecer'], ['desenho', 'dezenho']],
+  },
+  {
+    id: 'g-j', titulo: 'G e J', icone: '🦒', cor: '#c62828',
+    regra: 'Antes de <b>E e I</b>, o G e o J podem ter o mesmo som: <b>g</b>entil, <b>j</b>eito. Palavras com <b>-agem</b> e <b>-ugem</b> usam G (viagem, ferrugem); os verbos com <b>-jar</b> usam J (viajar).',
+    pares: [['jeito', 'geito'], ['viajar', 'viagar'], ['garagem', 'garage'], ['tigela', 'tijela'], ['berinjela', 'beringela'],
+      ['laranjeira', 'larangeira'], ['ferrugem', 'ferrujem'], ['coragem', 'corajem'], ['gentil', 'jentil'], ['ginástica', 'jinástica'],
+      ['relógio', 'relójio'], ['sujeira', 'sugeira'], ['girafa', 'jirafa'], ['jiboia', 'giboia'], ['fugir', 'fujir'],
+      ['injeção', 'ingeção'], ['objetivo', 'obgetivo'], ['rejeitar', 'regeitar'], ['proteger', 'protejer']],
+  },
+  {
+    id: 'x-ch', titulo: 'X e CH', icone: '☕', cor: '#0b3d91',
+    regra: '<b>X</b> e <b>CH</b> podem ter o mesmo som. Depois de <b>EN</b> no começo, quase sempre é X (<b>enx</b>ergar, <b>enx</b>ame), menos nas palavras que vêm de cheio e charco (enchente, encharcar). Depois de <b>ai, ei, ou</b>, também é X: abai<b>x</b>ar.',
+    pares: [['enxergar', 'enchergar'], ['enxame', 'enchame'], ['enchente', 'enxente'], ['chuchu', 'xuxu'], ['chuva', 'xuva'],
+      ['chave', 'xave'], ['mexer', 'mecher'], ['mexido', 'mechido'], ['xícara', 'chícara'], ['lagartixa', 'lagarticha'],
+      ['cachorro', 'caxorro'], ['pechincha', 'pechicha'], ['flecha', 'flexa'], ['encharcar', 'enxarcar'], ['faxina', 'fachina'],
+      ['puxar', 'puchar'], ['cochilo', 'coxilo'], ['mochila', 'moxila'], ['cheiro', 'xeiro'], ['abaixar', 'abaichar']],
+  },
+  {
+    id: 'r-rr', titulo: 'R e RR', icone: '🐶', cor: '#e0a100',
+    regra: 'Um <b>R</b> sozinho entre vogais é fraquinho: ba<b>r</b>ata. Para o som forte entre vogais, use <b>RR</b>: te<b>rr</b>a, ga<b>rr</b>afa.',
+    pares: [['barata', 'barrata'], ['cachorro', 'cachoro'], ['terra', 'tera'], ['corrida', 'corida'], ['arrumar', 'arumar'],
+      ['garrafa', 'garafa'], ['borracha', 'boraxa'], ['carreira', 'careira'], ['barriga', 'bariga'], ['sorriso', 'soriso'],
+      ['arroz', 'aroz'], ['socorro', 'socoro'], ['correr', 'corer'], ['terreno', 'tereno'], ['irregular', 'iregular'], ['guerra', 'guera']],
+  },
+  {
+    id: 'm-n', titulo: 'M antes de P e B', icone: '🥁', cor: '#1e4fb8',
+    regra: '<b>Antes de P e B, só M!</b> ta<b>m</b>bém, se<b>m</b>pre, so<b>m</b>bra. Antes das outras letras, usamos <b>N</b>: e<b>n</b>quanto, mu<b>n</b>do.',
+    pares: [['também', 'tanbém'], ['sempre', 'senpre'], ['campo', 'canpo'], ['bombeiro', 'bonbeiro'], ['emprego', 'enprego'],
+      ['limpeza', 'linpeza'], ['comprar', 'conprar'], ['importante', 'inportante'], ['embora', 'enbora'], ['tempo', 'tenpo'],
+      ['lâmpada', 'lanpada'], ['sombra', 'sonbra'], ['ambulância', 'anbulância'], ['computador', 'conputador'], ['brinquedo', 'brimquedo'],
+      ['amendoim', 'amendoin'], ['ninguém', 'ninguem'], ['mundo', 'mumdo'], ['enquanto', 'enquando'], ['atenção', 'atensão']],
+  },
+  {
+    id: 'h', titulo: 'H inicial', icone: '🏠', cor: '#0a8fc2',
+    regra: 'O <b>H</b> no começo da palavra não tem som, mas faz parte dela: <b>h</b>oje, <b>h</b>istória, <b>h</b>ospital. É preciso lembrar como a palavra é escrita!',
+    pares: [['hoje', 'oje'], ['homem', 'omem'], ['história', 'istória'], ['hospital', 'ospital'], ['humano', 'umano'],
+      ['herói', 'erói'], ['higiene', 'igiene'], ['habilidade', 'abilidade'], ['honesto', 'onesto'], ['hábito', 'ábito'],
+      ['herança', 'erança'], ['horário', 'orário'], ['horta', 'orta'], ['horizonte', 'orizonte'], ['humilde', 'umilde'],
+      ['hóspede', 'óspede'], ['hipótese', 'ipótese'], ['helicóptero', 'elicóptero'], ['harmonia', 'armonia']],
+  },
+  {
+    id: 'acentos', titulo: 'Acentuação', icone: '🍞', cor: '#e53935',
+    regra: 'O <b>acento</b> faz parte da palavra e muda o som da vogal: voc<b>ê</b>, l<b>á</b>pis, <b>ô</b>nibus. Sem ele, a palavra fica errada.',
+    pares: [['você', 'voce'], ['avó', 'avo'], ['avô', 'avo'], ['pássaro', 'passaro'], ['médico', 'medico'],
+      ['lápis', 'lapis'], ['fácil', 'facil'], ['difícil', 'dificil'], ['ônibus', 'onibus'], ['último', 'ultimo'],
+      ['também', 'tambem'], ['ninguém', 'ninguem'], ['português', 'portugues'], ['matemática', 'matematica'], ['ciência', 'ciencia'],
+      ['família', 'familia'], ['água', 'agua'], ['saúde', 'saude'], ['herói', 'heroi']],
+  },
+  {
+    id: 'escola', titulo: 'Palavras da escola', icone: '🎒', cor: '#2e7d32',
+    regra: 'Palavras que usamos todo dia na escola: profe<b>ss</b>or, <b>c</b>aderno, exer<b>c</b>ício. Olhe bem cada letra e cada acento!',
+    pares: [['professor', 'profesor'], ['aluno', 'alúno'], ['escola', 'iscola'], ['caderno', 'quaderno'], ['lousa', 'louza'],
+      ['caneta', 'canetta'], ['borracha', 'boraxa'], ['biblioteca', 'bibliotéca'], ['exercício', 'exercicio'], ['matéria', 'materia'],
+      ['aprendizagem', 'aprendisagem'], ['conhecimento', 'conhicimento'], ['disciplina', 'diciplina'], ['educação', 'educasão'], ['português', 'portugês'],
+      ['geografia', 'geográfia'], ['história', 'istoria'], ['ciências', 'ciencias'], ['interpretação', 'enterpretação'], ['questionário', 'questionario']],
+  },
+  {
+    id: 'dificeis', titulo: 'Palavras difíceis', icone: '🧠', cor: '#e07b00',
+    regra: 'Palavras que pegam muita gente: e<b>x</b>emplo (X com som de Z), e<b>xc</b>elente, adole<b>sc</b>ente, <b>pr</b>oblema, cabel<b>ei</b>reiro. Leia devagar, letra por letra!',
+    pares: [['exagero', 'esagero'], ['exemplo', 'ezemplo'], ['experiência', 'experiencia'], ['excelente', 'exelente'], ['adolescente', 'adolecente'],
+      ['ascensão', 'asensão'], ['consciência', 'conciência'], ['crescimento', 'crecimento'], ['desenvolvimento', 'dezenvolvimento'], ['privilégio', 'previlégio'],
+      ['empecilho', 'impecilho'], ['companhia', 'compania'], ['espontâneo', 'espontanio'], ['beneficente', 'beneficiente'], ['meteorologia', 'metereologia'],
+      ['reivindicar', 'reinvindicar'], ['mendigo', 'mendingo'], ['cabeleireiro', 'cabelereiro'], ['problema', 'poblema'], ['perspectiva', 'prespectiva']],
+  },
+];
