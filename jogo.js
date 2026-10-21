@@ -1626,6 +1626,23 @@
     // sombra no chão, suporte e travessão girando no eixo
     g.fillStyle = 'rgba(19, 60, 80, 0.10)';
     g.beginPath(); g.ellipse(cx, cy + 38 * k, 26 * k, 4 * k, 0, 0, Math.PI * 2); g.fill();
+    // travada: dois calços listrados (amarelo e preto) segurando o travessão reto
+    const travada = o && !peso.testando && !o.resolvido;
+    const mostraTrava = travada && Math.abs(peso.inclinacao) < 0.03;   // só depois que o travessão voltou a ficar reto
+    if (mostraTrava) {
+      for (const lado of [-1, 1]) {
+        const x0 = cx + lado * 52 * k - 5 * k, y0 = cy + 4 * k, alt = 34 * k, larg = 10 * k;
+        g.save();
+        g.beginPath(); g.rect(x0, y0, larg, alt); g.clip();
+        g.fillStyle = '#f9c62b'; g.fillRect(x0, y0, larg, alt);
+        g.fillStyle = '#22364a';
+        for (let s = -larg; s < alt; s += 7 * k) {
+          g.beginPath(); g.moveTo(x0, y0 + s); g.lineTo(x0 + larg, y0 + s - larg); g.lineTo(x0 + larg, y0 + s - larg + 3.5 * k); g.lineTo(x0, y0 + s + 3.5 * k); g.fill();
+        }
+        g.restore();
+        g.strokeStyle = '#22364a'; g.lineWidth = 2; g.strokeRect(x0, y0, larg, alt);
+      }
+    }
     if (pronto(S.base)) g.drawImage(S.base, cx - 19.5 * k, cy - 8 * k, 40 * k, 46 * k);
     if (pronto(S.travessao)) {
       g.save(); g.translate(cx, cy); g.rotate(a);
@@ -1673,11 +1690,17 @@
       }
     }
 
-    // travada: cadeado no eixo; no teste, o ponteiro fica verde e de pé quando equilibra
-    const travada = o && !peso.testando && !o.resolvido;
-    if (travada) {
-      g.font = `${Math.round(16 * k)}px sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle';
-      g.fillText('🔒', cx, cy - 16 * k);
+    // travada: cadeado grande no eixo e faixa no alto; no teste, o ponteiro fica verde e de pé quando equilibra
+    if (mostraTrava) {
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = `${Math.round(24 * k)}px sans-serif`;
+      g.fillText('🔒', cx, cy - 20 * k);
+      const texto = '🔒 Balança travada · toque em Testar';
+      g.font = `800 ${Math.round(10 * k)}px Nunito, Arial, sans-serif`;
+      const tw = g.measureText(texto).width + 16 * k;
+      g.fillStyle = 'rgba(34, 54, 74, 0.88)';
+      g.beginPath(); g.roundRect(cx - tw / 2, 5 * k, tw, 16 * k, 8 * k); g.fill();
+      g.fillStyle = '#ffffff'; g.fillText(texto, cx, 13 * k);
     }
     g.save(); g.translate(cx, cy); g.rotate(a);
     g.fillStyle = travada ? 'rgba(0, 0, 0, 0)' : Math.abs(peso.inclinacao) < 0.01 ? '#2e9e5b' : '#e53935';
