@@ -87,7 +87,7 @@ Abra o `index.html` no navegador.
 - `assets/plenix/*.gif` — as mesmas animações em GIF (fundo branco), para usar em outros materiais
 - `ferramentas/plenix.ps1` — recorta o Plenix comparando as imagens de fundo azul e roxo (em `assets/plenix-original/`)
 - `ferramentas/plenix-farda.py` — veste o Plenix com a farda da Rede Estadual (camisa branca, gola azul, faixa amarela, vermelha e azul) a partir de `assets/plenix-original/plenix_spritesheet_original.png`
-- `assets/logo-pleno.png` — logo do colégio
+- `assets/logo-pg.png` — logo da Pedagogia Gamificada (marca do app; recorte redondo de `assets/logo-pg-original.png`)
 - `ferramentas/logo.ps1` — recorta o logo e deixa o fundo transparente
 
 Para criar mais perguntas, basta adicionar itens no `dados.js`.

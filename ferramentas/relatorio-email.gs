@@ -58,16 +58,16 @@ function montarEmail(r) {
   const linhas = r.palavras.map((p) => `<tr><td style="padding:6px 10px;color:#1e7846;font-weight:bold">${h(p.certa.toUpperCase())}</td>`
     + `<td style="padding:6px 10px;color:#c8323c;text-decoration:line-through">${h(p.tentou.join(', ').toUpperCase())}</td></tr>`).join('');
   const tabela = linhas
-    ? `<h3 style="color:#1565c0">${r.tx.revisar}</h3><table style="border-collapse:collapse;border:1px solid #dce9f8">`
-      + `<tr style="background:#1565c0;color:#fff"><th style="padding:6px 10px;text-align:left">${r.tx.certo}</th><th style="padding:6px 10px;text-align:left">${r.tx.tentou}</th></tr>${linhas}</table>`
+    ? `<h3 style="color:#1fa2b0">${r.tx.revisar}</h3><table style="border-collapse:collapse;border:1px solid #dbeef1">`
+      + `<tr style="background:#1fa2b0;color:#fff"><th style="padding:6px 10px;text-align:left">${r.tx.certo}</th><th style="padding:6px 10px;text-align:left">${r.tx.tentou}</th></tr>${linhas}</table>`
     : '';
   return `<div style="font-family:Arial,sans-serif;color:#13294b;max-width:640px">`
-    + `<h2 style="color:#1565c0;margin-bottom:4px">Relatório de ${r.assunto}</h2>`
+    + `<h2 style="color:#1fa2b0;margin-bottom:4px">Relatório de ${r.assunto}</h2>`
     + `<p style="margin-top:0;color:#64748b">Jogos Educacionais: o aluno joga, o professor analisa</p>`
     + `<p><b>Aluno:</b> ${h(r.aluno)}<br><b>Atividade:</b> ${h(r.missao)}<br><b>Data:</b> ${h(r.data)}<br>`
     + `<b>Acertos de primeira:</b> ${r.acertos} de ${r.total} · <b>Estrelas:</b> ${r.estrelas} de 3</p>`
     + graficosEmail(r)
-    + `<h3 style="color:#1565c0">Principais dificuldades</h3>${dificuldades}${tabela}</div>`;
+    + `<h3 style="color:#1fa2b0">Principais dificuldades</h3>${dificuldades}${tabela}</div>`;
 }
 
 // Gráficos feitos só com tabelas e cores (o Gmail não mostra imagens nem SVG embutidos)
@@ -82,7 +82,7 @@ function barra(partes, alturaPx) {
 function graficosEmail(r) {
   if (!r.total) return '';
   const pct = Math.round((r.acertos / r.total) * 100);
-  let html = `<h3 style="color:#1565c0;margin-bottom:6px">Resultado: ${pct}% certo de primeira</h3>`
+  let html = `<h3 style="color:#1fa2b0;margin-bottom:6px">Resultado: ${pct}% certo de primeira</h3>`
     + barra([[pct, VERDE, `${r.acertos} ✔`], [100 - pct, VERMELHO, r.total - r.acertos ? `${r.total - r.acertos} ✘` : '']], 26);
 
   if (r.porRegra.length) {
@@ -95,7 +95,7 @@ function graficosEmail(r) {
         + barra([[Math.round((ok / x.total) * 100), VERDE, ok || ''], [Math.round((x.erros / x.total) * 100), VERMELHO, x.erros || '']], 18)
         + `</td></tr></table></td><td style="padding:4px 0 4px 8px;font-size:12px;white-space:nowrap">${ok}/${x.total}</td></tr>`;
     }).join('');
-    html += `<h3 style="color:#1565c0;margin:18px 0 6px">${r.tx.porRegra}</h3>`
+    html += `<h3 style="color:#1fa2b0;margin:18px 0 6px">${r.tx.porRegra}</h3>`
       + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${linhas}</table>`
       + `<p style="font-size:12px;color:#64748b;margin:4px 0 0"><span style="color:${VERDE}">■</span> certo de primeira &nbsp; <span style="color:${VERMELHO}">■</span> com erro</p>`;
   }
@@ -104,7 +104,7 @@ function graficosEmail(r) {
     const colunas = r.niveis.map((x, i) => `<td valign="bottom" align="center" style="padding:0 1px">`
       + `<div style="height:${Math.round((x.n * 90) / r.tx.nivelMax)}px;background:${x.ok ? VERDE : VERMELHO};border-radius:3px 3px 0 0"></div>`
       + `<div style="font-size:10px;color:#64748b">${i + 1}</div></td>`).join('');
-    html += `<h3 style="color:#1565c0;margin:18px 0 6px">${r.tx.niveis} (1 a ${r.tx.nivelMax})</h3>`
+    html += `<h3 style="color:#1fa2b0;margin:18px 0 6px">${r.tx.niveis} (1 a ${r.tx.nivelMax})</h3>`
       + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="height:110px"><tr>${colunas}</tr></table>`
       + `<p style="font-size:12px;color:#64748b;margin:4px 0 0">Altura = nível. <span style="color:${VERDE}">■</span> acertou (o nível sobe) &nbsp; <span style="color:${VERMELHO}">■</span> errou (o nível desce)</p>`;
   }

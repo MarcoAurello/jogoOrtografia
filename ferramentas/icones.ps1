@@ -1,10 +1,10 @@
-# Gera os ícones do app: fundo em degradê pastel, logo da Secretaria de Educação e "ABC" em amarelo.
+# Gera os ícones do app: fundo em degradê pastel, logo da Pedagogia Gamificada e "ABC" em amarelo.
 # Uso: powershell -ExecutionPolicy Bypass -File ferramentas\icones.ps1
 Add-Type -AssemblyName System.Drawing
 $raiz = Split-Path $PSScriptRoot -Parent
 $saida = Join-Path $raiz 'icons'
 New-Item -ItemType Directory -Force $saida | Out-Null
-$logo = [System.Drawing.Image]::FromFile((Join-Path $raiz 'assets\logo-pe.png'))
+$logo = [System.Drawing.Image]::FromFile((Join-Path $raiz 'assets\logo-pg.png'))
 
 function Icone($tamanho, $escala, $arquivo, $cantos) {
   $bmp = New-Object System.Drawing.Bitmap $tamanho, $tamanho
@@ -15,7 +15,7 @@ function Icone($tamanho, $escala, $arquivo, $cantos) {
   $g.Clear([System.Drawing.Color]::Transparent)
 
   $area = New-Object System.Drawing.Rectangle 0, 0, $tamanho, $tamanho
-  $fundo = New-Object System.Drawing.Drawing2D.LinearGradientBrush $area, ([System.Drawing.Color]::FromArgb(255, 255, 246, 199)), ([System.Drawing.Color]::FromArgb(255, 184, 216, 255)), 45
+  $fundo = New-Object System.Drawing.Drawing2D.LinearGradientBrush $area, ([System.Drawing.Color]::FromArgb(255, 236, 250, 251)), ([System.Drawing.Color]::FromArgb(255, 166, 222, 228)), 45
   $forma = New-Object System.Drawing.Drawing2D.GraphicsPath
   if ($cantos) {
     $r = $tamanho * 0.22
@@ -40,7 +40,7 @@ function Icone($tamanho, $escala, $arquivo, $cantos) {
   $fmt = New-Object System.Drawing.StringFormat
   $fmt.Alignment = 'Center'
   $caminho.AddString('ABC', $fonte.FontFamily, [int]$fonte.Style, [float]$fs, (New-Object System.Drawing.RectangleF 0, ([float]($ly + $lh + $tamanho * 0.01)), $tamanho, $tamanho), $fmt)
-  $caneta = New-Object System.Drawing.Pen ([System.Drawing.Color]::FromArgb(255, 11, 46, 102)), ([float]($tamanho * 0.025))
+  $caneta = New-Object System.Drawing.Pen ([System.Drawing.Color]::FromArgb(255, 19, 119, 132)), ([float]($tamanho * 0.025))
   $caneta.LineJoin = 'Round'
   $g.DrawPath($caneta, $caminho)
   $g.FillPath((New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255, 247, 223, 28))), $caminho)

@@ -266,7 +266,7 @@
 
   // missão especial com as palavras de todas as missões, misturadas
   const TODAS = {
-    id: 'todas', titulo: 'Todas as palavras', icone: '🌟', cor: '#1565c0', todas: true,
+    id: 'todas', titulo: 'Todas as palavras', icone: '🌟', cor: '#1fa2b0', todas: true,
     regra: 'Aqui aparecem as <b>80 palavras</b> de todas as missões, misturadas! Use todos os segredos que você aprendeu. Se cansar, toque em <b>Terminar e ver relatório</b> quando quiser.',
   };
 
@@ -447,7 +447,7 @@
   // Cada palavra fica de 2 a 5 segundos na tela: quanto mais rápido o aluno pega, mais rápido elas caem;
   // quando ele erra ou deixa passar, a chuva fica mais lenta.
   const CHUVA = { PALAVRAS: 30, VIDA_MAX: 5, VIDA_MIN: 2, RODAPE: 34 };
-  const CHUVA_TODAS = { id: 'todas', titulo: 'Todas as palavras', icone: '🌟', cor: '#1565c0' };
+  const CHUVA_TODAS = { id: 'todas', titulo: 'Todas as palavras', icone: '🌟', cor: '#1fa2b0' };
   let chuvaModo = 'certas', chuvaCat = 'todas';
   let chuva = null;   // a rodada em andamento
   const limitar = (v, min, max) => Math.min(max, Math.max(min, v));
@@ -1146,6 +1146,15 @@
       g.lineWidth = grande || medio ? 2.5 : 1.5;
       g.beginPath(); g.moveTo(dentro.x, dentro.y); g.lineTo(fora.x, fora.y); g.stroke();
     }
+    // míssil (aponta para onde voa) com fogo animado
+    if (tiro.missil) {
+      const pm = posicaoMissil(md, tiro.missil);
+      const ang = Math.atan2(md.canhao.y - pm.ini.y, md.canhao.x - pm.ini.x) + Math.PI / 2;
+      const quadro = Math.floor(tiro.t * 12) % 3;
+      sprite(g, SPRITES.missil, quadro * 16, 0, 16, 42, pm.x, pm.y, k * 0.85, ang, 8, 18);
+    }
+
+    // números da escala por cima do míssil, para o aluno sempre conseguir ler
     g.textAlign = 'center'; g.textBaseline = 'middle';
     for (let a = 0; a < 360; a += 15) {
       if (a % 30 !== 0 && a % 45 !== 0) continue;
@@ -1155,14 +1164,6 @@
       g.fillStyle = principal ? '#ffd23a' : a % 30 === 0 ? '#d9efff' : '#ffe08a';
       if (a === 0) { g.fillText('0°', md.canhao.x - 4 * k, md.canhao.y + 34 * k); continue; }
       g.fillText(`${a}°`, p.x, p.y);
-    }
-
-    // míssil (aponta para onde voa) com fogo animado
-    if (tiro.missil) {
-      const pm = posicaoMissil(md, tiro.missil);
-      const ang = Math.atan2(md.canhao.y - pm.ini.y, md.canhao.x - pm.ini.x) + Math.PI / 2;
-      const quadro = Math.floor(tiro.t * 12) % 3;
-      sprite(g, SPRITES.missil, quadro * 16, 0, 16, 42, pm.x, pm.y, k * 0.85, ang, 8, 18);
     }
 
     // canhão: carreta parada e cano girando para a mira
@@ -1227,7 +1228,7 @@
 
   // ---------- Gráficos do relatório ----------
   // Desenhados num canvas no próprio aparelho; a mesma imagem aparece na tela e no PDF.
-  const COR_OK = '#2e9e5b', COR_ERRO = '#e53935', COR_TEXTO = '#13294b', COR_GRADE = '#dce9f8', COR_LINHA = '#1565c0';
+  const COR_OK = '#2e9e5b', COR_ERRO = '#e53935', COR_TEXTO = '#13294b', COR_GRADE = '#dce9f8', COR_LINHA = '#1fa2b0';
   const fonteGrafico = (tam, peso = 700) => `${peso} ${tam}px Nunito, Arial, sans-serif`;
 
   function novoGrafico(w, h, titulo) {
@@ -1487,7 +1488,7 @@
     const { rel, estrelas, missao: mis, data } = ultimoRelatorio;
     const tx = textosRelatorio(mis);
     const doc = new lib.jsPDF({ unit: 'mm', format: 'a4' });
-    const AZUL = [21, 101, 192], TEXTO = [19, 41, 75], CINZA = [100, 116, 139];
+    const AZUL = [19, 119, 132], TEXTO = [34, 54, 74], CINZA = [100, 116, 139];
     const L = 18, LARG = 210 - 2 * L;
     let y = 16;
 
@@ -1500,7 +1501,7 @@
 
     // cabeçalho com o logo
     try {
-      const logo = await imagemComoDataURL('assets/logo-pe.png');
+      const logo = await imagemComoDataURL('assets/logo-pg.png');
       doc.addImage(logo.url, 'PNG', L, y - 2, 28, 28 * logo.h / logo.w, undefined, 'FAST');
     } catch (e) { /* sem logo */ }
     doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.setTextColor(...AZUL);
@@ -1560,7 +1561,7 @@
       cabecalho();
       rel.comErro.forEach((r, i) => {
         if (y + 8 > 278) { doc.addPage(); y = 20; cabecalho(); }
-        if (i % 2 === 0) { doc.setFillColor(234, 243, 252); doc.rect(L, y - 5, LARG, 8, 'F'); }
+        if (i % 2 === 0) { doc.setFillColor(232, 246, 248); doc.rect(L, y - 5, LARG, 8, 'F'); }
         doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(30, 120, 70);
         doc.text(paraPDF(r.certa.toUpperCase()), L + 3, y);
         doc.setFont('helvetica', 'normal'); doc.setTextColor(200, 50, 60);
