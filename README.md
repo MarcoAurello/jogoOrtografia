@@ -1,4 +1,4 @@
-# Jogos das Palavras
+# Jogos Educacionais
 
 Jogo educativo para crianças em alfabetização, feito para o **Colégio Pleno**.
 O **Plenix**, o mascote robô do Pleno, guia as missões, comemora os acertos, fica triste com os erros

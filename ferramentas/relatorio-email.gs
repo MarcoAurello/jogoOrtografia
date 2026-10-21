@@ -1,4 +1,4 @@
-/* Jogos das Palavras — envio do relatório por e-mail (Google Apps Script, gratuito).
+/* Jogos Educacionais — envio do relatório por e-mail (Google Apps Script, gratuito).
    O jogo manda os dados do relatório para este script, que envia o e-mail pelo Gmail da conta
    que publicou o script (até 100 e-mails por dia numa conta Gmail comum).
    Se o script estiver ligado a uma planilha (Extensões → Apps Script), cada relatório também
@@ -25,7 +25,7 @@ function doPost(e) {
 
     MailApp.sendEmail({
       to: para,
-      name: 'Jogos das Palavras',
+      name: 'Jogos Educacionais',
       subject: `Relatório de Ortografia: ${aluno} (${missao})`,
       htmlBody: montarEmail({ aluno, missao, data, acertos, total, estrelas, grupos, palavras }),
     });
@@ -51,7 +51,7 @@ function montarEmail(r) {
     : '';
   return `<div style="font-family:Arial,sans-serif;color:#13294b;max-width:640px">`
     + `<h2 style="color:#1565c0;margin-bottom:4px">Relatório de Ortografia</h2>`
-    + `<p style="margin-top:0;color:#64748b">Jogos das Palavras: treinando palavras que mais erramos</p>`
+    + `<p style="margin-top:0;color:#64748b">Jogos Educacionais: treinando palavras que mais erramos</p>`
     + `<p><b>Aluno:</b> ${h(r.aluno)}<br><b>Missão:</b> ${h(r.missao)}<br><b>Data:</b> ${h(r.data)}<br>`
     + `<b>Acertos de primeira:</b> ${r.acertos} de ${r.total} · <b>Estrelas:</b> ${r.estrelas} de 3</p>`
     + `<h3 style="color:#1565c0">Principais dificuldades</h3>${dificuldades}${tabela}</div>`;
