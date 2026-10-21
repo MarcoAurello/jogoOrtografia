@@ -291,28 +291,59 @@
   };
 
   // missão especial com as palavras de todas as missões, misturadas
-  const TODAS = {
-    id: 'todas', titulo: 'Todas as palavras', icone: '🌟', cor: '#1fa2b0', todas: true,
-    regra: 'Aqui aparecem as <b>80 palavras</b> de todas as missões, misturadas! Use todos os segredos que você aprendeu. Se cansar, toque em <b>Terminar e ver relatório</b> quando quiser.',
-  };
+  // ---------- Níveis do Jogo de Ortografia ----------
+  // O aluno escolhe só o nível; cada rodada mistura palavras de várias regras.
+  // Fácil: as palavras com figura das missões. Médio e Difícil: as palavras da Chuva de Erros
+  // (o jeito certo e o errado), em perguntas de escolher a certa e de achar o "monstro" escrito errado.
+  const PERGUNTAS_POR_RODADA = 10;
+  // as categorias da Chuva viram regras do Jogo de Ortografia (o mesmo id agrupa os dois tipos no relatório)
+  const regraDaChuva = (c, tipo) => ({ ...c, id: 'c-' + c.id, tipo });
+  const paresDaChuva = (filtro) => CHUVA_CATEGORIAS.flatMap((c) => c.pares.filter(([certa]) => filtro(c, certa)).map(([certa, errada]) => ({ c, certa, errada })));
+  const ehDificil = (c, certa) => c.id === 'escola' || c.id === 'dificeis' || certa.length >= 10;
+
+  // uma pergunta a partir de um par da Chuva: escolher a certa (2 opções) ou achar o monstro entre 3 palavras
+  function perguntaDoPar(par, todos, detetive) {
+    if (!detetive) return { m: regraDaChuva(par.c, 'escolher'), p: { opcoes: [par.certa, par.errada], resp: par.certa, fig: '✍️' } };   // sem figura própria: ícone neutro
+    // duas outras palavras certas, sem repetir (algumas aparecem em mais de uma regra, como "também")
+    const outras = embaralhar([...new Set(todos.map((x) => x.certa))].filter((w) => w !== par.certa)).slice(0, 2);
+    return { m: regraDaChuva(par.c, 'detetive'),
+      p: { palavras: [par.errada, ...outras], errada: par.errada, certa: par.certa, dica: par.c.regra } };
+  }
+
+  const NIVEIS_ORTO = [
+    { id: 'orto-facil', titulo: 'Fácil', icone: '🌱', cor: '#2e9e5b', mistura: true,
+      descricao: 'Palavras curtas com figura',
+      regra: 'Palavras curtas, com figura: <b>S ou SS, Ç ou C, R ou RR, M ou N, G ou J, X ou CH</b>, acentos e o <b>Detetive de Erros</b>. Olhe a figura, ouça a palavra e escolha!',
+      fila: () => MISSOES.flatMap((m) => m.perguntas.map((p) => ({ m, p }))) },
+    { id: 'orto-medio', titulo: 'Médio', icone: '🌿', cor: '#e0a100', mistura: true,
+      descricao: 'Palavras do dia a dia',
+      regra: 'Palavras do dia a dia que muita gente erra: <b>S, SS, C, Ç e Z</b>, <b>G e J</b>, <b>X e CH</b>, <b>R e RR</b>, <b>M antes de P e B</b>, <b>H inicial</b> e <b>acentos</b>. Escolha o jeito certo ou ache o monstro!',
+      fila: () => { const pares = paresDaChuva((c, certa) => !ehDificil(c, certa)); return pares.map((par) => perguntaDoPar(par, pares, Math.random() < 0.3)); } },
+    { id: 'orto-dificil', titulo: 'Difícil', icone: '🌳', cor: '#e53935', mistura: true,
+      descricao: 'Palavras longas e difíceis',
+      regra: 'Palavras longas e difíceis, da escola e do dia a dia: <b>exceção</b>, <b>conhecimento</b>, <b>helicóptero</b>... Leia letra por letra antes de escolher!',
+      fila: () => { const pares = paresDaChuva(ehDificil); return pares.map((par) => perguntaDoPar(par, pares, Math.random() < 0.4)); } },
+  ];
 
   function telaMissoes() {
     const estrelas = lerEstrelas();
-    $('grade-missoes').innerHTML = [...MISSOES, TODAS].map((m) => `
-      <button class="missao${m.todas ? ' missao-todas' : ''}" style="--c:${m.cor}" data-id="${m.id}" type="button">
-        <span class="missao-icone">${m.icone}</span>
-        <span class="missao-titulo">${m.titulo}</span>
-        <span class="missao-estrelas">${estrelasTexto(estrelas[m.id] || 0)}</span>
+    $('grade-missoes').innerHTML = NIVEIS_ORTO.map((n) => `
+      <button class="missao" style="--c:${n.cor}" data-id="${n.id}" type="button">
+        <span class="missao-icone">${n.icone}</span>
+        <span class="missao-titulo">${n.titulo}</span>
+        <span class="missao-descricao">${n.descricao}</span>
+        <span class="missao-estrelas">${estrelasTexto(estrelas[n.id] || 0)}</span>
       </button>`).join('');
-    const total = MISSOES.reduce((s, m) => s + (estrelas[m.id] || 0), 0);
-    $('total-estrelas').textContent = `${aluno}, você já ganhou ${total} de ${MISSOES.length * 3} estrelas nas missões ⭐`;
+    const total = NIVEIS_ORTO.reduce((s, n) => s + (estrelas[n.id] || 0), 0);
+    $('total-estrelas').textContent = `${aluno}, você já ganhou ${total} de ${NIVEIS_ORTO.length * 3} estrelas ⭐`;
     mostrar('tela-missoes');
   }
 
   $('grade-missoes').onclick = (e) => {
     const b = e.target.closest('.missao'); if (!b) return;
     SOM.clique();
-    telaRegra(b.dataset.id === 'todas' ? TODAS : MISSOES.find((m) => m.id === b.dataset.id));
+    const n = NIVEIS_ORTO.find((x) => x.id === b.dataset.id);
+    telaRegra({ ...n, titulo: `Ortografia – nível ${n.titulo}` });
   };
 
   // ---------- Missão ----------
@@ -331,13 +362,11 @@
   }
 
   function comecarMissao() {
-    fila = missao.todas
-      ? embaralhar(MISSOES.flatMap((m) => m.perguntas.map((p) => ({ m, p }))))
-      : embaralhar(missao.perguntas).map((p) => ({ m: missao, p }));
+    fila = embaralhar(missao.fila()).slice(0, PERGUNTAS_POR_RODADA);
     idx = 0; resultados = [];
     $('barra-titulo').textContent = `${missao.icone} ${missao.titulo}`;
     $('tela-pergunta').style.setProperty('--c', missao.cor);
-    $('btn-terminar').hidden = !missao.todas;
+    $('btn-terminar').hidden = true;
     mostrar('tela-pergunta');
     mostrarPergunta();
   }
@@ -379,7 +408,7 @@
     $('btn-proxima').hidden = true;
     $('opcoes').innerHTML = '';
     $('palavra').innerHTML = '';
-    $('etiqueta-missao').hidden = !missao.todas;
+    $('etiqueta-missao').hidden = !missao.mistura;
     $('etiqueta-missao').textContent = `${m.icone} ${m.titulo}`;
     $('etiqueta-missao').style.setProperty('--c', m.cor);
     mascote('davi-jogo', 'pensando');   // enquanto o aluno analisa a questão
@@ -407,7 +436,7 @@
       for (const op of m.opcoes) botaoOpcao(op, '', m.cor, (e) => responder(e.currentTarget, op === p.resp, op));
     } else {
       $('enunciado').textContent = 'Qual é o jeito certo de escrever?';
-      balao('Olhe bem os <b>acentos</b> e o <b>til</b>! ✨');
+      balao(m.id === 'acentos' || m.id === 'c-acentos' ? 'Olhe bem os <b>acentos</b> e o <b>til</b>! ✨' : 'Olhe bem <b>cada letra</b>! Qual está escrita certa? ✨');
       for (const op of embaralhar(p.opcoes)) botaoOpcao(op, 'palavra-op', m.cor, (e) => responder(e.currentTarget, op === p.resp, op));
     }
   }
@@ -1683,7 +1712,7 @@
       niveis: 'Nível em cada conta', atividade: 'Atividade', outras: '🔢 Outras contas' };
     return { tipo: 'ortografia', assunto: 'Ortografia', unidade: 'palavra', revisar: 'Palavras para revisar',
       certo: 'Jeito certo', tentou: 'Você tentou', tentouPdf: 'O aluno tentou', porRegra: 'Acertos por regra',
-      niveis: 'Nível', atividade: mis.chuva ? 'Atividade' : 'Missão', outras: mis.chuva ? '🌧️ Outra chuva' : 'Outras missões' };
+      niveis: 'Nível', atividade: 'Atividade', outras: mis.chuva ? '🌧️ Outra chuva' : 'Outro nível' };
   }
 
   // ---------- Gráficos do relatório ----------

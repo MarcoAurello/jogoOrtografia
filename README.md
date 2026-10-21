@@ -51,7 +51,18 @@ As palavras estão em `CHUVA_CATEGORIAS` no `dados.js`, como pares `['jeito cert
 Ficaram de fora os pares em que o "errado" também é uma palavra que existe (caro/carro, ora, pais...) e as
 palavras que só se decidem dentro de uma frase (mas/mais, mau/mal, onde/aonde, porque/por que...).
 
-## Jogo de Ortografia: missões
+## Jogo de Ortografia: níveis
+
+O aluno escolhe só o nível (as missões por regra não aparecem mais); cada rodada tem 10 perguntas misturando regras:
+
+- **Fácil:** as palavras com figura das missões abaixo (completar a letra, acentos e Detetive de Erros).
+- **Médio:** as palavras da Chuva de Erros do dia a dia (S/SS/C/Ç/Z, G/J, X/CH, R/RR, M antes de P e B, H, acentos).
+- **Difícil:** as palavras da escola, as difíceis e as palavras longas (10 letras ou mais) da Chuva de Erros.
+
+No Médio e no Difícil cada par da Chuva vira "qual é o jeito certo?" ou o Detetive (achar a palavra errada entre três).
+As estrelas ficam por nível. As palavras do Fácil estão em `MISSOES`, as do Médio e do Difícil em `CHUVA_CATEGORIAS` (`dados.js`).
+
+### Palavras do nível Fácil
 
 | Missão | O que treina |
 |---|---|

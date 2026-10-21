@@ -1197,3 +1197,7 @@ body { background: var(--fundo); }
 .peso-btn.so-peso { width: auto; padding: 0 1px; background: transparent; border: 0; border-radius: 6px; }
 .peso-btn.so-peso:hover { background: rgba(31, 162, 176, 0.12); }
 .peso-btn.so-peso { min-width: 34px; min-height: 46px; justify-content: flex-end; }
+
+/* níveis do Jogo de Ortografia */
+#grade-missoes { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); max-width: 760px; margin: 0 auto; }
+.missao-descricao { font-size: 15px; font-weight: 700; color: var(--cinza-texto); text-align: center; }
