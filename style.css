@@ -948,6 +948,26 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
 .mat-resposta.errada { background: var(--vermelho); box-shadow: 0 6px 0 #8e1b1b; animation: tremer 0.4s ease; }
 .mat-resposta.apagada { opacity: 0.45; }
 
+/* ---------- Tiro Certo ---------- */
+.tiro-hud { display: flex; justify-content: space-between; align-items: center; margin: -4px 4px 8px; font-weight: 800; color: var(--primaria-escura); }
+.tiro-municao { display: flex; gap: 4px; min-height: 32px; align-items: center; }
+.tiro-municao img { width: 15px; height: 24px; image-rendering: pixelated; }
+.tiro-municao img.gasta { opacity: 0.2; filter: grayscale(1); }
+.tiro-arena {
+  position: relative;
+  width: 100%; max-width: 560px; aspect-ratio: 1; margin: 0 auto;
+  border-radius: 26px; overflow: hidden;
+  border: 4px solid var(--primaria-escura);
+  background: #0c1a36;
+  box-shadow: var(--sombra);
+}
+.tiro-arena canvas { width: 100%; height: 100%; display: block; }
+.tiro-pergunta { margin: 12px 0 0; text-align: center; font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 700; color: var(--primaria); }
+#tiro-opcoes { max-width: 560px; margin-left: auto; margin-right: auto; }
+#tiro-opcoes .mat-resposta { background: #0a8fc2; box-shadow: 0 6px 0 var(--primaria-escura); }
+#tiro-opcoes .mat-resposta.certa { background: var(--verde); box-shadow: 0 6px 0 #1d6b3d; }
+#tiro-opcoes .mat-resposta.errada { background: var(--vermelho); box-shadow: 0 6px 0 #8e1b1b; }
+
 @media (max-width: 720px) {
   .mat-ops { grid-template-columns: repeat(2, 1fr); }
   .mat-arena { height: 42vh; }

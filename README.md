@@ -7,7 +7,18 @@ cada regra da ortografia do português de um jeito simples.
 
 Feito com HTML, CSS e JavaScript puro, sem instalação. Funciona no computador, no tablet e no celular.
 
-São três jogos, escolhidos na tela inicial: **Jogo de Ortografia** (as missões abaixo), **Chuva de Erros** e **Chuva de Matemática**.
+São quatro jogos, escolhidos na tela inicial: **Jogo de Ortografia** (as missões abaixo), **Chuva de Erros**,
+**Chuva de Matemática** e **Tiro Certo**. Lema: *o aluno joga, o professor analisa*.
+
+## Tiro Certo (ângulos)
+
+O círculo é um transferidor: 0° à esquerda (onde fica o canhão), 90° em cima, 180° à direita e 270° embaixo.
+Um míssil de cada vez entra pela borda numa marca de ângulo e voa em linha reta até o canhão. O aluno escolhe
+entre 4 ângulos (no computador, também pelas teclas 1 a 4); o canhão mira naquela marca e só o ângulo por onde
+o míssil entrou o derruba. Começa com 4 tiros e cada acerto vale +1 tiro. A partida acaba quando os tiros acabam,
+quando um míssil chega ao canhão ou depois de 20 mísseis. Os níveis (1 a 5) usam ângulos de 90°, 45°, 30°, 15° e 10°:
+acertar de primeira sobe um nível, errar desce. As opções erradas são ângulos vizinhos e o espelhado (360° − x).
+Os sprites em pixel art são desenhados por `ferramentas/tiro-sprites.py` (gravam em `assets/tiro/`).
 
 ## Chuva de Matemática
 

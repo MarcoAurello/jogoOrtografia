@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Jogos Educacionais",
   "short_name": "Jogos Educacionais",
-  "description": "Treinando palavras que mais erramos. Jogos educativos de ortografia para crianças: Jogo de Ortografia (S ou SS, Ç ou C, R ou RR, M ou N, G ou J, X ou CH, acentos e o Detetive de Erros), Chuva de Erros e Chuva de Matemática.",
+  "description": "O aluno joga, o professor analisa. Jogos educativos de ortografia para crianças: Jogo de Ortografia (S ou SS, Ç ou C, R ou RR, M ou N, G ou J, X ou CH, acentos e o Detetive de Erros), Chuva de Erros, Chuva de Matemática e Tiro Certo (ângulos).",
   "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",

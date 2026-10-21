@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#1565c0">
   <meta name="author" content="Marco Nunes">
-  <meta name="description" content="Jogos Educacionais: treinando palavras que mais erramos. Jogos educativos de ortografia para crianças, com o Plenix, o amigo robô.">
+  <meta name="description" content="Jogos Educacionais: o aluno joga, o professor analisa. Jogos educativos de ortografia para crianças, com o Plenix, o amigo robô.">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Jogos Educacionais">
@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=22">
+  <link rel="stylesheet" href="style.css?v=23">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -34,7 +34,7 @@
         <span class="cor-amarelo">JOGOS</span>
         <span class="cor-azul">EDUCACIONAIS</span>
       </h1>
-      <p class="slogan">Treinando palavras que mais erramos</p>
+      <p class="slogan">O aluno joga, o professor analisa</p>
       <form class="cartao cartao-login" id="form-login" autocomplete="off">
         <div class="davi-area" id="davi-login"></div>
         <label class="campo">
@@ -57,13 +57,13 @@
         <span class="cor-amarelo">JOGOS</span>
         <span class="cor-azul">EDUCACIONAIS</span>
       </h1>
-      <p class="slogan">Treinando palavras que mais erramos</p>
+      <p class="slogan">O aluno joga, o professor analisa</p>
       <div class="cena">
         <div class="davi-area grande" id="davi-inicio"></div>
         <div class="balao balao-esq">
           Oi, <b id="nome-saudacao"></b>! 👋<br>
           Eu sou o <b>Plenix</b>, o seu amigo robô! 🤖<br>
-          Vamos aprender as palavras que mais erramos?
+          Escolha um jogo e vamos aprender juntos!
         </div>
       </div>
       <div class="escolha-jogos">
@@ -81,6 +81,11 @@
           <span class="jogo-card-icone">🔢</span>
           <span class="jogo-card-nome">Chuva de Matemática</span>
           <span class="jogo-card-texto">Responda a conta antes que ela caia!</span>
+        </button>
+        <button class="jogo-card" id="btn-tiro" type="button" style="--c:#0a8fc2">
+          <span class="jogo-card-icone">🎯</span>
+          <span class="jogo-card-nome">Tiro Certo</span>
+          <span class="jogo-card-texto">Ache o ângulo e derrube o míssil!</span>
         </button>
       </div>
       <div class="linha-botoes">
@@ -163,6 +168,43 @@
         <div class="chuva-contagem" id="mat-contagem"></div>
       </div>
       <div class="mat-respostas" id="mat-respostas"></div>
+    </section>
+
+    <!-- Tiro Certo: instruções -->
+    <section class="tela" id="tela-tiro-menu">
+      <h2 class="subtitulo">🎯 Tiro Certo</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-tiro"></div>
+        <div class="balao balao-esq">
+          Mísseis estão vindo! O círculo é um <b>transferidor</b>: o canhão fica no <b>0°</b> (à esquerda),
+          <b>90°</b> em cima, <b>180°</b> à direita e <b>270°</b> embaixo.
+          Veja por qual ângulo o míssil entrou e escolha a resposta certa.
+          Você tem <b>4 tiros</b>, e cada acerto vale <b>+1 tiro</b>! 💥
+        </div>
+      </div>
+      <div class="linha-botoes">
+        <button class="btn-grande" id="btn-tiro-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="tiro-voltar" type="button">← Início</button>
+      </div>
+    </section>
+
+    <!-- Tiro Certo: o jogo -->
+    <section class="tela" id="tela-tiro">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="tiro-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="tiro-nivel"></span>
+        <span class="chuva-placar"><span id="tiro-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span class="tiro-municao" id="tiro-municao" aria-label="Tiros"></span>
+        <span id="tiro-contador"></span>
+      </div>
+      <div class="tiro-arena" id="tiro-arena">
+        <canvas id="tiro-canvas"></canvas>
+        <div class="chuva-contagem" id="tiro-contagem"></div>
+      </div>
+      <p class="tiro-pergunta" id="tiro-pergunta">Por qual ângulo o míssil está vindo?</p>
+      <div class="mat-respostas" id="tiro-opcoes"></div>
     </section>
 
     <!-- Área do professor: senha e e-mail que recebe os relatórios -->
@@ -285,9 +327,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=22"></script>
-  <script src="dados.js?v=22"></script>
-  <script src="jogo.js?v=22"></script>
+  <script src="plenix.js?v=23"></script>
+  <script src="dados.js?v=23"></script>
+  <script src="jogo.js?v=23"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
