@@ -1116,3 +1116,84 @@ body { background: var(--fundo); }
 }
 .filtro-tema.ativo { color: var(--branco); background: var(--primaria); }
 .filtro-temas + .escolha-jogos { margin-top: 12px; }
+
+/* ---------- Peso Certo ---------- */
+.peso-niveis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 8px; }
+.peso-niveis .chuva-modo { display: flex; flex-direction: column; gap: 2px; align-items: center; }
+.peso-niveis small { font-size: 14px; font-weight: 700; opacity: 0.85; }
+.peso-vidas { font-size: 22px; letter-spacing: 2px; }
+.peso-arena {
+  position: relative;
+  width: 100%; max-width: 560px; aspect-ratio: 4 / 3; margin: 0 auto;
+  border-radius: 16px; overflow: hidden;
+  background: linear-gradient(180deg, #e3f6f8 0%, #f7fcfd 70%, #fff3cf 100%);
+  box-shadow: var(--sombra);
+  transition: box-shadow 0.2s;
+}
+.peso-arena canvas { width: 100%; height: 100%; display: block; }
+.peso-arena.erro { box-shadow: 0 0 0 5px var(--vermelho), var(--sombra); animation: tremer 0.4s ease; }
+.peso-arena.certo { box-shadow: 0 0 0 5px var(--verde), var(--sombra); }
+.peso-arena.alvo-drop { box-shadow: 0 0 0 5px var(--amarelo), var(--sombra); }
+.peso-msg { min-height: 1.6em; margin: 10px 0 0; text-align: center; font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 700; color: var(--primaria-escura); }
+.peso-msg.certo { color: #1d6b3d; }
+.peso-msg.erro { color: #b42318; }
+#btn-peso-proximo { margin-top: 8px; }
+.peso-rotulo { margin: 14px 0 6px; font-family: 'Fredoka', sans-serif; font-size: 17px; color: var(--primaria-escura); }
+.peso-rotulo small { font-family: 'Nunito', sans-serif; font-size: 13px; color: var(--cinza-texto); }
+.peso-lista { display: flex; flex-wrap: wrap; gap: 8px; min-height: 64px; padding: 8px; background: var(--branco); border-radius: 14px; box-shadow: var(--sombra); }
+.peso-prato { min-height: 54px; background: #f6fbfc; }
+.peso-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px;
+  width: 74px; padding: 6px 4px 4px;
+  font-family: 'Fredoka', sans-serif; font-size: 16px; font-weight: 700; color: var(--texto);
+  background: var(--branco);
+  border: 2px solid #cfe3e7; border-radius: 12px;
+  touch-action: none; user-select: none;
+}
+.peso-btn:active { transform: scale(0.96); }
+.peso-btn .peso-sprite {
+  width: 36px; height: 39px;
+  background: url(assets/balanca/pesos.png) 0 0 / 700% 100% no-repeat;
+  image-rendering: pixelated;
+}
+.peso-prato .peso-btn { width: 64px; font-size: 14px; }
+.peso-fantasma { position: fixed; z-index: 50; pointer-events: none; opacity: 0.9; transform: translate(-50%, -50%) scale(1.1); }
+.peso-tabela { position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(19, 60, 80, 0.45); }
+.peso-tabela-cartao { max-width: 560px; text-align: center; line-height: 1.5; }
+.escada { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; margin: 6px 0 12px; }
+.escada span { padding: 6px 10px; font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 700; color: var(--branco); background: var(--primaria); border-radius: 8px; }
+.escada i { font-style: normal; font-size: 12px; font-weight: 800; color: var(--cinza-texto); }
+.peso-tabela-cartao .exemplos { margin-top: 8px; font-weight: 800; color: var(--primaria-escura); }
+@media (max-width: 720px) {
+  .peso-niveis { grid-template-columns: 1fr; }
+  .peso-btn { width: 66px; font-size: 14px; }
+}
+
+/* ---------- Área do professor: e-mail por jogo ---------- */
+.emails-jogos { padding: 10px 12px; background: #f6fbfc; border: 2px solid #dbeef1; border-radius: 12px; }
+.emails-jogos summary { cursor: pointer; font-family: 'Fredoka', sans-serif; font-size: 17px; font-weight: 600; color: var(--primaria-escura); }
+.emails-jogos .professor-ajuda { margin: 6px 0 4px; font-size: 14px; color: var(--cinza-texto); }
+.campo-jogo { margin-top: 8px; font-size: 15px; }
+.campo-jogo input { font-size: 16px; padding: 9px 12px; }
+
+/* prateleiras rotuladas do Peso Certo (os pesos ficam em pé, sem número) */
+#peso-estoque { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px 12px; align-items: end; padding: 12px; }
+.prateleira { display: flex; flex-direction: column; align-items: stretch; }
+.prateleira.vazia { opacity: 0.45; }
+.prateleira-pesos { display: flex; justify-content: center; align-items: flex-end; gap: 2px; min-height: 48px; padding: 0 6px; }
+.prateleira-tabua {
+  position: relative; height: 12px;
+  background: linear-gradient(180deg, #d99a52 0%, #b07434 60%, #7d4f22 100%);
+  border-radius: 3px; box-shadow: 0 3px 0 rgba(79, 50, 20, 0.35);
+}
+.prateleira-placa {
+  position: absolute; left: 50%; top: 7px; transform: translateX(-50%);
+  padding: 1px 10px;
+  font-family: 'Fredoka', sans-serif; font-size: 15px; font-weight: 700; white-space: nowrap;
+  color: var(--texto); background: #fff8e1;
+  border: 2px solid #b07434; border-radius: 6px;
+}
+.prateleira + .prateleira, #peso-estoque .prateleira { margin-bottom: 18px; }
+.peso-btn.so-peso { width: auto; padding: 0 1px; background: transparent; border: 0; border-radius: 6px; }
+.peso-btn.so-peso:hover { background: rgba(31, 162, 176, 0.12); }
+.peso-btn.so-peso { min-width: 34px; min-height: 46px; justify-content: flex-end; }

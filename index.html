@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=26">
+  <link rel="stylesheet" href="style.css?v=27">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -91,6 +91,11 @@
           <span class="jogo-card-icone">🎯</span>
           <span class="jogo-card-nome">Tiro Certo</span>
           <span class="jogo-card-texto">Ache o ângulo e derrube o míssil!</span>
+        </button>
+        <button class="jogo-card" id="btn-peso" type="button" data-tema="matematica" style="--c:#e0a100">
+          <span class="jogo-card-icone">⚖️</span>
+          <span class="jogo-card-nome">Peso Certo</span>
+          <span class="jogo-card-texto">Equilibre a balança com os pesos!</span>
         </button>
       </div>
       <div class="linha-botoes">
@@ -212,6 +217,59 @@
       <div class="mat-respostas" id="tiro-opcoes"></div>
     </section>
 
+    <!-- Peso Certo: escolha do nível -->
+    <section class="tela" id="tela-peso-menu">
+      <h2 class="subtitulo">⚖️ Peso Certo</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-peso"></div>
+        <div class="balao balao-esq">
+          Coloque pesos no prato da <b>direita</b> até a balança ficar <b>reta</b>!
+          A soma dos pesos tem que ser igual ao peso do objeto. Cuidado: os pesos vêm em
+          unidades diferentes (<b>kg, hg, dag, g, dg, cg, mg</b>). Passou do ponto? Perde uma vida! ❤️
+        </div>
+      </div>
+      <div class="cartao cartao-chuva">
+        <h3 class="chuva-pergunta">Qual nível?</h3>
+        <div class="peso-niveis" id="peso-niveis"></div>
+        <button class="btn-grande" id="btn-peso-comecar" type="button">Começar ▶</button>
+      </div>
+      <button class="btn-sec" id="peso-voltar" type="button">← Início</button>
+    </section>
+
+    <!-- Peso Certo: o jogo -->
+    <section class="tela" id="tela-peso">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="peso-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="peso-nivel"></span>
+        <span class="chuva-placar"><span id="peso-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span class="peso-vidas" id="peso-vidas" aria-label="Vidas"></span>
+        <span id="peso-contador"></span>
+        <button class="btn-sec btn-pequeno" id="btn-tabela" type="button">📏 Tabela</button>
+      </div>
+      <div class="peso-arena" id="peso-arena">
+        <canvas id="peso-canvas"></canvas>
+      </div>
+      <p class="peso-msg" id="peso-msg"></p>
+      <button class="btn-grande" id="btn-peso-proximo" type="button" hidden>Próximo objeto ➜</button>
+      <h3 class="peso-rotulo">No prato da direita <small>(toque para tirar)</small></h3>
+      <div class="peso-lista peso-prato" id="peso-prato"></div>
+      <h3 class="peso-rotulo">Pesos <small>(toque ou arraste para a balança)</small></h3>
+      <div class="peso-lista" id="peso-estoque"></div>
+      <div class="peso-tabela" id="peso-tabela" hidden>
+        <div class="cartao peso-tabela-cartao" role="dialog" aria-label="Tabela de conversão">
+          <h3 class="chuva-pergunta">📏 Tabela de conversão</h3>
+          <div class="escada">
+            <span>kg</span><i>×10</i><span>hg</span><i>×10</i><span>dag</span><i>×10</i><span>g</span><i>×10</i><span>dg</span><i>×10</i><span>cg</span><i>×10</i><span>mg</span>
+          </div>
+          <p>Para a <b>direita</b> (unidade menor), <b>multiplique por 10</b> a cada degrau.<br>Para a <b>esquerda</b> (unidade maior), <b>divida por 10</b>.</p>
+          <p class="exemplos">1 kg = 10 hg = 100 dag = 1000 g<br>1 g = 10 dg = 100 cg = 1000 mg</p>
+          <button class="btn-grande" id="btn-tabela-fechar" type="button">Entendi</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Área do professor: senha e e-mail que recebe os relatórios -->
     <section class="tela" id="tela-professor">
       <h2 class="subtitulo">🧑‍🏫 Área do professor</h2>
@@ -224,11 +282,16 @@
         <button class="btn-grande" type="submit">Entrar ▶</button>
       </form>
       <form class="cartao cartao-login" id="form-email-professor" autocomplete="off" hidden>
-        <p class="professor-ajuda">No fim de cada missão, o relatório do aluno é enviado para este e-mail (precisa de internet; sem internet, ele vai depois).</p>
+        <p class="professor-ajuda">No fim de cada atividade, o relatório do aluno é enviado por e-mail (precisa de internet; sem internet, ele vai depois).</p>
         <label class="campo">
-          <span>E-mail do professor</span>
+          <span>E-mail geral (todos os jogos)</span>
           <input type="email" id="professor-email" maxlength="120" placeholder="nome@exemplo.com">
         </label>
+        <details class="emails-jogos" id="emails-jogos">
+          <summary>📨 Um e-mail diferente para cada jogo (opcional)</summary>
+          <p class="professor-ajuda">Deixe em branco para usar o e-mail geral.</p>
+          <div id="campos-emails-jogos"></div>
+        </details>
         <p class="erro-login" id="aviso-email" role="status"></p>
         <button class="btn-grande" type="submit">Salvar ✔</button>
         <button class="btn-sec" id="btn-remover-email" type="button">Parar de enviar</button>
@@ -332,9 +395,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=26"></script>
-  <script src="dados.js?v=26"></script>
-  <script src="jogo.js?v=26"></script>
+  <script src="plenix.js?v=27"></script>
+  <script src="dados.js?v=27"></script>
+  <script src="jogo.js?v=27"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

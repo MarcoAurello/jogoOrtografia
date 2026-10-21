@@ -10,6 +10,7 @@ const MAX_ITENS = 120;
 const TEXTOS = {
   ortografia: { assunto: 'Ortografia', unidade: 'palavra', revisar: 'Palavras para revisar', certo: 'Jeito certo', tentou: 'O aluno tentou', porRegra: 'Acertos por regra', niveis: 'Nível', nivelMax: 10 },
   matematica: { assunto: 'Matemática', unidade: 'conta', revisar: 'Contas para revisar', certo: 'Conta certa', tentou: 'O aluno respondeu', porRegra: 'Acertos por operação', niveis: 'Nível em cada conta', nivelMax: 10 },
+  medidas: { assunto: 'Medidas de massa', unidade: 'objeto', revisar: 'Objetos para revisar', certo: 'Objeto e peso', tentou: 'Passou do ponto com', porRegra: 'Acertos por unidade', niveis: 'Nível', nivelMax: 3 },
   angulos: { assunto: 'Ângulos', unidade: 'ângulo', revisar: 'Ângulos para revisar', certo: 'Ângulo certo', tentou: 'O aluno escolheu', porRegra: 'Acertos por tipo de ângulo', niveis: 'Nível em cada míssil', nivelMax: 5 },
 };
 
@@ -24,13 +25,15 @@ function doPost(e) {
     const aluno = texto(d.aluno, 40);
     const missao = texto(d.missao, 80);
     // tipo do relatório: pelo campo "tipo" ou, nas versões antigas do jogo, pelo nome da atividade
-    const tipo = d.tipo === 'angulos' || /tiro certo/i.test(missao) ? 'angulos'
+    const tipo = d.tipo === 'medidas' || /peso certo/i.test(missao) ? 'medidas'
+      : d.tipo === 'angulos' || /tiro certo/i.test(missao) ? 'angulos'
       : d.tipo === 'matematica' || /matem/i.test(String(d.assunto || '')) || /matem/i.test(missao) ? 'matematica' : 'ortografia';
     const tx = TEXTOS[tipo];
     const assunto = tx.assunto;
     const data = texto(d.data, 20);
     const grupos = lista(d.grupos).map((g) => ({ titulo: texto(g.titulo, 60), qtd: Number(g.qtd) || 0, regra: texto(g.regra, 400) }));
     const palavras = lista(d.palavras).map((p) => ({ certa: texto(p.certa, 40), tentou: lista(p.tentou).map((t) => texto(t, 40)) }));
+    const extra = texto(d.extra, 120);
     const acertos = Number(d.acertos) || 0, total = Number(d.total) || 0, estrelas = Number(d.estrelas) || 0;
     const porRegra = lista(d.porRegra).slice(0, 12).map((x) => ({ titulo: texto(x.titulo, 40), total: numero(x.total, 200), erros: numero(x.erros, 200) }));
     const niveis = lista(d.niveis).slice(0, 40).map((x) => ({ n: numero(x.n, tx.nivelMax) || 1, ok: !!x.ok }));
@@ -39,7 +42,7 @@ function doPost(e) {
       to: para,
       name: 'Jogos Educacionais',
       subject: `Relatório de ${assunto}: ${aluno} (${missao})`,
-      htmlBody: montarEmail({ tx, assunto, aluno, missao, data, acertos, total, estrelas, grupos, palavras, porRegra, niveis }),
+      htmlBody: montarEmail({ tx, extra, assunto, aluno, missao, data, acertos, total, estrelas, grupos, palavras, porRegra, niveis }),
     });
     guardarNaPlanilha([new Date(), para, aluno, missao, acertos, total, estrelas,
       palavras.map((p) => `${p.certa} (${p.tentou.join(', ')})`).join('; ')]);
@@ -65,7 +68,7 @@ function montarEmail(r) {
     + `<h2 style="color:#1fa2b0;margin-bottom:4px">Relatório de ${r.assunto}</h2>`
     + `<p style="margin-top:0;color:#64748b">Jogos Educacionais: o aluno joga, o professor analisa</p>`
     + `<p><b>Aluno:</b> ${h(r.aluno)}<br><b>Atividade:</b> ${h(r.missao)}<br><b>Data:</b> ${h(r.data)}<br>`
-    + `<b>Acertos de primeira:</b> ${r.acertos} de ${r.total} · <b>Estrelas:</b> ${r.estrelas} de 3</p>`
+    + `<b>Acertos de primeira:</b> ${r.acertos} de ${r.total} · <b>Estrelas:</b> ${r.estrelas} de 3${r.extra ? `<br>${h(r.extra)}` : ''}</p>`
     + graficosEmail(r)
     + `<h3 style="color:#1fa2b0">Principais dificuldades</h3>${dificuldades}${tabela}</div>`;
 }

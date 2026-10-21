@@ -7,8 +7,18 @@ cada regra da ortografia do português de um jeito simples.
 
 Feito com HTML, CSS e JavaScript puro, sem instalação. Funciona no computador, no tablet e no celular.
 
-São quatro jogos, escolhidos na tela inicial: **Jogo de Ortografia** (as missões abaixo), **Chuva de Erros**,
-**Chuva de Matemática** e **Tiro Certo**. Lema: *o aluno joga, o professor analisa*.
+São cinco jogos, escolhidos na tela inicial (com filtro por tema: Português ou Matemática): **Jogo de Ortografia**
+(as missões abaixo), **Chuva de Erros**, **Chuva de Matemática**, **Tiro Certo** e **Peso Certo**. Lema: *o aluno joga, o professor analisa*.
+
+## Peso Certo (medidas de massa)
+
+Balança de dois pratos: o objeto fica no prato da esquerda e o aluno coloca pesos no da direita (tocando ou arrastando)
+até a soma ser exatamente o peso do objeto. A soma não aparece, só a inclinação; quando equilibra, aparece a conta
+(ex.: `1 dg + 5 cg + 5 cg = 200 mg`). Os pesos ficam em prateleiras com plaquinhas de valor, e o tamanho de cada peso
+acompanha o quanto ele pesa. Passou do ponto: perde 1 de 3 vidas e o último peso volta. Tocar num peso do prato o devolve.
+Níveis escolhidos no menu: Fácil (kg e g), Médio (g, dag e hg) e Difícil (mg, cg e dg, às vezes em g com vírgula).
+O estoque tem de 6 a 8 pesos e sempre uma combinação exata. O botão "📏 Tabela" mostra a escada de conversão, e o
+relatório diz quantas vezes ela foi usada. Sprites desenhados por `ferramentas/balanca-sprites.py` (em `assets/balanca/`).
 
 ## Tiro Certo (ângulos)
 
@@ -115,7 +125,7 @@ powershell -ExecutionPolicy Bypass -File ferramentas\versao.ps1
 ## Relatório por e-mail (grátis, com Google Apps Script)
 
 Na tela inicial, **🧑‍🏫 Área do professor** (senha `app0707`, em `SENHA_PROFESSOR` no `jogo.js`) guarda no aparelho
-o e-mail do professor. No fim de cada missão, o relatório vai para esse e-mail, mesmo que o aluno não baixe o PDF.
+um e-mail geral e, se quiser, um e-mail diferente para cada jogo (em branco, o jogo usa o geral). No fim de cada atividade, o relatório vai para o e-mail do jogo, mesmo que o aluno não baixe o PDF.
 Sem internet, o relatório fica numa fila no aparelho e é enviado quando a conexão voltar.
 
 O envio é feito por `ferramentas/relatorio-email.gs`, publicado uma vez na sua conta Google:
