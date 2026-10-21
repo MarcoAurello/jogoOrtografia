@@ -67,9 +67,13 @@ Para criar mais perguntas, basta adicionar itens no `dados.js`.
 O jogo pode ser instalado no celular (botão **📲 Instalar app** na tela inicial) e funciona offline.
 Inclui `manifest.json`, `service-worker.js`, ícones em `icons/` e `privacidade.html` (exigida pela Google Play).
 
-Ao alterar qualquer arquivo do jogo, aumente a `VERSAO` em `service-worker.js` e o número `?v=`
-nos arquivos do `index.html` (style.css, plenix.js, dados.js, jogo.js) e do `service-worker.js`,
-para os aparelhos baixarem a versão nova.
+Ao alterar qualquer arquivo do jogo, aumente a versão para os aparelhos baixarem a nova.
+O script troca de uma vez a `VERSAO` do `service-worker.js` e o `?v=` dos arquivos no `index.html`
+e no `service-worker.js` (soma 1; para escolher o número, passe-o no fim, ex.: `... versao.ps1 20`):
+
+```
+powershell -ExecutionPolicy Bypass -File ferramentas\versao.ps1
+```
 
 - `assets/figuras/` — figuras das palavras, recortadas do cartaz por `ferramentas/figuras.ps1`
 - `ferramentas/icones.ps1` — gera os ícones do app
