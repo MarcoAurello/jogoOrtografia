@@ -1156,15 +1156,14 @@
 
     // números da escala por cima do míssil, para o aluno sempre conseguir ler
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    for (let a = 0; a < 360; a += 15) {
-      if (a % 30 !== 0 && a % 45 !== 0) continue;
-      const principal = a % 90 === 0;
-      const p = ponto(a, R + (principal ? 22 : 17) * (S / 420));
-      g.font = `${principal ? 800 : 700} ${Math.round((principal ? 17 : 12) * (S / 420))}px Nunito, Arial, sans-serif`;
-      g.fillStyle = principal ? '#ffd23a' : a % 30 === 0 ? '#d9efff' : '#ffe08a';
-      if (a === 0) { g.fillText('0°', md.canhao.x - 4 * k, md.canhao.y + 34 * k); continue; }
+    // só os números de referência (0°, 90°, 180° e 270°): os outros ângulos o aluno descobre contando as marcas
+    g.font = `800 ${Math.round(18 * (S / 420))}px Nunito, Arial, sans-serif`;
+    g.fillStyle = '#ffd23a';
+    for (const a of [90, 180, 270]) {
+      const p = ponto(a, R + 22 * (S / 420));
       g.fillText(`${a}°`, p.x, p.y);
     }
+    g.fillText('0°', md.canhao.x - 4 * k, md.canhao.y + 34 * k);
 
     // canhão: carreta parada e cano girando para a mira
     const c = md.canhao;
