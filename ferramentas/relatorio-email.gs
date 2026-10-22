@@ -20,7 +20,7 @@ const TEXTOS = {
   matematica: { assunto: 'Matemática', unidade: 'conta', revisar: 'Contas para revisar', certo: 'Conta certa', tentou: 'O aluno respondeu', porRegra: 'Acertos por operação', niveis: 'Nível em cada conta', nivelMax: 10 },
   medidas: { assunto: 'Medidas de massa', unidade: 'objeto', revisar: 'Objetos para revisar', certo: 'Objeto e peso', tentou: 'Passou do ponto com', porRegra: 'Acertos por unidade', niveis: 'Nível', nivelMax: 3 },
   angulos: { assunto: 'Ângulos', unidade: 'ângulo', revisar: 'Ângulos para revisar', certo: 'Ângulo certo', tentou: 'O aluno escolheu', porRegra: 'Acertos por tipo de ângulo', niveis: 'Nível em cada míssil', nivelMax: 5 },
-  atencao: { assunto: 'Atenção e memória', unidade: 'sequência', revisar: 'Sequências para revisar', certo: 'Sequência que piscou', tentou: 'O que o aluno tocou', porRegra: 'Acertos por tamanho da sequência', niveis: 'Nível em cada rodada', nivelMax: 8 },
+  atencao: { assunto: 'Atenção e memória', unidade: 'sequência', revisar: 'Sequências para revisar', certo: 'Sequência que piscou', tentou: 'O que o aluno fez', porRegra: 'Acertos por tamanho da sequência', niveis: 'Nível em cada rodada', nivelMax: 8 },
   questionario: { assunto: 'Questionário da aula', unidade: 'pergunta', revisar: 'Perguntas para revisar', certo: 'Pergunta e resposta certa', tentou: 'O aluno respondeu', porRegra: 'Acertos', niveis: 'Nível', nivelMax: 10 },
 };
 

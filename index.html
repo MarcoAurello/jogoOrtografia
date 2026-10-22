@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=53">
+  <link rel="stylesheet" href="style.css?v=54">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -265,10 +265,10 @@
 
     <!-- Jogo do Reflexo: instruções -->
     <section class="tela" id="tela-luzes-menu">
-      <h2 class="subtitulo">💡 Jogo do Reflexo</h2>
+      <h2 class="subtitulo" id="luz-menu-titulo">💡 Jogo do Reflexo</h2>
       <div class="cena cena-regra">
         <div class="davi-area" id="davi-luzes"></div>
-        <div class="balao balao-esq">
+        <div class="balao balao-esq" id="luz-menu-texto">
           Lá em cima estão <b>4 lâmpadas</b>, cada uma com uma cor e um som. Olhe e escute: quando uma lâmpada
           <b>piscar</b>, toque no <b>botão da mesma cor</b> lá embaixo, <b>quantas vezes ela piscou</b>.
           Atenção: os botões ficam em outro lugar! Acertou? Fica mais difícil. Quanto mais rápido, <b>mais pontos</b>! ⚡
@@ -295,6 +295,9 @@
         <div class="luz-lampadas" id="luz-lampadas"></div>
         <p class="luz-msg" id="luz-msg" role="status"></p>
         <div class="luz-botoes" id="luz-botoes"></div>
+        <!-- Nível 2: copos e filas de bolinhas (cada fila mostra 2 bolinhas) -->
+        <div class="luz-copos" id="luz-copos" hidden></div>
+        <div class="luz-bolas" id="luz-bolas" hidden></div>
       </div>
     </section>
 
@@ -476,6 +479,11 @@
           <span class="jogo-card-nome">Jogo do Reflexo</span>
           <span class="jogo-card-texto">Veja a luz piscar e toque no botão da mesma cor!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-luzes2" type="button" data-tema="psicopedagogia" style="--c:#c2185b">
+          <img class="jogo-card-capa" src="assets/capa-reflexo2.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Jogo do Reflexo Nível 2</span>
+          <span class="jogo-card-texto">Leve a bolinha da cor da luz para o copo da mesma cor!</span>
+        </button>
         <!-- jogo externo: abre o jogo de raciocínio e estratégia em outra aba -->
         <a class="jogo-card com-capa" id="btn-psico" href="https://nagila.vercel.app/" target="_blank" rel="noopener" data-tema="psicopedagogia" style="--c:#2e7dbf">
           <img class="jogo-card-capa" src="assets/capa-psico-estrategia.jpg" alt="" width="518" height="707" style="object-position: center 45%">
@@ -590,9 +598,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=53"></script>
-  <script src="dados.js?v=53"></script>
-  <script src="jogo.js?v=53"></script>
+  <script src="plenix.js?v=54"></script>
+  <script src="dados.js?v=54"></script>
+  <script src="jogo.js?v=54"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

@@ -453,7 +453,8 @@
     matematica: { nome: 'Chuva de Matemática', abrir: () => telaMatMenu() },
     tiro: { nome: 'Tiro Certo', abrir: () => telaTiroMenu() },
     peso: { nome: 'Peso Certo', abrir: () => telaPesoMenu() },
-    reflexo: { nome: 'Jogo do Reflexo', abrir: () => telaLuzesMenu() },
+    reflexo: { nome: 'Jogo do Reflexo', abrir: () => telaLuzesMenu(1) },
+    reflexo2: { nome: 'Jogo do Reflexo Nível 2', abrir: () => telaLuzesMenu(2) },
   };
   const JOGOS_DE_FORA = [
     { nome: 'ABC da Tia Ana', link: 'https://abcdaana.vercel.app/' },
@@ -2155,12 +2156,14 @@
   // tocando os botões das mesmas cores, na mesma ordem e quantas vezes cada uma piscou.
   // Acertou: o próximo desafio fica mais difícil (mais cores, mais piscadas, mais rápido). Errou: fica mais fácil.
   // Os pontos dependem da rapidez: quanto mais rápido responder, mais pontos.
-  const LUZ = { RODADAS: 15, NIVEL_MAX: 8, ESPERA: 15 };   // ESPERA: segundos para responder
+  // Nível 2: em vez de botões, copos e filas de bolinhas. A lâmpada pisca e o aluno arrasta a bolinha da mesma cor
+  // até o copo da mesma cor (quantas vezes piscou). Lâmpadas, copos e filas nunca têm a mesma cor um embaixo do outro.
+  const LUZ = { RODADAS: 15, NIVEL_MAX: 8, ESPERA: 15, ESPERA2: 25 };   // ESPERA: segundos para responder
   const CORES_LUZ = [
-    { id: 'vermelha', nome: 'Vermelha', cor: '#ff3b30', freq: 330 },
-    { id: 'amarela', nome: 'Amarela', cor: '#ffd60a', freq: 523 },
-    { id: 'verde', nome: 'Verde', cor: '#30d158', freq: 392 },
-    { id: 'azul', nome: 'Azul', cor: '#1e88ff', freq: 262 },
+    { id: 'vermelha', nome: 'Vermelha', copo: 'vermelho', cor: '#ff3b30', freq: 330 },
+    { id: 'amarela', nome: 'Amarela', copo: 'amarelo', cor: '#ffd60a', freq: 523 },
+    { id: 'verde', nome: 'Verde', copo: 'verde', cor: '#30d158', freq: 392 },
+    { id: 'azul', nome: 'Azul', copo: 'azul', cor: '#1e88ff', freq: 262 },
   ];
   // passos: quantas cores na sequência; max: até quantas piscadas por cor; ms: duração de cada piscada
   const NIVEIS_LUZ = [
@@ -2169,6 +2172,20 @@
     { passos: 3, max: 2, ms: 540 }, { passos: 3, max: 3, ms: 490 },
     { passos: 4, max: 2, ms: 450 }, { passos: 4, max: 3, ms: 400 },
   ];
+  // Nível 2 começa mais leve: arrastar leva mais tempo que tocar
+  const NIVEIS_LUZ2 = [
+    { passos: 1, max: 1, ms: 800 }, { passos: 1, max: 2, ms: 760 },
+    { passos: 2, max: 1, ms: 700 }, { passos: 2, max: 2, ms: 640 },
+    { passos: 3, max: 1, ms: 600 }, { passos: 3, max: 2, ms: 560 },
+    { passos: 4, max: 1, ms: 520 }, { passos: 4, max: 2, ms: 480 },
+  ];
+  let modoLuz = 1;   // 1 = botões; 2 = copos e bolinhas
+  const TEXTO_MENU_LUZ = {
+    1: $('luz-menu-texto').innerHTML,
+    2: `Lá em cima estão <b>4 lâmpadas</b>; no meio, <b>4 copos</b>; embaixo, <b>filas de bolinhas</b>. Quando uma lâmpada
+      <b>piscar</b>, arraste a <b>bolinha da mesma cor</b> até o <b>copo da mesma cor</b>, uma bolinha para cada piscada.
+      Cuidado: nada fica embaixo da mesma cor! Se preferir, toque na bolinha e depois no copo. ⚡`,
+  };
   const TIPOS_LUZ = [1, 2, 3, 4].map((n) => ({
     id: `luz${n}`, titulo: n === 1 ? 'Sequência de 1 cor' : `Sequência de ${n} cores`, icone: '💡', cor: '#7b4fc9',
     regra: n === 1
@@ -2180,17 +2197,25 @@
   const corLuz = (id) => CORES_LUZ.find((c) => c.id === id);
   const segundos = (s) => `${s.toFixed(1).replace('.', ',')} s`;
 
-  function telaLuzesMenu() {
+  function telaLuzesMenu(modo = modoLuz) {
     pararLuz();
+    modoLuz = modo;
+    $('luz-menu-titulo').textContent = modo === 2 ? '💡 Jogo do Reflexo Nível 2' : '💡 Jogo do Reflexo';
+    $('luz-menu-texto').innerHTML = TEXTO_MENU_LUZ[modo];
     mascote('davi-luzes', 'oi');
     mostrar('tela-luzes-menu');
   }
 
   function comecarLuz() {
     pararLuz();
-    missao = { id: 'luzes', luzes: true, icone: '💡', cor: '#7b4fc9', titulo: 'Jogo do Reflexo (atenção e memória)' };
+    missao = modoLuz === 2
+      ? { id: 'luzes2', luzes: true, icone: '💡', cor: '#c2185b', titulo: 'Jogo do Reflexo Nível 2 (copos e bolinhas)' }
+      : { id: 'luzes', luzes: true, icone: '💡', cor: '#7b4fc9', titulo: 'Jogo do Reflexo (atenção e memória)' };
     resultados = [];
-    luz = { nivel: 1, nivelMax: 1, pontos: 0, feitas: 0, acertos: 0, rodando: true, vez: 0, erros: {} };
+    luz = { modo: modoLuz, nivel: 1, nivelMax: 1, pontos: 0, feitas: 0, acertos: 0, rodando: true, vez: 0, erros: {} };
+    $('luz-botoes').hidden = luz.modo === 2;
+    $('luz-copos').hidden = luz.modo !== 2;
+    $('luz-bolas').hidden = luz.modo !== 2;
     $('luz-lampadas').innerHTML = CORES_LUZ.map((c) =>
       `<div class="lampada" data-cor="${c.id}" style="--cor:${c.cor}" role="img" aria-label="Lâmpada ${c.nome}"><span class="vidro"></span><span class="rosca"></span></div>`).join('');
     mostrar('tela-luzes');
@@ -2200,6 +2225,7 @@
   function pararLuz() {
     if (luz) { luz.rodando = false; clearTimeout(luz.proxima); clearInterval(luz.relogio); }
     luz = null;
+    soltarArrasto();
     document.querySelectorAll('.lampada.acesa').forEach((l) => l.classList.remove('acesa'));
   }
 
@@ -2218,6 +2244,19 @@
       `<button class="luz-botao" type="button" data-cor="${c.id}" style="--cor:${c.cor}" aria-label="Botão ${c.nome}"><span></span></button>`).join('');
   }
 
+  // Nível 2: copos e filas de bolinhas; nenhuma cor fica embaixo da mesma cor (nem da lâmpada, nem do copo)
+  function montarCoposBolas() {
+    let copos, bolas;
+    do { copos = embaralhar(CORES_LUZ); } while (copos.some((c, i) => c === CORES_LUZ[i]));
+    do { bolas = embaralhar(CORES_LUZ); } while (bolas.some((c, i) => c === CORES_LUZ[i] || c === copos[i]));
+    $('luz-copos').innerHTML = copos.map((c) =>
+      `<div class="copo" data-cor="${c.id}" style="--cor:${c.cor}" role="button" tabindex="0" aria-label="Copo ${c.nome}"><span class="copo-corpo"></span><span class="copo-bolas"></span></div>`).join('');
+    $('luz-bolas').innerHTML = bolas.map((c) =>
+      `<div class="fila-bolas" data-cor="${c.id}" style="--cor:${c.cor}"><button class="bola" type="button" data-cor="${c.id}" aria-label="Bolinha ${c.nome}"></button><span class="bola bola-espera"></span></div>`).join('');
+  }
+
+  const bloquearLuz = (sim) => $('luz-palco').classList.toggle('bloqueado', sim);
+
   async function acenderLuz(id, ms) {
     const lampada = document.querySelector(`.lampada[data-cor="${id}"]`);
     tocar([[corLuz(id).freq, ms / 1000, 'sine']]);
@@ -2232,7 +2271,7 @@
     luz.feitas++;
     const vez = ++luz.vez;
     const ativa = () => luz && luz.rodando && luz.vez === vez;
-    const nv = NIVEIS_LUZ[luz.nivel - 1];
+    const nv = (luz.modo === 2 ? NIVEIS_LUZ2 : NIVEIS_LUZ)[luz.nivel - 1];
     // sequência: cada passo é uma cor (diferente da anterior) que pisca de 1 até "max" vezes
     const seq = [];
     for (let i = 0; i < nv.passos; i++) {
@@ -2241,9 +2280,13 @@
       seq.push({ cor: c, vezes: 1 + Math.floor(Math.random() * nv.max) });
     }
     Object.assign(luz, { seq, esperado: seq.flatMap((s) => Array(s.vezes).fill(s.cor.id)), tocadas: [], respondendo: false });
-    // nos níveis 1 e 2 os botões ficam no mesmo lugar; depois mudam de lugar a cada rodada
-    if (luz.feitas === 1 || luz.nivel >= 3) montarBotoesLuz();
-    $('luz-botoes').classList.add('bloqueado');
+    // nos primeiros níveis os botões ficam no mesmo lugar; depois mudam de lugar a cada rodada
+    if (luz.modo === 2) {
+      if (luz.feitas === 1 || luz.nivel >= 2) montarCoposBolas();
+      document.querySelectorAll('.copo-bolas').forEach((c) => { c.innerHTML = ''; });
+      luz.bolaSelecionada = null;
+    } else if (luz.feitas === 1 || luz.nivel >= 3) montarBotoesLuz();
+    bloquearLuz(true);
     $('luz-tempo').textContent = '';
     hudLuz();
     msgLuz('👀 Olhe e escute…');
@@ -2259,13 +2302,14 @@
     if (!ativa()) return;
     luz.respondendo = true;
     luz.t0 = performance.now();
-    $('luz-botoes').classList.remove('bloqueado');
-    msgLuz('👆 Sua vez! Toque nos botões.');
+    bloquearLuz(false);
+    msgLuz(luz.modo === 2 ? '👆 Sua vez! Leve as bolinhas aos copos.' : '👆 Sua vez! Toque nos botões.');
+    const limite = luz.modo === 2 ? LUZ.ESPERA2 : LUZ.ESPERA;
     luz.relogio = setInterval(() => {
       if (!ativa() || !luz.respondendo) return;
       const t = (performance.now() - luz.t0) / 1000;
       $('luz-tempo').textContent = `⏱ ${segundos(t)}`;
-      if (t >= LUZ.ESPERA) respostaLuz(false, 'não respondeu a tempo', 'sem resposta');
+      if (t >= limite) respostaLuz(false, 'não respondeu a tempo', 'sem resposta');
     }, 100);
   }
 
@@ -2274,8 +2318,9 @@
     const { esperado } = luz, i = luz.tocadas.length;
     const anterior = esperado[i - 1];
     const proxima = esperado.slice(i).find((c) => c !== esperado[i]);
-    if (tocou === anterior) return 'tocou a mais';
-    if (tocou === proxima) return 'tocou a menos';
+    const verbo = luz.modo === 2 ? 'colocou' : 'tocou';
+    if (tocou === anterior) return `${verbo} a mais`;
+    if (tocou === proxima) return `${verbo} a menos`;
     if (esperado.includes(tocou)) return 'trocou a ordem';
     return 'cor que não piscou';
   }
@@ -2291,26 +2336,109 @@
     lampada.classList.add('acesa');
     setTimeout(() => lampada.classList.remove('acesa'), 160);
     tocar([[corLuz(id).freq, 0.16, 'sine']]);
+    jogadaLuz(id, 'tocou');
+  };
+
+  // confere a jogada (botão tocado ou bolinha colocada no copo certo) com a sequência que piscou
+  function jogadaLuz(id, verbo) {
     if (id !== luz.esperado[luz.tocadas.length]) {
       const tipo = tipoDoErroLuz(id);
       luz.tocadas.push(id);
-      respostaLuz(false, `tocou ${luz.tocadas.map((c) => corLuz(c).nome).join(', ')} (${tipo})`, tipo);
+      respostaLuz(false, `${verbo} ${luz.tocadas.map((c) => corLuz(c).nome).join(', ')} (${tipo})`, tipo);
       return;
     }
     luz.tocadas.push(id);
     if (luz.tocadas.length === luz.esperado.length) respostaLuz(true);
+  }
+
+  // ----- Nível 2: arrastar a bolinha até o copo (ou tocar na bolinha e depois no copo) -----
+  let arrasto = null;
+  function soltarArrasto() {
+    if (!arrasto) return;
+    arrasto.fantasma.remove();
+    arrasto.bola.classList.remove('pega');
+    document.querySelectorAll('.copo.alvo').forEach((c) => c.classList.remove('alvo'));
+    arrasto = null;
+  }
+  const copoNoPonto = (x, y) => { const el = document.elementFromPoint(x, y); return el && el.closest('#luz-copos .copo'); };
+
+  $('luz-bolas').addEventListener('pointerdown', (e) => {
+    const bola = e.target.closest('button.bola');
+    if (!bola || !luz || !luz.respondendo) return;
+    e.preventDefault();
+    soltarArrasto();
+    const r = bola.getBoundingClientRect();
+    const fantasma = document.createElement('span');
+    fantasma.className = 'bola bola-fantasma';
+    fantasma.style.cssText = `--cor:${corLuz(bola.dataset.cor).cor};width:${r.width}px;height:${r.height}px`;
+    document.body.append(fantasma);
+    arrasto = { bola, fantasma, dx: r.width / 2, dy: r.height / 2, x0: e.clientX, y0: e.clientY, moveu: false };
+    fantasma.style.transform = `translate(${e.clientX - arrasto.dx}px, ${e.clientY - arrasto.dy}px) scale(1.15)`;
+    bola.classList.add('pega');
+  });
+  document.addEventListener('pointermove', (e) => {
+    if (!arrasto) return;
+    if (Math.hypot(e.clientX - arrasto.x0, e.clientY - arrasto.y0) > 8) arrasto.moveu = true;
+    arrasto.fantasma.style.transform = `translate(${e.clientX - arrasto.dx}px, ${e.clientY - arrasto.dy}px) scale(1.15)`;
+    const copo = copoNoPonto(e.clientX, e.clientY);
+    document.querySelectorAll('.copo').forEach((c) => c.classList.toggle('alvo', c === copo));
+  });
+  document.addEventListener('pointerup', (e) => {
+    if (!arrasto) return;
+    const { bola, moveu } = arrasto;
+    soltarArrasto();
+    if (!moveu) { selecionarBola(bola); return; }   // só tocou: escolhe a bolinha e depois toca no copo
+    const copo = copoNoPonto(e.clientX, e.clientY);
+    if (copo) soltarBola(bola.dataset.cor, copo);   // soltou fora de um copo: a bolinha volta para a fila
+  });
+  document.addEventListener('pointercancel', soltarArrasto);
+
+  function selecionarBola(bola) {
+    const ja = bola.classList.contains('selecionada');
+    document.querySelectorAll('.bola.selecionada').forEach((b) => b.classList.remove('selecionada'));
+    luz.bolaSelecionada = ja ? null : bola.dataset.cor;
+    if (!ja) { bola.classList.add('selecionada'); SOM.clique(); }
+  }
+  $('luz-copos').onclick = (e) => {
+    const copo = e.target.closest('.copo');
+    if (copo && luz && luz.respondendo && luz.bolaSelecionada) soltarBola(luz.bolaSelecionada, copo);
   };
+
+  function soltarBola(corBola, copo) {
+    if (!luz || !luz.respondendo) return;
+    luz.bolaSelecionada = null;
+    document.querySelectorAll('.bola.selecionada').forEach((b) => b.classList.remove('selecionada'));
+    const corCopo = copo.dataset.cor;
+    // a bolinha cai no copo (o copo dá um pulinho) e a fila anda: aparece outra bolinha
+    const dentro = copo.querySelector('.copo-bolas');
+    if (dentro.children.length < 4) dentro.insertAdjacentHTML('beforeend', `<i style="--cor:${corLuz(corBola).cor}"></i>`);
+    copo.classList.remove('caiu');
+    void copo.offsetWidth;
+    copo.classList.add('caiu');
+    const fila = document.querySelector(`.fila-bolas[data-cor="${corBola}"]`);
+    fila.classList.remove('andou');
+    void fila.offsetWidth;
+    fila.classList.add('andou');
+    tocar([[corLuz(corCopo).freq, 0.16, 'sine']]);
+    if (corBola !== corCopo) {
+      luz.tocadas.push(corBola);
+      respostaLuz(false, `colocou a bolinha ${corLuz(corBola).nome.toLowerCase()} no copo ${corLuz(corCopo).copo} (copo de outra cor)`, 'copo de outra cor');
+      return;
+    }
+    jogadaLuz(corBola, 'colocou');
+  }
 
   function respostaLuz(acertou, motivo, tipoErro) {
     luz.respondendo = false;
     clearInterval(luz.relogio);
-    $('luz-botoes').classList.add('bloqueado');
+    bloquearLuz(true);
+    soltarArrasto();
     const tempo = (performance.now() - luz.t0) / 1000;
     const texto = luz.seq.map((s) => `${s.cor.nome} ${s.vezes}x`).join(' → ');
     const tipo = TIPOS_LUZ[luz.seq.length - 1];
     if (acertou) {
       // pontos: base pelo nível + bônus de rapidez (o tempo "bom" cresce com o número de toques)
-      const bom = 0.8 + luz.esperado.length * 0.6;
+      const bom = luz.modo === 2 ? 1.5 + luz.esperado.length * 1.3 : 0.8 + luz.esperado.length * 0.6;
       const bonus = Math.max(0, Math.round(100 * (1 - (tempo - bom) / (bom * 2))));
       const ganho = 20 * luz.nivel + Math.min(100, bonus);
       luz.pontos += ganho;
@@ -2369,7 +2497,8 @@
     $('fim-texto').textContent = `${aluno}, você acertou ${l.acertos} de ${l.feitas} sequências e fez ${l.pontos} pontos!`;
   }
 
-  $('btn-luzes').onclick = () => { SOM.clique(); escolherProfessorE('Jogo do Reflexo', telaLuzesMenu); };
+  $('btn-luzes').onclick = () => { SOM.clique(); escolherProfessorE('Jogo do Reflexo', () => telaLuzesMenu(1)); };
+  $('btn-luzes2').onclick = () => { SOM.clique(); escolherProfessorE('Jogo do Reflexo Nível 2', () => telaLuzesMenu(2)); };
   $('luzes-voltar').onclick = telaJogos;
   $('btn-luzes-comecar').onclick = () => { SOM.clique(); comecarLuz(); };
   $('luzes-sair').onclick = telaLuzesMenu;
@@ -2380,8 +2509,8 @@
       certo: 'Pergunta e resposta certa', tentou: 'Você respondeu', tentouPdf: 'O aluno respondeu', porRegra: 'Acertos',
       niveis: 'Nível', atividade: 'Atividade', outras: '📝 Outro questionário' };
     if (mis.luzes) return { tipo: 'atencao', assunto: 'Atenção e memória', unidade: 'sequência', revisar: 'Sequências para revisar',
-      certo: 'Sequência que piscou', tentou: 'O que você tocou', tentouPdf: 'O que o aluno tocou', porRegra: 'Acertos por tamanho da sequência',
-      niveis: 'Nível em cada rodada', atividade: 'Atividade', outras: '💡 Jogo do Reflexo', tempos: 'Tempo de resposta em cada rodada' };
+      certo: 'Sequência que piscou', tentou: 'O que você fez', tentouPdf: 'O que o aluno fez', porRegra: 'Acertos por tamanho da sequência',
+      niveis: 'Nível em cada rodada', atividade: 'Atividade', outras: mis.id === 'luzes2' ? '💡 Reflexo Nível 2' : '💡 Jogo do Reflexo', tempos: 'Tempo de resposta em cada rodada' };
     if (mis.peso) return { tipo: 'medidas', assunto: 'Medidas de massa', unidade: 'objeto', revisar: 'Objetos para revisar',
       certo: 'Objeto e peso', tentou: 'Passou do ponto com', tentouPdf: 'Passou do ponto com', porRegra: 'Acertos por unidade',
       niveis: 'Nível', atividade: 'Atividade', outras: '⚖️ Peso Certo' };
@@ -2806,21 +2935,17 @@
   $('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.luzes ? telaLuzesMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
   $('btn-tiro').onclick = () => { SOM.clique(); escolherProfessorE('Tiro Certo', telaTiroMenu); };
 
-  // filtro dos jogos por tema na tela inicial (a escolha fica guardada no aparelho)
-  const CHAVE_TEMA = 'pleno-ortografia:tema';
+  // filtro dos jogos por tema (ao abrir o app, todos os jogos aparecem)
   function filtrarTema(tema) {
     document.querySelectorAll('.filtro-tema').forEach((b) => b.classList.toggle('ativo', b.dataset.tema === tema));
     document.querySelectorAll('.escolha-jogos .jogo-card').forEach((c) => { c.hidden = tema !== 'todos' && c.dataset.tema !== tema; });
-    try { localStorage.setItem(CHAVE_TEMA, tema); } catch (e) { /* sem armazenamento */ }
   }
   $('filtro-temas').onclick = (e) => {
     const b = e.target.closest('.filtro-tema'); if (!b) return;
     SOM.clique();
     filtrarTema(b.dataset.tema);
   };
-  let temaSalvo = 'todos';
-  try { temaSalvo = localStorage.getItem(CHAVE_TEMA) || 'todos'; } catch (e) { /* sem armazenamento */ }
-  filtrarTema(['todos', 'portugues', 'matematica', 'abc', 'ingles', 'psicopedagogia'].includes(temaSalvo) ? temaSalvo : 'todos');
+  filtrarTema('todos');
   $('btn-area-jogos').onclick = () => { SOM.clique(); telaJogos(); };
   $('jogos-voltar').onclick = telaInicio;
   $('tiro-voltar').onclick = telaJogos;
