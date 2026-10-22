@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=39">
+  <link rel="stylesheet" href="style.css?v=40">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -66,42 +66,17 @@
           Escolha um jogo e vamos aprender juntos!
         </div>
       </div>
-      <div class="filtro-temas" id="filtro-temas" role="group" aria-label="Filtrar jogos por tema">
-        <button class="filtro-tema ativo" type="button" data-tema="todos">Todos</button>
-        <button class="filtro-tema" type="button" data-tema="portugues">📚 Português</button>
-        <button class="filtro-tema" type="button" data-tema="matematica">🔢 Matemática</button>
-        <button class="filtro-tema" type="button" data-tema="questionario">📝 Questionários</button>
-      </div>
-      <div class="escolha-jogos">
-        <button class="jogo-card" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
-          <span class="jogo-card-icone">📚</span>
-          <span class="jogo-card-nome">Jogo de Ortografia</span>
-          <span class="jogo-card-texto">Missões com os segredos da escrita</span>
+      <!-- dois caminhos: os jogos ou o questionário da aula -->
+      <div class="menu-professor menu-inicio">
+        <button class="jogo-card" id="btn-area-jogos" type="button" style="--c:#1fa2b0">
+          <span class="jogo-card-icone">🎮</span>
+          <span class="jogo-card-nome">Jogos</span>
+          <span class="jogo-card-texto">Português e Matemática: ortografia, chuvas, ângulos e balança</span>
         </button>
-        <button class="jogo-card" id="btn-chuva" type="button" data-tema="portugues" style="--c:#e53935">
-          <span class="jogo-card-icone">🌧️</span>
-          <span class="jogo-card-nome">Chuva de Erros</span>
-          <span class="jogo-card-texto">Pegue as palavras antes que sumam!</span>
-        </button>
-        <button class="jogo-card" id="btn-mat" type="button" data-tema="matematica" style="--c:#0b3d91">
-          <span class="jogo-card-icone">🔢</span>
-          <span class="jogo-card-nome">Chuva de Matemática</span>
-          <span class="jogo-card-texto">Responda a conta antes que ela caia!</span>
-        </button>
-        <button class="jogo-card com-capa" id="btn-tiro" type="button" data-tema="matematica" style="--c:#0a8fc2">
-          <img class="jogo-card-capa" src="assets/tiro/capa-tiro-certo.jpg" alt="" width="640" height="627">
-          <span class="jogo-card-nome">Tiro Certo</span>
-          <span class="jogo-card-texto">Ache o ângulo e derrube o míssil!</span>
-        </button>
-        <button class="jogo-card" id="btn-peso" type="button" data-tema="matematica" style="--c:#e0a100">
-          <span class="jogo-card-icone">⚖️</span>
-          <span class="jogo-card-nome">Peso Certo</span>
-          <span class="jogo-card-texto">Equilibre a balança com os pesos!</span>
-        </button>
-        <button class="jogo-card" id="btn-quiz" type="button" data-tema="questionario" style="--c:#7b4fc9">
+        <button class="jogo-card" id="btn-quiz" type="button" style="--c:#7b4fc9">
           <span class="jogo-card-icone">📝</span>
           <span class="jogo-card-nome">Questionário da aula</span>
-          <span class="jogo-card-texto">Responda as perguntas do professor!</span>
+          <span class="jogo-card-texto">Responda as perguntas que o professor preparou</span>
         </button>
       </div>
       <div class="linha-botoes">
@@ -136,7 +111,7 @@
         <div class="chuva-categorias" id="chuva-categorias"></div>
         <button class="btn-grande" id="btn-chuva-comecar" type="button">Começar ▶</button>
       </div>
-      <button class="btn-sec" id="chuva-voltar" type="button">← Início</button>
+      <button class="btn-sec" id="chuva-voltar" type="button">← Jogos</button>
     </section>
 
     <!-- Chuva de Erros: o jogo -->
@@ -168,7 +143,7 @@
         <p class="erro-login" id="mat-erro" role="alert"></p>
         <button class="btn-grande" id="btn-mat-comecar" type="button">Começar ▶</button>
       </div>
-      <button class="btn-sec" id="mat-voltar" type="button">← Início</button>
+      <button class="btn-sec" id="mat-voltar" type="button">← Jogos</button>
     </section>
 
     <!-- Chuva de Matemática: o jogo -->
@@ -201,7 +176,7 @@
       </div>
       <div class="linha-botoes">
         <button class="btn-grande" id="btn-tiro-comecar" type="button">Começar ▶</button>
-        <button class="btn-sec" id="tiro-voltar" type="button">← Início</button>
+        <button class="btn-sec" id="tiro-voltar" type="button">← Jogos</button>
       </div>
     </section>
 
@@ -240,7 +215,7 @@
         <div class="peso-niveis" id="peso-niveis"></div>
         <button class="btn-grande" id="btn-peso-comecar" type="button">Começar ▶</button>
       </div>
-      <button class="btn-sec" id="peso-voltar" type="button">← Início</button>
+      <button class="btn-sec" id="peso-voltar" type="button">← Jogos</button>
     </section>
 
     <!-- Peso Certo: o jogo -->
@@ -387,6 +362,44 @@
       <button class="btn-sec" id="professor-voltar" type="button">← Início</button>
     </section>
 
+    <!-- Jogos: a lista, com o filtro por tema -->
+    <section class="tela" id="tela-jogos">
+      <h2 class="subtitulo">🎮 Escolha um jogo</h2>
+      <div class="filtro-temas" id="filtro-temas" role="group" aria-label="Filtrar jogos por tema">
+        <button class="filtro-tema ativo" type="button" data-tema="todos">Todos</button>
+        <button class="filtro-tema" type="button" data-tema="portugues">📚 Português</button>
+        <button class="filtro-tema" type="button" data-tema="matematica">🔢 Matemática</button>
+      </div>
+      <div class="escolha-jogos">
+        <button class="jogo-card" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
+          <span class="jogo-card-icone">📚</span>
+          <span class="jogo-card-nome">Jogo de Ortografia</span>
+          <span class="jogo-card-texto">Missões com os segredos da escrita</span>
+        </button>
+        <button class="jogo-card" id="btn-chuva" type="button" data-tema="portugues" style="--c:#e53935">
+          <span class="jogo-card-icone">🌧️</span>
+          <span class="jogo-card-nome">Chuva de Erros</span>
+          <span class="jogo-card-texto">Pegue as palavras antes que sumam!</span>
+        </button>
+        <button class="jogo-card" id="btn-mat" type="button" data-tema="matematica" style="--c:#0b3d91">
+          <span class="jogo-card-icone">🔢</span>
+          <span class="jogo-card-nome">Chuva de Matemática</span>
+          <span class="jogo-card-texto">Responda a conta antes que ela caia!</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-tiro" type="button" data-tema="matematica" style="--c:#0a8fc2">
+          <img class="jogo-card-capa" src="assets/tiro/capa-tiro-certo.jpg" alt="" width="640" height="627">
+          <span class="jogo-card-nome">Tiro Certo</span>
+          <span class="jogo-card-texto">Ache o ângulo e derrube o míssil!</span>
+        </button>
+        <button class="jogo-card" id="btn-peso" type="button" data-tema="matematica" style="--c:#e0a100">
+          <span class="jogo-card-icone">⚖️</span>
+          <span class="jogo-card-nome">Peso Certo</span>
+          <span class="jogo-card-texto">Equilibre a balança com os pesos!</span>
+        </button>
+      </div>
+      <button class="btn-sec" id="jogos-voltar" type="button">← Início</button>
+    </section>
+
     <!-- Ajuda para instalar quando o navegador não abre a instalação sozinho -->
     <section class="tela" id="tela-instalar">
       <div class="cartao">
@@ -401,7 +414,7 @@
       <h2 class="subtitulo">Escolha o nível</h2>
       <div class="grade-missoes" id="grade-missoes"></div>
       <p class="total-estrelas" id="total-estrelas"></p>
-      <button class="btn-sec" id="voltar-inicio" type="button">← Início</button>
+      <button class="btn-sec" id="voltar-inicio" type="button">← Jogos</button>
     </section>
 
     <!-- Regra da missão -->
@@ -483,9 +496,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=39"></script>
-  <script src="dados.js?v=39"></script>
-  <script src="jogo.js?v=39"></script>
+  <script src="plenix.js?v=40"></script>
+  <script src="dados.js?v=40"></script>
+  <script src="jogo.js?v=40"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

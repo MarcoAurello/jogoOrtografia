@@ -178,6 +178,12 @@
     setTimeout(() => $('login-nome').focus(), 300);
   }
 
+  // tela com a lista de jogos (Português e Matemática); o questionário tem botão próprio na tela inicial
+  function telaJogos() {
+    if (!aluno) return telaLogin();
+    mostrar('tela-jogos');
+  }
+
   function telaInicio() {
     if (!aluno) return telaLogin();
     $('nome-saudacao').textContent = aluno;
@@ -2467,7 +2473,7 @@
 
   // ---------- Botões ----------
   $('btn-jogar').onclick = () => { SOM.clique(); escolherProfessorE('Jogo de Ortografia', telaMissoes); };
-  $('voltar-inicio').onclick = telaInicio;
+  $('voltar-inicio').onclick = telaJogos;
   $('btn-comecar').onclick = () => { SOM.clique(); comecarMissao(); };
   $('regra-voltar').onclick = telaMissoes;
   $('sair-missao').onclick = telaMissoes;
@@ -2490,23 +2496,27 @@
     SOM.clique();
     filtrarTema(b.dataset.tema);
   };
-  try { filtrarTema(localStorage.getItem(CHAVE_TEMA) || 'todos'); } catch (e) { filtrarTema('todos'); }
-  $('tiro-voltar').onclick = telaInicio;
+  let temaSalvo = 'todos';
+  try { temaSalvo = localStorage.getItem(CHAVE_TEMA) || 'todos'; } catch (e) { /* sem armazenamento */ }
+  filtrarTema(['todos', 'portugues', 'matematica'].includes(temaSalvo) ? temaSalvo : 'todos');
+  $('btn-area-jogos').onclick = () => { SOM.clique(); telaJogos(); };
+  $('jogos-voltar').onclick = telaInicio;
+  $('tiro-voltar').onclick = telaJogos;
   $('btn-tiro-comecar').onclick = () => { SOM.clique(); comecarTiro(); };
   $('tiro-sair').onclick = telaTiroMenu;
   $('btn-peso').onclick = () => { SOM.clique(); escolherProfessorE('Peso Certo', telaPesoMenu); };
-  $('peso-voltar').onclick = telaInicio;
+  $('peso-voltar').onclick = telaJogos;
   $('btn-peso-comecar').onclick = () => { SOM.clique(); comecarPeso(); };
   $('peso-sair').onclick = telaPesoMenu;
   $('btn-quiz').onclick = () => { SOM.clique(); escolherProfessorE('Questionário da aula', telaQuizMenu); };
   $('quiz-voltar').onclick = telaInicio;
   $('quiz-sair').onclick = telaQuizMenu;
   $('btn-mat').onclick = () => { SOM.clique(); escolherProfessorE('Chuva de Matemática', telaMatMenu); };
-  $('mat-voltar').onclick = telaInicio;
+  $('mat-voltar').onclick = telaJogos;
   $('btn-mat-comecar').onclick = () => { SOM.clique(); comecarMat(); };
   $('mat-sair').onclick = telaMatMenu;
   $('btn-chuva').onclick = () => { SOM.clique(); escolherProfessorE('Chuva de Erros', telaChuvaMenu); };
-  $('chuva-voltar').onclick = telaInicio;
+  $('chuva-voltar').onclick = telaJogos;
   $('btn-chuva-comecar').onclick = () => { SOM.clique(); comecarChuva(); };
   $('chuva-sair').onclick = telaChuvaMenu;
   $('btn-pdf').onclick = () => { baixarPDF().catch((e) => { console.error('PDF:', e); window.print(); }); };

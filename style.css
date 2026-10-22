@@ -1266,3 +1266,9 @@ button.quiz-item:hover { border-color: #7b4fc9; }
 /* menu da Área do professor */
 .menu-professor { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; max-width: 620px; margin: 0 auto; }
 .prof-voltar { align-self: flex-start; margin: 0 0 4px; }
+.menu-inicio { margin-top: 18px; }
+.menu-inicio .jogo-card { padding-top: 22px; padding-bottom: 20px; }
+.menu-inicio .jogo-card-icone { width: 76px; height: 76px; font-size: 42px; }
+@media (max-width: 720px) {
+  .menu-inicio { grid-template-columns: 1fr 1fr; }
+}

@@ -7,8 +7,8 @@ cada regra da ortografia do português de um jeito simples.
 
 Feito com HTML, CSS e JavaScript puro, sem instalação. Funciona no computador, no tablet e no celular.
 
-São seis jogos, escolhidos na tela inicial (com filtro por tema: Português, Matemática ou Questionários): **Jogo de Ortografia**,
-**Chuva de Erros**, **Chuva de Matemática**, **Tiro Certo**, **Peso Certo** e **Questionário da aula**. Lema: *o aluno joga, o professor analisa*.
+A tela inicial tem dois caminhos: **🎮 Jogos** (a lista, com filtro Português ou Matemática: **Jogo de Ortografia**,
+**Chuva de Erros**, **Chuva de Matemática**, **Tiro Certo** e **Peso Certo**) e **📝 Questionário da aula**. Lema: *o aluno joga, o professor analisa*.
 
 ## Questionário da aula
 
