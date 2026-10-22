@@ -1,6 +1,6 @@
 // Guarda os arquivos do jogo para funcionar offline.
 // Ao mudar qualquer arquivo do jogo, aumente a VERSAO para os aparelhos baixarem a nova.
-const VERSAO = 'ortografia-pleno-v51';
+const VERSAO = 'ortografia-pleno-v52';
 
 const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
   .flatMap((id) => Array.from({ length: 10 }, (_, i) => `./assets/figuras/${id}-${i}.jpg`));
@@ -8,10 +8,10 @@ const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
 const ARQUIVOS = [
   './',
   './index.html',
-  './style.css?v=51',
-  './jogo.js?v=51',
-  './dados.js?v=51',
-  './plenix.js?v=51',
+  './style.css?v=52',
+  './jogo.js?v=52',
+  './dados.js?v=52',
+  './plenix.js?v=52',
   './assets/plenix/plenix_spritesheet_1x.png',
   './assets/tiro/canhao-cano.png',
   './assets/tiro/canhao-carreta.png',
@@ -46,6 +46,8 @@ const ARQUIVOS = [
   './assets/manual/p08-link.jpg',
   './assets/manual/p09-escolha-prof.jpg',
   './assets/manual/p10-quiz-aluno.jpg',
+  './assets/manual/p11-links-jogos.jpg',
+  './assets/video/capa-video.jpg',
   './assets/balanca/base.png',
   './assets/balanca/travessao.png',
   './assets/balanca/prato.png',
@@ -95,6 +97,8 @@ self.addEventListener('fetch', (e) => {
   }
 
   if (url.origin !== location.origin) return;
+  // vídeo: o navegador pede em pedaços (Range) e o cache não guarda pedaços; vai direto ao servidor
+  if (url.pathname.endsWith('.mp4')) return;
 
   // Arquivos do jogo: sempre confere com o servidor (sem usar cópia velha do navegador)
   // e só usa o cache quando estiver sem internet

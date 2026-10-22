@@ -41,6 +41,12 @@
     .topo .logo { width: 84px; height: 84px; margin: 0 auto 10px; border-radius: 50%; background: var(--branco); }
     .topo h1 { font-size: clamp(30px, 6vw, 44px); }
     .topo p { margin: 6px auto 0; max-width: 560px; font-size: 17px; opacity: 0.95; }
+
+    /* vídeo de apresentação no topo */
+    .video { margin: 4px auto 8px; max-width: 900px; text-align: center; }
+    .video h2 { font-size: clamp(24px, 4.5vw, 30px); color: var(--primaria-escura); margin: 0 0 10px; }
+    .video video { width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 18px; background: #000; box-shadow: 0 6px 0 rgba(19, 41, 75, 0.12); }
+    .video p { margin: 8px 0 0; color: var(--cinza); font-size: 15px; }
     .abas { position: sticky; top: 0; z-index: 5; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
       padding: 10px 16px; background: var(--branco); box-shadow: 0 2px 10px rgba(19, 41, 75, 0.08); }
     .abas a { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; text-decoration: none; color: var(--primaria-escura);
@@ -112,17 +118,28 @@
   </header>
 
   <nav class="abas" aria-label="Partes do manual">
-    <a href="#professor">🧑‍🏫 Para o professor</a>
-    <a href="#jogos">🎮 Os jogos</a>
+    <a href="#video">▶️ Vídeo</a>
+    <a href="#professor">🧑‍🏫 Professor</a>
+    <a href="#jogos">🎮 Jogos</a>
     <a href="./">← Voltar</a>
   </nav>
 
   <main>
+    <!-- vídeo de apresentação (2 min 23 s) -->
+    <section class="video" id="video">
+      <h2>▶️ Assista o vídeo da plataforma</h2>
+      <video controls preload="metadata" playsinline poster="assets/video/capa-video.jpg" width="1920" height="1080">
+        <source src="assets/video/jogos-educacionais.mp4" type="video/mp4">
+        Seu navegador não conseguiu abrir o vídeo.
+      </video>
+      <p>Em pouco mais de 2 minutos: as telas, a Área do professor e para que serve cada jogo.</p>
+    </section>
+
     <!-- ================= PARTE 1: PROFESSOR ================= -->
     <section class="parte" id="professor">
       <h2>🧑‍🏫 Para o professor</h2>
-      <p class="intro">Na Área do professor você faz duas coisas: <b>cadastra os e-mails</b> que recebem os relatórios dos alunos
-        e <b>cria os questionários da aula</b>, cada um com um link para mandar à turma. Tudo fica guardado na planilha do Google da escola.</p>
+      <p class="intro">Na Área do professor você <b>cadastra os e-mails</b> que recebem os relatórios dos alunos,
+        <b>cria os questionários da aula</b> e <b>copia o link de cada jogo</b> para mandar à turma. Tudo fica guardado na planilha do Google da escola.</p>
 
       <h3 class="grupo">Entrar na Área do professor</h3>
 
@@ -130,10 +147,11 @@
         <div>
           <span class="passo-num">1</span>
           <h4>Abra a Área do professor</h4>
-          <p>Na tela inicial do jogo, depois de entrar com um nome, desça até o fim e toque em
+          <p>No topo do app, ao lado da marca, toque em <span class="botao">☰ Menu</span> e escolha
             <span class="botao">🧑‍🏫 Área do professor</span>.</p>
+          <p>No mesmo menu ficam também <b>Instalar app</b>, <b>Trocar aluno</b>, o <b>Manual do usuário</b> e o <b>Vídeo da plataforma</b>.</p>
         </div>
-        <img class="print" src="assets/manual/p01-inicio.jpg" alt="Tela inicial com o botão Área do professor destacado" width="400" height="820" loading="lazy">
+        <img class="print" src="assets/manual/p01-inicio.jpg" alt="Menu aberto no topo do app com a opção Área do professor" width="400" height="820" loading="lazy">
       </div>
 
       <div class="passo">
@@ -153,10 +171,11 @@
           <ul>
             <li><b>📧 E-mails dos relatórios</b>: cadastrar ou tirar quem recebe os relatórios.</li>
             <li><b>📝 Questionários da aula</b>: criar, copiar o link e excluir questionários.</li>
+            <li><b>🔗 Links dos jogos</b>: copiar o link de um jogo para mandar à turma.</li>
           </ul>
           <p>Dentro de cada parte, o botão <span class="botao">← Voltar</span> traz você de novo para este menu.</p>
         </div>
-        <img class="print" src="assets/manual/p03-menu.jpg" alt="Menu com os botões E-mails dos relatórios e Questionários da aula" width="400" height="520" loading="lazy">
+        <img class="print" src="assets/manual/p03-menu.jpg" alt="Menu com os botões E-mails dos relatórios, Questionários da aula e Links dos jogos" width="400" height="720" loading="lazy">
       </div>
 
       <h3 class="grupo">📧 Cadastrar o e-mail que recebe os relatórios</h3>
@@ -256,6 +275,21 @@
           <p class="dica">💡 Para apagar um questionário, toque em <span class="botao">🗑️ Excluir</span>. A aba dele some da planilha e o link deixa de funcionar.</p>
         </div>
         <img class="print" src="assets/manual/p10-quiz-aluno.jpg" alt="Pergunta do questionário na tela do aluno, com quatro respostas" width="400" height="660" loading="lazy">
+      </div>
+
+      <h3 class="grupo">🔗 Compartilhar um jogo</h3>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">11</span>
+          <h4>Copie o link de um jogo</h4>
+          <p>No menu do professor, toque em <b>Links dos jogos</b>. Aparece a lista de todos os jogos, cada um com o botão
+            <span class="botao">🔗 Copiar link</span>.</p>
+          <p>Mande o link para a turma: o aluno digita o primeiro nome, escolhe o professor e o <b>jogo abre direto</b>,
+            sem precisar procurar na lista.</p>
+          <p class="dica">💡 Os jogos com <b>↗</b> (ABC da Tia Ana, Desafio da Rotina, Desafio das Peças e Hive) são de outros sites: o link copiado é o endereço do próprio jogo.</p>
+        </div>
+        <img class="print" src="assets/manual/p11-links-jogos.jpg" alt="Lista Links dos jogos com o botão Copiar link em cada jogo" width="400" height="820" loading="lazy">
       </div>
     </section>
 

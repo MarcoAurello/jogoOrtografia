@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=51">
+  <link rel="stylesheet" href="style.css?v=52">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -24,6 +24,17 @@
 
   <main class="app">
     <header class="topo">
+      <!-- menu suspenso ao lado da marca: instalar, trocar aluno, área do professor, manual e vídeo -->
+      <div class="menu-app" id="menu-app">
+        <button class="btn-menu" id="btn-menu" type="button" aria-expanded="false" aria-controls="menu-app-lista">☰ <span>Menu</span></button>
+        <div class="menu-app-lista" id="menu-app-lista" hidden>
+          <button class="menu-item" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
+          <button class="menu-item" id="btn-trocar" type="button">👤 Trocar aluno</button>
+          <button class="menu-item" id="btn-professor" type="button">🧑‍🏫 Área do professor</button>
+          <a class="menu-item" href="manual.html">📘 Manual do usuário</a>
+          <a class="menu-item" href="manual.html#video">▶️ Vídeo da plataforma</a>
+        </div>
+      </div>
       <img class="logo" src="assets/logo-pg.png" alt="Pedagogia Gamificada">
       <button class="btn-icone" id="btn-som" type="button" aria-label="Som ligado">🔊</button>
     </header>
@@ -79,12 +90,7 @@
           <span class="jogo-card-texto">Responda as perguntas que o professor preparou</span>
         </button>
       </div>
-      <div class="linha-botoes">
-        <button class="btn-sec btn-instalar" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
-        <button class="btn-sec" id="btn-trocar" type="button">👤 Trocar aluno</button>
-        <button class="btn-sec" id="btn-professor" type="button">🧑‍🏫 Área do professor</button>
-        <a class="btn-sec btn-manual" href="manual.html">📘 Manual do usuário</a>
-      </div>
+      <a class="btn-sec btn-manual btn-video" href="manual.html#video">▶️ Assista o vídeo da plataforma</a>
       <a class="btn-whats" href="https://wa.me/5581985503305?text=Ol%C3%A1!%20Vim%20pelos%20Jogos%20Educacionais." target="_blank" rel="noopener" aria-label="Fale conosco pelo WhatsApp">
         <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path fill="#fff" d="M16 3C9 3 3.3 8.6 3.3 15.6c0 2.4.7 4.7 1.9 6.7L3 29l6.9-2.1c1.9 1 4 1.6 6.1 1.6 7 0 12.7-5.7 12.7-12.7C28.7 8.6 23 3 16 3zm0 23.2c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-4.1 1.2 1.2-4-.3-.4c-1.1-1.7-1.7-3.6-1.7-5.7C5.3 9.7 10.1 5 16 5s10.6 4.7 10.6 10.6S21.9 26.2 16 26.2zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.7 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>
         Fale conosco
@@ -326,6 +332,19 @@
           <span class="jogo-card-nome">Questionários da aula</span>
           <span class="jogo-card-texto">Criar, enviar planilha, copiar o link e excluir</span>
         </button>
+        <button class="jogo-card" id="btn-prof-links" type="button" style="--c:#e0a100">
+          <span class="jogo-card-icone">🔗</span>
+          <span class="jogo-card-nome">Links dos jogos</span>
+          <span class="jogo-card-texto">Copiar o link de um jogo para mandar à turma</span>
+        </button>
+      </div>
+      <div class="cartao cartao-login" id="painel-links" hidden>
+        <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
+        <h3 class="chuva-pergunta">🔗 Links dos jogos</h3>
+        <p class="professor-ajuda">Cada jogo tem um <b>link</b> que abre direto nele: o aluno digita o nome e já começa.
+          É só copiar e mandar para a turma pelo WhatsApp, e-mail ou mural.</p>
+        <div class="lista-quiz" id="lista-links-jogos"></div>
+        <p class="erro-login" id="aviso-link-jogo" role="status"></p>
       </div>
       <div class="cartao cartao-login" id="info-emails" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
@@ -531,9 +550,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=51"></script>
-  <script src="dados.js?v=51"></script>
-  <script src="jogo.js?v=51"></script>
+  <script src="plenix.js?v=52"></script>
+  <script src="dados.js?v=52"></script>
+  <script src="jogo.js?v=52"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

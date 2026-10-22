@@ -1280,3 +1280,27 @@ a.jogo-card { text-decoration: none; text-align: center; }   /* cartão que é l
 .credito-link:hover { text-decoration: underline; }
 #aviso-link { overflow-wrap: anywhere; }   /* o link copiado quebra a linha em vez de vazar */
 .btn-manual { text-decoration: none; text-align: center; font-family: 'Fredoka', 'Nunito', sans-serif; }   /* link para o manual.html com cara de botão */
+
+/* menu suspenso do topo, ao lado da marca */
+.menu-app { position: absolute; top: 50%; left: 16px; transform: translateY(-50%); z-index: 50; }
+.btn-menu {
+  padding: 9px 16px; border-radius: 999px; background: var(--branco); color: var(--primaria-escura);
+  font-size: 18px; font-weight: 600; box-shadow: 0 2px 6px rgba(19, 60, 80, 0.18);
+}
+.menu-app-lista {
+  position: absolute; top: calc(100% + 10px); left: 0; min-width: 260px; padding: 8px;
+  background: var(--branco); border-radius: 16px; box-shadow: 0 10px 30px rgba(19, 41, 75, 0.25);
+}
+.menu-item {
+  display: block; width: 100%; padding: 12px 14px; border-radius: 10px; background: none; text-align: left;
+  font-family: 'Fredoka', 'Nunito', sans-serif; font-size: 18px; font-weight: 600; color: var(--texto); text-decoration: none;
+}
+.menu-item[hidden] { display: none; }
+.menu-item:hover, .menu-item:focus-visible { background: #eef4f6; }
+.btn-video { display: block; width: fit-content; margin: 18px auto 0; }
+@media (max-width: 480px) {
+  .menu-app { left: 10px; }
+  .btn-menu { padding: 8px 12px; font-size: 20px; }
+  .btn-menu span { display: none; }   /* no celular fica só o ☰ */
+}
+#aviso-link-jogo { overflow-wrap: anywhere; }   /* o link copiado quebra a linha em vez de vazar */

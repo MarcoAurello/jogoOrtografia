@@ -206,9 +206,21 @@
     try { localStorage.setItem(CHAVE_ALUNO, aluno); } catch (err) { /* sem armazenamento */ }
     SOM.certo();
     if (QUIZ_DO_LINK) { escolherProfessorE('Questionário da aula', telaQuizMenu); return; }   // veio pelo link de um questionário
+    const doLink = Object.hasOwn(JOGOS_DO_LINK, JOGO_DO_LINK || '') ? JOGOS_DO_LINK[JOGO_DO_LINK] : null;
+    if (doLink) { telaJogos(); escolherProfessorE(doLink.nome, doLink.abrir); return; }       // veio pelo link de um jogo
     telaInicio();
     frase('ola');   // apresentação gravada pelo Davi (se existir)
   };
+
+  // menu suspenso do topo: abre e fecha no botão; fecha ao escolher um item, ao tocar fora ou com Esc
+  const abrirMenu = (aberto) => {
+    $('menu-app-lista').hidden = !aberto;
+    $('btn-menu').setAttribute('aria-expanded', String(aberto));
+  };
+  $('btn-menu').onclick = (e) => { e.stopPropagation(); abrirMenu($('menu-app-lista').hidden); };
+  $('menu-app-lista').addEventListener('click', (e) => { if (e.target.closest('.menu-item')) abrirMenu(false); });
+  document.addEventListener('click', (e) => { if (!e.target.closest('#menu-app')) abrirMenu(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirMenu(false); });
 
   $('btn-trocar').onclick = () => {
     aluno = null;
@@ -295,6 +307,7 @@
     $('menu-professor').hidden = qual !== 'menu';
     $('info-emails').hidden = qual !== 'emails';
     $('painel-questionarios').hidden = qual !== 'quiz';
+    $('painel-links').hidden = qual !== 'links';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -433,6 +446,48 @@
   }
 
   // link que abre direto um questionário (o aluno não vê os outros jogos): endereço do jogo + ?q=<id da aba>
+  // ---------- Links dos jogos: ?jogo=<id> abre direto naquele jogo (os de fora usam o próprio endereço) ----------
+  const JOGOS_DO_LINK = {
+    ortografia: { nome: 'Jogo de Ortografia', abrir: () => telaMissoes() },
+    chuva: { nome: 'Chuva de Erros', abrir: () => telaChuvaMenu() },
+    matematica: { nome: 'Chuva de Matemática', abrir: () => telaMatMenu() },
+    tiro: { nome: 'Tiro Certo', abrir: () => telaTiroMenu() },
+    peso: { nome: 'Peso Certo', abrir: () => telaPesoMenu() },
+  };
+  const JOGOS_DE_FORA = [
+    { nome: 'ABC da Tia Ana', link: 'https://abcdaana.vercel.app/' },
+    { nome: 'Desafio da Rotina', link: 'https://routinesgame.vercel.app/' },
+    { nome: 'Desafio das Peças', link: 'https://nagila.vercel.app/' },
+    { nome: 'Hive', link: 'https://hive-alpha-smoky.vercel.app/' },
+  ];
+  function listarLinksJogos() {
+    $('aviso-link-jogo').textContent = '';
+    const jogos = [
+      ...Object.entries(JOGOS_DO_LINK).map(([id, j]) => ({ nome: j.nome, link: `${location.origin}${location.pathname}?jogo=${id}` })),
+      ...JOGOS_DE_FORA.map((j) => ({ ...j, nome: `${j.nome} ↗` })),
+    ];
+    $('lista-links-jogos').innerHTML = '';
+    for (const j of jogos) {
+      const item = document.createElement('div');
+      item.className = 'quiz-item';
+      item.innerHTML = `<span class="quiz-item-nome">${seguro(j.nome)}</span>`;
+      const copiar = document.createElement('button');
+      copiar.type = 'button';
+      copiar.className = 'quiz-link';
+      copiar.textContent = '🔗 Copiar link';
+      copiar.onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(j.link);
+          $('aviso-link-jogo').textContent = `Link de "${j.nome.replace(' ↗', '')}" copiado! Cole no WhatsApp, e-mail ou mural da turma: ${j.link}`;
+          $('aviso-link-jogo').classList.add('aviso-ok');
+        } catch (e) { window.prompt(`Copie o link de "${j.nome}":`, j.link); }
+      };
+      item.append(copiar);
+      $('lista-links-jogos').append(item);
+    }
+  }
+  $('btn-prof-links').onclick = () => { SOM.clique(); parteProfessor('links'); listarLinksJogos(); };
+
   const linkDoQuestionario = (id) => `${location.origin}${location.pathname}?q=${encodeURIComponent(id)}`;
   async function copiarLinkQuestionario(q) {
     const link = linkDoQuestionario(q.id);
@@ -1984,6 +2039,7 @@
   const CHAVE_QUIZ_LISTA = 'pleno-ortografia:questionarios';
   // aberto por um link de questionário (?q=<id>): o aluno vai direto para ele, sem ver os outros jogos
   const QUIZ_DO_LINK = new URLSearchParams(location.search).get('q');
+  const JOGO_DO_LINK = new URLSearchParams(location.search).get('jogo');
   let quizDoLinkAberto = false;
   const chaveQuiz = (id) => `pleno-ortografia:questionario:${id}`;
   let quiz = null;   // o questionário em andamento
