@@ -1272,3 +1272,5 @@ button.quiz-item:hover { border-color: #7b4fc9; }
 @media (max-width: 720px) {
   .menu-inicio { grid-template-columns: 1fr 1fr; }
 }
+.jogo-card-capa.larga { aspect-ratio: 16 / 9; object-position: center top; }
+.capa-jogo.larga { max-width: 520px; }
