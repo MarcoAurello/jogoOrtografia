@@ -2498,7 +2498,7 @@
   };
   let temaSalvo = 'todos';
   try { temaSalvo = localStorage.getItem(CHAVE_TEMA) || 'todos'; } catch (e) { /* sem armazenamento */ }
-  filtrarTema(['todos', 'portugues', 'matematica', 'abc'].includes(temaSalvo) ? temaSalvo : 'todos');
+  filtrarTema(['todos', 'portugues', 'matematica', 'abc', 'ingles'].includes(temaSalvo) ? temaSalvo : 'todos');
   $('btn-area-jogos').onclick = () => { SOM.clique(); telaJogos(); };
   $('jogos-voltar').onclick = telaInicio;
   $('tiro-voltar').onclick = telaJogos;
