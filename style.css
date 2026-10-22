@@ -1276,3 +1276,5 @@ button.quiz-item:hover { border-color: #7b4fc9; }
 .capa-jogo.larga { max-width: 520px; }
 .jogo-card-capa.inteira { aspect-ratio: auto; }   /* arte bem larga: aparece inteira, sem cortar as pontas */
 a.jogo-card { text-decoration: none; text-align: center; }   /* cartão que é link (jogo externo) */
+.credito-link { color: var(--primaria); font-weight: 800; text-decoration: none; }   /* site da Pedagogia Gamificada */
+.credito-link:hover { text-decoration: underline; }
