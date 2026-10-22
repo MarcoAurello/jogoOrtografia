@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=43">
+  <link rel="stylesheet" href="style.css?v=44">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -374,8 +374,8 @@
         <button class="filtro-tema" type="button" data-tema="matematica">🔢 Matemática</button>
       </div>
       <div class="escolha-jogos">
-        <button class="jogo-card" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
-          <span class="jogo-card-icone">📚</span>
+        <button class="jogo-card com-capa" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
+          <img class="jogo-card-capa larga inteira" src="assets/capa-ortografia.jpg" alt="" width="760" height="370">
           <span class="jogo-card-nome">Jogo de Ortografia</span>
           <span class="jogo-card-texto">Missões com os segredos da escrita</span>
         </button>
@@ -414,6 +414,7 @@
 
     <!-- Escolha da missão -->
     <section class="tela" id="tela-missoes">
+      <img class="capa-jogo larga" src="assets/capa-ortografia.jpg" alt="Ortografia em Jogo: escreva certo, conquiste pontos" width="760" height="370">
       <h2 class="subtitulo">Escolha o nível</h2>
       <div class="grade-missoes" id="grade-missoes"></div>
       <p class="total-estrelas" id="total-estrelas"></p>
@@ -499,9 +500,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=43"></script>
-  <script src="dados.js?v=43"></script>
-  <script src="jogo.js?v=43"></script>
+  <script src="plenix.js?v=44"></script>
+  <script src="dados.js?v=44"></script>
+  <script src="jogo.js?v=44"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
