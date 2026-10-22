@@ -1,4 +1,4 @@
-/* Jogos Educacionais — © Marco Nunes. Todos os direitos reservados. */
+/* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 (() => {
   const $ = (id) => document.getElementById(id);
   const embaralhar = (lista) => {
@@ -2468,7 +2468,7 @@
     for (let i = 1; i <= paginas; i++) {
       doc.setPage(i);
       doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...CINZA);
-      doc.text('© Marco Nunes - Todos os direitos reservados', L, 290);
+      doc.text('© Davi e Marco - Todos os direitos reservados', L, 290);
       doc.text(`${i}/${paginas}`, L + LARG, 290, { align: 'right' });
     }
     doc.save(`relatorio-${nomeArquivo(aluno)}-${nomeArquivo(mis.titulo)}.pdf`);

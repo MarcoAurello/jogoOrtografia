@@ -130,7 +130,7 @@ Para criar mais perguntas, basta adicionar itens no `dados.js`.
 
 ---
 
-© **Marco Nunes** — Todos os direitos reservados.
+© **Davi e Marco** — Todos os direitos reservados.
 
 ## App (PWA)
 
