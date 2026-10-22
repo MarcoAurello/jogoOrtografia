@@ -11,7 +11,9 @@
 const CHAVE = 'jogo-ortografia';      // a mesma CHAVE_RELATORIO do jogo.js (só evita envios por engano)
 const SENHA_PROFESSOR = 'app0707';    // a mesma senha da Área do professor: exigida para criar e excluir questionários
 const MAX_ITENS = 120;
-const PREFIXO_QUESTIONARIO = 'Q: ';
+const PREFIXO_QUESTIONARIO = 'Q: ';   // abas criadas pelo jogo; à mão vale "Q:" com ou sem espaço
+const ABA_QUESTIONARIO = /^Q:\s*/i;
+const tituloDaAba = (a) => a.getName().replace(ABA_QUESTIONARIO, '').trim() || a.getName();
 const TEXTOS = {
   ortografia: { assunto: 'Ortografia', unidade: 'palavra', revisar: 'Palavras para revisar', certo: 'Jeito certo', tentou: 'O aluno tentou', porRegra: 'Acertos por regra', niveis: 'Nível', nivelMax: 10 },
   matematica: { assunto: 'Matemática', unidade: 'conta', revisar: 'Contas para revisar', certo: 'Conta certa', tentou: 'O aluno respondeu', porRegra: 'Acertos por operação', niveis: 'Nível em cada conta', nivelMax: 10 },
@@ -77,7 +79,7 @@ function lerEmails() {
 
 // ---------- questionários (uma aba "Q: <nome>" para cada um) ----------
 function abasDeQuestionario() {
-  return planilha().getSheets().filter((a) => a.getName().indexOf(PREFIXO_QUESTIONARIO) === 0);
+  return planilha().getSheets().filter((a) => ABA_QUESTIONARIO.test(a.getName()));
 }
 
 function perguntasDaAba(aba) {
@@ -90,13 +92,13 @@ function perguntasDaAba(aba) {
 }
 
 function listarQuestionarios() {
-  return abasDeQuestionario().map((a) => ({ id: String(a.getSheetId()), titulo: a.getName().slice(PREFIXO_QUESTIONARIO.length), perguntas: perguntasDaAba(a).length }));
+  return abasDeQuestionario().map((a) => ({ id: String(a.getSheetId()), titulo: tituloDaAba(a), perguntas: perguntasDaAba(a).length }));
 }
 
 function lerQuestionario(id) {
   const aba = abasDeQuestionario().find((a) => String(a.getSheetId()) === String(id));
   if (!aba) throw new Error('Questionário não encontrado.');
-  return { id: String(aba.getSheetId()), titulo: aba.getName().slice(PREFIXO_QUESTIONARIO.length), perguntas: perguntasDaAba(aba) };
+  return { id: String(aba.getSheetId()), titulo: tituloDaAba(aba), perguntas: perguntasDaAba(aba) };
 }
 
 function salvarQuestionario(titulo, perguntas) {
