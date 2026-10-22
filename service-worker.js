@@ -1,6 +1,6 @@
 // Guarda os arquivos do jogo para funcionar offline.
 // Ao mudar qualquer arquivo do jogo, aumente a VERSAO para os aparelhos baixarem a nova.
-const VERSAO = 'ortografia-pleno-v59';
+const VERSAO = 'ortografia-pleno-v61';
 
 const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
   .flatMap((id) => Array.from({ length: 10 }, (_, i) => `./assets/figuras/${id}-${i}.jpg`));
@@ -8,10 +8,10 @@ const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
 const ARQUIVOS = [
   './',
   './index.html',
-  './style.css?v=59',
-  './jogo.js?v=59',
-  './dados.js?v=59',
-  './plenix.js?v=59',
+  './style.css?v=61',
+  './jogo.js?v=61',
+  './dados.js?v=61',
+  './plenix.js?v=61',
   './assets/plenix/plenix_spritesheet_1x.png',
   './assets/tiro/canhao-cano.png',
   './assets/tiro/canhao-carreta.png',
@@ -32,6 +32,8 @@ const ARQUIVOS = [
   './assets/manual/g07-reflexo.jpg',
   './assets/capa-reflexo2.jpg',
   './assets/manual/g08-reflexo2.jpg',
+  './assets/capa-rotina.jpg',
+  './assets/manual/g09-rotina.jpg',
   './manual.html',
   './assets/manual/g00-lista.jpg',
   './assets/manual/g01-orto-niveis.jpg',

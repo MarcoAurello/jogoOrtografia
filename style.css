@@ -1530,3 +1530,41 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .tela-jogo .btn-ouvir { padding-top: 4px; padding-bottom: 4px; }
   #tela-pergunta .barra-titulo { font-size: 16px; }
 }
+
+/* ---------- Rotina Certa: pilha de passos que se arrastam ---------- */
+.rotina-tarefa { margin: 2px 0 8px; text-align: center; font-family: 'Fredoka', sans-serif; font-weight: 700;
+  font-size: clamp(20px, 3.4dvh, 28px); color: var(--primaria-escura); }
+.rotina-pilha { position: relative; width: 100%; max-width: 560px; margin: 0 auto; touch-action: none; }
+.rotina-pilha.tremer { animation: luz-tremer 0.16s linear 2; }
+.passo-rotina {
+  position: absolute; left: 0; right: 0; top: 0;
+  display: flex; align-items: center; gap: 10px; min-height: 44px; height: clamp(44px, 7.2dvh, 60px); padding: 0 12px;
+  border-radius: 14px; background: var(--branco); border: 2px solid #d6e6ea; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.12);
+  font-family: 'Nunito', system-ui, sans-serif; font-weight: 800; font-size: clamp(14px, 2.3dvh, 18px); color: var(--texto); text-align: left;
+  cursor: grab; user-select: none; touch-action: none;
+  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.2), background 0.2s, border-color 0.2s, box-shadow 0.15s;
+}
+.passo-num {
+  flex: 0 0 auto; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+  background: #eef4f6; color: var(--primaria-escura); font-family: 'Fredoka', sans-serif; font-size: 16px;
+}
+.passo-icone { flex: 0 0 auto; font-size: clamp(20px, 3.4dvh, 28px); }
+.passo-texto { flex: 1; line-height: 1.15; }
+.passo-alca { flex: 0 0 auto; color: #9aaab5; font-size: 22px; }
+/* antecipação: ao pegar, o botão levanta, cresce e fica por cima; sem transição para seguir o dedo sem atraso */
+.passo-rotina.arrastando { z-index: 5; transition: none; cursor: grabbing; border-color: var(--primaria); box-shadow: 0 14px 24px rgba(19, 41, 75, 0.25); }
+/* finalização: ao soltar, encaixa com um quique */
+.passo-rotina.encaixou { animation: passo-encaixe 0.26s ease-out; }
+@keyframes passo-encaixe { 40% { filter: brightness(1.05); box-shadow: 0 2px 0 rgba(19, 41, 75, 0.12); } }
+.passo-rotina.selecionado { border-color: var(--primaria); background: #e6f7f9; }
+.passo-rotina.preso { cursor: default; border-color: #2e9e5b; background: #e9f7ef; }
+.passo-rotina.preso .passo-num { background: #2e9e5b; color: #fff; }
+.passo-rotina.preso .passo-alca { visibility: hidden; }
+.passo-rotina.errado { border-color: #e53935; background: #fdecea; }
+.passo-rotina.festa { animation: passo-festa 0.4s ease-out; }
+@keyframes passo-festa { 40% { filter: brightness(1.08) saturate(1.2); } }
+.rotina-msg { min-height: 1.4em; margin: 10px 0 4px; text-align: center; font-family: 'Fredoka', sans-serif; font-weight: 600;
+  font-size: clamp(15px, 2.4dvh, 19px); color: var(--primaria-escura); }
+.rotina-msg.ok { color: #1d6b3d; }
+.rotina-msg.erro { color: #b42318; }
+#btn-rotina-testar:disabled { opacity: 0.5; }

@@ -177,7 +177,7 @@
   const ABA_DA_TELA = {
     'tela-inicio': 'inicio', 'tela-jogos': 'jogos', 'tela-missoes': 'jogos', 'tela-regra': 'jogos', 'tela-chuva-menu': 'jogos',
     'tela-mat-menu': 'jogos', 'tela-tiro-menu': 'jogos', 'tela-peso-menu': 'jogos', 'tela-luzes-menu': 'jogos', 'tela-fim': 'jogos',
-    'tela-quiz-menu': 'quiz', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
+    'tela-rotina-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
   };
   function encaixarTela() {
     const tela = document.querySelector('.tela.ativa');
@@ -282,7 +282,7 @@
   document.addEventListener('click', (e) => { if (!e.target.closest('#menu-app')) abrirMenu(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirMenu(false); });
 
-  function pararJogos() { pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararVoz(); }
+  function pararJogos() { pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararVoz(); }
   const irParaInicio = () => { pararJogos(); $('escolha-prof').hidden = true; telaInicio(); };
   $('btn-logo-inicio').onclick = irParaInicio;
   $('btn-menu-inicio').onclick = irParaInicio;
@@ -316,7 +316,7 @@
   let senhaProfessor = '';   // a senha digitada, mandada ao script para gravar questionários
   const lerJSON = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) || padrao; } catch (e) { return padrao; } };
   const gravarJSON = (chave, valor) => { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) { /* sem armazenamento */ } };
-  const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
+  const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
   let emailEscolhido = (() => { try { return localStorage.getItem(CHAVE_EMAIL_ESCOLHIDO) || ''; } catch (e) { return ''; } })();
   const listaEmails = () => lerJSON(CHAVE_EMAILS, []);
   // o e-mail para onde vai o relatório (só se estiver na lista da planilha)
@@ -531,6 +531,7 @@
     peso: { nome: 'Peso Certo', abrir: () => telaPesoMenu() },
     reflexo: { nome: 'Jogo do Reflexo', abrir: () => telaLuzesMenu(1) },
     reflexo2: { nome: 'Jogo do Reflexo Nível 2', abrir: () => telaLuzesMenu(2) },
+    rotina: { nome: 'Rotina Certa', abrir: () => telaRotinaMenu() },
   };
   const JOGOS_DE_FORA = [
     { nome: 'ABC da Tia Ana', link: 'https://abcdaana.vercel.app/' },
@@ -2579,11 +2580,261 @@
   $('btn-luzes-comecar').onclick = () => { SOM.clique(); comecarLuz(); };
   $('luzes-sair').onclick = telaLuzesMenu;
 
+  // ---------- Rotina Certa ----------
+  // Sequência e planejamento (funções executivas). Cada rotina do dia a dia tem 6 passos em ordem; os passos aparecem
+  // embaralhados numa pilha de botões e a criança arrasta (ou toca em dois para trocar) até ficar na ordem certa,
+  // depois toca em "Testar". Os passos certos ficam verdes e presos; os outros ela tenta de novo (até 3 vezes).
+  // Acertou de primeira: a próxima rotina tem mais passos (3 a 6). Precisou de ajuda: a próxima tem menos.
+  const ROTINA = { NIVEL_MAX: 4, TENTATIVAS: 3 };   // nível 1 = 3 passos ... nível 4 = 6 passos
+  const ROTINAS = [
+    { titulo: 'Tomar banho', icone: '🛁', passos: [
+      ['🧺', 'Separar a toalha e a roupa limpa'], ['👕', 'Tirar a roupa suja'], ['🚿', 'Entrar no chuveiro e molhar o corpo'],
+      ['🧼', 'Passar o sabonete e o xampu'], ['💦', 'Enxaguar o corpo todo'], ['👚', 'Secar com a toalha e vestir a roupa'] ] },
+    { titulo: 'Hora do almoço', icone: '🍽️', passos: [
+      ['🧴', 'Lavar as mãos'], ['🪑', 'Sentar à mesa'], ['🍛', 'Servir a comida no prato'],
+      ['😋', 'Comer devagar, mastigando bem'], ['🧽', 'Levar o prato para a pia'], ['🪥', 'Escovar os dentes'] ] },
+    { titulo: 'Ir para a escola', icone: '🎒', passos: [
+      ['⏰', 'Acordar com o despertador'], ['🛏️', 'Levantar da cama'], ['🥣', 'Tomar o café da manhã'],
+      ['🪥', 'Escovar os dentes'], ['🎒', 'Colocar a mochila nas costas'], ['🏫', 'Ir para a escola'] ] },
+    { titulo: 'Fazer um bolo (com um adulto)', icone: '🎂', passos: [
+      ['🧴', 'Lavar as mãos e separar os ingredientes'], ['🥚', 'Quebrar os ovos numa tigela'], ['🥄', 'Misturar os ovos, o açúcar e a farinha'],
+      ['🫗', 'Colocar a massa na forma'], ['🔥', 'Assar no forno com a ajuda do adulto'], ['🍰', 'Esperar esfriar e cortar'] ] },
+    { titulo: 'Escovar os dentes', icone: '🪥', passos: [
+      ['🪥', 'Pegar a escova de dentes'], ['🧴', 'Colocar um pouco de pasta na escova'], ['😁', 'Escovar os dentes da frente'],
+      ['👅', 'Escovar os dentes de trás e a língua'], ['💧', 'Cuspir e enxaguar a boca'], ['🧽', 'Lavar a escova e guardar'] ] },
+    { titulo: 'Hora de dormir', icone: '🌙', passos: [
+      ['🧸', 'Guardar os brinquedos'], ['🛁', 'Tomar banho'], ['👘', 'Vestir o pijama'],
+      ['🪥', 'Escovar os dentes'], ['📖', 'Deitar e ouvir uma história'], ['💡', 'Apagar a luz e dormir'] ] },
+  ];
+  // tamanho da rotina no relatório
+  const TIPOS_ROTINA = [3, 4, 5, 6].map((n) => ({
+    id: `rotina${n}`, titulo: `Rotina com ${n} passos`, icone: '🧩', cor: '#2e9e5b',
+    regra: `Ordenar ${n} passos de uma tarefa do dia a dia: pensar no que vem primeiro, no meio e por último (planejamento e sequência).`,
+  }));
+  let rotina = null;   // a partida em andamento
+
+  function telaRotinaMenu() {
+    pararRotina();
+    mascote('davi-rotina', 'oi');
+    mostrar('tela-rotina-menu');
+  }
+
+  function comecarRotina() {
+    pararRotina();
+    missao = { id: 'rotina', rotina: true, icone: '🧩', cor: '#2e9e5b', titulo: 'Rotina Certa (sequência e planejamento)' };
+    resultados = [];
+    rotina = { fila: embaralhar(ROTINAS), feitas: 0, nivel: 1, nivelMax: 1, pontos: 0, acertosPrimeira: 0, tentativasTotal: 0, rodando: true };
+    mostrar('tela-rotina');
+    novaRotina();
+  }
+
+  function pararRotina() {
+    if (rotina) { rotina.rodando = false; clearInterval(rotina.relogio); clearTimeout(rotina.proxima); }
+    rotina = null;
+  }
+
+  // escolhe quantos passos usar pelo nível, sempre mantendo a ordem original (o primeiro e o último ficam sempre)
+  function passosDoNivel(r, n) {
+    if (n >= r.passos.length) return r.passos.map((p, i) => ({ id: i, icone: p[0], texto: p[1] }));
+    const meio = embaralhar(r.passos.slice(1, -1).map((_, i) => i + 1)).slice(0, n - 2).sort((a, b) => a - b);
+    return [0, ...meio, r.passos.length - 1].map((i) => ({ id: i, icone: r.passos[i][0], texto: r.passos[i][1] }));
+  }
+
+  function novaRotina() {
+    if (!rotina || !rotina.rodando) return;
+    if (rotina.feitas >= rotina.fila.length) { terminarRotina(); return; }
+    const r = rotina.fila[rotina.feitas];
+    rotina.feitas++;
+    const certos = passosDoNivel(r, rotina.nivel + 2);
+    let ordem;
+    do { ordem = embaralhar(certos); } while (ordem.every((p, i) => p === certos[i]));   // nunca começa já certa
+    Object.assign(rotina, { atual: r, certos, ordem, presos: new Set(), tentativas: 0, t0: performance.now(), selecionado: null, respondendo: true });
+    $('rotina-nivel').textContent = `🧩 Nível ${rotina.nivel} de ${ROTINA.NIVEL_MAX}`;
+    $('rotina-pontos').textContent = rotina.pontos;
+    $('rotina-contador').textContent = `Rotina ${rotina.feitas} de ${rotina.fila.length}`;
+    $('rotina-tarefa').textContent = `${r.icone} ${r.titulo}`;
+    msgRotina(`Coloque os ${certos.length} passos na ordem certa.`);
+    $('btn-rotina-testar').disabled = false;
+    desenharPilha(true);
+    clearInterval(rotina.relogio);
+    rotina.relogio = setInterval(() => {
+      if (rotina && rotina.respondendo) $('rotina-tempo').textContent = `⏱ ${segundos((performance.now() - rotina.t0) / 1000)}`;
+    }, 200);
+  }
+  const msgRotina = (texto, tipo = '') => { $('rotina-msg').textContent = texto; $('rotina-msg').className = `rotina-msg ${tipo}`; };
+
+  // a pilha: cada botão fica numa "vaga" (top = posição × altura); ao arrastar, os outros deslizam para abrir espaço
+  const alturaVaga = () => { const b = $('rotina-pilha').querySelector('.passo-rotina'); return b ? b.offsetHeight + 8 : 60; };
+  function desenharPilha(novos) {
+    const pilha = $('rotina-pilha');
+    if (novos) {
+      pilha.innerHTML = rotina.ordem.map((p) =>
+        `<button class="passo-rotina" type="button" role="listitem" data-id="${p.id}"><span class="passo-num"></span><span class="passo-icone" aria-hidden="true">${p.icone}</span><span class="passo-texto">${seguro(p.texto)}</span><span class="passo-alca" aria-hidden="true">⠿</span></button>`).join('');
+    }
+    const h = alturaVaga();
+    pilha.style.height = `${rotina.ordem.length * h - 8}px`;
+    rotina.ordem.forEach((p, i) => {
+      const b = pilha.querySelector(`[data-id="${p.id}"]`);
+      if (!b.classList.contains('arrastando')) b.style.transform = `translateY(${i * h}px)`;
+      b.querySelector('.passo-num').textContent = i + 1;
+      b.setAttribute('aria-label', `Posição ${i + 1}: ${p.texto}`);
+      b.classList.toggle('preso', rotina.presos.has(p.id));
+      b.classList.toggle('selecionado', rotina.selecionado === p.id);
+    });
+  }
+
+  // arrastar: o botão "levanta" (antecipação), segue o dedo e os outros abrem espaço; ao soltar, encaixa com um quique
+  let arrastoRotina = null;
+  $('rotina-pilha').addEventListener('pointerdown', (e) => {
+    const b = e.target.closest('.passo-rotina');
+    if (!b || !rotina || !rotina.respondendo) return;
+    const id = Number(b.dataset.id);
+    if (rotina.presos.has(id)) return;
+    e.preventDefault();
+    arrastoRotina = { b, id, y0: e.clientY, inicio: rotina.ordem.findIndex((p) => p.id === id), moveu: false };
+  });
+  document.addEventListener('pointermove', (e) => {
+    if (!arrastoRotina || !rotina) return;
+    const a = arrastoRotina, h = alturaVaga();
+    const dy = e.clientY - a.y0;
+    if (!a.moveu && Math.abs(dy) < 6) return;
+    if (!a.moveu) { a.moveu = true; a.b.classList.add('arrastando'); rotina.selecionado = null; }
+    const max = (rotina.ordem.length - 1) * h;
+    const y = Math.max(-h * 0.3, Math.min(max + h * 0.3, a.inicio * h + dy));
+    a.b.style.transform = `translateY(${y}px) scale(1.04)`;
+    // vaga para onde o botão está indo (os presos não saem do lugar)
+    let alvo = Math.max(0, Math.min(rotina.ordem.length - 1, Math.round(y / h)));
+    if (rotina.presos.has(rotina.ordem[alvo].id)) return;
+    const atual = rotina.ordem.findIndex((p) => p.id === a.id);
+    if (alvo !== atual) {
+      const [item] = rotina.ordem.splice(atual, 1);
+      rotina.ordem.splice(alvo, 0, item);
+      // os presos voltam para a vaga deles
+      corrigirPresos();
+      desenharPilha(false);
+    }
+  });
+  function soltarRotina() {
+    if (!arrastoRotina) return;
+    const { b, moveu } = arrastoRotina;
+    arrastoRotina = null;
+    if (!rotina) return;
+    if (!moveu) { tocarPassoRotina(Number(b.dataset.id)); return; }
+    b.classList.remove('arrastando');
+    b.classList.add('encaixou');
+    setTimeout(() => b.classList.remove('encaixou'), 260);
+    tocar([[523, 0.06]]);
+    desenharPilha(false);
+  }
+  document.addEventListener('pointerup', soltarRotina);
+  document.addEventListener('pointercancel', soltarRotina);
+
+  // mantém cada passo preso (já testado como certo) na sua posição certa
+  function corrigirPresos() {
+    const livres = rotina.ordem.filter((p) => !rotina.presos.has(p.id));
+    rotina.ordem = rotina.certos.map((p) => (rotina.presos.has(p.id) ? p : livres.shift()));
+  }
+
+  // sem arrastar: toca em um passo e depois em outro para trocarem de lugar
+  function tocarPassoRotina(id) {
+    if (rotina.presos.has(id)) return;
+    if (rotina.selecionado == null) { rotina.selecionado = id; SOM.clique(); desenharPilha(false); return; }
+    if (rotina.selecionado !== id) {
+      const i = rotina.ordem.findIndex((p) => p.id === rotina.selecionado), j = rotina.ordem.findIndex((p) => p.id === id);
+      [rotina.ordem[i], rotina.ordem[j]] = [rotina.ordem[j], rotina.ordem[i]];
+      tocar([[523, 0.06]]);
+    }
+    rotina.selecionado = null;
+    desenharPilha(false);
+  }
+
+  $('btn-rotina-testar').onclick = () => {
+    if (!rotina || !rotina.respondendo) return;
+    rotina.tentativas++;
+    rotina.tentativasTotal++;
+    rotina.selecionado = null;
+    const erradas = [];
+    rotina.ordem.forEach((p, i) => { if (p.id === rotina.certos[i].id) rotina.presos.add(p.id); else erradas.push(p); });
+    const pilha = $('rotina-pilha');
+    pilha.querySelectorAll('.passo-rotina').forEach((b) => b.classList.remove('errado'));
+    if (!erradas.length) { fimDaRotina(true); return; }
+    // o primeiro passo fora do lugar vira a dica no relatório
+    const i = rotina.ordem.findIndex((p, k) => p.id !== rotina.certos[k].id);
+    rotina.primeiroErro = rotina.primeiroErro || `pôs "${rotina.ordem[i].texto}" no lugar de "${rotina.certos[i].texto}"`;
+    erradas.forEach((p) => pilha.querySelector(`[data-id="${p.id}"]`).classList.add('errado'));
+    SOM.errado();
+    pilha.classList.remove('tremer');
+    void pilha.offsetWidth;
+    pilha.classList.add('tremer');
+    desenharPilha(false);
+    if (rotina.tentativas >= ROTINA.TENTATIVAS) { fimDaRotina(false); return; }
+    msgRotina(`${erradas.length} ${erradas.length === 1 ? 'passo está' : 'passos estão'} fora do lugar. Os verdes já estão certos: tente de novo!`, 'erro');
+  };
+
+  function fimDaRotina(acertou) {
+    rotina.respondendo = false;
+    clearInterval(rotina.relogio);
+    $('btn-rotina-testar').disabled = true;
+    const tempo = (performance.now() - rotina.t0) / 1000;
+    const n = rotina.certos.length;
+    const tipo = TIPOS_ROTINA[n - 3];
+    const texto = `${rotina.atual.titulo} (${n} passos)`;
+    if (acertou) {
+      // pontos: base pelo nível, bônus de rapidez e menos pontos a cada tentativa a mais
+      const bom = n * 3;
+      const bonus = Math.max(0, Math.min(100, Math.round(100 * (1 - (tempo - bom) / (bom * 2)))));
+      const ganho = Math.max(10, Math.round((30 * rotina.nivel + bonus) / rotina.tentativas));
+      rotina.pontos += ganho;
+      const primeira = rotina.tentativas === 1;
+      if (primeira) rotina.acertosPrimeira++;
+      resultados.push({ m: tipo, certa: texto, erros: primeira ? [] : [`acertou na ${rotina.tentativas}ª tentativa; ${rotina.primeiroErro}`], nivel: rotina.nivel, tempo });
+      SOM.certo();
+      msgRotina(primeira ? `✅ Ordem perfeita! +${ganho} pontos em ${segundos(tempo)}` : `✅ Agora sim! +${ganho} pontos`, 'ok');
+      $('rotina-pilha').querySelectorAll('.passo-rotina').forEach((b, i) => setTimeout(() => b.classList.add('festa'), i * 70));
+      rotina.nivel = primeira ? Math.min(ROTINA.NIVEL_MAX, rotina.nivel + 1) : rotina.nivel;
+    } else {
+      // depois de 3 tentativas mostra a ordem certa
+      resultados.push({ m: tipo, certa: texto, erros: [`não conseguiu em ${ROTINA.TENTATIVAS} tentativas; ${rotina.primeiroErro}`], nivel: rotina.nivel, tempo });
+      rotina.ordem = rotina.certos.slice();
+      rotina.certos.forEach((p) => rotina.presos.add(p.id));
+      desenharPilha(false);
+      msgRotina('Esta é a ordem certa. Vamos para a próxima!', 'erro');
+      rotina.nivel = Math.max(1, rotina.nivel - 1);
+    }
+    rotina.primeiroErro = '';
+    rotina.nivelMax = Math.max(rotina.nivelMax, rotina.nivel);
+    $('rotina-pontos').textContent = rotina.pontos;
+    rotina.proxima = setTimeout(novaRotina, acertou ? 1800 : 3200);
+  }
+
+  function terminarRotina() {
+    const r = rotina;
+    pararRotina();
+    const tempos = resultados.filter((x) => !x.erros.length).map((x) => x.tempo);
+    missao.extra = '';
+    missao.resumo = [
+      `Pontos: ${r.pontos}. Chegou a rotinas de ${r.nivelMax + 2} passos (nível ${r.nivelMax} de ${ROTINA.NIVEL_MAX}).`,
+      `Acertou de primeira ${r.acertosPrimeira} de ${r.feitas} rotinas; usou ${r.tentativasTotal} tentativas no total.`,
+      ...(tempos.length ? [`Tempo médio para ordenar (acertos de primeira): ${segundos(tempos.reduce((s, t) => s + t, 0) / tempos.length)}.`] : []),
+    ];
+    fimDaMissao();
+    $('fim-titulo').textContent = r.acertosPrimeira === r.feitas ? 'Rotina perfeita!' : 'Rotinas concluídas!';
+    $('fim-texto').textContent = `${aluno}, você organizou ${r.feitas} rotinas e fez ${r.pontos} pontos!`;
+  }
+
+  $('btn-rotina').onclick = () => { SOM.clique(); escolherProfessorE('Rotina Certa', telaRotinaMenu); };
+  $('rotina-voltar').onclick = telaJogos;
+  $('btn-rotina-comecar').onclick = () => { SOM.clique(); comecarRotina(); };
+  $('rotina-sair').onclick = telaRotinaMenu;
+
   // ---------- Textos do relatório de cada jogo ----------
   function textosRelatorio(mis) {
     if (mis.quiz) return { tipo: 'questionario', assunto: 'Questionário da aula', unidade: 'pergunta', revisar: 'Perguntas para revisar',
       certo: 'Pergunta e resposta certa', tentou: 'Você respondeu', tentouPdf: 'O aluno respondeu', porRegra: 'Acertos',
       niveis: 'Nível', atividade: 'Atividade', outras: '📝 Outro questionário' };
+    if (mis.rotina) return { tipo: 'sequencia', assunto: 'Sequência e planejamento', unidade: 'rotina', revisar: 'Rotinas para revisar',
+      certo: 'Rotina', tentou: 'O que aconteceu', tentouPdf: 'O que aconteceu', porRegra: 'Acertos por tamanho da rotina',
+      niveis: 'Nível em cada rotina', atividade: 'Atividade', outras: '🧩 Rotina Certa', tempos: 'Tempo para ordenar cada rotina' };
     if (mis.luzes) return { tipo: 'atencao', assunto: 'Atenção e memória', unidade: 'sequência', revisar: 'Sequências para revisar',
       certo: 'Sequência que piscou', tentou: 'O que você fez', tentouPdf: 'O que o aluno fez', porRegra: 'Acertos por tamanho da sequência',
       niveis: 'Nível em cada rodada', atividade: 'Atividade', outras: mis.id === 'luzes2' ? '💡 Reflexo Nível 2' : '💡 Jogo do Reflexo', tempos: 'Tempo de resposta em cada rodada' };
@@ -2680,7 +2931,7 @@
     const yDe = (n) => yBase - ((n - 1) / (maximo - 1)) * (yBase - yTopo);
     const xDe = (i) => (pts.length === 1 ? (x0 + x1) / 2 : x0 + (i * (x1 - x0)) / (pts.length - 1));
     g.font = fonteGrafico(16); g.textAlign = 'right';
-    for (const n of maximo > 5 ? [1, 4, 7, 10] : [1, 2, 3, 4, 5]) {
+    for (const n of maximo > 5 ? [1, 4, 7, 10] : Array.from({ length: maximo }, (_, i) => i + 1)) {
       g.strokeStyle = COR_GRADE; g.lineWidth = 1;
       g.beginPath(); g.moveTo(x0, yDe(n)); g.lineTo(x1, yDe(n)); g.stroke();
       g.fillStyle = COR_TEXTO; g.fillText(String(n), x0 - 10, yDe(n));
@@ -2731,15 +2982,15 @@
     const graficos = [{ c: graficoResultado(rel), alt: `Resultado: ${rel.dePrimeiraN} de ${rel.respondidas} certas de primeira` }];
     const tx = textosRelatorio(mis);
     if (rel.porRegra.length) graficos.push({ c: graficoPorRegra(rel, tx.porRegra), alt: tx.porRegra });
-    if (rel.niveis.length) graficos.push({ c: graficoNiveis(rel, tx.niveis, mis.luzes ? LUZ.NIVEL_MAX : mis.tiro ? TIRO.NIVEL_MAX : MAT.NIVEL_MAX), alt: tx.niveis, largo: true });
-    if (rel.tempos.length) graficos.push({ c: graficoTempos(rel, tx.tempos), alt: tx.tempos, largo: true });
+    if (rel.niveis.length) graficos.push({ c: graficoNiveis(rel, tx.niveis, mis.rotina ? ROTINA.NIVEL_MAX : mis.luzes ? LUZ.NIVEL_MAX : mis.tiro ? TIRO.NIVEL_MAX : MAT.NIVEL_MAX), alt: tx.niveis, largo: true });
+    if (rel.tempos.length && tx.tempos) graficos.push({ c: graficoTempos(rel, tx.tempos), alt: tx.tempos, largo: true });
     return graficos.map((x) => ({ url: x.c.toDataURL('image/png'), w: x.c.width, h: x.c.height, alt: x.alt, largo: !!x.largo }));
   }
 
   function desenharRelatorio(rel, estrelas) {
     const data = new Date().toLocaleDateString('pt-BR');
     const tx = textosRelatorio(missao);
-    const caixa = (s) => (missao.quiz ? s : s.toUpperCase());   // palavras em caixa alta; perguntas do questionário como estão
+    const caixa = (s) => (missao.quiz || missao.rotina || missao.luzes ? s : s.toUpperCase());   // palavras em caixa alta; frases e perguntas como estão
     $('relatorio-info').innerHTML = `<b>Aluno:</b> ${seguro(aluno)} · <b>Data:</b> ${data} · <b>${tx.atividade}:</b> ${seguro(missao.titulo)}<br>`
       + `<b>Acertos de primeira:</b> ${rel.dePrimeiraN} de ${rel.respondidas} · <b>Estrelas:</b> ${estrelas} de 3`
       + (missao.extra ? `<br>${seguro(missao.extra)}` : '')
@@ -2970,7 +3221,7 @@
         y += 7;
       };
       cabecalho();
-      const caixa = (s) => (mis.quiz ? s : s.toUpperCase());
+      const caixa = (s) => (mis.quiz || mis.rotina || mis.luzes ? s : s.toUpperCase());
       rel.comErro.forEach((r, i) => {
         // textos longos (perguntas do questionário) quebram em várias linhas dentro da coluna
         doc.setFontSize(11);
@@ -3007,14 +3258,15 @@
   $('btn-terminar').onclick = () => { if (resultados.length) fimDaMissao(); else telaMissoes(); };
   $('btn-proxima').onclick = proxima;
   $('btn-ouvir').onclick = () => falar(palavraCerta(fila[idx]));
-  $('btn-repetir').onclick = () => (missao.quiz ? comecarQuiz(missao.quizId) : missao.luzes ? comecarLuz() : missao.peso ? comecarPeso() : missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
-  $('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.luzes ? telaLuzesMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
+  $('btn-repetir').onclick = () => (missao.quiz ? comecarQuiz(missao.quizId) : missao.rotina ? comecarRotina() : missao.luzes ? comecarLuz() : missao.peso ? comecarPeso() : missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
+  $('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.rotina ? telaRotinaMenu() : missao.luzes ? telaLuzesMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
   $('btn-tiro').onclick = () => { SOM.clique(); escolherProfessorE('Tiro Certo', telaTiroMenu); };
 
   // filtro dos jogos por tema (ao abrir o app, todos os jogos aparecem)
   function filtrarTema(tema) {
     document.querySelectorAll('.filtro-tema').forEach((b) => b.classList.toggle('ativo', b.dataset.tema === tema));
-    document.querySelectorAll('.escolha-jogos .jogo-card').forEach((c) => { c.hidden = tema !== 'todos' && c.dataset.tema !== tema; });
+    // um jogo pode estar em mais de um tema (data-tema com os temas separados por espaço)
+    document.querySelectorAll('.escolha-jogos .jogo-card').forEach((c) => { c.hidden = tema !== 'todos' && !c.dataset.tema.split(' ').includes(tema); });
   }
   $('filtro-temas').onclick = (e) => {
     const b = e.target.closest('.filtro-tema'); if (!b) return;
