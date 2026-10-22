@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=54">
+  <link rel="stylesheet" href="style.css?v=59">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -28,6 +28,7 @@
       <div class="menu-app" id="menu-app">
         <button class="btn-menu" id="btn-menu" type="button" aria-expanded="false" aria-controls="menu-app-lista">☰ <span>Menu</span></button>
         <div class="menu-app-lista" id="menu-app-lista" hidden>
+          <button class="menu-item" id="btn-menu-inicio" type="button">🏠 Início</button>
           <button class="menu-item" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
           <button class="menu-item" id="btn-trocar" type="button">👤 Trocar aluno</button>
           <button class="menu-item" id="btn-professor" type="button">🧑‍🏫 Área do professor</button>
@@ -35,7 +36,7 @@
           <a class="menu-item" href="manual.html#video">▶️ Vídeo da plataforma</a>
         </div>
       </div>
-      <img class="logo" src="assets/logo-pg.png" alt="Pedagogia Gamificada">
+      <button class="btn-logo" id="btn-logo-inicio" type="button" aria-label="Ir para o início"><img class="logo" src="assets/logo-pg.png" alt="Pedagogia Gamificada"></button>
       <button class="btn-icone" id="btn-som" type="button" aria-label="Som ligado">🔊</button>
     </header>
 
@@ -117,13 +118,15 @@
         </div>
         <h3 class="chuva-pergunta">Quais palavras?</h3>
         <div class="chuva-categorias" id="chuva-categorias"></div>
-        <button class="btn-grande" id="btn-chuva-comecar" type="button">Começar ▶</button>
       </div>
-      <button class="btn-sec" id="chuva-voltar" type="button">← Jogos</button>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-chuva-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="chuva-voltar" type="button">← Jogos</button>
+      </div>
     </section>
 
     <!-- Chuva de Erros: o jogo -->
-    <section class="tela" id="tela-chuva">
+    <section class="tela tela-jogo" id="tela-chuva">
       <div class="barra">
         <button class="btn-sec btn-pequeno" id="chuva-sair" type="button">← Sair</button>
         <span class="barra-titulo" id="chuva-alvo"></span>
@@ -150,13 +153,15 @@
         <h3 class="chuva-pergunta">Quais contas vão cair?</h3>
         <div class="mat-ops" id="mat-ops"></div>
         <p class="erro-login" id="mat-erro" role="alert"></p>
-        <button class="btn-grande" id="btn-mat-comecar" type="button">Começar ▶</button>
       </div>
-      <button class="btn-sec" id="mat-voltar" type="button">← Jogos</button>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-mat-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="mat-voltar" type="button">← Jogos</button>
+      </div>
     </section>
 
     <!-- Chuva de Matemática: o jogo -->
-    <section class="tela" id="tela-mat">
+    <section class="tela tela-jogo" id="tela-mat">
       <div class="barra">
         <button class="btn-sec btn-pequeno" id="mat-sair" type="button">← Sair</button>
         <span class="barra-titulo" id="mat-nivel"></span>
@@ -183,14 +188,14 @@
           Você tem <b>4 tiros</b>, e cada acerto vale <b>+1 tiro</b>! 💥
         </div>
       </div>
-      <div class="linha-botoes">
+      <div class="linha-botoes acoes-menu">
         <button class="btn-grande" id="btn-tiro-comecar" type="button">Começar ▶</button>
         <button class="btn-sec" id="tiro-voltar" type="button">← Jogos</button>
       </div>
     </section>
 
     <!-- Tiro Certo: o jogo -->
-    <section class="tela" id="tela-tiro">
+    <section class="tela tela-jogo" id="tela-tiro">
       <div class="barra">
         <button class="btn-sec btn-pequeno" id="tiro-sair" type="button">← Sair</button>
         <span class="barra-titulo" id="tiro-nivel"></span>
@@ -200,7 +205,7 @@
         <span class="tiro-municao" id="tiro-municao" aria-label="Tiros"></span>
         <span id="tiro-contador"></span>
       </div>
-      <div class="tiro-arena" id="tiro-arena">
+      <div class="tiro-arena" id="tiro-arena" data-encaixe="1">
         <canvas id="tiro-canvas"></canvas>
         <div class="chuva-contagem" id="tiro-contagem"></div>
       </div>
@@ -223,13 +228,15 @@
       <div class="cartao cartao-chuva">
         <h3 class="chuva-pergunta">Qual nível?</h3>
         <div class="peso-niveis" id="peso-niveis"></div>
-        <button class="btn-grande" id="btn-peso-comecar" type="button">Começar ▶</button>
       </div>
-      <button class="btn-sec" id="peso-voltar" type="button">← Jogos</button>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-peso-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="peso-voltar" type="button">← Jogos</button>
+      </div>
     </section>
 
     <!-- Peso Certo: o jogo -->
-    <section class="tela" id="tela-peso">
+    <section class="tela tela-jogo" id="tela-peso">
       <div class="barra">
         <button class="btn-sec btn-pequeno" id="peso-sair" type="button">← Sair</button>
         <span class="barra-titulo" id="peso-nivel"></span>
@@ -240,7 +247,7 @@
         <span id="peso-contador"></span>
         <button class="btn-sec btn-pequeno" id="btn-tabela" type="button">📏 Tabela</button>
       </div>
-      <div class="peso-arena" id="peso-arena">
+      <div class="peso-arena" id="peso-arena" data-encaixe="1.3333">
         <canvas id="peso-canvas"></canvas>
       </div>
       <p class="peso-msg" id="peso-msg"></p>
@@ -274,14 +281,14 @@
           Atenção: os botões ficam em outro lugar! Acertou? Fica mais difícil. Quanto mais rápido, <b>mais pontos</b>! ⚡
         </div>
       </div>
-      <div class="linha-botoes">
+      <div class="linha-botoes acoes-menu">
         <button class="btn-grande" id="btn-luzes-comecar" type="button">Começar ▶</button>
         <button class="btn-sec" id="luzes-voltar" type="button">← Jogos</button>
       </div>
     </section>
 
     <!-- Jogo do Reflexo: o jogo -->
-    <section class="tela" id="tela-luzes">
+    <section class="tela tela-jogo" id="tela-luzes">
       <div class="barra">
         <button class="btn-sec btn-pequeno" id="luzes-sair" type="button">← Sair</button>
         <span class="barra-titulo" id="luz-nivel"></span>
@@ -319,7 +326,7 @@
     </section>
 
     <!-- Questionário da aula: as perguntas -->
-    <section class="tela" id="tela-quiz">
+    <section class="tela tela-jogo" id="tela-quiz">
       <div class="barra">
         <button class="btn-sec btn-pequeno" id="quiz-sair" type="button">← Sair</button>
         <span class="barra-titulo" id="quiz-titulo"></span>
@@ -332,6 +339,13 @@
         <button class="btn-grande" id="btn-quiz-proxima" type="button" hidden>Próxima ➜</button>
       </div>
     </section>
+
+    <!-- celular deitado e o jogo não cabe: pede para virar -->
+    <div class="aviso-girar" role="alert">
+      <span class="aviso-girar-icone" aria-hidden="true">📱</span>
+      <b>Vire o celular em pé</b>
+      <span>Assim o jogo cabe inteiro na tela.</span>
+    </div>
 
     <!-- Antes de abrir um jogo: para quem vai o relatório -->
     <div class="peso-tabela" id="escolha-prof" hidden>
@@ -540,7 +554,7 @@
     </section>
 
     <!-- Pergunta -->
-    <section class="tela" id="tela-pergunta">
+    <section class="tela tela-jogo" id="tela-pergunta">
       <div class="barra">
         <button class="btn-sec btn-pequeno" id="sair-missao" type="button">← Níveis</button>
         <span class="barra-titulo" id="barra-titulo"></span>
@@ -592,15 +606,35 @@
     </section>
   </main>
 
+  <!-- barra de navegação fixa embaixo (some durante uma partida, para o jogo usar a tela toda) -->
+  <nav class="barra-inferior" id="barra-inferior" aria-label="Navegação" hidden>
+    <button class="aba" type="button" data-aba="inicio">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></svg>
+      <span>Início</span>
+    </button>
+    <button class="aba" type="button" data-aba="jogos">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6.5" width="19" height="11" rx="5.5"/><path d="M7.5 10v4M5.5 12h4"/><circle cx="15.5" cy="11" r=".6" fill="currentColor"/><circle cx="17.5" cy="13" r=".6" fill="currentColor"/></svg>
+      <span>Jogos</span>
+    </button>
+    <button class="aba" type="button" data-aba="quiz">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="m8.5 10 1.5 1.5L12.5 9M8.5 15.5l1.5 1.5 2.5-2.5M14.5 10.5h2M14.5 16h2"/></svg>
+      <span>Questionário</span>
+    </button>
+    <button class="aba" type="button" data-aba="professor">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20.5c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg>
+      <span>Professor</span>
+    </button>
+  </nav>
+
   <footer class="credito">
     <span>© <b>Davi e Marco</b> — Todos os direitos reservados</span>
     <a class="credito-link" href="https://sitejodospedagogicos.vercel.app/" target="_blank" rel="noopener">Pedagogia Gamificada ↗</a>
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=54"></script>
-  <script src="dados.js?v=54"></script>
-  <script src="jogo.js?v=54"></script>
+  <script src="plenix.js?v=59"></script>
+  <script src="dados.js?v=59"></script>
+  <script src="jogo.js?v=59"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

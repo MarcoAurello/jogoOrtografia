@@ -1391,3 +1391,142 @@ a.jogo-card { text-decoration: none; text-align: center; }   /* cartão que é l
 @keyframes fila-andou { from { transform: translateY(60%); opacity: 0.2; } to { transform: none; opacity: 1; } }
 .fila-bolas.andou .bola-espera { animation-name: fila-andou-espera; }
 @keyframes fila-andou-espera { from { transform: translateY(60%) scale(0.88); opacity: 0; } to { transform: scale(0.88); opacity: 0.75; } }
+
+/* =====================================================================
+   Encaixe na tela: a barra do topo fica sempre visível; jogo em andamento
+   não rola (a tela do jogo tem a altura visível, calculada no jogo.js em
+   --livre); nas telas de entrada o Começar fica sempre à vista embaixo.
+   ===================================================================== */
+.topo { position: sticky; top: 0; z-index: 40; }
+.btn-logo { display: block; padding: 0; background: none; border-radius: 50%; line-height: 0; }
+.btn-logo:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 3px; }
+
+/* jogo em andamento: sem rodapé e sem rolagem; a área do jogo pega o espaço que sobra */
+body.em-jogo .credito { display: none; }
+body.em-jogo .app { padding-bottom: 0; }
+.tela-jogo.ativa { display: flex; flex-direction: column; height: var(--livre, calc(100dvh - 96px)); overflow-y: auto; }   /* só rola por dentro se não couber de jeito nenhum */
+.tela-jogo.ativa > * { flex-shrink: 0; }
+.tela-jogo > .barra { margin-bottom: 6px; }
+.tela-jogo > .tiro-hud { margin-top: 0; margin-bottom: 6px; }
+.tela-jogo > .chuva-arena, .tela-jogo > .mat-arena { flex: 1 1 0; min-height: 140px; height: auto; }
+.tela-jogo .mat-respostas { margin-top: 10px; }
+.tela-jogo .mat-resposta { min-height: 48px; }
+.tela-jogo .tiro-arena, .tela-jogo .peso-arena { max-width: 100%; }
+.tela-jogo .tiro-pergunta { margin-top: 8px; font-size: clamp(16px, 2.6dvh, 20px); }
+.tela-jogo > .luz-palco { flex: 1 1 auto; min-height: 0; justify-content: space-evenly; }
+.tela-jogo > .jogo-grade, .tela-jogo > .cartao { min-height: 0; }
+
+/* Jogo do Reflexo: lâmpadas, botões, copos e bolinhas encolhem em telas baixas */
+.lampada .vidro { width: clamp(42px, min(15vw, 9dvh), 96px); }
+.lampada .rosca { width: clamp(20px, min(7vw, 4dvh), 44px); height: clamp(12px, min(4.5vw, 2.6dvh), 28px); }
+.luz-botao { max-width: min(110px, 13dvh); }
+.copo { width: clamp(44px, min(16vw, 9.5dvh), 92px); }
+.bola { width: clamp(32px, min(11vw, 6.2dvh), 60px); }
+.fila-bolas { gap: clamp(4px, 1dvh, 8px); }
+
+/* Peso Certo: as listas de pesos ficam numa linha que corre para o lado, para sobrar altura para a balança */
+.tela-jogo .peso-lista { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; }
+.tela-jogo #peso-estoque { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(140px, 1fr); }
+.tela-jogo .peso-rotulo { margin: 6px 0 4px; }
+.tela-jogo .peso-msg { margin-top: 6px; font-size: clamp(15px, 2.4dvh, 20px); }
+/* botões grandes dentro do jogo (Testar, Próxima) um pouco mais baixos */
+.tela-jogo .btn-grande { margin-top: 6px; padding-top: 10px; padding-bottom: 10px; font-size: clamp(18px, 2.8dvh, 24px); }
+.tela-jogo .peso-rotulo small { display: none; }
+
+/* telas de entrada dos jogos: capa menor em telas baixas e Começar sempre à vista */
+.capa-jogo { width: auto; max-width: min(100%, 360px); max-height: min(30dvh, 300px); }
+.capa-jogo.larga { max-width: min(100%, 520px); }
+.acoes-menu {
+  position: sticky; bottom: 0; z-index: 5;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px;
+  margin: 10px calc(-1 * clamp(14px, 4vw, 40px)) 0; padding: 12px 16px max(12px, env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(238, 244, 246, 0) 0%, var(--fundo) 28%);
+}
+.acoes-menu .btn-grande, .acoes-menu .btn-sec { margin: 0; }
+
+/* telas baixas (celular pequeno ou deitado): topo e mascote menores */
+@media (max-height: 760px) {
+  .topo { padding-top: max(6px, env(safe-area-inset-top)); padding-bottom: 6px; margin-bottom: 10px; }
+  .logo { height: 52px; }
+  .btn-icone { width: 42px; height: 42px; }
+  .cena-regra { margin: 8px 0 4px; }
+  .cena-regra .davi-area { width: 72px; }
+  .cena-regra { flex-direction: row; align-items: center; gap: 8px; }
+  .cena-regra .balao::before { display: none; }
+  .cena-regra .balao { font-size: 15px; padding: 10px 14px; }
+  .subtitulo { margin-bottom: 6px; }
+}
+@media (max-height: 560px) {
+  .logo { height: 40px; }
+  .cena-regra .davi-area { display: none; }
+  .capa-jogo { max-height: 24dvh; }
+}
+
+/* alvo de toque: no mínimo 44 px */
+.btn-pequeno, .btn-menu, .menu-item, .quiz-link, .quiz-excluir, .filtro-tema { min-height: 44px; }
+
+/* tela inicial em telas baixas: Plenix ao lado do balão e cartões mais baixos, para caber sem rolar */
+@media (max-height: 1100px) {
+  #tela-inicio .titulo { font-size: clamp(24px, 4.2dvh, 34px); margin: 0 0 4px; }
+  #tela-inicio .slogan { margin: 0 auto 4px; font-size: 15px; }
+  #tela-inicio .cena { flex-direction: row; align-items: center; gap: 8px; margin: 4px 0; }
+  #tela-inicio .davi-area.grande { width: clamp(64px, 11dvh, 110px); }
+  #tela-inicio .balao { font-size: 14px; padding: 10px 12px; }
+  #tela-inicio .balao::before { display: none; }
+  .menu-inicio { margin-top: 8px; }
+  .menu-inicio .jogo-card { padding-top: 12px; padding-bottom: 12px; }
+  .menu-inicio .jogo-card-icone { width: 54px; height: 54px; font-size: 30px; }
+  .btn-video { margin-top: 10px; }
+  .credito { padding-top: 0; }
+  #tela-inicio .btn-whats { margin-top: 8px; }
+}
+@media (max-height: 760px) {
+  #tela-inicio .menu-inicio .jogo-card-texto { display: none; }   /* o título e o ícone bastam em tela baixa */
+  #tela-inicio .balao { font-size: 13px; }
+  #tela-inicio .link-privacidade { margin: 6px 0 0; }
+}
+
+/* aviso para virar o celular (só aparece quando o jogo não cabe com o aparelho deitado) */
+.aviso-girar { display: none; }
+body.girar .aviso-girar {
+  position: fixed; inset: 0; z-index: 35; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;   /* abaixo da barra do topo (z 40): o menu continua acessível */
+  padding: 24px; text-align: center; background: rgba(19, 41, 75, 0.94); color: #fff; font-size: 18px;
+}
+body.girar .aviso-girar b { font-family: 'Fredoka', 'Nunito', sans-serif; font-size: 28px; }
+.aviso-girar-icone { font-size: 64px; animation: girar-celular 1.6s ease-in-out infinite; }
+@keyframes girar-celular { 0%, 30% { transform: rotate(-90deg); } 60%, 100% { transform: rotate(0deg); } }
+
+/* ---------- Barra de navegação inferior (fixa) ---------- */
+.barra-inferior {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+  padding: 6px clamp(6px, 3vw, 24px) max(6px, env(safe-area-inset-bottom));
+  background: var(--branco); border-top: 1px solid #ece6f5; box-shadow: 0 -4px 16px rgba(19, 41, 75, 0.08);
+}
+.barra-inferior[hidden] { display: none; }
+.aba {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  min-height: 52px; padding: 6px 4px; border-radius: 22px; background: none;
+  font-family: 'Nunito', system-ui, sans-serif; font-size: 13px; font-weight: 800; color: #3b3a4a;
+  transition: background 0.15s, color 0.15s;
+}
+.aba svg { width: 24px; height: 24px; }
+.aba.ativa { background: #efe7fb; color: #c2185b; }
+.aba:focus-visible { outline: 3px solid #c2185b; outline-offset: 2px; }
+@media (hover: hover) { .aba:not(.ativa):hover { background: #f6f2fc; } }
+/* espaço para a barra não cobrir o fim da página */
+body.com-barra .credito { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
+
+/* Jogo de Ortografia em telas baixas: Plenix menor, figura acompanha a altura e a barra não quebra em 2 linhas */
+@media (max-height: 760px) {
+  .tela-jogo .cena-jogo .davi-area { width: clamp(52px, 9dvh, 84px); }
+  .tela-jogo .balao-cima { font-size: 14px; padding: 8px 12px; }
+  .tela-jogo .cartao-pergunta { padding-top: 10px; padding-bottom: 10px; }
+  .tela-jogo .figura img { width: clamp(56px, 10dvh, 118px); }
+  .tela-jogo .jogo-grade { gap: 8px; }
+  .tela-jogo .barra { padding-top: 4px; padding-bottom: 4px; }
+  .tela-jogo .figura { font-size: clamp(44px, 9dvh, 64px); }
+  .tela-jogo .btn-ouvir { padding-top: 4px; padding-bottom: 4px; }
+  #tela-pergunta .barra-titulo { font-size: 16px; }
+}

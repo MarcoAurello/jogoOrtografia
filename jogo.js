@@ -165,7 +165,67 @@
   function mostrar(id) {
     document.querySelectorAll('.tela').forEach((t) => t.classList.toggle('ativa', t.id === id));
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    encaixarDepois();
   }
+
+  // ---------- Encaixe na tela ----------
+  // Jogo em andamento não rola: a tela do jogo (.tela-jogo) ocupa a altura visível do aparelho (descontada a barra
+  // do topo) e as áreas com proporção fixa (data-encaixe = largura/altura: transferidor, balança) encolhem ou
+  // crescem para caber o que fica embaixo delas. Recalcula ao girar o aparelho, ao mudar o tamanho da janela e
+  // quando a barra do navegador aparece ou some.
+  // aba ativa da barra inferior para cada tela
+  const ABA_DA_TELA = {
+    'tela-inicio': 'inicio', 'tela-jogos': 'jogos', 'tela-missoes': 'jogos', 'tela-regra': 'jogos', 'tela-chuva-menu': 'jogos',
+    'tela-mat-menu': 'jogos', 'tela-tiro-menu': 'jogos', 'tela-peso-menu': 'jogos', 'tela-luzes-menu': 'jogos', 'tela-fim': 'jogos',
+    'tela-quiz-menu': 'quiz', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
+  };
+  function encaixarTela() {
+    const tela = document.querySelector('.tela.ativa');
+    const emJogo = !!tela && tela.classList.contains('tela-jogo');
+    document.body.classList.toggle('em-jogo', emJogo);
+    // barra inferior: aparece depois do login e fora das partidas
+    const barra = $('barra-inferior');
+    barra.hidden = !tela || tela.id === 'tela-login' || emJogo;
+    document.body.classList.toggle('com-barra', !barra.hidden);
+    const aba = tela ? ABA_DA_TELA[tela.id] : '';
+    barra.querySelectorAll('.aba').forEach((b) => {
+      b.classList.toggle('ativa', b.dataset.aba === aba);
+      if (b.dataset.aba === aba) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
+    if (!tela) return;
+    // altura livre = altura visível menos o que fica acima da tela (barra do topo e margens)
+    const alto = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    const acima = tela.getBoundingClientRect().top + window.scrollY;
+    document.documentElement.style.setProperty('--livre', `${Math.floor(alto - acima - 6)}px`);
+    for (const el of tela.querySelectorAll('[data-encaixe]')) {
+      el.style.width = '';
+      if (!emJogo) continue;
+      const sobra = tela.clientHeight - (tela.scrollHeight - el.offsetHeight);   // altura que sobra para a área
+      const proporcao = Number(el.dataset.encaixe);
+      el.style.width = `${Math.max(120, Math.min(el.parentElement.clientWidth, Math.floor(sobra * proporcao)))}px`;
+    }
+    // celular deitado e o jogo não cabe (ou a área ficou pequena demais): pede para virar o aparelho
+    const naoCabe = emJogo && (tela.scrollHeight > tela.clientHeight + 2
+      || [...tela.querySelectorAll('[data-encaixe]')].some((el) => el.offsetWidth < 200));
+    document.body.classList.toggle('girar', naoCabe && window.innerWidth > window.innerHeight);
+    if (typeof tiro !== 'undefined' && tiro) desenharTiro();
+  }
+  let encaixeAgendado = 0;
+  function encaixarDepois() {
+    clearTimeout(encaixeAgendado);
+    encaixeAgendado = setTimeout(encaixarTela, 40);   // espera a tela nova montar
+  }
+  window.addEventListener('resize', encaixarDepois);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', encaixarDepois);
+  // o conteúdo muda de tamanho (botões de resposta que aparecem, lista de pesos, perguntas): reencaixa.
+  // A tela de jogo tem altura fixa, então observa cada parte dela, e não só a página.
+  const observador = new ResizeObserver(encaixarDepois);
+  observador.observe(document.querySelector('main'));
+  document.querySelectorAll('.tela-jogo > *').forEach((el) => observador.observe(el));
+  // também quando aparecem ou somem botões e listas (fora das áreas animadas, que mudam a cada quadro)
+  const vigia = new MutationObserver(encaixarDepois);
+  document.querySelectorAll('.tela-jogo > *:not(.chuva-arena):not(.tiro-arena):not(.peso-arena):not(.luz-palco)')
+    .forEach((el) => vigia.observe(el, { childList: true, attributes: true, attributeFilter: ['hidden'] }));
 
   function telaLogin() {
     mascote('davi-login', 'oi');
@@ -221,6 +281,22 @@
   $('menu-app-lista').addEventListener('click', (e) => { if (e.target.closest('.menu-item')) abrirMenu(false); });
   document.addEventListener('click', (e) => { if (!e.target.closest('#menu-app')) abrirMenu(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirMenu(false); });
+
+  function pararJogos() { pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararVoz(); }
+  const irParaInicio = () => { pararJogos(); $('escolha-prof').hidden = true; telaInicio(); };
+  $('btn-logo-inicio').onclick = irParaInicio;
+  $('btn-menu-inicio').onclick = irParaInicio;
+  $('barra-inferior').onclick = (e) => {
+    const aba = e.target.closest('.aba');
+    if (!aba) return;
+    SOM.clique();
+    pararJogos();
+    $('escolha-prof').hidden = true;
+    if (aba.dataset.aba === 'inicio') telaInicio();
+    else if (aba.dataset.aba === 'jogos') telaJogos();
+    else if (aba.dataset.aba === 'quiz') escolherProfessorE('Questionário da aula', telaQuizMenu);
+    else telaProfessor();
+  };
 
   $('btn-trocar').onclick = () => {
     aluno = null;
