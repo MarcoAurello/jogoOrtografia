@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=34">
+  <link rel="stylesheet" href="style.css?v=35">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -46,10 +46,6 @@
           <span>Senha</span>
           <input type="password" id="login-senha" maxlength="40" placeholder="Senha da turma">
         </label>
-        <label class="campo" id="campo-professor" hidden>
-          <span>📧 Para quem vai o relatório?</span>
-          <select id="login-professor"></select>
-        </label>
         <p class="erro-login" id="erro-login" role="alert"></p>
         <button class="btn-grande" type="submit">Entrar ▶</button>
       </form>
@@ -76,7 +72,6 @@
         <button class="filtro-tema" type="button" data-tema="matematica">🔢 Matemática</button>
         <button class="filtro-tema" type="button" data-tema="questionario">📝 Questionários</button>
       </div>
-      <p class="relatorio-para" id="relatorio-para" hidden></p>
       <div class="escolha-jogos">
         <button class="jogo-card" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
           <span class="jogo-card-icone">📚</span>
@@ -314,6 +309,20 @@
       </div>
     </section>
 
+    <!-- Antes de abrir um jogo: para quem vai o relatório -->
+    <div class="peso-tabela" id="escolha-prof" hidden>
+      <form class="cartao cartao-login escolha-prof-cartao" id="form-escolha-prof" role="dialog" aria-label="Para quem vai o relatório">
+        <h3 class="chuva-pergunta" id="escolha-prof-titulo">📧 Para quem vai o relatório?</h3>
+        <label class="campo">
+          <span>Escolha o professor</span>
+          <select id="login-professor"></select>
+        </label>
+        <p class="erro-login" id="erro-escolha-prof" role="alert"></p>
+        <button class="btn-grande" type="submit">Continuar ▶</button>
+        <button class="btn-sec" id="escolha-prof-cancelar" type="button">Cancelar</button>
+      </form>
+    </div>
+
     <!-- Área do professor: senha e e-mail que recebe os relatórios -->
     <section class="tela" id="tela-professor">
       <h2 class="subtitulo">🧑‍🏫 Área do professor</h2>
@@ -328,7 +337,7 @@
       <div class="cartao cartao-login" id="info-emails" hidden>
         <h3 class="chuva-pergunta">📧 E-mails dos relatórios</h3>
         <p class="professor-ajuda">Os e-mails ficam na aba <b>"E-mails"</b> da planilha do Google:
-          coluna <b>A</b> o nome do professor e coluna <b>B</b> o e-mail. Ao entrar no jogo, o aluno escolhe
+          coluna <b>A</b> o nome do professor e coluna <b>B</b> o e-mail. Antes de abrir cada jogo, o aluno escolhe
           para quem vai o relatório. Para mudar a lista, edite a planilha.</p>
         <div class="lista-quiz" id="lista-emails-prof"></div>
       </div>
@@ -449,9 +458,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=34"></script>
-  <script src="dados.js?v=34"></script>
-  <script src="jogo.js?v=34"></script>
+  <script src="plenix.js?v=35"></script>
+  <script src="dados.js?v=35"></script>
+  <script src="jogo.js?v=35"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

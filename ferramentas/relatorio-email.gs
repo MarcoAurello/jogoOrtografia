@@ -1,6 +1,6 @@
 /* Jogos Educacionais — script do Google (Apps Script, gratuito), ligado a uma planilha do Google.
    A planilha guarda tudo, sem banco de dados:
-   - aba "E-mails": a lista de professores que recebem relatórios (A nome, B e-mail); o aluno escolhe um ao entrar;
+   - aba "E-mails": a lista de professores que recebem relatórios (A nome, B e-mail); o aluno escolhe um antes de cada jogo;
    - abas "Q: <nome>": um questionário da aula em cada aba (A pergunta, B resposta certa, C a E respostas erradas);
    - aba "Relatórios": uma linha para cada relatório enviado.
    O jogo lê a lista de e-mails e os questionários (doGet) e manda relatórios e alterações do professor (doPost).

@@ -174,7 +174,6 @@
     $('campo-senha').hidden = !PEDIR_SENHA;
     $('login-senha').required = PEDIR_SENHA;
     if (!$('login-nome').value) $('login-nome').value = ultimoNome;
-    desenharEscolhaEmail();
     mostrar('tela-login');
     setTimeout(() => $('login-nome').focus(), 300);
   }
@@ -182,9 +181,6 @@
   function telaInicio() {
     if (!aluno) return telaLogin();
     $('nome-saudacao').textContent = aluno;
-    const prof = listaEmails().find((x) => x.email === emailEscolhido);
-    $('relatorio-para').hidden = !prof;
-    if (prof) $('relatorio-para').textContent = `📧 Seus relatórios vão para: ${prof.nome}`;
     mascote('davi-inicio', 'oi');
     mostrar('tela-inicio');
   }
@@ -198,15 +194,6 @@
       mascote('davi-login', 'triste');
       SOM.errado();
       return;
-    }
-    if (!$('campo-professor').hidden && !$('login-professor').value) {
-      $('erro-login').textContent = 'Escolha para quem vai o relatório. 📧';
-      SOM.errado();
-      return;
-    }
-    if (!$('campo-professor').hidden) {
-      emailEscolhido = $('login-professor').value;
-      try { localStorage.setItem(CHAVE_EMAIL_ESCOLHIDO, emailEscolhido); } catch (err) { /* sem armazenamento */ }
     }
     aluno = nome;
     ultimoNome = aluno;
@@ -255,10 +242,9 @@
     return j;
   }
 
-  // lista de professores na tela de entrada
+  // lista de professores da janela que aparece antes de cada jogo
   function desenharEscolhaEmail() {
     const lista = listaEmails();
-    $('campo-professor').hidden = !lista.length;
     if (lista.length === 1 && !emailEscolhido) emailEscolhido = lista[0].email;   // só um professor: já vem escolhido
     $('login-professor').innerHTML = '<option value="">Escolha o professor…</option>'
       + lista.map((x) => `<option value="${seguro(x.email)}">${seguro(x.nome)}</option>`).join('')
@@ -268,11 +254,33 @@
 
   // traz a aba "E-mails" da planilha (ao abrir o jogo)
   async function carregarEmails() {
-    if (URL_RELATORIO) {
-      try { const { emails } = await lerDoScript('emails'); gravarJSON(CHAVE_EMAILS, emails || []); } catch (e) { /* sem internet: usa a cópia */ }
-    }
-    desenharEscolhaEmail();
+    if (!URL_RELATORIO) return;
+    try { const { emails } = await lerDoScript('emails'); gravarJSON(CHAVE_EMAILS, emails || []); } catch (e) { /* sem internet: usa a cópia */ }
   }
+
+  // antes de abrir o jogo escolhido, o aluno escolhe para quem vai o relatório (a última escolha já vem marcada)
+  let depoisDaEscolha = null;
+  function escolherProfessorE(nomeDoJogo, abrirJogo) {
+    if (!listaEmails().length) { abrirJogo(); return; }   // planilha sem e-mails: abre direto
+    desenharEscolhaEmail();
+    depoisDaEscolha = abrirJogo;
+    $('escolha-prof-titulo').textContent = `📧 ${nomeDoJogo}: para quem vai o relatório?`;
+    $('erro-escolha-prof').textContent = '';
+    $('escolha-prof').hidden = false;
+    $('login-professor').focus();
+  }
+  $('form-escolha-prof').onsubmit = (e) => {
+    e.preventDefault();
+    if (!$('login-professor').value) { $('erro-escolha-prof').textContent = 'Escolha um professor. 📧'; SOM.errado(); return; }
+    emailEscolhido = $('login-professor').value;
+    try { localStorage.setItem(CHAVE_EMAIL_ESCOLHIDO, emailEscolhido); } catch (err) { /* sem armazenamento */ }
+    $('escolha-prof').hidden = true;
+    SOM.clique();
+    const abrir = depoisDaEscolha;
+    depoisDaEscolha = null;
+    if (abrir) abrir();
+  };
+  $('escolha-prof-cancelar').onclick = () => { $('escolha-prof').hidden = true; depoisDaEscolha = null; };
 
   function telaProfessor() {
     $('form-senha-professor').hidden = false;
@@ -2363,7 +2371,7 @@
   }
 
   // ---------- Botões ----------
-  $('btn-jogar').onclick = () => { SOM.clique(); telaMissoes(); };
+  $('btn-jogar').onclick = () => { SOM.clique(); escolherProfessorE('Jogo de Ortografia', telaMissoes); };
   $('voltar-inicio').onclick = telaInicio;
   $('btn-comecar').onclick = () => { SOM.clique(); comecarMissao(); };
   $('regra-voltar').onclick = telaMissoes;
@@ -2373,7 +2381,7 @@
   $('btn-ouvir').onclick = () => falar(palavraCerta(fila[idx]));
   $('btn-repetir').onclick = () => (missao.quiz ? comecarQuiz(missao.quizId) : missao.peso ? comecarPeso() : missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
   $('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
-  $('btn-tiro').onclick = () => { SOM.clique(); telaTiroMenu(); };
+  $('btn-tiro').onclick = () => { SOM.clique(); escolherProfessorE('Tiro Certo', telaTiroMenu); };
 
   // filtro dos jogos por tema na tela inicial (a escolha fica guardada no aparelho)
   const CHAVE_TEMA = 'pleno-ortografia:tema';
@@ -2391,18 +2399,18 @@
   $('tiro-voltar').onclick = telaInicio;
   $('btn-tiro-comecar').onclick = () => { SOM.clique(); comecarTiro(); };
   $('tiro-sair').onclick = telaTiroMenu;
-  $('btn-peso').onclick = () => { SOM.clique(); telaPesoMenu(); };
+  $('btn-peso').onclick = () => { SOM.clique(); escolherProfessorE('Peso Certo', telaPesoMenu); };
   $('peso-voltar').onclick = telaInicio;
   $('btn-peso-comecar').onclick = () => { SOM.clique(); comecarPeso(); };
   $('peso-sair').onclick = telaPesoMenu;
-  $('btn-quiz').onclick = () => { SOM.clique(); telaQuizMenu(); };
+  $('btn-quiz').onclick = () => { SOM.clique(); escolherProfessorE('Questionário da aula', telaQuizMenu); };
   $('quiz-voltar').onclick = telaInicio;
   $('quiz-sair').onclick = telaQuizMenu;
-  $('btn-mat').onclick = () => { SOM.clique(); telaMatMenu(); };
+  $('btn-mat').onclick = () => { SOM.clique(); escolherProfessorE('Chuva de Matemática', telaMatMenu); };
   $('mat-voltar').onclick = telaInicio;
   $('btn-mat-comecar').onclick = () => { SOM.clique(); comecarMat(); };
   $('mat-sair').onclick = telaMatMenu;
-  $('btn-chuva').onclick = () => { SOM.clique(); telaChuvaMenu(); };
+  $('btn-chuva').onclick = () => { SOM.clique(); escolherProfessorE('Chuva de Erros', telaChuvaMenu); };
   $('chuva-voltar').onclick = telaInicio;
   $('btn-chuva-comecar').onclick = () => { SOM.clique(); comecarChuva(); };
   $('chuva-sair').onclick = telaChuvaMenu;

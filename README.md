@@ -150,7 +150,7 @@ Não há banco de dados: uma planilha do Google guarda tudo, por meio do script 
 | **Q: nome** (uma por questionário) | coluna A a pergunta, B a resposta certa, C a E as respostas erradas (a 1ª linha pode ser cabeçalho) |
 | **Relatórios** | uma linha por relatório enviado |
 
-Nada de e-mail é cadastrado no app: ao entrar no jogo, o aluno escolhe na lista da aba "E-mails" para qual professor
+Nada de e-mail é cadastrado no app: antes de abrir cada jogo, o aluno escolhe na lista da aba "E-mails" para qual professor
 vai o relatório (o aparelho lembra a última escolha). No fim de cada atividade, o relatório vai para esse e-mail,
 mesmo que o aluno não baixe o PDF. O script só envia para e-mails que estão na lista.
 Na tela inicial, **🧑‍🏫 Área do professor** (senha `app0707`, em `SENHA_PROFESSOR` no `jogo.js` e no script) mostra

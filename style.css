@@ -1245,3 +1245,4 @@ button.quiz-item:hover { border-color: #7b4fc9; }
 /* escolha do professor na entrada e aviso na tela inicial */
 #login-professor { font: 700 18px 'Nunito', sans-serif; padding: 11px 14px; color: var(--texto); background: #fff; border: 3px solid #cfe3e7; border-radius: 12px; }
 .relatorio-para { margin: 10px auto 0; text-align: center; font-weight: 800; color: var(--primaria-escura); }
+.escolha-prof-cartao { width: 100%; max-width: 420px; }
