@@ -386,6 +386,7 @@
   $('btn-prof-quiz').onclick = () => {
     SOM.clique();
     avisoQuiz('');
+    $('aviso-link').textContent = '';
     parteProfessor('quiz');
     listarQuestionariosProfessor();
   };
@@ -437,7 +438,9 @@
     const link = linkDoQuestionario(q.id);
     try {
       await navigator.clipboard.writeText(link);
-      avisoQuiz(`Link de "${q.titulo}" copiado! Cole no WhatsApp, e-mail ou mural da turma: ${link}`, true);
+      // o aviso fica logo abaixo da lista (o de "Novo questionário" pode estar fechado)
+      $('aviso-link').textContent = `Link de "${q.titulo}" copiado! Cole no WhatsApp, e-mail ou mural da turma: ${link}`;
+      $('aviso-link').classList.add('aviso-ok');
     } catch (e) {
       window.prompt(`Copie o link de "${q.titulo}":`, link);
     }

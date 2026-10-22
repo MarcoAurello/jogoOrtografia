@@ -1,6 +1,6 @@
 // Guarda os arquivos do jogo para funcionar offline.
 // Ao mudar qualquer arquivo do jogo, aumente a VERSAO para os aparelhos baixarem a nova.
-const VERSAO = 'ortografia-pleno-v49';
+const VERSAO = 'ortografia-pleno-v50';
 
 const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
   .flatMap((id) => Array.from({ length: 10 }, (_, i) => `./assets/figuras/${id}-${i}.jpg`));
@@ -8,10 +8,10 @@ const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
 const ARQUIVOS = [
   './',
   './index.html',
-  './style.css?v=49',
-  './jogo.js?v=49',
-  './dados.js?v=49',
-  './plenix.js?v=49',
+  './style.css?v=50',
+  './jogo.js?v=50',
+  './dados.js?v=50',
+  './plenix.js?v=50',
   './assets/plenix/plenix_spritesheet_1x.png',
   './assets/tiro/canhao-cano.png',
   './assets/tiro/canhao-carreta.png',
@@ -28,6 +28,24 @@ const ARQUIVOS = [
   './assets/capa-ingles-rotina.jpg',
   './assets/capa-psico-estrategia.jpg',
   './assets/capa-hive.jpg',
+  './manual.html',
+  './assets/manual/g00-lista.jpg',
+  './assets/manual/g01-orto-niveis.jpg',
+  './assets/manual/g02-orto-pergunta.jpg',
+  './assets/manual/g03-chuva.jpg',
+  './assets/manual/g04-mat.jpg',
+  './assets/manual/g05-tiro.jpg',
+  './assets/manual/g06-peso.jpg',
+  './assets/manual/p01-inicio.jpg',
+  './assets/manual/p02-senha.jpg',
+  './assets/manual/p03-menu.jpg',
+  './assets/manual/p04-emails.jpg',
+  './assets/manual/p05-email-ok.jpg',
+  './assets/manual/p06-quiz-lista.jpg',
+  './assets/manual/p07-quiz-novo.jpg',
+  './assets/manual/p08-link.jpg',
+  './assets/manual/p09-escolha-prof.jpg',
+  './assets/manual/p10-quiz-aluno.jpg',
   './assets/balanca/base.png',
   './assets/balanca/travessao.png',
   './assets/balanca/prato.png',

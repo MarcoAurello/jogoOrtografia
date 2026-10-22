@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1fa2b0">
+  <meta name="author" content="Marco Nunes">
+  <title>Manual do usuário — Jogos Educacionais</title>
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primaria: #1fa2b0;
+      --primaria-escura: #137784;
+      --texto: #13294b;
+      --cinza: #5b6b7f;
+      --fundo: #eef4f6;
+      --branco: #ffffff;
+      --borda: #d6e6ea;
+      --verde: #2e9e5b;
+      --roxo: #7b4fc9;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+    body {
+      margin: 0;
+      font-family: 'Nunito', system-ui, sans-serif;
+      font-weight: 600;
+      line-height: 1.6;
+      color: var(--texto);
+      background: var(--fundo);
+    }
+    h1, h2, h3 { font-family: 'Fredoka', sans-serif; line-height: 1.2; margin: 0; }
+    a { color: var(--primaria-escura); }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* topo com o logo e as duas partes do manual */
+    .topo { background: var(--primaria); color: var(--branco); text-align: center; padding: 22px 16px 26px; }
+    .topo .logo { width: 84px; height: 84px; margin: 0 auto 10px; border-radius: 50%; background: var(--branco); }
+    .topo h1 { font-size: clamp(30px, 6vw, 44px); }
+    .topo p { margin: 6px auto 0; max-width: 560px; font-size: 17px; opacity: 0.95; }
+    .abas { position: sticky; top: 0; z-index: 5; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+      padding: 10px 16px; background: var(--branco); box-shadow: 0 2px 10px rgba(19, 41, 75, 0.08); }
+    .abas a { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; text-decoration: none; color: var(--primaria-escura);
+      border: 2px solid var(--primaria); border-radius: 999px; padding: 6px 16px; }
+    .abas a:hover { background: var(--primaria); color: var(--branco); }
+
+    main { max-width: 980px; margin: 0 auto; padding: 24px 16px 40px; }
+    .parte { margin-top: 18px; }
+    .parte > h2 { font-size: clamp(26px, 5vw, 34px); color: var(--primaria-escura); margin: 26px 0 6px; }
+    .parte > .intro { margin: 0 0 18px; color: var(--cinza); font-size: 17px; }
+    h3.grupo { font-size: 24px; margin: 30px 0 12px; color: var(--texto); }
+
+    /* um passo: texto de um lado, print do outro */
+    .passo { display: grid; grid-template-columns: 1fr 260px; gap: 22px; align-items: start;
+      background: var(--branco); border-radius: 18px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.08); }
+    .passo-num { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; margin-bottom: 8px;
+      border-radius: 50%; background: var(--primaria); color: var(--branco); font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 700; }
+    .passo.roxo .passo-num { background: var(--roxo); }
+    .passo h4 { font-family: 'Fredoka', sans-serif; font-size: 21px; margin: 0 0 6px; }
+    .passo p, .passo li { font-size: 16px; }
+    .passo p { margin: 0 0 8px; }
+    .passo ul, .passo ol { margin: 0 0 8px; padding-left: 20px; }
+    .print { border-radius: 16px; overflow: hidden; border: 3px solid var(--texto); background: var(--branco); }
+    .dica { background: #fff8d6; border-left: 5px solid #e8c400; border-radius: 10px; padding: 10px 14px; margin: 8px 0 0; font-size: 15px; }
+    .aviso { background: #e9f7ef; border-left: 5px solid var(--verde); border-radius: 10px; padding: 10px 14px; margin: 8px 0 0; font-size: 15px; }
+    .botao { display: inline-block; white-space: nowrap; font-weight: 800; background: var(--fundo); border: 1px solid var(--borda); border-radius: 8px; padding: 0 6px; }
+    table.planilha { border-collapse: collapse; margin: 6px 0 8px; font-size: 14px; width: 100%; }
+    table.planilha th, table.planilha td { border: 1px solid var(--borda); padding: 4px 6px; text-align: left; }
+    table.planilha th { background: var(--fundo); }
+
+    /* um jogo: capa, para que serve e como jogar */
+    .jogo { background: var(--branco); border-radius: 18px; padding: 20px; margin-bottom: 18px; border-top: 6px solid var(--c, var(--primaria));
+      box-shadow: 0 4px 0 rgba(19, 41, 75, 0.08); }
+    .jogo-topo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .jogo-topo h3 { font-size: 26px; }
+    .tema { font-size: 14px; font-weight: 800; padding: 2px 10px; border-radius: 999px; background: var(--fundo); color: var(--primaria-escura); }
+    .tema.externo { background: #fde8f0; color: #a3164f; }
+    .jogo-corpo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+    .jogo-imagens { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start; }
+    .jogo-imagens.uma { grid-template-columns: 1fr; max-width: 300px; }
+    .jogo-imagens img { border-radius: 12px; border: 2px solid var(--borda); }
+    .jogo h4 { font-family: 'Fredoka', sans-serif; font-size: 19px; margin: 0 0 4px; color: var(--primaria-escura); }
+    .jogo ul, .jogo ol { margin: 0 0 12px; padding-left: 20px; }
+    .jogo li { margin-bottom: 3px; }
+
+    .rodape { text-align: center; color: var(--cinza); font-size: 14px; padding: 10px 16px 30px; }
+    .voltar { display: inline-block; margin-top: 8px; font-family: 'Fredoka', sans-serif; font-size: 18px; font-weight: 600; text-decoration: none;
+      color: var(--branco); background: var(--primaria); border-radius: 999px; padding: 8px 22px; }
+
+    @media (max-width: 720px) {
+      html { scroll-padding-top: 64px; }
+      .abas { gap: 6px; padding: 8px 10px; }
+      .abas a { font-size: 14px; padding: 4px 10px; }
+      .passo { grid-template-columns: 1fr; }
+      .passo .print { max-width: 280px; margin: 0 auto; }
+      .jogo-corpo { grid-template-columns: 1fr; }
+    }
+    @media print {
+      .abas, .voltar { display: none; }
+      .passo, .jogo { break-inside: avoid; box-shadow: none; border: 1px solid var(--borda); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <img class="logo" src="assets/logo-pg.png" alt="Pedagogia Gamificada" width="84" height="84">
+    <h1>📘 Manual do usuário</h1>
+    <p>Jogos Educacionais: o aluno joga, o professor analisa. Aqui você aprende a usar a Área do professor e a jogar cada jogo.</p>
+  </header>
+
+  <nav class="abas" aria-label="Partes do manual">
+    <a href="#professor">🧑‍🏫 Para o professor</a>
+    <a href="#jogos">🎮 Os jogos</a>
+    <a href="./">← Voltar</a>
+  </nav>
+
+  <main>
+    <!-- ================= PARTE 1: PROFESSOR ================= -->
+    <section class="parte" id="professor">
+      <h2>🧑‍🏫 Para o professor</h2>
+      <p class="intro">Na Área do professor você faz duas coisas: <b>cadastra os e-mails</b> que recebem os relatórios dos alunos
+        e <b>cria os questionários da aula</b>, cada um com um link para mandar à turma. Tudo fica guardado na planilha do Google da escola.</p>
+
+      <h3 class="grupo">Entrar na Área do professor</h3>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">1</span>
+          <h4>Abra a Área do professor</h4>
+          <p>Na tela inicial do jogo, depois de entrar com um nome, desça até o fim e toque em
+            <span class="botao">🧑‍🏫 Área do professor</span>.</p>
+        </div>
+        <img class="print" src="assets/manual/p01-inicio.jpg" alt="Tela inicial com o botão Área do professor destacado" width="400" height="820" loading="lazy">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">2</span>
+          <h4>Digite a senha do professor</h4>
+          <p>Digite a senha e toque em <span class="botao">Entrar ▶</span>. A senha protege a área para que os alunos não mexam nos cadastros.</p>
+          <p class="dica">💡 Não sabe a senha? Peça ao responsável pelos jogos na escola.</p>
+        </div>
+        <img class="print" src="assets/manual/p02-senha.jpg" alt="Campo Senha do professor e botão Entrar" width="400" height="440" loading="lazy">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">3</span>
+          <h4>Escolha o que vai fazer</h4>
+          <ul>
+            <li><b>📧 E-mails dos relatórios</b>: cadastrar ou tirar quem recebe os relatórios.</li>
+            <li><b>📝 Questionários da aula</b>: criar, copiar o link e excluir questionários.</li>
+          </ul>
+          <p>Dentro de cada parte, o botão <span class="botao">← Voltar</span> traz você de novo para este menu.</p>
+        </div>
+        <img class="print" src="assets/manual/p03-menu.jpg" alt="Menu com os botões E-mails dos relatórios e Questionários da aula" width="400" height="520" loading="lazy">
+      </div>
+
+      <h3 class="grupo">📧 Cadastrar o e-mail que recebe os relatórios</h3>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">4</span>
+          <h4>Preencha o nome e o e-mail</h4>
+          <p>Toque em <b>E-mails dos relatórios</b>. Em cima aparece a lista de quem já está cadastrado.
+            Embaixo, escreva o <b>nome do professor</b> (é o nome que o aluno vai ver) e o <b>e-mail</b>, e toque em
+            <span class="botao">➕ Adicionar</span>.</p>
+        </div>
+        <img class="print" src="assets/manual/p04-emails.jpg" alt="Lista de e-mails e formulário com nome e e-mail preenchidos" width="400" height="820" loading="lazy">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">5</span>
+          <h4>Pronto: o professor entrou na lista</h4>
+          <p>Aparece uma mensagem verde e o novo nome já está na lista. A partir de agora os alunos podem escolher esse professor.</p>
+          <p>Para tirar alguém, toque em <span class="botao">🗑️ Remover</span> ao lado do nome.</p>
+          <p class="dica">💡 Os e-mails ficam na aba <b>"E-mails"</b> da planilha do Google (coluna A o nome, coluna B o e-mail). Se preferir, também dá para editar direto na planilha.</p>
+        </div>
+        <img class="print" src="assets/manual/p05-email-ok.jpg" alt="Mensagem verde confirmando que o professor entrou na lista" width="400" height="820" loading="lazy">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">6</span>
+          <h4>O que o aluno vê</h4>
+          <p>Antes de abrir qualquer jogo (ou o questionário), o aluno escolhe <b>para quem vai o relatório</b> e toca em
+            <span class="botao">Continuar ▶</span>. No fim da partida, o relatório chega no e-mail do professor escolhido, com os acertos,
+            os erros e o que precisa revisar.</p>
+          <p class="aviso">✔ O app lembra a última escolha do aluno, então nas próximas vezes o professor já vem marcado.</p>
+        </div>
+        <img class="print" src="assets/manual/p09-escolha-prof.jpg" alt="Janela Para quem vai o relatório, com a lista de professores" width="400" height="820" loading="lazy">
+      </div>
+
+      <h3 class="grupo">📝 Criar e compartilhar um questionário</h3>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">7</span>
+          <h4>Abra os Questionários da aula</h4>
+          <p>No menu do professor, toque em <b>Questionários da aula</b>. Você vê todos os questionários já criados, com o número de perguntas
+            e dois botões: <span class="botao">🔗 Copiar link</span> e <span class="botao">🗑️ Excluir</span>.</p>
+          <p>Para montar as perguntas no Excel ou no Google Planilhas, toque em <span class="botao">📥 Baixar planilha modelo</span>.</p>
+        </div>
+        <img class="print" src="assets/manual/p06-quiz-lista.jpg" alt="Lista de questionários com os botões Copiar link e Excluir" width="400" height="820" loading="lazy">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">8</span>
+          <h4>Crie um questionário novo</h4>
+          <ol>
+            <li>Toque em <span class="botao">➕ Novo questionário</span>.</li>
+            <li>Escreva o <b>nome</b> (ex.: Geografia – Regiões do Brasil).</li>
+            <li>Coloque as perguntas de um destes jeitos:
+              <ul>
+                <li><b>Enviando a planilha</b> (.xlsx ou .csv): as perguntas aparecem embaixo para você conferir;</li>
+                <li><b>Digitando</b>: toque em <span class="botao">✍️ Adicionar pergunta</span>. O campo verde é a resposta certa e os vermelhos são as erradas.</li>
+              </ul>
+            </li>
+            <li>Toque em <span class="botao">Salvar questionário ✔</span>.</li>
+          </ol>
+          <p>Como montar a planilha (a primeira linha pode ser o cabeçalho):</p>
+          <table class="planilha">
+            <tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+            <tr><td>Pergunta</td><td>Resposta certa</td><td>Errada 1</td><td>Errada 2</td><td>Errada 3</td></tr>
+            <tr><td>Em qual região fica Pernambuco?</td><td>Nordeste</td><td>Sul</td><td>Norte</td><td>Sudeste</td></tr>
+          </table>
+          <p class="dica">💡 Cada pergunta precisa de 1 resposta certa e pelo menos 1 errada. No jogo, as respostas aparecem sempre embaralhadas.</p>
+        </div>
+        <img class="print" src="assets/manual/p07-quiz-novo.jpg" alt="Formulário de novo questionário com uma pergunta preenchida" width="400" height="820" loading="lazy">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">9</span>
+          <h4>Copie o link e mande para a turma</h4>
+          <p>Na lista, toque em <span class="botao">🔗 Copiar link</span> no questionário que você quer. Logo abaixo da lista aparece a mensagem
+            verde com o link já copiado.</p>
+          <p>Agora é só <b>colar</b> no grupo de WhatsApp da turma, no e-mail ou no mural da escola.</p>
+          <p class="aviso">✔ O link funciona pela internet, em qualquer celular ou computador. O aluno não precisa instalar nada.</p>
+        </div>
+        <img class="print" src="assets/manual/p08-link.jpg" alt="Mensagem verde: link do questionário copiado" width="400" height="820" loading="lazy">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">10</span>
+          <h4>O aluno abre o link e responde</h4>
+          <p>Pelo link, o aluno digita o primeiro nome, escolhe o professor e o questionário <b>abre direto</b>, sem passar pelos outros jogos.
+            Ele toca na resposta que acha certa e vê na hora se acertou. No fim, o relatório vai para o seu e-mail.</p>
+          <p>O aluno também pode achar o questionário pela tela inicial, no botão <b>📝 Questionário da aula</b>.</p>
+          <p class="dica">💡 Para apagar um questionário, toque em <span class="botao">🗑️ Excluir</span>. A aba dele some da planilha e o link deixa de funcionar.</p>
+        </div>
+        <img class="print" src="assets/manual/p10-quiz-aluno.jpg" alt="Pergunta do questionário na tela do aluno, com quatro respostas" width="400" height="660" loading="lazy">
+      </div>
+    </section>
+
+    <!-- ================= PARTE 2: JOGOS ================= -->
+    <section class="parte" id="jogos">
+      <h2>🎮 Os jogos</h2>
+      <p class="intro">Na tela inicial, o aluno toca em <b>🎮 Jogos</b> e vê todos os jogos. Os botões de cima filtram por tema:
+        Português, Matemática, ABC, Inglês e Psicopedagogia.</p>
+
+      <div class="passo">
+        <div>
+          <h4>Como o aluno começa</h4>
+          <ol>
+            <li>Digita o <b>primeiro nome</b> e toca em <span class="botao">Entrar ▶</span>.</li>
+            <li>Toca em <b>🎮 Jogos</b> e escolhe um jogo (se quiser, filtra pelo tema).</li>
+            <li>Escolhe <b>para quem vai o relatório</b> (só nos jogos do app).</li>
+            <li>Joga! No fim, vê como foi, e o professor recebe o relatório.</li>
+          </ol>
+          <p class="dica">💡 Os jogos com <b>↗</b> no cartão são de outros sites: abrem em outra aba e têm o próprio relatório, que não vem para o e-mail cadastrado aqui.</p>
+        </div>
+        <img class="print" src="assets/manual/g00-lista.jpg" alt="Tela Escolha um jogo com os filtros e os cartões dos jogos" width="400" height="820" loading="lazy">
+      </div>
+
+      <!-- Jogo de Ortografia -->
+      <article class="jogo" style="--c:#1565c0">
+        <div class="jogo-topo"><h3>📚 Jogo de Ortografia</h3><span class="tema">Português</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Treina as dúvidas mais comuns da escrita: <b>S ou SS, Ç ou C, R ou RR, M ou N, G ou J, X ou CH</b> e os acentos.</li>
+              <li>Liga a <b>figura</b>, o <b>som</b> e a <b>escrita</b> da palavra (o aluno pode ouvir a palavra).</li>
+              <li>Cada nível começa com o <b>Segredo do Plenix</b>, uma regra curta para o aluno entender o porquê.</li>
+              <li>O relatório mostra ao professor quais palavras o aluno errou e o que revisar.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Escolha o nível: <b>Fácil</b> (palavras curtas com figura), <b>Médio</b> (palavras do dia a dia) ou <b>Difícil</b> (palavras longas).</li>
+              <li>Leia o Segredo do Plenix e toque em <span class="botao">Começar ▶</span>.</li>
+              <li>Olhe a figura, toque em <span class="botao">🔊 Ouvir a palavra</span> se quiser e escolha a letra que completa a palavra.</li>
+              <li>Cada nível vale até <b>3 estrelas</b> ⭐.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens">
+            <img src="assets/manual/g01-orto-niveis.jpg" alt="Escolha do nível no Jogo de Ortografia" width="400" height="820" loading="lazy">
+            <img src="assets/manual/g02-orto-pergunta.jpg" alt="Pergunta com figura e letras para completar a palavra" width="400" height="700" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Chuva de Erros -->
+      <article class="jogo" style="--c:#e53935">
+        <div class="jogo-topo"><h3>🌧️ Chuva de Erros</h3><span class="tema">Português</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Ajuda a <b>reconhecer rápido</b> a forma certa de escrever as palavras.</li>
+              <li>Treina a <b>atenção</b>, a <b>leitura rápida</b> e a percepção visual das letras.</li>
+              <li>O aluno pode treinar só os casos que mais erra (escolhe o tipo de palavra).</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Escolha o que vai pegar: as palavras <b>CERTAS</b> ou as palavras <b>ERRADAS</b>.</li>
+              <li>Escolha quais palavras vão cair (todas ou um tipo, como S/SS ou acentos) e toque em <span class="botao">Começar ▶</span>.</li>
+              <li>As palavras caem do céu: toque <b>só nas que você escolheu</b>, antes que sumam.</li>
+              <li>Quanto mais rápido você acerta, mais rápido elas caem. Acertos seguidos dão bônus!</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens">
+            <img src="assets/capa-chuva-erros.jpg" alt="Capa da Chuva de Erros" width="760" height="428" loading="lazy">
+            <img src="assets/manual/g03-chuva.jpg" alt="Palavras caindo na Chuva de Erros" width="400" height="690" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Chuva de Matemática -->
+      <article class="jogo" style="--c:#0b3d91">
+        <div class="jogo-topo"><h3>🔢 Chuva de Matemática</h3><span class="tema">Matemática</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Desenvolve o <b>cálculo mental</b> e a rapidez nas quatro operações: adição, subtração, multiplicação e divisão.</li>
+              <li>A dificuldade <b>se ajusta ao aluno</b>: sobe quando ele acerta e desce quando ele erra, então ninguém fica travado.</li>
+              <li>O relatório mostra quais contas o aluno errou.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Escolha quais contas vão cair e toque em <span class="botao">Começar ▶</span>.</li>
+              <li>Uma conta cai de cada vez. Toque na <b>resposta certa</b> embaixo, antes que a conta chegue ao chão.</li>
+              <li>São 20 contas. Acertou: a próxima fica mais difícil. Errou: fica mais fácil.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens">
+            <img src="assets/capa-chuva-matematica.jpg" alt="Capa da Chuva de Matemática" width="600" height="691" loading="lazy">
+            <img src="assets/manual/g04-mat.jpg" alt="Conta 5 + 3 caindo e quatro respostas" width="400" height="670" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Tiro Certo -->
+      <article class="jogo" style="--c:#0a8fc2">
+        <div class="jogo-topo"><h3>🎯 Tiro Certo</h3><span class="tema">Matemática</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Ensina <b>ângulos</b> e o uso do <b>transferidor</b> de um jeito visual.</li>
+              <li>Treina a <b>localização no espaço</b> e a estimativa de ângulos.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>O círculo é um transferidor: o canhão fica no <b>0°</b> (à esquerda), o <b>90°</b> em cima, o <b>180°</b> à direita e o <b>270°</b> embaixo.</li>
+              <li>Um míssil aparece no círculo. Veja por qual ângulo ele está vindo.</li>
+              <li>Toque no ângulo certo para o canhão derrubar o míssil.</li>
+              <li>Você começa com <b>4 tiros</b> e cada acerto vale <b>+1 tiro</b>. São 20 mísseis.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens">
+            <img src="assets/tiro/capa-tiro-certo.jpg" alt="Capa do Tiro Certo" width="640" height="627" loading="lazy">
+            <img src="assets/manual/g05-tiro.jpg" alt="Transferidor com o canhão e o míssil" width="400" height="770" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Peso Certo -->
+      <article class="jogo" style="--c:#e0a100">
+        <div class="jogo-topo"><h3>⚖️ Peso Certo</h3><span class="tema">Matemática</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Trabalha as <b>medidas de massa</b> e a <b>conversão de unidades</b>: kg, hg, dag, g, dg, cg e mg.</li>
+              <li>Treina a <b>soma</b> e a <b>estimativa</b>: o aluno precisa planejar antes de testar.</li>
+              <li>Tem uma <b>tabela de conversão</b> para consultar durante o jogo.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Escolha o nível e toque em <span class="botao">Começar ▶</span>.</li>
+              <li>Um objeto aparece no prato da esquerda, com o peso dele.</li>
+              <li>Toque (ou arraste) os pesos para o prato da <b>direita</b> até achar que equilibra.</li>
+              <li>Toque em <span class="botao">⚖️ Testar</span>. A balança só se mexe no teste! Errou? Perde uma vida ❤️ (são 3).</li>
+              <li>Na dúvida, toque em <span class="botao">📏 Tabela</span>. São 10 objetos por partida.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens">
+            <img src="assets/capa-peso-certo.jpg" alt="Capa do Peso Certo" width="760" height="387" loading="lazy">
+            <img src="assets/manual/g06-peso.jpg" alt="Balança travada com uma melancia de 3 kg e os pesos embaixo" width="400" height="820" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Questionário da aula -->
+      <article class="jogo" style="--c:#7b4fc9">
+        <div class="jogo-topo"><h3>📝 Questionário da aula</h3><span class="tema">Todas as matérias</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>O professor <b>revisa o conteúdo da aula</b> com as próprias perguntas, de qualquer matéria.</li>
+              <li>O aluno vê na hora se acertou, e o professor recebe o relatório com as perguntas para revisar com a turma.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Abra pelo link que o professor mandou, ou toque em <b>📝 Questionário da aula</b> na tela inicial e escolha o questionário.</li>
+              <li>Leia a pergunta com calma e toque na resposta certa.</li>
+              <li>Toque em <span class="botao">Próxima ➜</span> até o fim e veja como foi.</li>
+            </ol>
+            <p class="dica">💡 Como o professor cria e compartilha: veja os <a href="#professor">passos 7 a 10</a>.</p>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/manual/p10-quiz-aluno.jpg" alt="Pergunta do questionário" width="400" height="660" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <h3 class="grupo">Jogos de outros sites ↗</h3>
+      <p class="intro" style="margin-top:-4px">Estes jogos abrem em outra aba. Cada um pede o nome do aluno de novo e tem o próprio relatório, que fica com o profissional responsável pelo jogo.</p>
+
+      <!-- ABC da Tia Ana -->
+      <article class="jogo" style="--c:#c2185b">
+        <div class="jogo-topo"><h3>🔤 ABC da Tia Ana</h3><span class="tema externo">ABC · outro site ↗</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Apoia a <b>alfabetização</b>: o aluno monta palavras com letras e sílabas.</li>
+              <li>Liga a <b>figura</b> à palavra escrita e treina a ordem das letras.</li>
+              <li>O relatório mostra o tempo em cada letra ou sílaba e as maiores dificuldades.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Digite o nome e toque em <b>JOGAR</b>.</li>
+              <li>Olhe a figura e <b>arraste cada letra</b> até o lugar certo para formar a palavra.</li>
+              <li>A partida tem tempo (2 minutos): monte o máximo de palavras que conseguir.</li>
+              <li>No fim, o relatório pode ser enviado para a Tia Ana ou baixado em PDF.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/capa-abc-tia-ana.jpg" alt="Capa do ABC da Tia Ana" width="480" height="619" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Desafio da Rotina -->
+      <article class="jogo" style="--c:#1e3a8a">
+        <div class="jogo-topo"><h3>🌎 Desafio da Rotina (My Day)</h3><span class="tema externo">Inglês · outro site ↗</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Ensina o <b>vocabulário da rotina</b> em inglês: acordar, tomar café, ir à escola…</li>
+              <li>Treina a <b>leitura</b> e a <b>tradução</b> nos dois sentidos (português ↔ inglês).</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Digite o nome e toque em <b>Let's go ▶</b>.</li>
+              <li>Escolha o modo: <b>PT ➜ EN</b> (a agenda vem em português e você escolhe a frase em inglês) ou <b>EN ➜ PT</b>.</li>
+              <li>Escolha o nível: <b>Fácil</b> (frases curtas) ou <b>Difícil</b> (frases completas) e um personagem.</li>
+              <li>Abra a <b>agenda</b> e escolha a frase certa para cada horário do dia.</li>
+              <li>No fim do dia: pontuação, acertos, erros e a correção (dá para baixar em PDF).</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/capa-ingles-rotina.jpg" alt="Capa do Desafio da Rotina" width="500" height="500" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Desafio das Peças -->
+      <article class="jogo" style="--c:#2e7dbf">
+        <div class="jogo-topo"><h3>🧠 Desafio das Peças com a Nágila</h3><span class="tema externo">Psicopedagogia · outro site ↗</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Trabalha o <b>raciocínio</b>, o <b>planejamento</b> e a <b>estratégia</b>: pensar antes de mover.</li>
+              <li>Ajuda a observar a <b>atenção</b> e a <b>impulsividade</b> (o tempo que o aluno leva para pensar em cada jogada).</li>
+              <li>O relatório traz as habilidades observadas. São indicadores para apoiar a profissional, não um diagnóstico.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Digite o nome e escolha: <b>Fácil, Médio ou Difícil</b> contra a Nágila, ou <b>2 jogadores</b>.</li>
+              <li>O objetivo é <b>levar todas as suas peças para o outro lado</b>.</li>
+              <li>Ande pelas linhas, <b>uma bolinha por vez</b>. Não pode pular nem comer peça.</li>
+              <li>Toque na sua peça e depois na bolinha que brilha (ou arraste). O seu relógio só anda na sua vez.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/capa-psico-estrategia.jpg" alt="Tabuleiro do Desafio das Peças" width="518" height="707" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Hive -->
+      <article class="jogo" style="--c:#f2b400">
+        <div class="jogo-topo"><h3>🐝 Hive (Colmeia)</h3><span class="tema externo">Psicopedagogia · outro site ↗</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Desenvolve a <b>estratégia</b> e a capacidade de <b>prever a jogada do outro</b>.</li>
+              <li>Treina o <b>pensamento espacial</b>, o respeito às regras e a tomada de decisão.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Jogue com <b>2 jogadores</b> no mesmo aparelho ou <b>contra a máquina</b>.</li>
+              <li>O objetivo é <b>cercar os 6 lados da Abelha Rainha</b> do adversário. E não deixar a sua ser encurralada!</li>
+              <li>Na sua vez, coloque uma peça nova ou mova uma peça do tabuleiro. Cada bicho anda de um jeito:
+                abelha 🐝, besouro 🪲, gafanhoto 🦗, aranha 🕷️ e formiga 🐜.</li>
+              <li>A peça nova só pode encostar nas peças da sua cor. A Rainha tem que entrar até a sua 4ª jogada.</li>
+              <li>Nenhum movimento pode separar a colmeia em duas partes.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/capa-hive.jpg" alt="Tabuleiro de colmeia do Hive" width="416" height="412" loading="lazy">
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <a class="voltar" href="./">← Voltar ao jogo</a>
+    <p>© <b>Marco Nunes</b> — Todos os direitos reservados<br>
+      <a href="https://sitejodospedagogicos.vercel.app/" target="_blank" rel="noopener">Pedagogia Gamificada ↗</a></p>
+  </footer>
+</body>
+</html>
