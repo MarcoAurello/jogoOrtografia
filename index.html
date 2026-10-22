@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=38">
+  <link rel="stylesheet" href="style.css?v=39">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -335,7 +335,21 @@
         <p class="erro-login" id="erro-professor" role="alert"></p>
         <button class="btn-grande" type="submit">Entrar ▶</button>
       </form>
+      <!-- depois da senha: um botão para cada assunto -->
+      <div class="menu-professor" id="menu-professor" hidden>
+        <button class="jogo-card" id="btn-prof-emails" type="button" style="--c:#1fa2b0">
+          <span class="jogo-card-icone">📧</span>
+          <span class="jogo-card-nome">E-mails dos relatórios</span>
+          <span class="jogo-card-texto">Cadastrar e excluir os professores que recebem os relatórios</span>
+        </button>
+        <button class="jogo-card" id="btn-prof-quiz" type="button" style="--c:#7b4fc9">
+          <span class="jogo-card-icone">📝</span>
+          <span class="jogo-card-nome">Questionários da aula</span>
+          <span class="jogo-card-texto">Criar, enviar planilha, copiar o link e excluir</span>
+        </button>
+      </div>
       <div class="cartao cartao-login" id="info-emails" hidden>
+        <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
         <h3 class="chuva-pergunta">📧 E-mails dos relatórios</h3>
         <p class="professor-ajuda">Ficam na aba <b>"E-mails"</b> da planilha do Google (A nome, B e-mail).
           Antes de abrir cada jogo, o aluno escolhe para quem vai o relatório.</p>
@@ -350,6 +364,7 @@
         </form>
       </div>
       <div class="cartao cartao-login" id="painel-questionarios" hidden>
+        <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
         <h3 class="chuva-pergunta">📝 Questionários da aula</h3>
         <p class="professor-ajuda">Ficam guardados na planilha do Google: uma aba <b>"Q: nome"</b> para cada questionário.
           Cada um tem um <b>link</b> que abre direto nele: é só copiar e mandar para a turma.</p>
@@ -468,9 +483,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=38"></script>
-  <script src="dados.js?v=38"></script>
-  <script src="jogo.js?v=38"></script>
+  <script src="plenix.js?v=39"></script>
+  <script src="dados.js?v=39"></script>
+  <script src="jogo.js?v=39"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

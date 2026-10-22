@@ -284,10 +284,17 @@
   };
   $('escolha-prof-cancelar').onclick = () => { $('escolha-prof').hidden = true; depoisDaEscolha = null; };
 
+  // Área do professor: senha → menu com dois botões → a parte escolhida (e-mails ou questionários)
+  function parteProfessor(qual) {
+    $('menu-professor').hidden = qual !== 'menu';
+    $('info-emails').hidden = qual !== 'emails';
+    $('painel-questionarios').hidden = qual !== 'quiz';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   function telaProfessor() {
     $('form-senha-professor').hidden = false;
-    $('info-emails').hidden = true;
-    $('painel-questionarios').hidden = true;
+    parteProfessor('nenhuma');
     $('professor-senha').value = '';
     $('erro-professor').textContent = '';
     mostrar('tela-professor');
@@ -356,16 +363,27 @@
     SOM.certo();
     senhaProfessor = $('professor-senha').value.trim();
     $('form-senha-professor').hidden = true;
-    $('info-emails').hidden = false;
-    $('painel-questionarios').hidden = false;
+    parteProfessor('menu');
+    carregarEmails();   // já deixa a lista atualizada para quando abrir os e-mails
+  };
+
+  $('btn-prof-emails').onclick = async () => {
+    SOM.clique();
     avisoEmail('');
     $('novo-email-nome').value = '';
     $('novo-email-email').value = '';
+    parteProfessor('emails');
     listarEmailsProfessor();
-    listarQuestionariosProfessor();
     await carregarEmails();
     listarEmailsProfessor();
   };
+  $('btn-prof-quiz').onclick = () => {
+    SOM.clique();
+    avisoQuiz('');
+    parteProfessor('quiz');
+    listarQuestionariosProfessor();
+  };
+  document.querySelectorAll('.prof-voltar').forEach((b) => { b.onclick = () => parteProfessor('menu'); });
 
   // ---------- Questionários da aula: cadastro pelo professor ----------
   function avisoQuiz(texto, ok) {
