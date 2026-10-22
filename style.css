@@ -809,7 +809,7 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
 /* ---------- Escolha do jogo (tela inicial) ---------- */
 .escolha-jogos {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 16px;
   max-width: 640px;
   margin: 18px auto 0;
@@ -1275,3 +1275,4 @@ button.quiz-item:hover { border-color: #7b4fc9; }
 .jogo-card-capa.larga { aspect-ratio: 16 / 9; object-position: center top; }
 .capa-jogo.larga { max-width: 520px; }
 .jogo-card-capa.inteira { aspect-ratio: auto; }   /* arte bem larga: aparece inteira, sem cortar as pontas */
+a.jogo-card { text-decoration: none; }   /* cartão que é link (jogo externo) */
