@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=42">
+  <link rel="stylesheet" href="style.css?v=43">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -204,6 +204,7 @@
     <!-- Peso Certo: escolha do nível -->
     <section class="tela" id="tela-peso-menu">
       <h2 class="subtitulo">⚖️ Peso Certo</h2>
+      <img class="capa-jogo larga" src="assets/capa-peso-certo.jpg" alt="Balança travada: toque no peso certo e deixe a balança em equilíbrio" width="760" height="387">
       <div class="cena cena-regra">
         <div class="davi-area" id="davi-peso"></div>
         <div class="balao balao-esq">
@@ -393,8 +394,8 @@
           <span class="jogo-card-nome">Tiro Certo</span>
           <span class="jogo-card-texto">Ache o ângulo e derrube o míssil!</span>
         </button>
-        <button class="jogo-card" id="btn-peso" type="button" data-tema="matematica" style="--c:#e0a100">
-          <span class="jogo-card-icone">⚖️</span>
+        <button class="jogo-card com-capa" id="btn-peso" type="button" data-tema="matematica" style="--c:#e0a100">
+          <img class="jogo-card-capa larga" src="assets/capa-peso-certo.jpg" alt="" width="760" height="387">
           <span class="jogo-card-nome">Peso Certo</span>
           <span class="jogo-card-texto">Equilibre a balança com os pesos!</span>
         </button>
@@ -498,9 +499,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=42"></script>
-  <script src="dados.js?v=42"></script>
-  <script src="jogo.js?v=42"></script>
+  <script src="plenix.js?v=43"></script>
+  <script src="dados.js?v=43"></script>
+  <script src="jogo.js?v=43"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
