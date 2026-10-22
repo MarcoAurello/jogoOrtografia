@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=61">
+  <link rel="stylesheet" href="style.css?v=64">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -342,6 +342,51 @@
       <button class="btn-grande" id="btn-rotina-testar" type="button">✔ Testar a ordem</button>
     </section>
 
+    <!-- Fichas Coloridas: instruções e nível -->
+    <section class="tela" id="tela-fichas-menu">
+      <h2 class="subtitulo">🔴 Fichas Coloridas</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-fichas"></div>
+        <div class="balao balao-esq">
+          Você joga contra o <b>Plenix</b>! Na sua vez, tire uma <b>cartela</b> e ganhe essa quantidade de fichas
+          <b>vermelhas (1 ponto)</b>. Junte <b>3 vermelhas</b> e troque por <b>1 azul (3 pontos)</b>;
+          junte <b>3 azuis</b> e troque por <b>1 amarela (9 pontos)</b>. Toque em 3 fichas iguais para trocar!
+          Vence quem juntar as amarelas primeiro. 🏆
+        </div>
+      </div>
+      <div class="cartao cartao-chuva">
+        <h3 class="chuva-pergunta">Qual nível?</h3>
+        <div class="peso-niveis" id="fichas-niveis"></div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-fichas-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="fichas-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Fichas Coloridas: o jogo -->
+    <section class="tela tela-jogo" id="tela-fichas">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="fichas-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="fichas-titulo"></span>
+        <span class="chuva-placar" id="fichas-meta"></span>
+      </div>
+      <div class="fichas-rival" id="fichas-rival"></div>
+      <div class="fichas-mesa">
+        <div class="fichas-cartela" id="fichas-cartela" aria-live="polite"><span>?</span></div>
+        <p class="fichas-msg" id="fichas-msg" role="status"></p>
+      </div>
+      <div class="fichas-bandeja" id="fichas-bandeja" aria-label="Suas fichas"></div>
+      <div class="fichas-pergunta" id="fichas-pergunta" hidden>
+        <p>Quantos pontos você tem agora?</p>
+        <div class="fichas-opcoes" id="fichas-opcoes"></div>
+      </div>
+      <div class="fichas-botoes">
+        <button class="btn-grande" id="btn-fichas-tirar" type="button">🃏 Tirar cartela</button>
+        <button class="btn-grande" id="btn-fichas-pronto" type="button" hidden>✔ Pronto</button>
+      </div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -476,14 +521,18 @@
     <!-- Jogos: a lista, com o filtro por tema -->
     <section class="tela" id="tela-jogos">
       <h2 class="subtitulo">🎮 Escolha um jogo</h2>
-      <div class="filtro-temas" id="filtro-temas" role="group" aria-label="Filtrar jogos por tema">
-        <button class="filtro-tema ativo" type="button" data-tema="todos">Todos</button>
-        <button class="filtro-tema" type="button" data-tema="portugues">📚 Português</button>
-        <button class="filtro-tema" type="button" data-tema="matematica">🔢 Matemática</button>
-        <button class="filtro-tema" type="button" data-tema="abc">🔤 ABC</button>
-        <button class="filtro-tema" type="button" data-tema="ingles">🌎 Inglês</button>
-        <button class="filtro-tema" type="button" data-tema="psicopedagogia">🧠 Psicopedagogia</button>
-      </div>
+      <!-- menu de categorias (cada opção mostra quantos jogos tem) -->
+      <label class="filtro-temas" id="filtro-temas">
+        <span class="filtro-rotulo">Categoria</span>
+        <select class="filtro-menu" id="filtro-tema" aria-label="Filtrar jogos por categoria">
+          <option value="todos">🎮 Todos os jogos</option>
+          <option value="portugues">📚 Português</option>
+          <option value="matematica">🔢 Matemática</option>
+          <option value="abc">🔤 ABC</option>
+          <option value="ingles">🌎 Inglês</option>
+          <option value="psicopedagogia">🧠 Psicopedagogia</option>
+        </select>
+      </label>
       <div class="escolha-jogos">
         <button class="jogo-card com-capa" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
           <img class="jogo-card-capa larga inteira" src="assets/capa-ortografia.jpg" alt="" width="760" height="370">
@@ -536,6 +585,11 @@
           <img class="jogo-card-capa" src="assets/capa-rotina.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Rotina Certa</span>
           <span class="jogo-card-texto">Coloque os passos do dia na ordem certa!</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
+          <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Fichas Coloridas</span>
+          <span class="jogo-card-texto">Junte 3 fichas e troque pela próxima cor!</span>
         </button>
         <!-- jogo externo: abre o jogo de raciocínio e estratégia em outra aba -->
         <a class="jogo-card com-capa" id="btn-psico" href="https://nagila.vercel.app/" target="_blank" rel="noopener" data-tema="psicopedagogia" style="--c:#2e7dbf">
@@ -671,9 +725,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=61"></script>
-  <script src="dados.js?v=61"></script>
-  <script src="jogo.js?v=61"></script>
+  <script src="plenix.js?v=64"></script>
+  <script src="dados.js?v=64"></script>
+  <script src="jogo.js?v=64"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

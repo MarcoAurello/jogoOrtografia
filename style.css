@@ -1568,3 +1568,62 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 .rotina-msg.ok { color: #1d6b3d; }
 .rotina-msg.erro { color: #b42318; }
 #btn-rotina-testar:disabled { opacity: 0.5; }
+
+/* ---------- Fichas Coloridas ---------- */
+.fichas-rival { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 0 6px; padding: 6px 10px;
+  border-radius: 12px; background: #eef4f6; font-weight: 800; color: var(--primaria-escura); }
+.fichas-rival-pts { margin-left: 4px; font-size: 14px; color: var(--cinza-texto); }
+.fichas-mini { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: #fff; font-size: 13px;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.55), var(--cor) 55%); text-shadow: 0 1px 1px #0006; }
+.fichas-mesa { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.fichas-cartela {
+  flex: 0 0 auto; display: grid; place-items: center; width: clamp(54px, 9dvh, 76px); aspect-ratio: 0.72; border-radius: 12px;
+  background: linear-gradient(160deg, #fffdf5, #fff1c2); border: 3px solid #e0a100; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.15);
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(28px, 5dvh, 40px); color: #b26a00;
+}
+.fichas-cartela.virou { animation: cartela-virar 0.45s ease-out; }
+@keyframes cartela-virar { 0% { transform: rotateY(90deg) scale(0.9); } 60% { transform: rotateY(-12deg) scale(1.05); } 100% { transform: none; } }
+.fichas-msg { flex: 1; margin: 0; font-size: clamp(14px, 2.3dvh, 17px); font-weight: 700; color: var(--texto); line-height: 1.3; }
+.fichas-msg.ok { color: #1d6b3d; }
+.fichas-msg.erro { color: #b42318; }
+.fichas-bandeja { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: space-evenly; gap: 6px;
+  padding: 8px; border-radius: 16px; background: linear-gradient(180deg, #e7f3e9, #d5ead9); box-shadow: inset 0 0 0 2px #b9dcc0; }
+.fichas-bandeja.tremer { animation: luz-tremer 0.16s linear 2; }
+.fichas-linha { display: flex; align-items: center; gap: 8px; min-height: clamp(40px, 7dvh, 56px); }
+.fichas-rotulo { flex: 0 0 92px; font-size: 12px; font-weight: 800; color: var(--primaria-escura); text-transform: capitalize; white-space: nowrap; }
+/* linha sem fichas: uma vaga tracejada da cor mostra onde a ficha nova vai cair */
+.ficha-vaga { display: grid; place-items: center; width: clamp(36px, 6.2dvh, 50px); aspect-ratio: 1; border-radius: 50%;
+  border: 3px dashed color-mix(in srgb, var(--cor) 55%, transparent); color: color-mix(in srgb, var(--cor) 70%, transparent);
+  font-family: 'Fredoka', sans-serif; font-weight: 700; }
+.fichas-pilha { flex: 1; display: flex; flex-wrap: wrap; gap: 6px; }
+.ficha {
+  width: clamp(36px, 6.2dvh, 50px); aspect-ratio: 1; padding: 0; border-radius: 50%; color: #fff;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(15px, 2.4dvh, 19px); text-shadow: 0 1px 2px #0007;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.6), var(--cor) 50%, color-mix(in srgb, var(--cor) 65%, #000) 100%);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--cor) 50%, #000), inset 0 0 0 3px rgba(255, 255, 255, 0.35);
+  transition: transform 0.12s;
+}
+.ficha.escolhida { transform: translateY(-6px) scale(1.12); outline: 3px solid #fff; outline-offset: 2px; }
+.ficha.caiu { animation: ficha-cair 0.3s ease-out; }
+@keyframes ficha-cair { 0% { transform: translateY(-40px); opacity: 0; } 70% { transform: translateY(3px) scale(1.06, 0.9); } 100% { transform: none; opacity: 1; } }
+.ficha.juntando { animation: ficha-juntar 0.32s ease-in forwards; }
+@keyframes ficha-juntar { to { transform: scale(0.3); opacity: 0; } }
+.ficha.nasceu { animation: ficha-nascer 0.4s ease-out; }
+@keyframes ficha-nascer { 0% { transform: scale(0.2); } 60% { transform: scale(1.25, 0.9); } 100% { transform: none; } }
+.fichas-pergunta { margin-top: 6px; text-align: center; }
+.fichas-pergunta p { margin: 0 0 6px; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 18px; color: var(--primaria-escura); }
+.fichas-opcoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.fichas-botoes { display: flex; justify-content: center; }
+.fichas-botoes .btn-grande:disabled { opacity: 0.5; }
+
+/* menu de categorias da lista de jogos */
+.filtro-temas { align-items: center; gap: 10px; }
+.filtro-rotulo { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; color: var(--primaria-escura); }
+.filtro-menu {
+  appearance: none; -webkit-appearance: none; min-height: 48px; max-width: 100%; padding: 10px 44px 10px 16px;
+  border: 2px solid var(--primaria); border-radius: 999px; color: var(--primaria-escura); cursor: pointer;
+  font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 600; font-size: 18px;
+  background: var(--branco) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='22' height='22' fill='none' stroke='%23137784' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center;
+  box-shadow: 0 3px 0 rgba(19, 41, 75, 0.1);
+}
+.filtro-menu:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
