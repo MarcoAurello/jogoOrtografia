@@ -174,6 +174,7 @@
     $('campo-senha').hidden = !PEDIR_SENHA;
     $('login-senha').required = PEDIR_SENHA;
     if (!$('login-nome').value) $('login-nome').value = ultimoNome;
+    desenharEscolhaEmail();
     mostrar('tela-login');
     setTimeout(() => $('login-nome').focus(), 300);
   }
@@ -181,6 +182,9 @@
   function telaInicio() {
     if (!aluno) return telaLogin();
     $('nome-saudacao').textContent = aluno;
+    const prof = listaEmails().find((x) => x.email === emailEscolhido);
+    $('relatorio-para').hidden = !prof;
+    if (prof) $('relatorio-para').textContent = `📧 Seus relatórios vão para: ${prof.nome}`;
     mascote('davi-inicio', 'oi');
     mostrar('tela-inicio');
   }
@@ -194,6 +198,15 @@
       mascote('davi-login', 'triste');
       SOM.errado();
       return;
+    }
+    if (!$('campo-professor').hidden && !$('login-professor').value) {
+      $('erro-login').textContent = 'Escolha para quem vai o relatório. 📧';
+      SOM.errado();
+      return;
+    }
+    if (!$('campo-professor').hidden) {
+      emailEscolhido = $('login-professor').value;
+      try { localStorage.setItem(CHAVE_EMAIL_ESCOLHIDO, emailEscolhido); } catch (err) { /* sem armazenamento */ }
     }
     aluno = nome;
     ultimoNome = aluno;
@@ -211,30 +224,21 @@
     telaLogin();
   };
 
-  // ---------- Área do professor: e-mails dos relatórios e questionários da aula ----------
-  // Tudo fica na planilha do Google, pelo script (ferramentas/relatorio-email.gs): aba "Configuração" com os e-mails
-  // e uma aba "Q: nome" para cada questionário. O aparelho guarda só uma cópia, para funcionar sem internet.
-  // A senha é conferida aqui (para os alunos não mexerem) e de novo no script, que é quem grava na planilha.
-  const SENHA_PROFESSOR = 'app0707';
-  const CHAVE_CONFIG = 'pleno-ortografia:config-emails';         // cópia da aba "Configuração" { jogo: e-mail }
-  const CHAVE_EMAIL = 'pleno-ortografia:email-professor';        // versões antigas: e-mail só no aparelho
-  const CHAVE_EMAILS_JOGOS = 'pleno-ortografia:emails-jogos';
-  const JOGOS_EMAIL = [['ortografia', '📚 Jogo de Ortografia'], ['chuva', '🌧️ Chuva de Erros'], ['matematica', '🔢 Chuva de Matemática'],
-    ['tiro', '🎯 Tiro Certo'], ['peso', '⚖️ Peso Certo'], ['questionario', '📝 Questionário da aula']];
-  let senhaProfessor = '';   // a senha digitada, mandada ao script para gravar na planilha
+  // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
+  // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
+  // e o aluno escolhe, ao entrar, para qual professor vai o relatório. O aparelho guarda uma cópia da lista
+  // (para funcionar sem internet) e lembra a última escolha.
+  const SENHA_PROFESSOR = 'app0707';   // conferida aqui (para os alunos não mexerem) e de novo no script
+  const CHAVE_EMAILS = 'pleno-ortografia:emails';                    // cópia da aba "E-mails" [{ nome, email }]
+  const CHAVE_EMAIL_ESCOLHIDO = 'pleno-ortografia:email-escolhido';  // e-mail escolhido, ou 'nenhum'
+  let senhaProfessor = '';   // a senha digitada, mandada ao script para gravar questionários
   const lerJSON = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) || padrao; } catch (e) { return padrao; } };
   const gravarJSON = (chave, valor) => { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) { /* sem armazenamento */ } };
-  const emailValido = (t) => /^[^\s@<>,;]+@[^\s@<>,;]+\.[a-z]{2,}$/i.test(t);
   const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
-
-  // e-mails conhecidos neste aparelho: os da planilha (copiados) por cima dos antigos, salvos só aqui
-  function configEmails() {
-    let antigo = {};
-    try { antigo = { ...lerJSON(CHAVE_EMAILS_JOGOS, {}), ...(localStorage.getItem(CHAVE_EMAIL) ? { geral: localStorage.getItem(CHAVE_EMAIL) } : {}) }; } catch (e) { /* sem armazenamento */ }
-    return { ...antigo, ...lerJSON(CHAVE_CONFIG, {}) };
-  }
-  // o e-mail próprio do jogo, ou o geral
-  const emailDoJogo = (mis) => { const c = configEmails(); return c[jogoDaMissao(mis)] || c.geral || ''; };
+  let emailEscolhido = (() => { try { return localStorage.getItem(CHAVE_EMAIL_ESCOLHIDO) || ''; } catch (e) { return ''; } })();
+  const listaEmails = () => lerJSON(CHAVE_EMAILS, []);
+  // o e-mail para onde vai o relatório (só se estiver na lista da planilha)
+  const emailDoRelatorio = () => (listaEmails().some((x) => x.email === emailEscolhido) ? emailEscolhido : '');
 
   // conversa com o script do Google: leituras por GET, gravações (com a senha) por POST
   async function lerDoScript(acao, extra = '') {
@@ -251,24 +255,28 @@
     return j;
   }
 
-  // traz a aba "Configuração" para o aparelho (ao abrir o jogo e na Área do professor)
-  async function sincronizarConfig() {
-    if (!URL_RELATORIO) return false;
-    try {
-      const { config } = await lerDoScript('config');
-      gravarJSON(CHAVE_CONFIG, config || {});
-      return true;
-    } catch (e) { return false; }
+  // lista de professores na tela de entrada
+  function desenharEscolhaEmail() {
+    const lista = listaEmails();
+    $('campo-professor').hidden = !lista.length;
+    if (lista.length === 1 && !emailEscolhido) emailEscolhido = lista[0].email;   // só um professor: já vem escolhido
+    $('login-professor').innerHTML = '<option value="">Escolha o professor…</option>'
+      + lista.map((x) => `<option value="${seguro(x.email)}">${seguro(x.nome)}</option>`).join('')
+      + '<option value="nenhum">Não enviar relatório</option>';
+    $('login-professor').value = emailEscolhido === 'nenhum' || lista.some((x) => x.email === emailEscolhido) ? emailEscolhido : '';
   }
 
-  function avisoProfessor(texto, ok) {
-    $('aviso-email').textContent = texto;
-    $('aviso-email').classList.toggle('aviso-ok', !!ok);
+  // traz a aba "E-mails" da planilha (ao abrir o jogo)
+  async function carregarEmails() {
+    if (URL_RELATORIO) {
+      try { const { emails } = await lerDoScript('emails'); gravarJSON(CHAVE_EMAILS, emails || []); } catch (e) { /* sem internet: usa a cópia */ }
+    }
+    desenharEscolhaEmail();
   }
 
   function telaProfessor() {
     $('form-senha-professor').hidden = false;
-    $('form-email-professor').hidden = true;
+    $('info-emails').hidden = true;
     $('painel-questionarios').hidden = true;
     $('professor-senha').value = '';
     $('erro-professor').textContent = '';
@@ -276,13 +284,11 @@
     setTimeout(() => $('professor-senha').focus(), 300);
   }
 
-  function preencherEmails() {
-    const c = configEmails();
-    $('professor-email').value = c.geral || '';
-    $('campos-emails-jogos').innerHTML = JOGOS_EMAIL.map(([id, nome]) => `
-      <label class="campo campo-jogo"><span>${nome}</span>
-        <input type="email" data-jogo="${id}" maxlength="120" placeholder="usa o e-mail geral" value="${seguro(c[id] || '')}"></label>`).join('');
-    $('emails-jogos').open = JOGOS_EMAIL.some(([id]) => c[id]);
+  function listarEmailsProfessor() {
+    const lista = listaEmails();
+    $('lista-emails-prof').innerHTML = lista.length
+      ? lista.map((x) => `<div class="quiz-item"><span class="quiz-item-nome">${seguro(x.nome)}</span><span class="quiz-item-qtd">${seguro(x.email)}</span></div>`).join('')
+      : '<p class="quiz-status">A aba "E-mails" ainda está vazia: preencha na planilha.</p>';
   }
 
   $('form-senha-professor').onsubmit = async (e) => {
@@ -295,56 +301,12 @@
     SOM.certo();
     senhaProfessor = $('professor-senha').value.trim();
     $('form-senha-professor').hidden = true;
-    $('form-email-professor').hidden = false;
+    $('info-emails').hidden = false;
     $('painel-questionarios').hidden = false;
-    preencherEmails();
-    if (!URL_RELATORIO) { avisoProfessor('O envio por e-mail ainda não foi ligado no jogo (falta o endereço do script).'); return; }
-    avisoProfessor('Buscando os e-mails na planilha…');
-    const ok = await sincronizarConfig();
-    preencherEmails();
-    const algum = Object.keys(configEmails()).length;
-    if (!ok) avisoProfessor('Sem conexão com a planilha: mostrando o que está salvo neste aparelho.');
-    else avisoProfessor(algum ? 'Os relatórios vão para os e-mails abaixo (salvos na planilha).' : 'Nenhum e-mail salvo: os relatórios não são enviados.', !!algum);
+    listarEmailsProfessor();
     listarQuestionariosProfessor();
-  };
-
-  $('form-email-professor').onsubmit = async (e) => {
-    e.preventDefault();
-    const config = {};
-    const geral = $('professor-email').value.trim().toLowerCase();
-    if (geral && !emailValido(geral)) { avisoProfessor('Digite um e-mail geral válido, como nome@exemplo.com.'); return; }
-    if (geral) config.geral = geral;
-    for (const campo of document.querySelectorAll('#campos-emails-jogos input')) {
-      const v = campo.value.trim().toLowerCase();
-      if (!v) continue;
-      if (!emailValido(v)) { avisoProfessor(`O e-mail de "${campo.closest('label').querySelector('span').textContent}" não é válido.`); campo.focus(); return; }
-      config[campo.dataset.jogo] = v;
-    }
-    if (!Object.keys(config).length) { avisoProfessor('Digite pelo menos um e-mail.'); return; }
-    avisoProfessor('Salvando na planilha…');
-    try {
-      const j = await gravarNoScript({ acao: 'salvarConfig', config });
-      gravarJSON(CHAVE_CONFIG, j.config || config);
-      try { localStorage.removeItem(CHAVE_EMAIL); localStorage.removeItem(CHAVE_EMAILS_JOGOS); } catch (err) { /* sem armazenamento */ }
-      SOM.certo();
-      const semEmail = config.geral ? [] : JOGOS_EMAIL.filter(([id]) => !config[id]).map(([, nome]) => nome);
-      avisoProfessor(`Salvo na planilha! Vale para todos os aparelhos. ✔${semEmail.length ? ` Sem e-mail (não enviam): ${semEmail.join(', ')}.` : ''}`, true);
-      enviarFila();
-    } catch (err) {
-      avisoProfessor(String(err.message) === 'senha'
-        ? 'A planilha não aceitou a senha: confira a SENHA_PROFESSOR no script do Google.'
-        : 'Não deu para salvar na planilha (sem internet ou script desatualizado). Tente de novo.');
-    }
-  };
-
-  $('btn-remover-email').onclick = async () => {
-    try {
-      await gravarNoScript({ acao: 'salvarConfig', config: {} });
-      gravarJSON(CHAVE_CONFIG, {});
-      try { localStorage.removeItem(CHAVE_EMAIL); localStorage.removeItem(CHAVE_EMAILS_JOGOS); } catch (e) { /* sem armazenamento */ }
-      preencherEmails();
-      avisoProfessor('Pronto: os relatórios não serão mais enviados por e-mail.');
-    } catch (err) { avisoProfessor('Não deu para apagar na planilha (sem internet?). Tente de novo.'); }
+    await carregarEmails();
+    listarEmailsProfessor();
   };
 
   // ---------- Questionários da aula: cadastro pelo professor ----------
@@ -2211,7 +2173,7 @@
   async function enviarRelatorioPorEmail({ rel, estrelas, missao: mis, data }) {
     const aviso = $('envio-email');
     aviso.hidden = true;
-    const para = emailDoJogo(mis);
+    const para = emailDoRelatorio();
     if (!URL_RELATORIO || !para || !rel.respondidas) return;
     const id = `${data.getTime()}-${Math.random().toString(36).slice(2, 8)}`;
     salvarFila([...lerFila(), {
@@ -2229,7 +2191,7 @@
     await enviarFila();
     if (resultadoEnvio[id] === 'ok') {
       aviso.className = 'envio-email ok';
-      aviso.textContent = `📧 Relatório enviado para ${para}.`;
+      aviso.textContent = `📧 Relatório enviado para ${(listaEmails().find((x) => x.email === para) || { nome: para }).nome}.`;
     } else if (resultadoEnvio[id] === 'erro') {
       aviso.className = 'envio-email erro';
       aviso.textContent = 'Não foi possível enviar o relatório. Peça ao professor para conferir o e-mail na Área do professor.';
@@ -2485,7 +2447,7 @@
 
   // relatórios que ficaram sem enviar: tenta ao abrir o jogo e quando a internet voltar
   window.addEventListener('online', enviarFila);
-  sincronizarConfig().then(enviarFila);
+  carregarEmails().then(enviarFila);
 
   telaInicio();
 })();

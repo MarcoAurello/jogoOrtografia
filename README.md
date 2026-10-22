@@ -146,14 +146,16 @@ Não há banco de dados: uma planilha do Google guarda tudo, por meio do script 
 
 | Aba da planilha | O que guarda |
 |---|---|
-| **Configuração** | os e-mails que recebem os relatórios: `geral` e, se quiser, um por jogo (`ortografia`, `chuva`, `matematica`, `tiro`, `peso`, `questionario`) |
+| **E-mails** | a lista de professores que recebem relatórios: coluna A o nome, coluna B o e-mail (o script cria a aba vazia na primeira vez) |
 | **Q: nome** (uma por questionário) | coluna A a pergunta, B a resposta certa, C a E as respostas erradas (a 1ª linha pode ser cabeçalho) |
 | **Relatórios** | uma linha por relatório enviado |
 
-Na tela inicial, **🧑‍🏫 Área do professor** (senha `app0707`, em `SENHA_PROFESSOR` no `jogo.js` e no script) salva os
-e-mails na aba "Configuração" e cria ou exclui questionários (enviando uma planilha `.xlsx`/`.csv` ou digitando as
-perguntas). Tudo vale para todos os aparelhos; cada aparelho guarda uma cópia para funcionar sem internet.
-No fim de cada atividade, o relatório vai para o e-mail do jogo (ou o geral), mesmo que o aluno não baixe o PDF.
+Nada de e-mail é cadastrado no app: ao entrar no jogo, o aluno escolhe na lista da aba "E-mails" para qual professor
+vai o relatório (o aparelho lembra a última escolha). No fim de cada atividade, o relatório vai para esse e-mail,
+mesmo que o aluno não baixe o PDF. O script só envia para e-mails que estão na lista.
+Na tela inicial, **🧑‍🏫 Área do professor** (senha `app0707`, em `SENHA_PROFESSOR` no `jogo.js` e no script) mostra
+a lista de e-mails e cria ou exclui questionários (enviando uma planilha `.xlsx`/`.csv` ou digitando as perguntas).
+Cada aparelho guarda uma cópia da lista e dos questionários para funcionar sem internet.
 Sem internet, o relatório fica numa fila no aparelho e é enviado quando a conexão voltar.
 Também dá para criar um questionário direto na planilha: é só criar uma aba com o nome começando por `Q: `.
 

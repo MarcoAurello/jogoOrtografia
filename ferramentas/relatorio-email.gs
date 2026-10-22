@@ -1,17 +1,17 @@
 /* Jogos Educacionais — script do Google (Apps Script, gratuito), ligado a uma planilha do Google.
    A planilha guarda tudo, sem banco de dados:
-   - aba "Configuração": os e-mails que recebem os relatórios (um geral e, se quiser, um por jogo);
+   - aba "E-mails": a lista de professores que recebem relatórios (A nome, B e-mail); o aluno escolhe um ao entrar;
    - abas "Q: <nome>": um questionário da aula em cada aba (A pergunta, B resposta certa, C a E respostas erradas);
    - aba "Relatórios": uma linha para cada relatório enviado.
-   O jogo lê a configuração e os questionários (doGet) e manda relatórios e alterações do professor (doPost).
+   O jogo lê a lista de e-mails e os questionários (doGet) e manda relatórios e alterações do professor (doPost).
+   Os relatórios só podem ir para e-mails que estão na aba "E-mails" (ninguém usa o script para mandar e-mail a outros).
    Os e-mails saem pelo Gmail da conta que publicou o script (até 100 por dia numa conta Gmail comum).
    Como publicar: veja "Relatório por e-mail" no README.md. */
 
 const CHAVE = 'jogo-ortografia';      // a mesma CHAVE_RELATORIO do jogo.js (só evita envios por engano)
-const SENHA_PROFESSOR = 'app0707';    // a mesma senha da Área do professor: exigida para mudar e-mails e questionários
+const SENHA_PROFESSOR = 'app0707';    // a mesma senha da Área do professor: exigida para criar e excluir questionários
 const MAX_ITENS = 120;
 const PREFIXO_QUESTIONARIO = 'Q: ';
-const JOGOS = ['geral', 'ortografia', 'chuva', 'matematica', 'tiro', 'peso', 'questionario'];
 const TEXTOS = {
   ortografia: { assunto: 'Ortografia', unidade: 'palavra', revisar: 'Palavras para revisar', certo: 'Jeito certo', tentou: 'O aluno tentou', porRegra: 'Acertos por regra', niveis: 'Nível', nivelMax: 10 },
   matematica: { assunto: 'Matemática', unidade: 'conta', revisar: 'Contas para revisar', certo: 'Conta certa', tentou: 'O aluno respondeu', porRegra: 'Acertos por operação', niveis: 'Nível em cada conta', nivelMax: 10 },
@@ -20,14 +20,14 @@ const TEXTOS = {
   questionario: { assunto: 'Questionário da aula', unidade: 'pergunta', revisar: 'Perguntas para revisar', certo: 'Pergunta e resposta certa', tentou: 'O aluno respondeu', porRegra: 'Acertos', niveis: 'Nível', nivelMax: 10 },
 };
 
-// ---------- leituras (GET): configuração e questionários ----------
+// ---------- leituras (GET): lista de e-mails e questionários ----------
 function doGet(e) {
   try {
     const acao = (e && e.parameter && e.parameter.acao) || '';
-    if (acao === 'config') return resposta({ ok: true, config: lerConfig() });
+    if (acao === 'emails') return resposta({ ok: true, emails: lerEmails() });
     if (acao === 'questionarios') return resposta({ ok: true, lista: listarQuestionarios() });
     if (acao === 'questionario') return resposta({ ok: true, questionario: lerQuestionario(e.parameter.id) });
-    return resposta({ ok: true, versao: 2 });
+    return resposta({ ok: true, versao: 3 });
   } catch (err) {
     return resposta({ ok: false, erro: String(err) });
   }
@@ -41,7 +41,6 @@ function doPost(e) {
     if (d.acao) {
       if (d.senha !== SENHA_PROFESSOR) return resposta({ ok: false, erro: 'senha' });
       if (d.acao === 'entrar') return resposta({ ok: true });
-      if (d.acao === 'salvarConfig') { salvarConfig(d.config || {}); return resposta({ ok: true, config: lerConfig() }); }
       if (d.acao === 'salvarQuestionario') return resposta({ ok: true, id: salvarQuestionario(d.titulo, d.perguntas) });
       if (d.acao === 'excluirQuestionario') { excluirQuestionario(d.id); return resposta({ ok: true }); }
       return resposta({ ok: false, erro: 'acao' });
@@ -52,34 +51,28 @@ function doPost(e) {
   }
 }
 
-// ---------- configuração dos e-mails (aba "Configuração") ----------
+// ---------- lista de e-mails (aba "E-mails": A nome do professor, B e-mail) ----------
 function planilha() {
   const p = SpreadsheetApp.getActiveSpreadsheet && SpreadsheetApp.getActiveSpreadsheet();
   if (!p) throw new Error('O script precisa estar ligado a uma planilha (Extensões → Apps Script).');
   return p;
 }
 
-function lerConfig() {
-  const aba = planilha().getSheetByName('Configuração');
-  const config = {};
-  if (!aba || aba.getLastRow() < 2) return config;
-  for (const [jogo, email] of aba.getRange(2, 1, aba.getLastRow() - 1, 2).getValues()) {
-    const j = texto(jogo, 20).toLowerCase(), m = texto(email, 120).toLowerCase();
-    if (JOGOS.includes(j) && emailValido(m)) config[j] = m;
-  }
-  return config;
-}
-
-function salvarConfig(novo) {
+function lerEmails() {
   const p = planilha();
-  const aba = p.getSheetByName('Configuração') || p.insertSheet('Configuração', 0);
-  aba.clearContents();
-  const linhas = [['Jogo', 'E-mail']];
-  for (const j of JOGOS) {
-    const m = texto(novo[j], 120).toLowerCase();
-    linhas.push([j, emailValido(m) ? m : '']);
+  let aba = p.getSheetByName('E-mails');
+  if (!aba) {   // primeira vez: cria a aba já com o cabeçalho, para o professor preencher
+    aba = p.insertSheet('E-mails', 0);
+    aba.getRange(1, 1, 1, 2).setValues([['Professor', 'E-mail']]);
+    aba.getRange(1, 1, 1, 2).setFontWeight('bold');
   }
-  aba.getRange(1, 1, linhas.length, 2).setValues(linhas);
+  if (aba.getLastRow() < 1) return [];
+  const linhas = aba.getRange(1, 1, aba.getLastRow(), 2).getDisplayValues();
+  if (!emailValido(texto(linhas[0][1], 120).toLowerCase())) linhas.shift();   // a primeira linha pode ser o cabeçalho
+  return linhas
+    .map(([nome, email]) => ({ nome: texto(nome, 60), email: texto(email, 120).toLowerCase() }))
+    .filter((x) => emailValido(x.email))
+    .map((x) => ({ nome: x.nome || x.email, email: x.email }));
 }
 
 // ---------- questionários (uma aba "Q: <nome>" para cada um) ----------
@@ -134,13 +127,9 @@ function enviarRelatorio(d) {
     : d.tipo === 'medidas' || /peso certo/i.test(missao) ? 'medidas'
     : d.tipo === 'angulos' || /tiro certo/i.test(missao) ? 'angulos'
     : d.tipo === 'matematica' || /matem/i.test(String(d.assunto || '')) || /matem/i.test(missao) ? 'matematica' : 'ortografia';
-  // destinatário: o que veio do jogo ou, se não veio, o da aba "Configuração" (do jogo ou o geral)
-  let para = texto(d.para, 120).toLowerCase();
-  if (!emailValido(para)) {
-    const config = lerConfigSeDer();
-    para = config[texto(d.jogo, 20)] || config.geral || '';
-  }
-  if (!emailValido(para)) return resposta({ ok: false, erro: 'email' });
+  // destinatário: o e-mail que o aluno escolheu, desde que esteja na aba "E-mails"
+  const para = texto(d.para, 120).toLowerCase();
+  if (!emailValido(para) || !lerEmails().some((x) => x.email === para)) return resposta({ ok: false, erro: 'email' });
   if (MailApp.getRemainingDailyQuota() < 1) return resposta({ ok: false, erro: 'cota' });
 
   const tx = TEXTOS[tipo];
@@ -163,10 +152,6 @@ function enviarRelatorio(d) {
   guardarNaPlanilha([new Date(), para, aluno, missao, acertos, total, estrelas,
     palavras.map((p) => `${p.certa} (${p.tentou.join(', ')})`).join('; ')]);
   return resposta({ ok: true });
-}
-
-function lerConfigSeDer() {
-  try { return lerConfig(); } catch (err) { return {}; }
 }
 
 function montarEmail(r) {
