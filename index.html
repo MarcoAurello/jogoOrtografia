@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=35">
+  <link rel="stylesheet" href="style.css?v=36">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -343,7 +343,9 @@
       </div>
       <div class="cartao cartao-login" id="painel-questionarios" hidden>
         <h3 class="chuva-pergunta">📝 Questionários da aula</h3>
-        <p class="professor-ajuda">Ficam guardados na planilha do Google: uma aba <b>"Q: nome"</b> para cada questionário.</p>
+        <p class="professor-ajuda">Ficam guardados na planilha do Google: uma aba <b>"Q: nome"</b> para cada questionário.
+          Cada um tem um <b>link</b> que abre direto nele: é só copiar e mandar para a turma.</p>
+        <a class="btn-sec btn-modelo" href="assets/modelo-questionario.xlsx" download="modelo-questionario.xlsx">📥 Baixar planilha modelo</a>
         <div class="lista-quiz" id="lista-quiz-prof"></div>
         <details class="emails-jogos" id="novo-questionario">
           <summary>➕ Novo questionário</summary>
@@ -458,9 +460,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=35"></script>
-  <script src="dados.js?v=35"></script>
-  <script src="jogo.js?v=35"></script>
+  <script src="plenix.js?v=36"></script>
+  <script src="dados.js?v=36"></script>
+  <script src="jogo.js?v=36"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

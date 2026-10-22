@@ -199,6 +199,7 @@
     ultimoNome = aluno;
     try { localStorage.setItem(CHAVE_ALUNO, aluno); } catch (err) { /* sem armazenamento */ }
     SOM.certo();
+    if (QUIZ_DO_LINK) { escolherProfessorE('Questionário da aula', telaQuizMenu); return; }   // veio pelo link de um questionário
     telaInicio();
     frase('ola');   // apresentação gravada pelo Davi (se existir)
   };
@@ -265,6 +266,7 @@
     desenharEscolhaEmail();
     depoisDaEscolha = abrirJogo;
     $('escolha-prof-titulo').textContent = `📧 ${nomeDoJogo}: para quem vai o relatório?`;
+    $('escolha-prof-cancelar').hidden = !!QUIZ_DO_LINK;
     $('erro-escolha-prof').textContent = '';
     $('escolha-prof').hidden = false;
     $('login-professor').focus();
@@ -334,6 +336,12 @@
         const item = document.createElement('div');
         item.className = 'quiz-item';
         item.innerHTML = `<span class="quiz-item-nome">${seguro(q.titulo)}</span><span class="quiz-item-qtd">${q.perguntas} pergunta${q.perguntas === 1 ? '' : 's'}</span>`;
+        const copiar = document.createElement('button');
+        copiar.type = 'button';
+        copiar.className = 'quiz-link';
+        copiar.textContent = '🔗 Copiar link';
+        copiar.onclick = () => copiarLinkQuestionario(q);
+        item.append(copiar);
         const apagar = document.createElement('button');
         apagar.type = 'button';
         apagar.className = 'quiz-excluir';
@@ -348,6 +356,18 @@
       }
     } catch (e) {
       caixa.innerHTML = '<p class="quiz-status">Não deu para buscar os questionários (sem internet ou script desatualizado).</p>';
+    }
+  }
+
+  // link que abre direto um questionário (o aluno não vê os outros jogos): endereço do jogo + ?q=<id da aba>
+  const linkDoQuestionario = (id) => `${location.origin}${location.pathname}?q=${encodeURIComponent(id)}`;
+  async function copiarLinkQuestionario(q) {
+    const link = linkDoQuestionario(q.id);
+    try {
+      await navigator.clipboard.writeText(link);
+      avisoQuiz(`Link de "${q.titulo}" copiado! Cole no WhatsApp, e-mail ou mural da turma: ${link}`, true);
+    } catch (e) {
+      window.prompt(`Copie o link de "${q.titulo}":`, link);
     }
   }
 
@@ -373,6 +393,7 @@
     const limpas = linhas.map((l) => (l || []).map((c) => String(c == null ? '' : c).trim()));
     if (limpas.length && /pergunta/i.test(limpas[0][0] || '')) limpas.shift();
     return limpas.filter((l) => l[0] && l[1] && (l[2] || l[3] || l[4]))
+      .filter((l) => !(/^pergunta$/i.test(l[0]) && /resposta|certa/i.test(l[1])))   // cabeçalho repetido
       .map((l) => ({ pergunta: l[0], certa: l[1], erradas: [l[2], l[3], l[4]].filter(Boolean) }));
   }
   function lerCSV(texto) {
@@ -1886,6 +1907,9 @@
   // Os questionários vêm da planilha do professor (pelo script). Uma pergunta por vez, as respostas
   // sempre embaralhadas; no fim, o resultado e o relatório. Fica uma cópia no aparelho para jogar sem internet.
   const CHAVE_QUIZ_LISTA = 'pleno-ortografia:questionarios';
+  // aberto por um link de questionário (?q=<id>): o aluno vai direto para ele, sem ver os outros jogos
+  const QUIZ_DO_LINK = new URLSearchParams(location.search).get('q');
+  let quizDoLinkAberto = false;
   const chaveQuiz = (id) => `pleno-ortografia:questionario:${id}`;
   let quiz = null;   // o questionário em andamento
 
@@ -1893,7 +1917,10 @@
     quiz = null;
     mascote('davi-quiz', 'oi');
     mostrar('tela-quiz-menu');
-    const desenhar = (lista, aviso) => {
+    $('quiz-voltar').hidden = !!QUIZ_DO_LINK;
+    const desenhar = (todos, aviso) => {
+      const lista = QUIZ_DO_LINK ? todos.filter((q) => String(q.id) === QUIZ_DO_LINK) : todos;
+      if (QUIZ_DO_LINK && !lista.length && !aviso) aviso = 'Este link não abre nenhum questionário: ele pode ter sido excluído. Peça um novo link ao professor.';
       $('quiz-status').textContent = aviso || (lista.length ? '' : 'O professor ainda não criou nenhum questionário.');
       $('lista-quiz').innerHTML = '';
       for (const q of lista) {
@@ -1912,6 +1939,8 @@
       const { lista } = await lerDoScript('questionarios');
       gravarJSON(CHAVE_QUIZ_LISTA, lista);
       if ($('tela-quiz-menu').classList.contains('ativa')) desenhar(lista);
+      // pelo link, o questionário já abre sozinho na primeira vez
+      if (QUIZ_DO_LINK && !quizDoLinkAberto && lista.some((q) => String(q.id) === QUIZ_DO_LINK)) { quizDoLinkAberto = true; comecarQuiz(QUIZ_DO_LINK); }
     } catch (e) {
       desenhar(copia, copia.length ? 'Sem internet: mostrando os questionários salvos neste aparelho.' : 'Sem internet: não deu para buscar os questionários.');
     }

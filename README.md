@@ -16,6 +16,14 @@ O professor cria questionários na Área do professor (ou numa aba "Q: nome" da 
 responde uma pergunta por vez com as 4 respostas sempre embaralhadas e vê na hora se acertou (e qual era a certa).
 No fim aparecem estrelas, o resultado e o relatório (tela, PDF e e-mail) com as perguntas que errou.
 
+Cada questionário tem um **link** (botão "🔗 Copiar link" na Área do professor): o endereço do jogo com `?q=<id da aba>`.
+Quem abre o link digita o nome, escolhe o professor e cai direto naquele questionário, sem ver os outros jogos.
+O link é do site onde o professor copiou (ex.: o endereço publicado), e deixa de funcionar se a aba for excluída.
+
+A **planilha modelo** (`assets/modelo-questionario.xlsx`, botão "📥 Baixar planilha modelo") tem a aba "Perguntas"
+(A pergunta, B certa em verde, C a E erradas em vermelho, com 2 exemplos) e a aba "Como usar". Ela é gerada por
+`ferramentas/modelo-questionario.py`. Linhas de cabeçalho repetidas são ignoradas.
+
 ## Peso Certo (medidas de massa)
 
 Balança de dois pratos: o objeto fica no prato da esquerda e o aluno coloca no da direita (tocando ou arrastando) os pesos

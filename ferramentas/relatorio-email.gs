@@ -88,8 +88,11 @@ function perguntasDaAba(aba) {
   if (/pergunta/i.test(valores[0][0])) valores.shift();   // a primeira linha pode ser o cabeçalho
   return valores
     .map((l) => ({ pergunta: texto(l[0], 300), certa: texto(l[1], 160), erradas: l.slice(2, 5).map((x) => texto(x, 160)).filter(Boolean) }))
-    .filter((q) => q.pergunta && q.certa && q.erradas.length);
+    .filter((q) => q.pergunta && q.certa && q.erradas.length && !ehCabecalho(q.pergunta, q.certa));
 }
+
+// linha de cabeçalho ("Pergunta | Resposta certa | ..."), mesmo repetida no meio da aba
+const ehCabecalho = (a, b) => /^pergunta$/i.test(String(a).trim()) && /resposta|certa/i.test(String(b));
 
 function listarQuestionarios() {
   return abasDeQuestionario().map((a) => ({ id: String(a.getSheetId()), titulo: tituloDaAba(a), perguntas: perguntasDaAba(a).length }));

@@ -1246,3 +1246,6 @@ button.quiz-item:hover { border-color: #7b4fc9; }
 #login-professor { font: 700 18px 'Nunito', sans-serif; padding: 11px 14px; color: var(--texto); background: #fff; border: 3px solid #cfe3e7; border-radius: 12px; }
 .relatorio-para { margin: 10px auto 0; text-align: center; font-weight: 800; color: var(--primaria-escura); }
 .escolha-prof-cartao { width: 100%; max-width: 420px; }
+.btn-modelo { display: block; width: fit-content; margin: 2px auto 6px; text-align: center; text-decoration: none; }
+.quiz-link { padding: 6px 10px; font-size: 15px; font-weight: 700; color: var(--primaria-escura); background: #e3f6f8; border-radius: 8px; }
+#lista-quiz-prof .quiz-item { flex-wrap: wrap; }
