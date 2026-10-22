@@ -1304,3 +1304,59 @@ a.jogo-card { text-decoration: none; text-align: center; }   /* cartão que é l
   .btn-menu span { display: none; }   /* no celular fica só o ☰ */
 }
 #aviso-link-jogo { overflow-wrap: anywhere; }   /* o link copiado quebra a linha em vez de vazar */
+
+/* ---------- Jogo do Reflexo ---------- */
+/* palco escuro para o brilho das lâmpadas aparecer */
+.luz-palco {
+  display: flex; flex-direction: column; align-items: center; gap: clamp(14px, 3vh, 26px);
+  padding: clamp(18px, 4vw, 34px) clamp(10px, 3vw, 28px); border-radius: 22px;
+  background: radial-gradient(ellipse at 50% 0%, #2b3f57 0%, #142233 70%);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.06);
+}
+.luz-palco.tremer { animation: luz-tremer 0.18s linear 2; }
+@keyframes luz-tremer {
+  0%, 100% { transform: translateX(0); } 25% { transform: translateX(-7px); } 75% { transform: translateX(7px); }
+}
+.luz-lampadas, .luz-botoes { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(10px, 3vw, 28px); width: 100%; max-width: 560px; }
+
+/* lâmpada: vidro colorido em cima e a rosca embaixo; apagada fica escura, acesa brilha */
+.lampada { display: flex; flex-direction: column; align-items: center; }
+.lampada .vidro {
+  width: clamp(54px, 15vw, 96px); aspect-ratio: 1; border-radius: 50% 50% 46% 46%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.55), var(--cor) 45%, color-mix(in srgb, var(--cor) 60%, #000) 100%);
+  filter: brightness(0.42) saturate(0.6);
+  transition: filter 0.08s, box-shadow 0.08s, transform 0.08s;
+}
+.lampada .rosca {
+  width: clamp(26px, 7vw, 44px); height: clamp(18px, 4.5vw, 28px); margin-top: -4px; border-radius: 0 0 8px 8px;
+  background: repeating-linear-gradient(180deg, #cfd6de 0 4px, #8b96a3 4px 7px);
+}
+.lampada.acesa .vidro {
+  filter: brightness(1.25) saturate(1.2);
+  box-shadow: 0 0 22px 8px var(--cor), 0 0 60px 18px color-mix(in srgb, var(--cor) 55%, transparent);
+  transform: scale(1.08);
+}
+
+.luz-msg { min-height: 1.6em; margin: 0; text-align: center; font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 600;
+  font-size: clamp(18px, 4.4vw, 24px); color: #fff; }
+.luz-msg.ok { color: #7ee2a2; }
+.luz-msg.erro { color: #ff8a80; }
+
+/* botão de fliperama: aro escuro e a cúpula colorida; ao tocar, amassa e volta (squash and stretch) */
+.luz-botao {
+  aspect-ratio: 1; width: 100%; max-width: 110px; justify-self: center; padding: clamp(6px, 1.6vw, 10px); border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #3a3f47, #0d1117 70%); box-shadow: 0 6px 0 #05080c, 0 10px 18px rgba(0, 0, 0, 0.45);
+  transition: transform 0.06s;
+}
+.luz-botao span {
+  display: block; width: 100%; height: 100%; border-radius: 50%;
+  background: radial-gradient(circle at 38% 30%, rgba(255, 255, 255, 0.6), var(--cor) 42%, color-mix(in srgb, var(--cor) 65%, #000) 100%);
+  box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.25);
+}
+.luz-botao:active span, .luz-botao.apertado span { filter: brightness(1.35); }
+.luz-botao.apertado { animation: luz-apertar 0.22s ease-out; }
+@keyframes luz-apertar {
+  0% { transform: scale(1, 1); } 35% { transform: translateY(5px) scale(1.08, 0.86); } 70% { transform: scale(0.97, 1.04); } 100% { transform: scale(1, 1); }
+}
+.luz-botoes.bloqueado .luz-botao { pointer-events: none; opacity: 0.55; }
+.relatorio-resumo { margin: 8px 0 0; padding-left: 20px; text-align: left; }   /* destaques do Jogo do Reflexo */

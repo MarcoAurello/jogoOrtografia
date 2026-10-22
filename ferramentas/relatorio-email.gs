@@ -20,6 +20,7 @@ const TEXTOS = {
   matematica: { assunto: 'Matemática', unidade: 'conta', revisar: 'Contas para revisar', certo: 'Conta certa', tentou: 'O aluno respondeu', porRegra: 'Acertos por operação', niveis: 'Nível em cada conta', nivelMax: 10 },
   medidas: { assunto: 'Medidas de massa', unidade: 'objeto', revisar: 'Objetos para revisar', certo: 'Objeto e peso', tentou: 'Passou do ponto com', porRegra: 'Acertos por unidade', niveis: 'Nível', nivelMax: 3 },
   angulos: { assunto: 'Ângulos', unidade: 'ângulo', revisar: 'Ângulos para revisar', certo: 'Ângulo certo', tentou: 'O aluno escolheu', porRegra: 'Acertos por tipo de ângulo', niveis: 'Nível em cada míssil', nivelMax: 5 },
+  atencao: { assunto: 'Atenção e memória', unidade: 'sequência', revisar: 'Sequências para revisar', certo: 'Sequência que piscou', tentou: 'O que o aluno tocou', porRegra: 'Acertos por tamanho da sequência', niveis: 'Nível em cada rodada', nivelMax: 8 },
   questionario: { assunto: 'Questionário da aula', unidade: 'pergunta', revisar: 'Perguntas para revisar', certo: 'Pergunta e resposta certa', tentou: 'O aluno respondeu', porRegra: 'Acertos', niveis: 'Nível', nivelMax: 10 },
 };
 
@@ -153,6 +154,7 @@ function enviarRelatorio(d) {
   const missao = texto(d.missao, 80);
   // tipo do relatório: pelo campo "tipo" ou, nas versões antigas do jogo, pelo nome da atividade
   const tipo = d.tipo === 'questionario' ? 'questionario'
+    : d.tipo === 'atencao' ? 'atencao'
     : d.tipo === 'medidas' || /peso certo/i.test(missao) ? 'medidas'
     : d.tipo === 'angulos' || /tiro certo/i.test(missao) ? 'angulos'
     : d.tipo === 'matematica' || /matem/i.test(String(d.assunto || '')) || /matem/i.test(missao) ? 'matematica' : 'ortografia';
@@ -171,12 +173,15 @@ function enviarRelatorio(d) {
   const acertos = Number(d.acertos) || 0, total = Number(d.total) || 0, estrelas = Number(d.estrelas) || 0;
   const porRegra = lista(d.porRegra).slice(0, 12).map((x) => ({ titulo: texto(x.titulo, 40), total: numero(x.total, 200), erros: numero(x.erros, 200) }));
   const niveis = lista(d.niveis).slice(0, 40).map((x) => ({ n: numero(x.n, tx.nivelMax) || 1, ok: !!x.ok }));
+  // Jogo do Reflexo: destaques em frases e o tempo de resposta de cada rodada (null = não respondeu)
+  const resumo = lista(d.resumo).slice(0, 10).map((l) => texto(l, 200)).filter(Boolean);
+  const tempos = lista(d.tempos).slice(0, 40).map((x) => ({ t: x.t == null ? null : Math.min(60, Math.max(0, Number(x.t) || 0)), ok: !!x.ok }));
 
   MailApp.sendEmail({
     to: para,
     name: 'Jogos Educacionais',
     subject: `Relatório de ${assunto}: ${aluno} (${missao})`,
-    htmlBody: montarEmail({ tx, extra, assunto, aluno, missao, data, acertos, total, estrelas, grupos, palavras, porRegra, niveis }),
+    htmlBody: montarEmail({ tx, extra, assunto, aluno, missao, data, acertos, total, estrelas, grupos, palavras, porRegra, niveis, resumo, tempos }),
   });
   guardarNaPlanilha([new Date(), para, aluno, missao, acertos, total, estrelas,
     palavras.map((p) => `${p.certa} (${p.tentou.join(', ')})`).join('; ')]);
@@ -201,6 +206,7 @@ function montarEmail(r) {
     + `<p style="margin-top:0;color:#64748b">Jogos Educacionais: o aluno joga, o professor analisa</p>`
     + `<p><b>Aluno:</b> ${h(r.aluno)}<br><b>Atividade:</b> ${h(r.missao)}<br><b>Data:</b> ${h(r.data)}<br>`
     + `<b>Acertos de primeira:</b> ${r.acertos} de ${r.total} · <b>Estrelas:</b> ${r.estrelas} de 3${r.extra ? `<br>${h(r.extra)}` : ''}</p>`
+    + (r.resumo && r.resumo.length ? `<h3 style="color:#1fa2b0;margin-bottom:6px">Destaques</h3><ul style="margin-top:0;padding-left:20px">${r.resumo.map((l) => `<li style="margin-bottom:4px">${h(l)}</li>`).join('')}</ul>` : '')
     + graficosEmail(r)
     + `<h3 style="color:#1fa2b0">Principais dificuldades</h3>${dificuldades}${tabela}</div>`;
 }
@@ -242,6 +248,17 @@ function graficosEmail(r) {
     html += `<h3 style="color:#1fa2b0;margin:18px 0 6px">${r.tx.niveis} (1 a ${r.tx.nivelMax})</h3>`
       + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="height:110px"><tr>${colunas}</tr></table>`
       + `<p style="font-size:12px;color:#64748b;margin:4px 0 0">Altura = nível. <span style="color:${VERDE}">■</span> acertou (o nível sobe) &nbsp; <span style="color:${VERMELHO}">■</span> errou (o nível desce)</p>`;
+  }
+
+  if (r.tempos && r.tempos.length) {
+    const maior = Math.max(4, ...r.tempos.map((x) => x.t || 0));
+    const colunas = r.tempos.map((x, i) => `<td valign="bottom" align="center" style="padding:0 1px">`
+      + `<div style="font-size:9px;color:#64748b">${x.t == null ? '–' : String(x.t).replace('.', ',')}</div>`
+      + `<div style="height:${Math.max(4, Math.round(((x.t == null ? maior : x.t) * 90) / maior))}px;background:${x.t == null ? '#b0bec5' : x.ok ? VERDE : VERMELHO};border-radius:3px 3px 0 0"></div>`
+      + `<div style="font-size:10px;color:#64748b">${i + 1}</div></td>`).join('');
+    html += `<h3 style="color:#1fa2b0;margin:18px 0 6px">Tempo de resposta em cada rodada (segundos)</h3>`
+      + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="height:125px"><tr>${colunas}</tr></table>`
+      + `<p style="font-size:12px;color:#64748b;margin:4px 0 0">Barra mais baixa = resposta mais rápida. <span style="color:${VERDE}">■</span> acertou &nbsp; <span style="color:${VERMELHO}">■</span> errou &nbsp; <span style="color:#b0bec5">■</span> não respondeu</p>`;
   }
   return html;
 }

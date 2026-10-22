@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=52">
+  <link rel="stylesheet" href="style.css?v=53">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -263,6 +263,41 @@
       </div>
     </section>
 
+    <!-- Jogo do Reflexo: instruções -->
+    <section class="tela" id="tela-luzes-menu">
+      <h2 class="subtitulo">💡 Jogo do Reflexo</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-luzes"></div>
+        <div class="balao balao-esq">
+          Lá em cima estão <b>4 lâmpadas</b>, cada uma com uma cor e um som. Olhe e escute: quando uma lâmpada
+          <b>piscar</b>, toque no <b>botão da mesma cor</b> lá embaixo, <b>quantas vezes ela piscou</b>.
+          Atenção: os botões ficam em outro lugar! Acertou? Fica mais difícil. Quanto mais rápido, <b>mais pontos</b>! ⚡
+        </div>
+      </div>
+      <div class="linha-botoes">
+        <button class="btn-grande" id="btn-luzes-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="luzes-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Jogo do Reflexo: o jogo -->
+    <section class="tela" id="tela-luzes">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="luzes-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="luz-nivel"></span>
+        <span class="chuva-placar"><span id="luz-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="luz-rodada"></span>
+        <span id="luz-tempo"></span>
+      </div>
+      <div class="luz-palco" id="luz-palco">
+        <div class="luz-lampadas" id="luz-lampadas"></div>
+        <p class="luz-msg" id="luz-msg" role="status"></p>
+        <div class="luz-botoes" id="luz-botoes"></div>
+      </div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -436,6 +471,11 @@
           <span class="jogo-card-nome">Desafio da Rotina</span>
           <span class="jogo-card-texto">A rotina do dia a dia em inglês ↗</span>
         </a>
+        <button class="jogo-card com-capa" id="btn-luzes" type="button" data-tema="psicopedagogia" style="--c:#7b4fc9">
+          <img class="jogo-card-capa" src="assets/capa-reflexo.jpg" alt="" width="368" height="265" style="object-position: center">
+          <span class="jogo-card-nome">Jogo do Reflexo</span>
+          <span class="jogo-card-texto">Veja a luz piscar e toque no botão da mesma cor!</span>
+        </button>
         <!-- jogo externo: abre o jogo de raciocínio e estratégia em outra aba -->
         <a class="jogo-card com-capa" id="btn-psico" href="https://nagila.vercel.app/" target="_blank" rel="noopener" data-tema="psicopedagogia" style="--c:#2e7dbf">
           <img class="jogo-card-capa" src="assets/capa-psico-estrategia.jpg" alt="" width="518" height="707" style="object-position: center 45%">
@@ -550,9 +590,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=52"></script>
-  <script src="dados.js?v=52"></script>
-  <script src="jogo.js?v=52"></script>
+  <script src="plenix.js?v=53"></script>
+  <script src="dados.js?v=53"></script>
+  <script src="jogo.js?v=53"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
