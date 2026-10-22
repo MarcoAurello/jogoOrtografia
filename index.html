@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=36">
+  <link rel="stylesheet" href="style.css?v=37">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -88,8 +88,8 @@
           <span class="jogo-card-nome">Chuva de Matemática</span>
           <span class="jogo-card-texto">Responda a conta antes que ela caia!</span>
         </button>
-        <button class="jogo-card" id="btn-tiro" type="button" data-tema="matematica" style="--c:#0a8fc2">
-          <span class="jogo-card-icone">🎯</span>
+        <button class="jogo-card com-capa" id="btn-tiro" type="button" data-tema="matematica" style="--c:#0a8fc2">
+          <img class="jogo-card-capa" src="assets/tiro/capa-tiro-certo.jpg" alt="" width="640" height="627">
           <span class="jogo-card-nome">Tiro Certo</span>
           <span class="jogo-card-texto">Ache o ângulo e derrube o míssil!</span>
         </button>
@@ -189,6 +189,7 @@
     <!-- Tiro Certo: instruções -->
     <section class="tela" id="tela-tiro-menu">
       <h2 class="subtitulo">🎯 Tiro Certo</h2>
+      <img class="capa-jogo" src="assets/tiro/capa-tiro-certo.jpg" alt="Tiro Certo: o canhão e os ângulos" width="640" height="627">
       <div class="cena cena-regra">
         <div class="davi-area" id="davi-tiro"></div>
         <div class="balao balao-esq">
@@ -460,9 +461,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=36"></script>
-  <script src="dados.js?v=36"></script>
-  <script src="jogo.js?v=36"></script>
+  <script src="plenix.js?v=37"></script>
+  <script src="dados.js?v=37"></script>
+  <script src="jogo.js?v=37"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

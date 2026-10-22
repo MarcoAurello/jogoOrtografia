@@ -1249,3 +1249,13 @@ button.quiz-item:hover { border-color: #7b4fc9; }
 .btn-modelo { display: block; width: fit-content; margin: 2px auto 6px; text-align: center; text-decoration: none; }
 .quiz-link { padding: 6px 10px; font-size: 15px; font-weight: 700; color: var(--primaria-escura); background: #e3f6f8; border-radius: 8px; }
 #lista-quiz-prof .quiz-item { flex-wrap: wrap; }
+
+/* arte de capa de um jogo (cartão da tela inicial e tela de instruções) */
+.jogo-card.com-capa { padding-top: 0; overflow: hidden; }
+.jogo-card-capa { width: calc(100% + 28px); max-width: none; height: auto; margin: 0 -14px 6px; aspect-ratio: 4 / 3; object-fit: cover; object-position: center 12%; display: block; }
+.capa-jogo { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto 12px; border-radius: 18px; box-shadow: var(--sombra); }
+@media (max-width: 720px) {
+  .jogo-card-capa { width: calc(100% + 16px); margin: 0 -8px 6px; }
+}
+.jogo-card { justify-content: center; }
+.jogo-card.com-capa { justify-content: flex-start; }

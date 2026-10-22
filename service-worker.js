@@ -1,6 +1,6 @@
 // Guarda os arquivos do jogo para funcionar offline.
 // Ao mudar qualquer arquivo do jogo, aumente a VERSAO para os aparelhos baixarem a nova.
-const VERSAO = 'ortografia-pleno-v36';
+const VERSAO = 'ortografia-pleno-v37';
 
 const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
   .flatMap((id) => Array.from({ length: 10 }, (_, i) => `./assets/figuras/${id}-${i}.jpg`));
@@ -8,10 +8,10 @@ const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
 const ARQUIVOS = [
   './',
   './index.html',
-  './style.css?v=36',
-  './jogo.js?v=36',
-  './dados.js?v=36',
-  './plenix.js?v=36',
+  './style.css?v=37',
+  './jogo.js?v=37',
+  './dados.js?v=37',
+  './plenix.js?v=37',
   './assets/plenix/plenix_spritesheet_1x.png',
   './assets/tiro/canhao-cano.png',
   './assets/tiro/canhao-carreta.png',
@@ -19,6 +19,7 @@ const ARQUIVOS = [
   './assets/tiro/bala.png',
   './assets/tiro/explosao.png',
   './assets/tiro/municao.png',
+  './assets/tiro/capa-tiro-certo.jpg',
   './assets/balanca/base.png',
   './assets/balanca/travessao.png',
   './assets/balanca/prato.png',
