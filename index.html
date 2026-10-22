@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=46">
+  <link rel="stylesheet" href="style.css?v=47">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -374,6 +374,7 @@
         <button class="filtro-tema" type="button" data-tema="matematica">🔢 Matemática</button>
         <button class="filtro-tema" type="button" data-tema="abc">🔤 ABC</button>
         <button class="filtro-tema" type="button" data-tema="ingles">🌎 Inglês</button>
+        <button class="filtro-tema" type="button" data-tema="psicopedagogia">🧠 Psicopedagogia</button>
       </div>
       <div class="escolha-jogos">
         <button class="jogo-card com-capa" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
@@ -412,6 +413,12 @@
           <img class="jogo-card-capa" src="assets/capa-ingles-rotina.jpg" alt="" width="500" height="500">
           <span class="jogo-card-nome">Desafio da Rotina</span>
           <span class="jogo-card-texto">A rotina do dia a dia em inglês ↗</span>
+        </a>
+        <!-- jogo externo: abre o jogo de raciocínio e estratégia em outra aba -->
+        <a class="jogo-card com-capa" id="btn-psico" href="https://nagila.vercel.app/" target="_blank" rel="noopener" data-tema="psicopedagogia" style="--c:#2e7dbf">
+          <img class="jogo-card-capa" src="assets/capa-psico-estrategia.jpg" alt="" width="518" height="707" style="object-position: center 45%">
+          <span class="jogo-card-nome">Raciocínio e Estratégia</span>
+          <span class="jogo-card-texto">Pense antes de mover a peça! ↗</span>
         </a>
       </div>
       <button class="btn-sec" id="jogos-voltar" type="button">← Início</button>
@@ -514,9 +521,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=46"></script>
-  <script src="dados.js?v=46"></script>
-  <script src="jogo.js?v=46"></script>
+  <script src="plenix.js?v=47"></script>
+  <script src="dados.js?v=47"></script>
+  <script src="jogo.js?v=47"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

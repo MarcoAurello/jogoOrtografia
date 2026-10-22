@@ -1275,4 +1275,4 @@ button.quiz-item:hover { border-color: #7b4fc9; }
 .jogo-card-capa.larga { aspect-ratio: 16 / 9; object-position: center top; }
 .capa-jogo.larga { max-width: 520px; }
 .jogo-card-capa.inteira { aspect-ratio: auto; }   /* arte bem larga: aparece inteira, sem cortar as pontas */
-a.jogo-card { text-decoration: none; }   /* cartão que é link (jogo externo) */
+a.jogo-card { text-decoration: none; text-align: center; }   /* cartão que é link (jogo externo) */
