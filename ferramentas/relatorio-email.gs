@@ -1,6 +1,7 @@
 /* Jogos Educacionais — script do Google (Apps Script, gratuito), ligado a uma planilha do Google.
    A planilha guarda tudo, sem banco de dados:
-   - aba "E-mails": a lista de professores que recebem relatórios (A nome, B e-mail); o aluno escolhe um antes de cada jogo;
+   - aba "E-mails": a lista de professores que recebem relatórios (A nome, B e-mail); o aluno escolhe um antes de cada jogo.
+     O professor cadastra e remove e-mails pela Área do professor (ou direto na aba);
    - abas "Q: <nome>": um questionário da aula em cada aba (A pergunta, B resposta certa, C a E respostas erradas);
    - aba "Relatórios": uma linha para cada relatório enviado.
    O jogo lê a lista de e-mails e os questionários (doGet) e manda relatórios e alterações do professor (doPost).
@@ -9,7 +10,7 @@
    Como publicar: veja "Relatório por e-mail" no README.md. */
 
 const CHAVE = 'jogo-ortografia';      // a mesma CHAVE_RELATORIO do jogo.js (só evita envios por engano)
-const SENHA_PROFESSOR = 'app0707';    // a mesma senha da Área do professor: exigida para criar e excluir questionários
+const SENHA_PROFESSOR = 'app0707';    // a mesma senha da Área do professor: exigida para mudar e-mails e questionários
 const MAX_ITENS = 120;
 const PREFIXO_QUESTIONARIO = 'Q: ';   // abas criadas pelo jogo; à mão vale "Q:" com ou sem espaço
 const ABA_QUESTIONARIO = /^Q:\s*/i;
@@ -43,13 +44,15 @@ function doPost(e) {
     if (d.acao) {
       if (d.senha !== SENHA_PROFESSOR) return resposta({ ok: false, erro: 'senha' });
       if (d.acao === 'entrar') return resposta({ ok: true });
+      if (d.acao === 'adicionarEmail') { adicionarEmail(d.nome, d.email); return resposta({ ok: true, emails: lerEmails() }); }
+      if (d.acao === 'removerEmail') { removerEmail(d.email); return resposta({ ok: true, emails: lerEmails() }); }
       if (d.acao === 'salvarQuestionario') return resposta({ ok: true, id: salvarQuestionario(d.titulo, d.perguntas) });
       if (d.acao === 'excluirQuestionario') { excluirQuestionario(d.id); return resposta({ ok: true }); }
       return resposta({ ok: false, erro: 'acao' });
     }
     return enviarRelatorio(d);
   } catch (err) {
-    return resposta({ ok: false, erro: String(err) });
+    return resposta({ ok: false, erro: err && err.message ? err.message : String(err) });
   }
 }
 
@@ -60,7 +63,7 @@ function planilha() {
   return p;
 }
 
-function lerEmails() {
+function abaEmails() {
   const p = planilha();
   let aba = p.getSheetByName('E-mails');
   if (!aba) {   // primeira vez: cria a aba já com o cabeçalho, para o professor preencher
@@ -68,6 +71,11 @@ function lerEmails() {
     aba.getRange(1, 1, 1, 2).setValues([['Professor', 'E-mail']]);
     aba.getRange(1, 1, 1, 2).setFontWeight('bold');
   }
+  return aba;
+}
+
+function lerEmails() {
+  const aba = abaEmails();
   if (aba.getLastRow() < 1) return [];
   const linhas = aba.getRange(1, 1, aba.getLastRow(), 2).getDisplayValues();
   if (!emailValido(texto(linhas[0][1], 120).toLowerCase())) linhas.shift();   // a primeira linha pode ser o cabeçalho
@@ -75,6 +83,22 @@ function lerEmails() {
     .map(([nome, email]) => ({ nome: texto(nome, 60), email: texto(email, 120).toLowerCase() }))
     .filter((x) => emailValido(x.email))
     .map((x) => ({ nome: x.nome || x.email, email: x.email }));
+}
+
+function adicionarEmail(nome, email) {
+  const m = texto(email, 120).toLowerCase();
+  if (!emailValido(m)) throw new Error('email');
+  if (lerEmails().some((x) => x.email === m)) throw new Error('repetido');
+  abaEmails().appendRow([texto(nome, 60) || m, m]);
+}
+
+function removerEmail(email) {
+  const m = texto(email, 120).toLowerCase();
+  const aba = abaEmails();
+  const valores = aba.getRange(1, 1, Math.max(aba.getLastRow(), 1), 2).getDisplayValues();
+  for (let i = valores.length - 1; i >= 0; i--) {   // de baixo para cima, para o número das linhas não mudar
+    if (texto(valores[i][1], 120).toLowerCase() === m) aba.deleteRow(i + 1);
+  }
 }
 
 // ---------- questionários (uma aba "Q: <nome>" para cada um) ----------

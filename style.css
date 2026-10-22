@@ -1259,3 +1259,6 @@ button.quiz-item:hover { border-color: #7b4fc9; }
 }
 .jogo-card { justify-content: center; }
 .jogo-card.com-capa { justify-content: flex-start; }
+.cadastro-email { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; padding: 10px 12px; background: #f6fbfc; border: 2px solid #dbeef1; border-radius: 12px; }
+.cadastro-email .btn-grande { margin-top: 4px; }
+#lista-emails-prof .quiz-item { flex-wrap: wrap; }

@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=37">
+  <link rel="stylesheet" href="style.css?v=38">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -337,10 +337,17 @@
       </form>
       <div class="cartao cartao-login" id="info-emails" hidden>
         <h3 class="chuva-pergunta">📧 E-mails dos relatórios</h3>
-        <p class="professor-ajuda">Os e-mails ficam na aba <b>"E-mails"</b> da planilha do Google:
-          coluna <b>A</b> o nome do professor e coluna <b>B</b> o e-mail. Antes de abrir cada jogo, o aluno escolhe
-          para quem vai o relatório. Para mudar a lista, edite a planilha.</p>
+        <p class="professor-ajuda">Ficam na aba <b>"E-mails"</b> da planilha do Google (A nome, B e-mail).
+          Antes de abrir cada jogo, o aluno escolhe para quem vai o relatório.</p>
         <div class="lista-quiz" id="lista-emails-prof"></div>
+        <form class="cadastro-email" id="form-novo-email" autocomplete="off">
+          <label class="campo campo-jogo"><span>Nome do professor</span>
+            <input type="text" id="novo-email-nome" maxlength="60" placeholder="Ex.: Prof. Maria"></label>
+          <label class="campo campo-jogo"><span>E-mail</span>
+            <input type="email" id="novo-email-email" maxlength="120" placeholder="nome@escola.com" required></label>
+          <p class="erro-login" id="aviso-email" role="status"></p>
+          <button class="btn-grande" type="submit">➕ Adicionar</button>
+        </form>
       </div>
       <div class="cartao cartao-login" id="painel-questionarios" hidden>
         <h3 class="chuva-pergunta">📝 Questionários da aula</h3>
@@ -461,9 +468,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=37"></script>
-  <script src="dados.js?v=37"></script>
-  <script src="jogo.js?v=37"></script>
+  <script src="plenix.js?v=38"></script>
+  <script src="dados.js?v=38"></script>
+  <script src="jogo.js?v=38"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

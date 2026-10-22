@@ -294,12 +294,57 @@
     setTimeout(() => $('professor-senha').focus(), 300);
   }
 
+  function avisoEmail(texto, ok) {
+    $('aviso-email').textContent = texto;
+    $('aviso-email').classList.toggle('aviso-ok', !!ok);
+  }
+  const mensagemDoErro = (err, padrao) => ({
+    senha: 'A planilha não aceitou a senha: confira a SENHA_PROFESSOR no script do Google.',
+    email: 'Digite um e-mail válido, como nome@escola.com.',
+    repetido: 'Este e-mail já está na lista.',
+  }[String(err && err.message)] || padrao);
+
+  // lista de professores com o botão de remover (grava direto na aba "E-mails")
   function listarEmailsProfessor() {
     const lista = listaEmails();
-    $('lista-emails-prof').innerHTML = lista.length
-      ? lista.map((x) => `<div class="quiz-item"><span class="quiz-item-nome">${seguro(x.nome)}</span><span class="quiz-item-qtd">${seguro(x.email)}</span></div>`).join('')
-      : '<p class="quiz-status">A aba "E-mails" ainda está vazia: preencha na planilha.</p>';
+    $('lista-emails-prof').innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhum e-mail ainda: cadastre o primeiro abaixo.</p>';
+    for (const x of lista) {
+      const item = document.createElement('div');
+      item.className = 'quiz-item';
+      item.innerHTML = `<span class="quiz-item-nome">${seguro(x.nome)}</span><span class="quiz-item-qtd">${seguro(x.email)}</span>`;
+      const remover = document.createElement('button');
+      remover.type = 'button';
+      remover.className = 'quiz-excluir';
+      remover.textContent = '🗑️ Remover';
+      remover.onclick = async () => {
+        if (!window.confirm(`Remover ${x.nome} (${x.email}) da lista? Os alunos não poderão mais mandar relatórios para este e-mail.`)) return;
+        try {
+          const { emails } = await gravarNoScript({ acao: 'removerEmail', email: x.email });
+          gravarJSON(CHAVE_EMAILS, emails || []);
+          listarEmailsProfessor();
+          avisoEmail(`${x.nome} saiu da lista. ✔`, true);
+        } catch (err) { avisoEmail(mensagemDoErro(err, 'Não deu para remover (sem internet ou script desatualizado).')); }
+      };
+      item.append(remover);
+      $('lista-emails-prof').append(item);
+    }
   }
+
+  $('form-novo-email').onsubmit = async (e) => {
+    e.preventDefault();
+    const nome = $('novo-email-nome').value.trim();
+    const email = $('novo-email-email').value.trim().toLowerCase();
+    avisoEmail('Salvando na planilha…');
+    try {
+      const { emails } = await gravarNoScript({ acao: 'adicionarEmail', nome, email });
+      gravarJSON(CHAVE_EMAILS, emails || []);
+      $('novo-email-nome').value = '';
+      $('novo-email-email').value = '';
+      listarEmailsProfessor();
+      SOM.certo();
+      avisoEmail(`${nome || email} entrou na lista! Os alunos já podem escolher. ✔`, true);
+    } catch (err) { avisoEmail(mensagemDoErro(err, 'Não deu para salvar (sem internet ou script desatualizado).')); }
+  };
 
   $('form-senha-professor').onsubmit = async (e) => {
     e.preventDefault();
@@ -313,6 +358,9 @@
     $('form-senha-professor').hidden = true;
     $('info-emails').hidden = false;
     $('painel-questionarios').hidden = false;
+    avisoEmail('');
+    $('novo-email-nome').value = '';
+    $('novo-email-email').value = '';
     listarEmailsProfessor();
     listarQuestionariosProfessor();
     await carregarEmails();

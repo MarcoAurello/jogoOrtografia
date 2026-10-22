@@ -162,7 +162,7 @@ Nada de e-mail é cadastrado no app: antes de abrir cada jogo, o aluno escolhe n
 vai o relatório (o aparelho lembra a última escolha). No fim de cada atividade, o relatório vai para esse e-mail,
 mesmo que o aluno não baixe o PDF. O script só envia para e-mails que estão na lista.
 Na tela inicial, **🧑‍🏫 Área do professor** (senha `app0707`, em `SENHA_PROFESSOR` no `jogo.js` e no script) mostra
-a lista de e-mails e cria ou exclui questionários (enviando uma planilha `.xlsx`/`.csv` ou digitando as perguntas).
+a lista de e-mails, com cadastro e remoção (grava direto na aba "E-mails"), e cria ou exclui questionários (enviando uma planilha `.xlsx`/`.csv` ou digitando as perguntas).
 Cada aparelho guarda uma cópia da lista e dos questionários para funcionar sem internet.
 Sem internet, o relatório fica numa fila no aparelho e é enviado quando a conexão voltar.
 Também dá para criar um questionário direto na planilha: é só criar uma aba com o nome começando por `Q: `.
