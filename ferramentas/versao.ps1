@@ -1,5 +1,5 @@
 # Troca a versão do jogo de uma vez: o ?v= dos arquivos no index.html e no service-worker.js
-# e a VERSAO do cache, para os aparelhos baixarem a versão nova.
+# (e nos imports dos módulos em js/), e a VERSAO do cache, para os aparelhos baixarem a versão nova.
 # Uso: powershell -ExecutionPolicy Bypass -File ferramentas\versao.ps1        (soma 1)
 #      powershell -ExecutionPolicy Bypass -File ferramentas\versao.ps1 20     (usa a 20)
 param([int]$Nova = 0)
@@ -16,11 +16,12 @@ if (-not $achou.Success) { Write-Error 'Nao achei a VERSAO no service-worker.js'
 $atual = [int]$achou.Groups[1].Value
 if ($Nova -eq 0) { $Nova = $atual + 1 }
 
-foreach ($arquivo in @($html, $sw)) {
+$modulos = @(Get-ChildItem (Join-Path $raiz 'js') -Filter *.js | ForEach-Object { $_.FullName })
+foreach ($arquivo in @($html, $sw) + $modulos) {
   $texto = [IO.File]::ReadAllText($arquivo, $utf8)
   $texto = [regex]::Replace($texto, '(\.(css|js)\?v=)\d+', "`${1}$Nova")
   $texto = [regex]::Replace($texto, "(const VERSAO = 'ortografia-pleno-v)\d+'", "`${1}$Nova'")
   [IO.File]::WriteAllText($arquivo, $texto, $utf8)
 }
 
-Write-Host "Versao do jogo: v$atual -> v$Nova (index.html e service-worker.js)"
+Write-Host "Versao do jogo: v$atual -> v$Nova (index.html, service-worker.js e js/*.js)"

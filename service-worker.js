@@ -1,6 +1,6 @@
 // Guarda os arquivos do jogo para funcionar offline.
 // Ao mudar qualquer arquivo do jogo, aumente a VERSAO para os aparelhos baixarem a nova.
-const VERSAO = 'ortografia-pleno-v66';
+const VERSAO = 'ortografia-pleno-v68';
 
 const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
   .flatMap((id) => Array.from({ length: 10 }, (_, i) => `./assets/figuras/${id}-${i}.jpg`));
@@ -8,10 +8,28 @@ const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
 const ARQUIVOS = [
   './',
   './index.html',
-  './style.css?v=66',
-  './jogo.js?v=66',
-  './dados.js?v=66',
-  './plenix.js?v=66',
+  './style.css?v=68',
+  './js/main.js?v=68',
+  './js/util.js?v=68',
+  './js/estado.js?v=68',
+  './js/som.js?v=68',
+  './js/telas.js?v=68',
+  './js/professor.js?v=68',
+  './js/ortografia.js?v=68',
+  './js/chuva.js?v=68',
+  './js/matematica.js?v=68',
+  './js/tiro.js?v=68',
+  './js/peso.js?v=68',
+  './js/quiz.js?v=68',
+  './js/luzes.js?v=68',
+  './js/rotina.js?v=68',
+  './js/fichas.js?v=68',
+  './js/cores.js?v=68',
+  './js/lados.js?v=68',
+  './js/setas.js?v=68',
+  './js/relatorio.js?v=68',
+  './dados.js?v=68',
+  './plenix.js?v=68',
   './assets/plenix/plenix_spritesheet_1x.png',
   './assets/tiro/canhao-cano.png',
   './assets/tiro/canhao-carreta.png',

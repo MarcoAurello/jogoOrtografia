@@ -29,7 +29,7 @@ A **planilha modelo** (`assets/modelo-questionario.xlsx`, botão "📥 Baixar pl
 Fica em **Psicopedagogia**. Uma tabela de cores (linhas A, B, C… e colunas 1, 2, 3…) e, em cima, bolinhas com o valor
 de cada cor. A conta usa casas da tabela (ex.: `A2 + C3`): o aluno acha a cor de cada casa, troca pelo valor e toca na
 resposta entre 4 opções (no computador, também pelas teclas 1 a 4). Tocar numa casa da conta acende a linha e a coluna (dica,
-contada no relatório). Acertar sobe um nível e errar desce um. São 8 níveis, em `NIVEIS_CORES` no `jogo.js`: a tabela vai de
+contada no relatório). Acertar sobe um nível e errar desce um. São 8 níveis, em `NIVEIS_CORES` no `js/cores.js`: a tabela vai de
 4x4 a 5x5, de 3 a 6 cores, os valores crescem, a conta passa de 2 para 3 casas e entram a subtração e a multiplicação
 (`A1 × B2 + C3`). As respostas erradas imitam os erros comuns: trocar a linha pela coluna (ler A2 como B1), olhar a casa
 vizinha ou errar a conta. O relatório mostra qual foi o erro. A rodada tem 15 contas.
@@ -41,9 +41,21 @@ No meio aparecem setas: a seta deitada (← ou →) diz **qual bola** jogar e a 
 bola deve ir. A partir do nível 4 aparecem às vezes **duas setas em pé**: as duas bolas vão, cada uma no sentido da sua seta
 (mesmo sentido; do nível 5 em diante, também sentidos opostos). A bola vai deslizando o dedo para cima ou para baixo na
 metade da mesa, ou tocando no buraco; no computador, **W/S** jogam a bola da esquerda e **↑/↓** a da direita.
-Uma barra mostra o tempo de cada comando (de 5 s no nível 1 a 3 s no nível 8, em `NIVEIS_LADOS` no `jogo.js`) e quanto mais
+Uma barra mostra o tempo de cada comando (de 5 s no nível 1 a 3 s no nível 8, em `NIVEIS_LADOS` no `js/lados.js`) e quanto mais
 rápido, mais pontos. Dois acertos seguidos sobem um nível; um erro desce. A rodada tem 20 comandos, e o relatório separa os
 erros de lado (esquerda/direita), de direção (cima/baixo), de tempo e de jogar só uma das duas bolas.
+
+## Setas e Cores (atenção, memória e flexibilidade)
+
+Fica em **Psicopedagogia**, baseado na folha de atividades de setas coloridas. Em cima fica a legenda: cada seta tem uma cor
+(ex.: roxo = ↑, verde = ↓). No meio aparece uma fila de setas e embaixo as faixas de cores: o aluno troca cada seta pela cor
+dela e toca na faixa certa, na mesma ordem (no computador, também pelas teclas 1 a 4). **A cada 3 ou 4 perguntas a legenda
+muda** (nenhuma seta fica com a cor de antes), com aviso e os quadrados virando como cartas: o aluno precisa largar as cores
+antigas e olhar de novo. Acertar sobe um nível e errar desce um. São 7 níveis, em `NIVEIS_SETAS` no `js/setas.js`: de 1 a 6
+setas, só ↑ ↓ ← → no começo e as diagonais ↗ ↙ a partir do nível 3, com 3 faixas para escolher e 4 a partir do nível 4.
+As faixas erradas imitam os erros comuns: usar as cores de antes (logo depois da mudança), confundir a seta com a do lado
+oposto (↑ com ↓), trocar a ordem e olhar a seta errada. A rodada tem 15 perguntas, e o relatório conta também quantas
+vezes as cores mudaram e quantos erros vieram logo depois da mudança.
 
 ## Peso Certo (medidas de massa)
 
@@ -73,7 +85,7 @@ na resposta certa entre 4 opções (no computador, também pelas teclas 1 a 4) a
 Cada acerto sobe um nível (de 1 a 10: números e tabuadas maiores) e cada erro ou conta que cai desce um.
 Contas mais difíceis caem mais devagar (de 7 a 12 s). A rodada tem 20 contas e termina com estrelas, pontos,
 nível alcançado e o relatório (PDF e e-mail) com as contas para revisar, agrupadas por operação.
-As faixas de números de cada nível estão em `FAIXAS` e `FATORES` no `jogo.js`.
+As faixas de números de cada nível estão em `FAIXAS` e `FATORES` no `js/matematica.js`.
 
 ## Chuva de Erros
 
@@ -117,7 +129,7 @@ dica do Plenix quando a criança erra e **estrelas** no fim (salvas no aparelho)
 ## Entrada e relatório
 
 - **Sempre que o jogo abre**, o aluno digita o **primeiro nome**. A senha da turma (`alunoPleno`) está
-  desligada por enquanto; para voltar a pedir, troque `PEDIR_SENHA` para `true` no `jogo.js`
+  desligada por enquanto; para voltar a pedir, troque `PEDIR_SENHA` para `true` no `js/estado.js`
   (o último nome já vem preenchido).
   A senha é conferida no próprio aparelho (uma "portinha" para as crianças, não uma proteção de segurança).
 - As estrelas ficam salvas **por aluno** no aparelho; "Trocar aluno" permite outra criança usar.
@@ -138,7 +150,21 @@ Abra o `index.html` no navegador.
 ## Arquivos
 
 - `index.html`, `style.css` — páginas e visual (cores do Pleno)
-- `jogo.js` — telas, perguntas, sons, voz e estrelas
+- `js/` — o código do jogo, em módulos ES (carregados por `<script type="module" src="js/main.js">`, sem build):
+  - `main.js` — ponto de entrada: carrega os módulos, botão de instalar o app e primeira tela
+  - `util.js` — ajudantes (`$`, sortear, embaralhar, texto seguro para HTML)
+  - `estado.js` — o aluno, as estrelas salvas no aparelho e a partida em andamento (`missao`, `resultados`);
+    os outros módulos trocam essas variáveis pelas funções `definirAluno`, `definirMissao`, `definirResultados`...
+  - `som.js` — sons e voz (gravações em `audio/` ou a voz do aparelho)
+  - `telas.js` — telas e navegação: moldura, Plenix, troca de telas, encaixe na tela, login, menu, barra inferior e filtro dos jogos
+  - `professor.js` — área do professor e planilha: e-mails do relatório, questionários, links dos jogos, leitura de CSV/XLSX
+  - `relatorio.js` — fim do jogo: textos, gráficos, envio por e-mail (com fila sem internet), confete e PDF
+  - um arquivo por jogo: `ortografia.js`, `chuva.js` (Chuva de Erros), `matematica.js` (Chuva de Matemática), `tiro.js`,
+    `peso.js`, `quiz.js` (questionário do aluno), `luzes.js` (Jogo do Reflexo 1 e 2), `rotina.js`, `fichas.js`,
+    `cores.js` (Somando as Cores), `lados.js` (Esquerda e Direita) e `setas.js` (Setas e Cores). Cada um tem as telas `telaXMenu`, `comecarX`, `pararX`
+    e liga os próprios botões (ids com o prefixo do jogo, ex.: `cores-`, `lados-`)
+  - os imports levam o mesmo `?v=` do `index.html` (o `ferramentas/versao.ps1` troca todos); ao criar um módulo novo,
+    ponha-o também na lista `ARQUIVOS` do `service-worker.js`
 - `dados.js` — banco de palavras e regras de cada missão (fácil de aumentar)
 - `plenix.js` + `assets/plenix/plenix_spritesheet_1x.png` — o Plenix em pixel art (folha 4x4: andando, festejando, triste, pensando), animado no `style.css`
 - `assets/plenix/*.gif` — as mesmas animações em GIF (fundo branco), para usar em outros materiais
@@ -159,8 +185,8 @@ O jogo pode ser instalado no celular (botão **📲 Instalar app** na tela inici
 Inclui `manifest.json`, `service-worker.js`, ícones em `icons/` e `privacidade.html` (exigida pela Google Play).
 
 Ao alterar qualquer arquivo do jogo, aumente a versão para os aparelhos baixarem a nova.
-O script troca de uma vez a `VERSAO` do `service-worker.js` e o `?v=` dos arquivos no `index.html`
-e no `service-worker.js` (soma 1; para escolher o número, passe-o no fim, ex.: `... versao.ps1 20`):
+O script troca de uma vez a `VERSAO` do `service-worker.js` e o `?v=` dos arquivos no `index.html`,
+no `service-worker.js` e nos imports de `js/` (soma 1; para escolher o número, passe-o no fim, ex.: `... versao.ps1 20`):
 
 ```
 powershell -ExecutionPolicy Bypass -File ferramentas\versao.ps1
@@ -182,7 +208,7 @@ Não há banco de dados: uma planilha do Google guarda tudo, por meio do script 
 Nada de e-mail é cadastrado no app: antes de abrir cada jogo, o aluno escolhe na lista da aba "E-mails" para qual professor
 vai o relatório (o aparelho lembra a última escolha). No fim de cada atividade, o relatório vai para esse e-mail,
 mesmo que o aluno não baixe o PDF. O script só envia para e-mails que estão na lista.
-Na tela inicial, **🧑‍🏫 Área do professor** (senha `app0707`, em `SENHA_PROFESSOR` no `jogo.js` e no script) mostra
+Na tela inicial, **🧑‍🏫 Área do professor** (senha `app0707`, em `SENHA_PROFESSOR` no `js/professor.js` e no script) mostra
 a lista de e-mails, com cadastro e remoção (grava direto na aba "E-mails"), e cria ou exclui questionários (enviando uma planilha `.xlsx`/`.csv` ou digitando as perguntas).
 Cada aparelho guarda uma cópia da lista e dos questionários para funcionar sem internet.
 Sem internet, o relatório fica numa fila no aparelho e é enviado quando a conexão voltar.
@@ -194,7 +220,7 @@ Para publicar o script (uma vez):
    conteúdo de `ferramentas/relatorio-email.gs`.
 2. **Implantar → Nova implantação → Tipo: App da Web**. Executar como: **Eu**. Quem pode acessar: **Qualquer pessoa**.
    Autorize o acesso ao Gmail e à planilha quando o Google pedir.
-3. Copie o endereço do app da Web (termina em `/exec`) e cole em `URL_RELATORIO` no `jogo.js`.
+3. Copie o endereço do app da Web (termina em `/exec`) e cole em `URL_RELATORIO` no `js/relatorio.js`.
    Rode `ferramentas\versao.ps1` e publique o jogo.
 
 Limite gratuito: cerca de 100 e-mails por dia numa conta Gmail comum (1.500 no Google Workspace).

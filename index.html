@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=66">
+  <link rel="stylesheet" href="style.css?v=68">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -460,6 +460,36 @@
       </div>
     </section>
 
+    <!-- Setas e Cores: instruções -->
+    <section class="tela" id="tela-setas-menu">
+      <h2 class="subtitulo">🧭 Setas e Cores</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-setas"></div>
+        <div class="balao balao-esq">
+          Em cima, cada <b>seta</b> tem uma <b>cor</b>. No meio aparecem as setas da vez: troque cada seta pela
+          <b>cor dela</b> e toque na <b>faixa de cores</b> certa, na mesma ordem. Atenção: de vez em quando
+          <b>as cores mudam</b>, então olhe a legenda de novo! Acertando, aparecem mais setas. 🧠
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-setas-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="setas-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Setas e Cores: o jogo -->
+    <section class="tela tela-jogo" id="tela-setas">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="setas-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="setas-nivel"></span>
+        <span class="chuva-placar"><span id="setas-pontos">0</span> pts · <span id="setas-contador"></span></span>
+      </div>
+      <div class="setas-legenda" id="setas-legenda" aria-label="A cor de cada seta"></div>
+      <div class="setas-fila" id="setas-fila" aria-live="polite"></div>
+      <p class="cores-msg" id="setas-msg" role="status"></p>
+      <div class="setas-respostas" id="setas-respostas"></div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -681,6 +711,14 @@
           <span class="jogo-card-nome">Esquerda e Direita</span>
           <span class="jogo-card-texto">Siga as setas e jogue a bola certa no buraco!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-setas" type="button" data-tema="psicopedagogia" style="--c:#8e44ad">
+          <span class="jogo-card-capa setas-capa" aria-hidden="true">
+            <span class="setas-chave" style="--cor:#8e44ad;--giro:-90deg"><svg viewBox="0 0 100 100"><path d="M6 36h50V12l38 38-38 38V64H6z"/></svg></span><span class="setas-chave" style="--cor:#2e9e5b;--giro:90deg"><svg viewBox="0 0 100 100"><path d="M6 36h50V12l38 38-38 38V64H6z"/></svg></span><span class="setas-chave" style="--cor:#d81b45;--giro:180deg"><svg viewBox="0 0 100 100"><path d="M6 36h50V12l38 38-38 38V64H6z"/></svg></span><span class="setas-chave" style="--cor:#f5c400;--giro:0deg"><svg viewBox="0 0 100 100"><path d="M6 36h50V12l38 38-38 38V64H6z"/></svg></span>
+            <b><i style="--cor:#8e44ad"></i><i style="--cor:#2e9e5b"></i><i style="--cor:#f5c400"></i></b>
+          </span>
+          <span class="jogo-card-nome">Setas e Cores</span>
+          <span class="jogo-card-texto">Troque cada seta pela cor dela!</span>
+        </button>
         <!-- jogo externo: abre o jogo de raciocínio e estratégia em outra aba -->
         <a class="jogo-card com-capa" id="btn-psico" href="https://nagila.vercel.app/" target="_blank" rel="noopener" data-tema="psicopedagogia" style="--c:#2e7dbf">
           <img class="jogo-card-capa" src="assets/capa-psico-estrategia.jpg" alt="" width="518" height="707" style="object-position: center 45%">
@@ -815,9 +853,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=66"></script>
-  <script src="dados.js?v=66"></script>
-  <script src="jogo.js?v=66"></script>
+  <script src="plenix.js?v=68"></script>
+  <script src="dados.js?v=68"></script>
+  <script type="module" src="js/main.js?v=68"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

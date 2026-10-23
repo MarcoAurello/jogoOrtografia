@@ -1731,6 +1731,53 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .lados-seta, .lados-buraco.certo, .lados-buraco.errado, .lados-mesa.tremer { animation: none; }
 }
 
+/* ---------- Setas e Cores ---------- */
+/* capa do cartão: a legenda (setas coloridas) e, embaixo, uma faixa de cores */
+.setas-capa { display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 6px; padding: 14px 18px;
+  background: linear-gradient(160deg, #fbf7ff, #efe4fb); box-sizing: border-box; }
+.setas-capa .setas-chave { width: 19%; animation: none; }
+.setas-capa b { display: flex; gap: 4px; padding: 4px; background: #fff; border: 2px solid #13294b; border-radius: 10px; }
+.setas-capa b i { width: 30px; aspect-ratio: 1; border-radius: 6px; background: var(--cor); border: 2px solid #13294b; }
+
+/* legenda: um quadrado colorido para cada seta (como na folha de atividades) */
+.setas-legenda { display: flex; flex-wrap: wrap; justify-content: center; gap: min(clamp(6px, 1.4dvh, 12px), 2vw); margin: 2px 0 8px; }
+.setas-chave { display: grid; place-items: center; width: min(clamp(40px, 7dvh, 60px), 12vw); aspect-ratio: 1; box-sizing: border-box;
+  border-radius: 18%; border: 2.5px solid #13294b; background: var(--cor);
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.18), inset 0 3px 0 rgba(255, 255, 255, 0.28), 0 3px 0 rgba(19, 41, 75, 0.25);
+  animation: cores-nascer 0.38s ease-out both; }
+.setas-chave svg { width: 70%; height: 70%; fill: #fff; transform: rotate(var(--giro)); filter: drop-shadow(0 2px 0 #0004); }
+/* as cores mudaram: cada quadrado vira como uma carta (achata, passa do ponto e assenta) */
+.setas-legenda.mudou .setas-chave { animation: setas-virar 0.6s ease-out both; }
+@keyframes setas-virar { 0% { transform: scaleX(1); } 35% { transform: scaleX(0.05) scaleY(1.08); } 70% { transform: scale(1.14, 0.9); } 100% { transform: none; } }
+
+/* a fila de setas: casas brancas com setas pretas; ao responder, cada casa ganha a sua cor */
+.setas-fila { display: flex; flex-wrap: nowrap; justify-content: center; gap: min(8px, 1.6vw); margin: 6px auto 4px; }
+.setas-casa { display: grid; place-items: center; width: min(clamp(48px, 9dvh, 76px), 13.5vw); aspect-ratio: 1; box-sizing: border-box;
+  border-radius: 14%; border: 2.5px solid #13294b; background: #fff; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.25);
+  transition: background 0.2s; animation: lados-seta-nascer 0.3s ease-out both; }
+.setas-casa svg { width: 74%; height: 74%; fill: var(--texto); transform: rotate(var(--giro)); transition: fill 0.2s; }
+.setas-casa.pintada { background: var(--cor); animation: cores-quique 0.45s ease-out both; }
+.setas-casa.pintada svg { fill: #fff; }
+.setas-fila.tremer { animation: cores-tremer 0.16s linear; }
+.cores-msg.aviso { color: #7a3fa3; }
+
+/* as faixas de cores para escolher */
+.setas-respostas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 6px; }
+.setas-respostas.largas { grid-template-columns: 1fr; gap: 8px; }
+.setas-opcao { display: flex; justify-content: center; gap: min(6px, 1.2vw); padding: 8px; border: 2.5px solid #13294b; border-radius: 14px;
+  background: #fff; cursor: pointer; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.25); animation: cores-nascer 0.34s ease-out both; }
+.setas-opcao i { width: min(clamp(30px, 5.6dvh, 46px), 11vw); aspect-ratio: 1; border-radius: 6px; background: var(--cor); border: 2px solid #13294b;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.18); }
+.setas-opcao:active { transform: translateY(3px); box-shadow: none; }
+.setas-opcao:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.setas-opcao:disabled { cursor: default; }
+.setas-opcao.certa { background: #dff5e7; border-color: var(--verde); box-shadow: 0 4px 0 #1d6b3d; animation: cores-quique 0.45s ease-out; }
+.setas-opcao.errada { background: #fde4e4; border-color: var(--vermelho); box-shadow: 0 4px 0 #8e1b1b; animation: tremer 0.4s ease; }
+.setas-opcao.apagada { opacity: 0.45; }
+@media (prefers-reduced-motion: reduce) {
+  .setas-chave, .setas-legenda.mudou .setas-chave, .setas-casa, .setas-casa.pintada, .setas-fila.tremer, .setas-opcao, .setas-opcao.certa, .setas-opcao.errada { animation: none; }
+}
+
 /* menu de categorias da lista de jogos */
 .filtro-temas { align-items: center; gap: 10px; }
 .filtro-rotulo { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; color: var(--primaria-escura); }
