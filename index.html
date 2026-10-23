@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=64">
+  <link rel="stylesheet" href="style.css?v=66">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -387,6 +387,79 @@
       </div>
     </section>
 
+    <!-- Somando as Cores: instruções -->
+    <section class="tela" id="tela-cores-menu">
+      <h2 class="subtitulo">🎨 Somando as Cores</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-cores"></div>
+        <div class="balao balao-esq">
+          Cada <b>cor</b> vale um número: olhe as <b>bolinhas</b> em cima da tabela. Na conta aparece uma casa, como
+          <b>A2</b>: ache a linha <b>A</b> e a coluna <b>2</b>, veja a cor e troque pelo número dela. Depois é só fazer a conta!
+          Toque na casa da conta para o Plenix mostrar a linha e a coluna. Acertando, fica mais difícil. 🧠
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-cores-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="cores-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Somando as Cores: o jogo -->
+    <section class="tela tela-jogo" id="tela-cores">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="cores-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="cores-nivel"></span>
+        <span class="chuva-placar"><span id="cores-pontos">0</span> pts · <span id="cores-contador"></span></span>
+      </div>
+      <div class="cores-legenda" id="cores-legenda" aria-label="Quanto vale cada cor"></div>
+      <div class="cores-quadro" id="cores-quadro" data-encaixe="1">
+        <div class="cores-grade" id="cores-grade"></div>
+      </div>
+      <div class="cores-conta" id="cores-conta" aria-live="polite"></div>
+      <p class="cores-msg" id="cores-msg" role="status"></p>
+      <div class="mat-respostas" id="cores-respostas"></div>
+    </section>
+
+    <!-- Esquerda e Direita: instruções -->
+    <section class="tela" id="tela-lados-menu">
+      <h2 class="subtitulo">↔️ Esquerda e Direita</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-lados"></div>
+        <div class="balao balao-esq">
+          Olhe as <b>setas</b> no meio! Uma seta deitada diz <b>qual bola</b> jogar (esquerda ou direita) e a seta em pé
+          diz se vai <b>para cima ou para baixo</b>. Quando aparecem <b>duas setas em pé</b>, jogue as <b>duas bolas</b>:
+          cada uma para o lado da sua seta. Deslize a bola com o dedo (ou toque no buraco). Quanto mais rápido, mais pontos! ⚡
+          <small class="lados-teclas">No computador: <b>W</b> e <b>S</b> jogam a bola da esquerda, <b>↑</b> e <b>↓</b> a da direita.</small>
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-lados-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="lados-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Esquerda e Direita: o jogo -->
+    <section class="tela tela-jogo" id="tela-lados">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="lados-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="lados-nivel"></span>
+        <span class="chuva-placar"><span id="lados-pontos">0</span> pts · <span id="lados-contador"></span></span>
+      </div>
+      <p class="cores-msg" id="lados-msg" role="status"></p>
+      <div class="lados-mesa" id="lados-mesa" data-encaixe="0.66" aria-label="Mesa com quatro buracos e duas bolas">
+        <span class="lados-letra lados-e">E</span><span class="lados-letra lados-d">D</span>
+        <button class="lados-buraco" type="button" data-lado="E" data-dir="cima" aria-label="Buraco de cima da esquerda"></button>
+        <button class="lados-buraco" type="button" data-lado="D" data-dir="cima" aria-label="Buraco de cima da direita"></button>
+        <button class="lados-buraco" type="button" data-lado="E" data-dir="baixo" aria-label="Buraco de baixo da esquerda"></button>
+        <button class="lados-buraco" type="button" data-lado="D" data-dir="baixo" aria-label="Buraco de baixo da direita"></button>
+        <span class="lados-bola" id="lados-bola-E" data-lado="E"></span>
+        <span class="lados-bola" id="lados-bola-D" data-lado="D"></span>
+        <div class="lados-setas" id="lados-setas" aria-live="polite"></div>
+        <div class="lados-tempo"><i id="lados-tempo"></i></div>
+        <div class="lados-contagem" id="lados-contagem"></div>
+      </div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -591,6 +664,23 @@
           <span class="jogo-card-nome">Fichas Coloridas</span>
           <span class="jogo-card-texto">Junte 3 fichas e troque pela próxima cor!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-cores" type="button" data-tema="psicopedagogia" style="--c:#8e44ad">
+          <span class="jogo-card-capa cores-capa" aria-hidden="true">
+            <i style="--cor:#2e7d32"></i><i style="--cor:#e53935"></i><i style="--cor:#8e44ad"></i><i style="--cor:#1e64d2"></i>
+            <i style="--cor:#1e64d2"></i><i style="--cor:#fbc02d"></i><i style="--cor:#2e7d32"></i><i style="--cor:#e53935"></i>
+            <i style="--cor:#fbc02d"></i><i style="--cor:#8e44ad"></i><i style="--cor:#e53935"></i><i style="--cor:#2e7d32"></i>
+            <b>A2 + C3 = ?</b>
+          </span>
+          <span class="jogo-card-nome">Somando as Cores</span>
+          <span class="jogo-card-texto">Ache a cor na tabela e faça a conta!</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-lados" type="button" data-tema="psicopedagogia" style="--c:#0a8f6a">
+          <span class="jogo-card-capa lados-capa" aria-hidden="true">
+            <i></i><u></u><i></i><b style="--cor:#1e64d2"></b><em>➡ ⬇</em><b style="--cor:#e53935"></b><i></i><u></u><i></i>
+          </span>
+          <span class="jogo-card-nome">Esquerda e Direita</span>
+          <span class="jogo-card-texto">Siga as setas e jogue a bola certa no buraco!</span>
+        </button>
         <!-- jogo externo: abre o jogo de raciocínio e estratégia em outra aba -->
         <a class="jogo-card com-capa" id="btn-psico" href="https://nagila.vercel.app/" target="_blank" rel="noopener" data-tema="psicopedagogia" style="--c:#2e7dbf">
           <img class="jogo-card-capa" src="assets/capa-psico-estrategia.jpg" alt="" width="518" height="707" style="object-position: center 45%">
@@ -725,9 +815,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=64"></script>
-  <script src="dados.js?v=64"></script>
-  <script src="jogo.js?v=64"></script>
+  <script src="plenix.js?v=66"></script>
+  <script src="dados.js?v=66"></script>
+  <script src="jogo.js?v=66"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

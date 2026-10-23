@@ -1616,6 +1616,121 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 .fichas-botoes { display: flex; justify-content: center; }
 .fichas-botoes .btn-grande:disabled { opacity: 0.5; }
 
+/* ---------- Somando as Cores ---------- */
+/* capa do cartão: uma tabelinha de cores com a conta por cima */
+.cores-capa { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 14px 18px 30px; position: relative;
+  background: linear-gradient(160deg, #fbf7ff, #efe4fb); box-sizing: border-box; }
+.cores-capa i { border-radius: 8px; background: var(--cor); border: 2px solid #13294b; }
+.cores-capa b { position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); padding: 2px 12px; white-space: nowrap;
+  font-family: 'Fredoka', sans-serif; font-size: 18px; color: var(--primaria-escura); background: #fff; border: 2px solid #13294b; border-radius: 10px; }
+
+/* legenda: bolinhas com o valor de cada cor */
+.cores-legenda { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(6px, 1.4dvh, 12px); margin: 0 0 6px; }
+.cores-bola { display: grid; place-items: center; width: min(clamp(38px, 6.4dvh, 54px), 12.5vw); aspect-ratio: 1; border-radius: 50%; color: #fff;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(17px, 2.8dvh, 23px); text-shadow: 0 1px 2px #000a;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.6), var(--cor) 50%, color-mix(in srgb, var(--cor) 65%, #000) 100%);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--cor) 50%, #000), inset 0 0 0 3px rgba(255, 255, 255, 0.35);
+  animation: cores-nascer 0.38s ease-out both; }
+
+/* a tabela: cabeçalhos brancos (letras e números) e casas coloridas */
+.cores-quadro { margin: 0 auto; width: 100%; max-width: 520px; }
+.cores-quadro.tremer { animation: cores-tremer 0.16s linear; }
+.cores-grade { display: grid; grid-template-columns: repeat(calc(var(--lado, 4) + 1), 1fr);
+  grid-template-rows: repeat(calc(var(--lado, 4) + 1), 1fr); gap: clamp(4px, 1vw, 8px); aspect-ratio: 1; }
+.cores-cab, .cores-casa { border-radius: 18%; border: 2.5px solid #13294b; transition: opacity 0.2s, background 0.2s, transform 0.15s; }
+.cores-cab { display: grid; place-items: center; background: #fff; color: var(--texto);
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(16px, 3.4dvh, 28px); }
+.cores-canto { border-color: #c7d3dc; }
+.cores-casa { background: var(--cor); box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.18), inset 0 3px 0 rgba(255, 255, 255, 0.25);
+  animation: cores-nascer 0.34s ease-out both; }
+/* dica: a linha e a coluna da casa acendem, o resto fica mais apagado */
+.cores-cab.guia { background: var(--amarelo); transform: scale(1.06); }
+.cores-grade:has(.guia) .cores-casa:not(.guia) { opacity: 0.35; }
+.cores-casa.alvo { animation: cores-alvo 0.6s ease-out; outline: 4px solid #fff; outline-offset: -2px; position: relative; z-index: 1; }
+
+/* a conta: as casas são botões (tocar acende a linha e a coluna) */
+.cores-conta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin: 10px 0 4px;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: min(clamp(22px, 3.6dvh, 30px), 6vw); color: var(--primaria-escura); }
+.cores-conta { flex-wrap: nowrap; gap: min(8px, 1.5vw); }
+.cores-coord { min-width: 2.4em; padding: 4px min(10px, 2vw); border: 2.5px solid #13294b; border-radius: 12px; background: #fff; cursor: pointer;
+  font: inherit; color: var(--texto); box-shadow: 0 3px 0 rgba(19, 41, 75, 0.25); }
+.cores-coord:active { transform: translateY(2px); box-shadow: none; }
+.cores-coord:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.cores-res { min-width: 1.8em; padding: 4px 10px; text-align: center; border-radius: 12px; background: #efe4fb; }
+.cores-conta.acertou .cores-res { background: var(--verde); color: #fff; animation: cores-quique 0.45s ease-out; }
+.cores-conta.errou .cores-res { background: var(--vermelho); color: #fff; animation: tremer 0.3s ease; }
+.cores-msg { min-height: 2.7em; margin: 0; text-align: center; font-size: clamp(13px, 2.2dvh, 16px); font-weight: 700; line-height: 1.35; color: var(--texto); }
+.cores-msg.ok { color: #1d6b3d; }
+.cores-msg.erro { color: #b42318; }
+.cores-mini { display: inline-block; width: 0.95em; height: 0.95em; vertical-align: -0.12em; border-radius: 4px; background: var(--cor); border: 1.5px solid #13294b; }
+.tela-jogo .cores-msg + .mat-respostas { margin-top: 4px; grid-template-columns: repeat(4, 1fr); gap: 8px; }   /* 4 numa linha: sobra mais altura para a tabela */
+
+/* antecipação e quique: nasce pequena, passa do ponto achatada e assenta */
+@keyframes cores-nascer { 0% { transform: scale(0.2); opacity: 0; } 65% { transform: scale(1.12, 0.9); opacity: 1; } 100% { transform: none; } }
+@keyframes cores-alvo { 0% { transform: scale(1); } 30% { transform: scale(0.88); } 65% { transform: scale(1.18, 1.08); } 100% { transform: none; } }
+@keyframes cores-quique { 0% { transform: scale(0.7); } 55% { transform: scale(1.2, 0.88); } 80% { transform: scale(0.96, 1.05); } 100% { transform: none; } }
+@keyframes cores-tremer { 25% { transform: translateX(-5px); } 75% { transform: translateX(4px); } }
+@media (prefers-reduced-motion: reduce) {
+  .cores-bola, .cores-casa, .cores-casa.alvo, .cores-conta .cores-res, .cores-quadro.tremer { animation: none; }
+}
+
+/* ---------- Esquerda e Direita ---------- */
+/* capa do cartão: a mesa com os 4 buracos, as 2 bolas e as setas */
+.lados-capa { display: grid; grid-template-columns: 1fr 1.3fr 1fr; grid-template-rows: 1fr 1fr 1fr; place-items: center; padding: 12px 34px;
+  box-sizing: border-box; background: radial-gradient(ellipse at 50% 40%, #2fa37c, #11704f); }
+.lados-capa i { width: 54%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #04261a 55%, #0a4a33 75%); box-shadow: 0 0 0 4px #c9f2df55; }
+.lados-capa b { width: 40%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.65), var(--cor) 55%, color-mix(in srgb, var(--cor) 60%, #000) 100%); }
+.lados-capa em { font-style: normal; font-size: 30px; color: #fff; text-shadow: 0 2px 0 #0005; white-space: nowrap; }
+.lados-teclas { display: block; margin-top: 6px; color: var(--cinza-texto); }
+@media (hover: none) { .lados-teclas { display: none; } }   /* no celular e no tablet não tem teclado */
+
+/* a mesa: feltro verde com borda de madeira */
+.lados-mesa { position: relative; margin: 4px auto 0; width: 100%; max-width: 440px; aspect-ratio: 0.66; touch-action: none; user-select: none;
+  border-radius: 22px; border: 8px solid #b0743a; box-sizing: border-box;
+  background: radial-gradient(ellipse at 50% 45%, #2fa37c, #127252 75%);
+  box-shadow: inset 0 0 0 2px #0003, inset 0 10px 24px #0004, 0 6px 0 #7a4c22; }
+.lados-mesa.tremer { animation: cores-tremer 0.16s linear; }
+.lados-letra { position: absolute; top: 50%; transform: translate(-50%, -50%); font-family: 'Fredoka', sans-serif; font-weight: 700;
+  font-size: clamp(16px, 2.8dvh, 22px); color: #ffffffcc; pointer-events: none; }
+.lados-e { left: 6%; }
+.lados-d { left: 94%; }
+.lados-buraco { position: absolute; width: 27%; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer;
+  background: radial-gradient(circle at 50% 42%, #03200f 52%, #0b5038 72%, #1b8a63 100%);
+  box-shadow: 0 0 0 4px #ffffff30, inset 0 6px 10px #000a; }
+.lados-buraco[data-lado="E"] { left: 20%; }
+.lados-buraco[data-lado="D"] { left: 80%; }
+.lados-buraco[data-dir="cima"] { top: 14%; }
+.lados-buraco[data-dir="baixo"] { top: 86%; }
+.lados-buraco:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 3px; }
+.lados-buraco.certo { animation: lados-anel-certo 0.6s ease-out; }
+.lados-buraco.errado { animation: lados-anel-errado 0.6s ease-out; }
+@keyframes lados-anel-certo { 30% { box-shadow: 0 0 0 9px #7dffb0, inset 0 6px 10px #000a; } 100% { box-shadow: 0 0 0 4px #ffffff30, inset 0 6px 10px #000a; } }
+@keyframes lados-anel-errado { 30% { box-shadow: 0 0 0 9px #ff6b6b, inset 0 6px 10px #000a; } 100% { box-shadow: 0 0 0 4px #ffffff30, inset 0 6px 10px #000a; } }
+.lados-bola { position: absolute; top: 50%; width: 15%; aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.7), var(--cor) 52%, color-mix(in srgb, var(--cor) 60%, #000) 100%);
+  box-shadow: 0 5px 6px #0006; }
+#lados-bola-E { left: 20%; --cor: #1e64d2; }
+#lados-bola-D { left: 80%; --cor: #e53935; }
+
+/* as setas no meio da mesa */
+.lados-setas { position: absolute; left: 50%; top: 50%; width: 42%; transform: translate(-50%, -50%); display: flex; justify-content: center; gap: 6%; pointer-events: none; }
+.lados-seta { position: relative; width: 47%; aspect-ratio: 1; display: grid; place-items: center; border-radius: 16px; background: #fffffff0;
+  box-shadow: 0 4px 0 #0004; animation: lados-seta-nascer 0.3s ease-out both; }
+.lados-seta + .lados-seta { animation-delay: 60ms; }
+.lados-seta svg { width: 82%; height: 82%; fill: var(--primaria-escura); transform: rotate(var(--giro)); }
+.lados-setas.dupla .lados-seta svg { fill: #0a8f6a; }
+.lados-seta small { position: absolute; bottom: -1.5em; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(13px, 2.2dvh, 16px); color: #fff; }
+@keyframes lados-seta-nascer { 0% { transform: scale(0.3); opacity: 0; } 65% { transform: scale(1.12, 0.92); opacity: 1; } 100% { transform: none; } }
+.lados-tempo { position: absolute; left: 30%; width: 40%; top: 66%; height: 8px; border-radius: 99px; background: #0004; overflow: hidden; pointer-events: none; }
+.lados-tempo i { display: block; height: 100%; width: 0; background: var(--amarelo); border-radius: 99px; }
+.lados-contagem { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(48px, 10dvh, 90px); color: #fff; text-shadow: 0 4px 0 #0005; }
+.lados-contagem:empty { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .lados-seta, .lados-buraco.certo, .lados-buraco.errado, .lados-mesa.tremer { animation: none; }
+}
+
 /* menu de categorias da lista de jogos */
 .filtro-temas { align-items: center; gap: 10px; }
 .filtro-rotulo { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; color: var(--primaria-escura); }

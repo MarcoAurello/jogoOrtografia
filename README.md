@@ -24,6 +24,27 @@ A **planilha modelo** (`assets/modelo-questionario.xlsx`, botão "📥 Baixar pl
 (A pergunta, B certa em verde, C a E erradas em vermelho, com 2 exemplos) e a aba "Como usar". Ela é gerada por
 `ferramentas/modelo-questionario.py`. Linhas de cabeçalho repetidas são ignoradas.
 
+## Somando as Cores (coordenadas e cálculo)
+
+Fica em **Psicopedagogia**. Uma tabela de cores (linhas A, B, C… e colunas 1, 2, 3…) e, em cima, bolinhas com o valor
+de cada cor. A conta usa casas da tabela (ex.: `A2 + C3`): o aluno acha a cor de cada casa, troca pelo valor e toca na
+resposta entre 4 opções (no computador, também pelas teclas 1 a 4). Tocar numa casa da conta acende a linha e a coluna (dica,
+contada no relatório). Acertar sobe um nível e errar desce um. São 8 níveis, em `NIVEIS_CORES` no `jogo.js`: a tabela vai de
+4x4 a 5x5, de 3 a 6 cores, os valores crescem, a conta passa de 2 para 3 casas e entram a subtração e a multiplicação
+(`A1 × B2 + C3`). As respostas erradas imitam os erros comuns: trocar a linha pela coluna (ler A2 como B1), olhar a casa
+vizinha ou errar a conta. O relatório mostra qual foi o erro. A rodada tem 15 contas.
+
+## Esquerda e Direita (lateralidade e atenção)
+
+Fica em **Psicopedagogia**. A mesa tem um buraco em cada canto e uma bola de cada lado (azul à esquerda, vermelha à direita).
+No meio aparecem setas: a seta deitada (← ou →) diz **qual bola** jogar e a seta em pé (↑ ou ↓) diz **para onde**; só essa
+bola deve ir. A partir do nível 4 aparecem às vezes **duas setas em pé**: as duas bolas vão, cada uma no sentido da sua seta
+(mesmo sentido; do nível 5 em diante, também sentidos opostos). A bola vai deslizando o dedo para cima ou para baixo na
+metade da mesa, ou tocando no buraco; no computador, **W/S** jogam a bola da esquerda e **↑/↓** a da direita.
+Uma barra mostra o tempo de cada comando (de 5 s no nível 1 a 3 s no nível 8, em `NIVEIS_LADOS` no `jogo.js`) e quanto mais
+rápido, mais pontos. Dois acertos seguidos sobem um nível; um erro desce. A rodada tem 20 comandos, e o relatório separa os
+erros de lado (esquerda/direita), de direção (cima/baixo), de tempo e de jogar só uma das duas bolas.
+
 ## Peso Certo (medidas de massa)
 
 Balança de dois pratos: o objeto fica no prato da esquerda e o aluno coloca no da direita (tocando ou arrastando) os pesos
@@ -174,7 +195,7 @@ Para publicar o script (uma vez):
 2. **Implantar → Nova implantação → Tipo: App da Web**. Executar como: **Eu**. Quem pode acessar: **Qualquer pessoa**.
    Autorize o acesso ao Gmail e à planilha quando o Google pedir.
 3. Copie o endereço do app da Web (termina em `/exec`) e cole em `URL_RELATORIO` no `jogo.js`.
-   Rode `ferramentasersao.ps1` e publique o jogo.
+   Rode `ferramentas\versao.ps1` e publique o jogo.
 
 Limite gratuito: cerca de 100 e-mails por dia numa conta Gmail comum (1.500 no Google Workspace).
 Ao mudar o script, use **Implantar → Gerenciar implantações → editar → Nova versão** para o endereço continuar o mesmo.

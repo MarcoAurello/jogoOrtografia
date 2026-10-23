@@ -177,7 +177,7 @@
   const ABA_DA_TELA = {
     'tela-inicio': 'inicio', 'tela-jogos': 'jogos', 'tela-missoes': 'jogos', 'tela-regra': 'jogos', 'tela-chuva-menu': 'jogos',
     'tela-mat-menu': 'jogos', 'tela-tiro-menu': 'jogos', 'tela-peso-menu': 'jogos', 'tela-luzes-menu': 'jogos', 'tela-fim': 'jogos',
-    'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
+    'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-cores-menu': 'jogos', 'tela-lados-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
   };
   function encaixarTela() {
     const tela = document.querySelector('.tela.ativa');
@@ -282,7 +282,7 @@
   document.addEventListener('click', (e) => { if (!e.target.closest('#menu-app')) abrirMenu(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirMenu(false); });
 
-  function pararJogos() { pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararVoz(); }
+  function pararJogos() { pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararVoz(); }
   const irParaInicio = () => { pararJogos(); $('escolha-prof').hidden = true; telaInicio(); };
   $('btn-logo-inicio').onclick = irParaInicio;
   $('btn-menu-inicio').onclick = irParaInicio;
@@ -316,7 +316,7 @@
   let senhaProfessor = '';   // a senha digitada, mandada ao script para gravar questionários
   const lerJSON = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) || padrao; } catch (e) { return padrao; } };
   const gravarJSON = (chave, valor) => { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) { /* sem armazenamento */ } };
-  const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.fichas ? 'fichas' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
+  const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.cores ? 'cores' : mis.lados ? 'lados' : mis.fichas ? 'fichas' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
   let emailEscolhido = (() => { try { return localStorage.getItem(CHAVE_EMAIL_ESCOLHIDO) || ''; } catch (e) { return ''; } })();
   const listaEmails = () => lerJSON(CHAVE_EMAILS, []);
   // o e-mail para onde vai o relatório (só se estiver na lista da planilha)
@@ -533,6 +533,8 @@
     reflexo2: { nome: 'Jogo do Reflexo Nível 2', abrir: () => telaLuzesMenu(2) },
     rotina: { nome: 'Rotina Certa', abrir: () => telaRotinaMenu() },
     fichas: { nome: 'Fichas Coloridas', abrir: () => telaFichasMenu() },
+    cores: { nome: 'Somando as Cores', abrir: () => telaCoresMenu() },
+    lados: { nome: 'Esquerda e Direita', abrir: () => telaLadosMenu() },
   };
   const JOGOS_DE_FORA = [
     { nome: 'ABC da Tia Ana', link: 'https://abcdaana.vercel.app/' },
@@ -3109,11 +3111,558 @@
   $('btn-fichas-comecar').onclick = () => { SOM.clique(); comecarFichas(); };
   $('fichas-sair').onclick = telaFichasMenu;
 
+  // ---------- Somando as Cores ----------
+  // Coordenadas, atenção e cálculo. Uma tabela de cores (linhas A, B, C... e colunas 1, 2, 3...) e, em cima, as
+  // bolinhas com o valor de cada cor. A conta usa casas da tabela (A2 + C3): o aluno acha a cor de cada casa, troca
+  // pelo valor e faz a conta. Acertar sobe um nível, errar desce. Os níveis aumentam a tabela, as cores, os valores,
+  // o número de casas na conta e trazem a subtração e a multiplicação. As respostas erradas imitam os erros comuns:
+  // trocar a linha pela coluna (ler A2 como B1) e olhar a casa vizinha. Tocar numa casa da conta acende a linha e a
+  // coluna dela (dica, contada no relatório).
+  const CORES = { CONTAS: 15, NIVEL_MAX: 8, PAUSA: 2200 };
+  const PALETA_CORES = [
+    { id: 'verde', nome: 'verde', cor: '#2e7d32' },
+    { id: 'vermelho', nome: 'vermelho', cor: '#e53935' },
+    { id: 'roxo', nome: 'roxo', cor: '#8e44ad' },
+    { id: 'azul', nome: 'azul', cor: '#1e64d2' },
+    { id: 'amarelo', nome: 'amarelo', cor: '#fbc02d' },
+    { id: 'laranja', nome: 'laranja', cor: '#f57c00' },
+  ];
+  // lado da tabela, quantas cores, faixa dos valores, casas na conta e operações de cada nível
+  const NIVEIS_CORES = [
+    { lado: 4, cores: 3, min: 1, max: 5, termos: 2, ops: ['+'] },
+    { lado: 4, cores: 4, min: 1, max: 9, termos: 2, ops: ['+'] },
+    { lado: 4, cores: 4, min: 1, max: 9, termos: 2, ops: ['+', '−'] },
+    { lado: 4, cores: 5, min: 2, max: 12, termos: 3, ops: ['+'] },
+    { lado: 5, cores: 5, min: 2, max: 15, termos: 3, ops: ['+', '−'] },
+    { lado: 5, cores: 6, min: 1, max: 9, termos: 2, ops: ['×'] },
+    { lado: 5, cores: 6, min: 2, max: 20, termos: 3, ops: ['+', '−'] },
+    { lado: 5, cores: 6, min: 1, max: 9, termos: 3, ops: ['×', '+'] },
+  ];
+  const TIPOS_CORES = {
+    soma: { id: 'soma', titulo: 'Somar as cores', icone: '➕', cor: '#2e7d32',
+      regra: 'Ache a linha (letra) e a coluna (número) de cada casa, veja a cor e troque pelo valor da bolinha. Depois some.' },
+    sub: { id: 'sub', titulo: 'Somar e tirar', icone: '➖', cor: '#e53935',
+      regra: 'Troque cada casa pelo valor da cor e faça a conta da esquerda para a direita: primeiro o que vem antes.' },
+    mult: { id: 'mult', titulo: 'Multiplicar as cores', icone: '✖️', cor: '#8e44ad',
+      regra: 'Troque cada casa pelo valor da cor. Na conta com × e +, faça primeiro a multiplicação e depois some.' },
+  };
+  const LETRAS = 'ABCDE';
+  let cores = null;   // a partida em andamento
+  const nomeCasa = (l, c) => `${LETRAS[l]}${c + 1}`;
+
+  function telaCoresMenu() {
+    pararCores();
+    mascote('davi-cores', 'oi');
+    mostrar('tela-cores-menu');
+  }
+
+  function comecarCores() {
+    pararCores();
+    missao = { id: 'cores', cores: true, icone: '🎨', cor: '#8e44ad', titulo: 'Somando as Cores' };
+    resultados = [];
+    cores = { nivel: 1, nivelMax: 1, feitas: 0, acertos: 0, pontos: 0, dicas: 0, conta: null, timers: [], rodando: true };
+    mostrar('tela-cores');
+    proximaCores();
+  }
+
+  function pararCores() {
+    if (cores) { cores.rodando = false; cores.timers.forEach(clearTimeout); }
+    cores = null;
+  }
+  const depoisCores = (ms, fn) => { const c = cores; const t = setTimeout(() => { if (cores === c && c.rodando) fn(); }, ms); c.timers.push(t); };
+  const msgCores = (texto, tipo = '') => { $('cores-msg').innerHTML = texto; $('cores-msg').className = `cores-msg ${tipo}`; };
+
+  // valores diferentes para cada cor, sorteados na faixa do nível
+  function sortearValores(nv) {
+    const faixa = Array.from({ length: nv.max - nv.min + 1 }, (_, i) => nv.min + i);
+    return embaralhar(faixa).slice(0, nv.cores);
+  }
+
+  // tabela com todas as cores do nível (cada uma aparece pelo menos uma vez)
+  function sortearTabela(nv) {
+    const n = nv.lado * nv.lado;
+    const lista = Array.from({ length: n }, (_, i) => (i < nv.cores ? i : Math.floor(Math.random() * nv.cores)));
+    const misturada = embaralhar(lista);
+    return Array.from({ length: nv.lado }, (_, l) => misturada.slice(l * nv.lado, (l + 1) * nv.lado));
+  }
+
+  // calcula a conta (× antes de + e −; o resto da esquerda para a direita); null se algum passo ficar negativo
+  function calcularCores(vals, ops) {
+    const termos = [vals[0]], sinais = [];
+    ops.forEach((op, i) => {
+      if (op === '×') termos.push(termos.pop() * vals[i + 1]);
+      else { sinais.push(op); termos.push(vals[i + 1]); }
+    });
+    let total = termos[0];
+    for (let i = 0; i < sinais.length; i++) {
+      total = sinais[i] === '+' ? total + termos[i + 1] : total - termos[i + 1];
+      if (total < 0) return null;
+    }
+    return total;
+  }
+
+  function montarContaCores(nv, tabela, valores) {
+    const todas = [];
+    for (let l = 0; l < nv.lado; l++) for (let c = 0; c < nv.lado; c++) todas.push([l, c]);
+    for (let tentativa = 0; tentativa < 80; tentativa++) {
+      const casas = embaralhar(todas).slice(0, nv.termos);
+      let ops = Array.from({ length: nv.termos - 1 }, () => sortear(nv.ops));
+      if (nv.ops.includes('×') && nv.ops.length > 1) ops = ['×', '+'];   // nível 8: A1 × B2 + C3
+      if (nv.ops.includes('−') && !ops.includes('−') && Math.random() < 0.6) ops[ops.length - 1] = '−';
+      const vals = casas.map(([l, c]) => valores[tabela[l][c]]);
+      const res = calcularCores(vals, ops);
+      if (res == null) continue;
+      if (res === 0 && tentativa < 60) continue;   // evita muitas contas que dão zero
+      const tipo = ops.includes('×') ? TIPOS_CORES.mult : ops.includes('−') ? TIPOS_CORES.sub : TIPOS_CORES.soma;
+      return { casas, ops, vals, res, tipo };
+    }
+    return null;
+  }
+
+  // respostas erradas: trocou linha e coluna, olhou a casa vizinha e errou a conta (vizinhos do resultado)
+  function opcoesCores(conta, nv, tabela, valores) {
+    const erradas = new Map();   // valor -> motivo
+    const valorCom = (casas) => calcularCores(casas.map(([l, c]) => valores[tabela[l][c]]), conta.ops);
+    const trocadas = conta.casas.map(([l, c]) => [c, l]);
+    const r1 = valorCom(trocadas);
+    if (r1 != null && r1 !== conta.res) erradas.set(r1, 'trocou a linha pela coluna');
+    for (let k = 0; k < conta.casas.length && erradas.size < 2; k++) {
+      const [l, c] = conta.casas[k];
+      for (const [dl, dc] of embaralhar([[0, 1], [0, -1], [1, 0], [-1, 0]])) {
+        const nl = l + dl, nc = c + dc;
+        if (nl < 0 || nc < 0 || nl >= nv.lado || nc >= nv.lado) continue;
+        const casas = conta.casas.map((x, i) => (i === k ? [nl, nc] : x));
+        const r = valorCom(casas);
+        if (r != null && r !== conta.res && !erradas.has(r)) { erradas.set(r, 'olhou a casa vizinha'); break; }
+      }
+    }
+    for (const d of embaralhar([1, -1, 2, -2, 10, -10, 3])) {
+      if (erradas.size >= 3) break;
+      const v = conta.res + d;
+      if (v >= 0 && v !== conta.res && !erradas.has(v)) erradas.set(v, 'errou a conta');
+    }
+    for (let v = conta.res + 4; erradas.size < 3; v++) if (!erradas.has(v)) erradas.set(v, 'errou a conta');   // sempre 4 botões, só 1 certo
+    conta.motivos = erradas;
+    return embaralhar([conta.res, ...[...erradas.keys()].slice(0, 3)]);
+  }
+
+  function proximaCores() {
+    if (cores.feitas >= CORES.CONTAS) { terminarCores(); return; }
+    const nv = NIVEIS_CORES[cores.nivel - 1];
+    let tabela, valores, conta;
+    do {
+      tabela = sortearTabela(nv);
+      valores = sortearValores(nv);
+      conta = montarContaCores(nv, tabela, valores);
+    } while (!conta);
+    cores.feitas++;
+    cores.nv = nv;
+    cores.tabela = tabela;
+    cores.valores = valores;
+    cores.conta = conta;
+    cores.t0 = performance.now();
+    cores.dicaNestaConta = false;
+    hudCores();
+    // legenda: uma bolinha por cor com o valor
+    $('cores-legenda').innerHTML = valores.map((v, i) =>
+      `<span class="cores-bola" style="--cor:${PALETA_CORES[i].cor};animation-delay:${i * 60}ms" title="${PALETA_CORES[i].nome}">${v}</span>`).join('');
+    // tabela com cabeçalhos: canto vazio, números das colunas e letras das linhas
+    const g = $('cores-grade');
+    g.style.setProperty('--lado', nv.lado);
+    let html = '<span class="cores-cab cores-canto"></span>';
+    for (let c = 0; c < nv.lado; c++) html += `<span class="cores-cab" data-col="${c}">${c + 1}</span>`;
+    for (let l = 0; l < nv.lado; l++) {
+      html += `<span class="cores-cab" data-lin="${l}">${LETRAS[l]}</span>`;
+      for (let c = 0; c < nv.lado; c++) {
+        const k = tabela[l][c];
+        html += `<span class="cores-casa" data-lin="${l}" data-col="${c}" style="--cor:${PALETA_CORES[k].cor};animation-delay:${(l + c) * 35}ms" aria-label="${nomeCasa(l, c)} ${PALETA_CORES[k].nome}"></span>`;
+      }
+    }
+    g.innerHTML = html;
+    // a conta: cada casa é um botão que acende a linha e a coluna
+    $('cores-conta').className = 'cores-conta';
+    $('cores-conta').innerHTML = conta.casas.map(([l, c], i) =>
+      (i ? `<span class="cores-sinal">${conta.ops[i - 1]}</span>` : '')
+      + `<button class="cores-coord" type="button" data-lin="${l}" data-col="${c}">${nomeCasa(l, c)}</button>`).join('')
+      + '<span class="cores-sinal">=</span><span class="cores-res">?</span>';
+    msgCores(cores.feitas === 1 ? 'Ache a cor de cada casa e troque pelo número da bolinha.' : '');
+    $('cores-respostas').innerHTML = '';
+    opcoesCores(conta, nv, tabela, valores).forEach((v, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'mat-resposta';
+      b.textContent = v;
+      b.dataset.tecla = i + 1;
+      b.onclick = () => responderCores(v, b);
+      $('cores-respostas').append(b);
+    });
+  }
+
+  function hudCores() {
+    $('cores-nivel').textContent = `🎨 Nível ${cores.nivel} de ${CORES.NIVEL_MAX}`;
+    $('cores-pontos').textContent = cores.pontos;
+    $('cores-contador').textContent = `${cores.feitas}/${CORES.CONTAS}`;
+  }
+
+  // acende a linha e a coluna de uma casa (e a própria casa)
+  function acenderCasa(l, c, fixo) {
+    const g = $('cores-grade');
+    g.querySelectorAll('.guia').forEach((x) => x.classList.remove('guia'));
+    g.querySelectorAll(`[data-lin="${l}"], [data-col="${c}"]`).forEach((x) => x.classList.add('guia'));
+    const casa = g.querySelector(`.cores-casa[data-lin="${l}"][data-col="${c}"]`);
+    if (casa) { casa.classList.remove('alvo'); void casa.offsetWidth; casa.classList.add('alvo'); }
+    if (!fixo) depoisCores(1600, () => g.querySelectorAll('.guia').forEach((x) => x.classList.remove('guia')));
+  }
+
+  $('cores-conta').onclick = (e) => {
+    const b = e.target.closest('.cores-coord');
+    if (!b || !cores || !cores.conta) return;
+    if (!cores.conta.respondida && !cores.dicaNestaConta) { cores.dicaNestaConta = true; cores.dicas++; }
+    tocar([[660, 0.05]]);
+    acenderCasa(Number(b.dataset.lin), Number(b.dataset.col), false);
+  };
+
+  function responderCores(valor, botao) {
+    const conta = cores && cores.conta;
+    if (!conta || conta.respondida || !cores.rodando) return;
+    conta.respondida = true;
+    const tempo = (performance.now() - cores.t0) / 1000;
+    const botoes = [...document.querySelectorAll('#cores-respostas .mat-resposta')];
+    botoes.forEach((b) => { b.disabled = true; });
+    const certoEl = botoes.find((b) => Number(b.textContent) === conta.res);
+    const nomes = conta.casas.map(([l, c]) => nomeCasa(l, c));
+    const texto = nomes.map((n, i) => (i ? ` ${conta.ops[i - 1]} ` : '') + n).join('') + ` = ${conta.res}`;
+    const explicacao = conta.casas.map(([l, c], i) => {
+      const k = cores.tabela[l][c];
+      return `${nomes[i]} <span class="cores-mini" style="--cor:${PALETA_CORES[k].cor}"></span> = <b>${conta.vals[i]}</b>`;
+    }).join(' · ');
+    const contaNum = conta.vals.map((v, i) => (i ? ` ${conta.ops[i - 1]} ` : '') + v).join('') + ` = ${conta.res}`;
+    $('cores-conta').querySelector('.cores-res').textContent = conta.res;
+    // as casas da conta piscam na tabela (continuação: a resposta aponta de volta para onde estava a cor)
+    conta.casas.forEach(([l, c], i) => depoisCores(i * 220, () => {
+      const casa = $('cores-grade').querySelector(`.cores-casa[data-lin="${l}"][data-col="${c}"]`);
+      if (casa) { casa.classList.remove('alvo'); void casa.offsetWidth; casa.classList.add('alvo'); }
+    }));
+    const cor = (n) => PALETA_CORES[cores.tabela[conta.casas[n][0]][conta.casas[n][1]]].nome;
+    const textoRel = `${texto} (${conta.casas.map((_, i) => `${nomes[i]} ${cor(i)} = ${conta.vals[i]}`).join(', ')})`;
+    if (valor === conta.res) {
+      const rapidez = Math.max(0, 1 - tempo / 30);
+      const ganhou = 10 * cores.nivel + Math.round(rapidez * 10) - (cores.dicaNestaConta ? 3 : 0);
+      cores.pontos += Math.max(5, ganhou);
+      cores.acertos++;
+      botao.classList.add('certa');
+      $('cores-conta').classList.remove('acertou', 'errou'); void $('cores-conta').offsetWidth;
+      $('cores-conta').classList.add('acertou');
+      resultados.push({ m: conta.tipo, certa: textoRel, erros: [], nivel: cores.nivel, tempo });
+      cores.nivel = Math.min(CORES.NIVEL_MAX, cores.nivel + 1);
+      cores.nivelMax = Math.max(cores.nivelMax, cores.nivel);
+      msgCores(`✅ Isso! ${explicacao} → ${contaNum}`, 'ok');
+      SOM.certo();
+    } else {
+      const motivo = conta.motivos.get(valor) || 'errou a conta';
+      botao.classList.add('errada');
+      if (certoEl) certoEl.classList.add('certa');
+      botoes.forEach((b) => { if (b !== botao && b !== certoEl) b.classList.add('apagada'); });
+      $('cores-conta').classList.remove('acertou', 'errou'); void $('cores-conta').offsetWidth;
+      $('cores-conta').classList.add('errou');
+      // tremida curta na tabela (impacto do erro, sem exagero)
+      const q = $('cores-quadro');
+      q.classList.remove('tremer'); void q.offsetWidth; q.classList.add('tremer');
+      resultados.push({ m: conta.tipo, certa: textoRel, erros: [`respondeu ${valor} (${motivo})`], nivel: cores.nivel, tempo });
+      cores.nivel = Math.max(1, cores.nivel - 1);
+      const dica = motivo === 'trocou a linha pela coluna' ? 'A <b>letra</b> é a linha (deitada) e o <b>número</b> é a coluna (em pé). '
+        : motivo === 'olhou a casa vizinha' ? 'Siga a linha e a coluna com o dedo até elas se encontrarem. ' : '';
+      msgCores(`Quase! ${dica}${explicacao} → ${contaNum}`, 'erro');
+      SOM.errado();
+    }
+    hudCores();
+    depoisCores(CORES.PAUSA + (valor === conta.res ? 0 : 1200), proximaCores);
+  }
+
+  function terminarCores() {
+    const { acertos, feitas, pontos, nivelMax, dicas } = cores;
+    pararCores();
+    missao.resumo = [
+      `Acertou ${acertos} de ${feitas} contas e chegou ao nível ${nivelMax} de ${CORES.NIVEL_MAX}.`,
+      `Pediu para acender a linha e a coluna em ${dicas} de ${feitas} contas.`,
+    ];
+    fimDaMissao();
+    const n = ultimoRelatorio.estrelas;
+    $('fim-titulo').textContent = n === 3 ? 'Tabela dominada! 🎨' : 'Fim das contas!';
+    $('fim-texto').textContent = `${aluno}, você acertou ${acertos} de ${feitas} contas, chegou ao nível ${nivelMax} e fez ${pontos} pontos!`;
+  }
+
+  // teclas 1 a 4 escolhem a resposta no computador
+  document.addEventListener('keydown', (e) => {
+    if (!cores || !$('tela-cores').classList.contains('ativa')) return;
+    const b = document.querySelector(`#cores-respostas .mat-resposta[data-tecla="${e.key}"]`);
+    if (b && !b.disabled) b.click();
+  });
+
+  $('btn-cores').onclick = () => { SOM.clique(); escolherProfessorE('Somando as Cores', telaCoresMenu); };
+  $('cores-voltar').onclick = telaJogos;
+  $('btn-cores-comecar').onclick = () => { SOM.clique(); comecarCores(); };
+  $('cores-sair').onclick = telaCoresMenu;
+
+  // ---------- Esquerda e Direita ----------
+  // Lateralidade, atenção e controle inibitório. A mesa tem um buraco em cada canto e uma bola de cada lado.
+  // No meio aparecem setas: uma seta deitada (← ou →) diz qual bola jogar e a seta em pé (↑ ou ↓) diz para onde;
+  // só aquela bola deve ser jogada. A partir do nível 4, às vezes aparecem duas setas em pé: as duas bolas são
+  // jogadas, cada uma no sentido da sua seta (mesmo sentido ou, do nível 5 em diante, sentidos opostos).
+  // Quanto mais rápido, mais pontos. Dois acertos seguidos sobem um nível; um erro desce.
+  // A bola vai com o dedo (deslizar para cima ou para baixo na metade da mesa) ou tocando no buraco;
+  // no computador, W/S jogam a bola da esquerda e ↑/↓ a da direita.
+  const LADOS = { COMANDOS: 20, NIVEL_MAX: 8 };
+  // tempo para responder (s), chance de vir o comando com as duas bolas e se ele pode ter sentidos opostos
+  const NIVEIS_LADOS = [
+    { tempo: 5, dupla: 0, oposto: false },
+    { tempo: 4.5, dupla: 0, oposto: false },
+    { tempo: 4, dupla: 0, oposto: false },
+    { tempo: 4.5, dupla: 0.3, oposto: false },
+    { tempo: 4.5, dupla: 0.4, oposto: true },
+    { tempo: 4, dupla: 0.5, oposto: true },
+    { tempo: 3.5, dupla: 0.5, oposto: true },
+    { tempo: 3, dupla: 0.5, oposto: true },
+  ];
+  const TIPOS_LADOS = {
+    simples: { id: 'simples', titulo: 'Uma bola: lado e direção', icone: '➡️', cor: '#1e64d2',
+      regra: 'A seta deitada mostra qual bola jogar (esquerda ou direita) e a seta em pé mostra se ela vai para cima ou para baixo. Só essa bola se mexe.' },
+    mesmo: { id: 'mesmo', titulo: 'Duas bolas, mesmo sentido', icone: '⏬', cor: '#0a8f6a',
+      regra: 'Duas setas em pé: as duas bolas vão juntas, cada uma para onde a sua seta aponta (aqui, as duas para o mesmo lado).' },
+    oposto: { id: 'oposto', titulo: 'Duas bolas, sentidos opostos', icone: '↕️', cor: '#e53935',
+      regra: 'Duas setas em pé apontando para lados diferentes: a bola da esquerda segue a seta da esquerda e a da direita segue a seta da direita.' },
+  };
+  const NOME_LADO = { E: 'esquerda', D: 'direita' };
+  const SETA_SVG = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M6 36h50V12l38 38-38 38V64H6z"/></svg>';
+  const GIRO_SETA = { direita: 0, baixo: 90, esquerda: 180, cima: -90 };
+  let lados = null;   // a partida em andamento
+
+  function telaLadosMenu() {
+    pararLados();
+    mascote('davi-lados', 'oi');
+    mostrar('tela-lados-menu');
+  }
+
+  function comecarLados() {
+    pararLados();
+    missao = { id: 'lados', lados: true, icone: '↔️', cor: '#0a8f6a', titulo: 'Esquerda e Direita' };
+    resultados = [];
+    lados = { nivel: 1, nivelMax: 1, seguidos: 0, feitos: 0, acertos: 0, pontos: 0, cmd: null, timers: [], rodando: true, ultimo: '' };
+    $('lados-setas').innerHTML = '';
+    $('lados-tempo').style.transition = 'none';
+    $('lados-tempo').style.width = '0';
+    ['E', 'D'].forEach((l) => { $(`lados-bola-${l}`).getAnimations().forEach((a) => a.cancel()); });
+    hudLados();
+    msgLados('Prepare-se…');
+    mostrar('tela-lados');
+    let n = 3;
+    const contar = () => {
+      if (n === 0) { $('lados-contagem').textContent = ''; proximoLados(); return; }
+      $('lados-contagem').textContent = n--;
+      SOM.clique();
+      depoisLados(650, contar);
+    };
+    contar();
+  }
+
+  function pararLados() {
+    if (lados) { lados.rodando = false; lados.timers.forEach(clearTimeout); }
+    lados = null;
+    $('lados-contagem').textContent = '';
+  }
+  const depoisLados = (ms, fn) => { const j = lados; const t = setTimeout(() => { if (lados === j && j.rodando) fn(); }, ms); j.timers.push(t); return t; };
+  const msgLados = (texto, tipo = '') => { $('lados-msg').innerHTML = texto; $('lados-msg').className = `cores-msg ${tipo}`; };
+  const setaHTML = (dir, rotulo = '') => `<span class="lados-seta" style="--giro:${GIRO_SETA[dir]}deg">${SETA_SVG}${rotulo ? `<small>${rotulo}</small>` : ''}</span>`;
+
+  function hudLados() {
+    $('lados-nivel').textContent = `↔️ Nível ${lados.nivel} de ${LADOS.NIVEL_MAX}`;
+    $('lados-pontos').textContent = lados.pontos;
+    $('lados-contador').textContent = `${lados.feitos}/${LADOS.COMANDOS}`;
+  }
+
+  // sorteia o próximo comando (sem repetir o anterior igualzinho)
+  function sortearComando(nv) {
+    for (;;) {
+      let cmd;
+      if (Math.random() < nv.dupla) {
+        const E = sortear(['cima', 'baixo']);
+        const D = nv.oposto && Math.random() < 0.5 ? (E === 'cima' ? 'baixo' : 'cima') : E;
+        cmd = { dupla: true, dirs: { E, D }, tipo: E === D ? TIPOS_LADOS.mesmo : TIPOS_LADOS.oposto };
+      } else {
+        cmd = { dupla: false, lado: sortear(['E', 'D']), dir: sortear(['cima', 'baixo']), tipo: TIPOS_LADOS.simples };
+      }
+      const chave = cmd.dupla ? `2${cmd.dirs.E}${cmd.dirs.D}` : `1${cmd.lado}${cmd.dir}`;
+      if (chave !== lados.ultimo) { lados.ultimo = chave; return cmd; }
+    }
+  }
+
+  const textoComando = (c) => (c.dupla
+    ? `as duas bolas: esquerda para ${c.dirs.E}, direita para ${c.dirs.D}`
+    : `a bola da ${NOME_LADO[c.lado]} para ${c.dir}`);
+
+  function proximoLados() {
+    if (lados.feitos >= LADOS.COMANDOS) { terminarLados(); return; }
+    const nv = NIVEIS_LADOS[lados.nivel - 1];
+    const cmd = sortearComando(nv);
+    cmd.feitos = { E: null, D: null };
+    cmd.t0 = performance.now();
+    cmd.limite = nv.tempo;
+    lados.cmd = cmd;
+    lados.feitos++;
+    hudLados();
+    msgLados('');
+    $('lados-mesa').querySelectorAll('.lados-buraco').forEach((b) => b.classList.remove('certo', 'errado'));
+    const setas = $('lados-setas');
+    setas.className = `lados-setas${cmd.dupla ? ' dupla' : ''}`;
+    setas.innerHTML = cmd.dupla
+      ? setaHTML(cmd.dirs.E, 'E') + setaHTML(cmd.dirs.D, 'D')
+      : setaHTML(cmd.lado === 'E' ? 'esquerda' : 'direita') + setaHTML(cmd.dir);
+    // barra do tempo: começa cheia e esvazia até o limite
+    const barra = $('lados-tempo');
+    barra.style.transition = 'none';
+    barra.style.width = '100%';
+    void barra.offsetWidth;
+    barra.style.transition = `width ${nv.tempo}s linear`;
+    barra.style.width = '0';
+    cmd.timer = depoisLados(nv.tempo * 1000, () => {
+      const c = lados.cmd;
+      if (!c || c.resolvido) return;
+      const so = ['E', 'D'].filter((l) => c.feitos[l]);
+      resolverLados(false, c.dupla && so.length ? `jogou só a bola da ${NOME_LADO[so[0]]}` : 'não jogou a tempo');
+    });
+  }
+
+  // a bola vai até o buraco: antecipação (encolhe para o outro lado), viagem esticada e cai no buraco
+  function jogarBola(lado, dir, certo) {
+    const bola = $(`lados-bola-${lado}`);
+    const alvo = dir === 'cima' ? '13%' : '87%', antes = dir === 'cima' ? '53%' : '47%';
+    bola.getAnimations().forEach((a) => a.cancel());
+    const ida = bola.animate([
+      { top: '50%', transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+      { top: antes, transform: 'translate(-50%, -50%) scale(1.15, 0.85)', opacity: 1, offset: 0.18 },
+      { top: alvo, transform: 'translate(-50%, -50%) scale(0.88, 1.15)', opacity: 1, offset: 0.78 },
+      { top: alvo, transform: 'translate(-50%, -50%) scale(0.25)', opacity: 0 },
+    ], { duration: 380, easing: 'ease-in', fill: 'forwards' });
+    const buraco = $('lados-mesa').querySelector(`.lados-buraco[data-lado="${lado}"][data-dir="${dir}"]`);
+    ida.onfinish = () => {
+      if (buraco) { buraco.classList.remove('certo', 'errado'); void buraco.offsetWidth; buraco.classList.add(certo ? 'certo' : 'errado'); }
+      tocar(certo ? [[dir === 'cima' ? 660 : 440, 0.06]] : [[180, 0.1]]);
+      // volta uma bola nova no meio (nasce pequena, passa do ponto e assenta)
+      bola.animate([
+        { top: '50%', transform: 'translate(-50%, -50%) scale(0.2)', opacity: 0 },
+        { top: '50%', transform: 'translate(-50%, -50%) scale(1.15, 0.9)', opacity: 1, offset: 0.65 },
+        { top: '50%', transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+      ], { duration: 320, delay: 260, easing: 'ease-out', fill: 'forwards' });
+    };
+  }
+
+  function jogarLados(lado, dir) {
+    const c = lados && lados.cmd;
+    if (!c || c.resolvido || !lados.rodando || c.feitos[lado]) return;
+    c.feitos[lado] = dir;
+    if (!c.dupla) {
+      const certo = lado === c.lado && dir === c.dir;
+      jogarBola(lado, dir, certo);
+      if (certo) resolverLados(true);
+      else resolverLados(false, lado !== c.lado ? `jogou a bola da ${NOME_LADO[lado]} (era a da ${NOME_LADO[c.lado]})` : `jogou para ${dir} (era para ${c.dir})`);
+      return;
+    }
+    const certo = c.dirs[lado] === dir;
+    jogarBola(lado, dir, certo);
+    if (!certo) resolverLados(false, `a bola da ${NOME_LADO[lado]} foi para ${dir} (era para ${c.dirs[lado]})`);
+    else if (c.feitos.E && c.feitos.D) resolverLados(true);
+  }
+
+  function resolverLados(acertou, motivo) {
+    const c = lados.cmd;
+    c.resolvido = true;
+    clearTimeout(c.timer);
+    const tempo = (performance.now() - c.t0) / 1000;
+    const barra = $('lados-tempo');
+    barra.style.width = getComputedStyle(barra).width;   // congela a barra onde parou
+    barra.style.transition = 'none';
+    const texto = `${c.dupla ? '⬆⬇ ' : ''}Jogar ${textoComando(c)}`;
+    if (acertou) {
+      const rapidez = Math.max(0, 1 - tempo / c.limite);
+      const ganhou = 10 * lados.nivel + Math.round(rapidez * 20);
+      lados.pontos += ganhou;
+      lados.acertos++;
+      lados.seguidos++;
+      resultados.push({ m: c.tipo, certa: texto, erros: [], nivel: lados.nivel, tempo });
+      if (lados.seguidos >= 2) { lados.seguidos = 0; lados.nivel = Math.min(LADOS.NIVEL_MAX, lados.nivel + 1); }
+      lados.nivelMax = Math.max(lados.nivelMax, lados.nivel);
+      msgLados(`✅ Isso! +${ganhou} ${rapidez > 0.6 ? '⚡ Rapidinho!' : ''}`, 'ok');
+      SOM.certo();
+    } else {
+      lados.seguidos = 0;
+      resultados.push({ m: c.tipo, certa: texto, erros: [motivo], nivel: lados.nivel, tempo: motivo === 'não jogou a tempo' ? null : tempo });
+      lados.nivel = Math.max(1, lados.nivel - 1);
+      const mesa = $('lados-mesa');
+      mesa.classList.remove('tremer'); void mesa.offsetWidth; mesa.classList.add('tremer');   // tremida curta: impacto do erro
+      msgLados(`Ops! Era para jogar ${textoComando(c)}.`, 'erro');
+      SOM.errado();
+    }
+    hudLados();
+    depoisLados(acertou ? 900 : 1900, proximoLados);
+  }
+
+  // deslizar na metade da mesa (ou tocar no buraco) joga a bola daquele lado
+  let toqueLados = null;
+  $('lados-mesa').addEventListener('pointerdown', (e) => {
+    if (!lados) return;
+    const r = $('lados-mesa').getBoundingClientRect();
+    toqueLados = { x: e.clientX, y: e.clientY, lado: e.clientX - r.left < r.width / 2 ? 'E' : 'D', buraco: e.target.closest('.lados-buraco') };
+  });
+  $('lados-mesa').addEventListener('pointerup', (e) => {
+    const t = toqueLados;
+    toqueLados = null;
+    if (!t || !lados) return;
+    const dy = e.clientY - t.y;
+    if (Math.abs(dy) > 24 && Math.abs(dy) > Math.abs(e.clientX - t.x) * 0.8) jogarLados(t.lado, dy < 0 ? 'cima' : 'baixo');
+    else if (t.buraco) jogarLados(t.buraco.dataset.lado, t.buraco.dataset.dir);
+  });
+  $('lados-mesa').addEventListener('pointercancel', () => { toqueLados = null; });
+
+  const TECLAS_LADOS = { w: ['E', 'cima'], s: ['E', 'baixo'], ArrowUp: ['D', 'cima'], ArrowDown: ['D', 'baixo'] };
+  document.addEventListener('keydown', (e) => {
+    if (!lados || !$('tela-lados').classList.contains('ativa')) return;
+    const k = TECLAS_LADOS[e.key.length === 1 ? e.key.toLowerCase() : e.key];
+    if (!k) return;
+    e.preventDefault();
+    jogarLados(k[0], k[1]);
+  });
+
+  function terminarLados() {
+    const { acertos, feitos, pontos, nivelMax } = lados;
+    pararLados();
+    const duplas = resultados.filter((r) => r.m.id !== 'simples');
+    missao.resumo = [
+      `Acertou ${acertos} de ${feitos} comandos e chegou ao nível ${nivelMax} de ${LADOS.NIVEL_MAX}.`,
+      ...(duplas.length ? [`Com as duas bolas: acertou ${duplas.filter((r) => !r.erros.length).length} de ${duplas.length}.`] : []),
+      `Errou o lado (esquerda/direita) ${resultados.filter((r) => r.erros.some((x) => x.startsWith('jogou a bola'))).length} vez(es) e a direção (cima/baixo) ${resultados.filter((r) => r.erros.some((x) => / \(era para /.test(x))).length} vez(es).`,
+    ];
+    fimDaMissao();
+    const n = ultimoRelatorio.estrelas;
+    $('fim-titulo').textContent = n === 3 ? 'Reflexo de campeão! ⚡' : 'Fim do jogo!';
+    $('fim-texto').textContent = `${aluno}, você acertou ${acertos} de ${feitos} comandos, chegou ao nível ${nivelMax} e fez ${pontos} pontos!`;
+  }
+
+  $('btn-lados').onclick = () => { SOM.clique(); escolherProfessorE('Esquerda e Direita', telaLadosMenu); };
+  $('lados-voltar').onclick = telaJogos;
+  $('btn-lados-comecar').onclick = () => { SOM.clique(); comecarLados(); };
+  $('lados-sair').onclick = telaLadosMenu;
+
   // ---------- Textos do relatório de cada jogo ----------
   function textosRelatorio(mis) {
     if (mis.quiz) return { tipo: 'questionario', assunto: 'Questionário da aula', unidade: 'pergunta', revisar: 'Perguntas para revisar',
       certo: 'Pergunta e resposta certa', tentou: 'Você respondeu', tentouPdf: 'O aluno respondeu', porRegra: 'Acertos',
       niveis: 'Nível', atividade: 'Atividade', outras: '📝 Outro questionário' };
+    if (mis.lados) return { tipo: 'lateralidade', assunto: 'Lateralidade e atenção (esquerda, direita, cima e baixo)', unidade: 'comando', revisar: 'Comandos para revisar',
+      certo: 'Comando', tentou: 'O que aconteceu', tentouPdf: 'O que aconteceu', porRegra: 'Acertos por tipo de comando',
+      niveis: 'Nível em cada comando', atividade: 'Atividade', outras: '↔️ Esquerda e Direita', tempos: 'Tempo de resposta em cada comando' };
+    if (mis.cores) return { tipo: 'cores', assunto: 'Coordenadas e cálculo (tabela de cores)', unidade: 'conta', revisar: 'Contas para revisar',
+      certo: 'Conta certa', tentou: 'Você respondeu', tentouPdf: 'O aluno respondeu', porRegra: 'Acertos por tipo de conta',
+      niveis: 'Nível em cada conta', atividade: 'Atividade', outras: '🎨 Somando as Cores', tempos: 'Tempo para resolver cada conta' };
     if (mis.fichas) return { tipo: 'fichas', assunto: 'Agrupar e trocar (valor das fichas)', unidade: 'jogada', revisar: 'Jogadas para revisar',
       certo: 'Jogada', tentou: 'O que aconteceu', tentouPdf: 'O que aconteceu', porRegra: 'Acertos por tipo',
       niveis: 'Nível', atividade: 'Atividade', outras: '🔴 Fichas Coloridas', tempos: 'Tempo para fazer as trocas em cada jogada' };
@@ -3275,7 +3824,7 @@
   function desenharRelatorio(rel, estrelas) {
     const data = new Date().toLocaleDateString('pt-BR');
     const tx = textosRelatorio(missao);
-    const caixa = (s) => (missao.quiz || missao.rotina || missao.luzes || missao.fichas ? s : s.toUpperCase());   // palavras em caixa alta; frases e perguntas como estão
+    const caixa = (s) => (missao.quiz || missao.rotina || missao.luzes || missao.fichas || missao.cores || missao.lados ? s : s.toUpperCase());   // palavras em caixa alta; frases e perguntas como estão
     $('relatorio-info').innerHTML = `<b>Aluno:</b> ${seguro(aluno)} · <b>Data:</b> ${data} · <b>${tx.atividade}:</b> ${seguro(missao.titulo)}<br>`
       + `<b>Acertos de primeira:</b> ${rel.dePrimeiraN} de ${rel.respondidas} · <b>Estrelas:</b> ${estrelas} de 3`
       + (missao.extra ? `<br>${seguro(missao.extra)}` : '')
@@ -3506,7 +4055,7 @@
         y += 7;
       };
       cabecalho();
-      const caixa = (s) => (mis.quiz || mis.rotina || mis.luzes || mis.fichas ? s : s.toUpperCase());
+      const caixa = (s) => (mis.quiz || mis.rotina || mis.luzes || mis.fichas || mis.cores || mis.lados ? s : s.toUpperCase());
       rel.comErro.forEach((r, i) => {
         // textos longos (perguntas do questionário) quebram em várias linhas dentro da coluna
         doc.setFontSize(11);
@@ -3543,8 +4092,8 @@
   $('btn-terminar').onclick = () => { if (resultados.length) fimDaMissao(); else telaMissoes(); };
   $('btn-proxima').onclick = proxima;
   $('btn-ouvir').onclick = () => falar(palavraCerta(fila[idx]));
-  $('btn-repetir').onclick = () => (missao.quiz ? comecarQuiz(missao.quizId) : missao.fichas ? comecarFichas() : missao.rotina ? comecarRotina() : missao.luzes ? comecarLuz() : missao.peso ? comecarPeso() : missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
-  $('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.fichas ? telaFichasMenu() : missao.rotina ? telaRotinaMenu() : missao.luzes ? telaLuzesMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
+  $('btn-repetir').onclick = () => (missao.quiz ? comecarQuiz(missao.quizId) : missao.cores ? comecarCores() : missao.lados ? comecarLados() : missao.fichas ? comecarFichas() : missao.rotina ? comecarRotina() : missao.luzes ? comecarLuz() : missao.peso ? comecarPeso() : missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
+  $('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.cores ? telaCoresMenu() : missao.lados ? telaLadosMenu() : missao.fichas ? telaFichasMenu() : missao.rotina ? telaRotinaMenu() : missao.luzes ? telaLuzesMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
   $('btn-tiro').onclick = () => { SOM.clique(); escolherProfessorE('Tiro Certo', telaTiroMenu); };
 
   // filtro dos jogos por tema (ao abrir o app, todos os jogos aparecem)
