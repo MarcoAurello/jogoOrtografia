@@ -1,21 +1,22 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Telas e navegação: moldura, mascote, troca de telas, encaixe na tela, login, menu do topo, barra inferior e filtro dos jogos. */
 
-import { $ } from './util.js?v=68';
-import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=68';
-import { frase, pararVoz, SOM } from './som.js?v=68';
-import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=68';
-import { pararChuva } from './chuva.js?v=68';
-import { pararMat } from './matematica.js?v=68';
-import { desenharTiro, pararTiro, tiro } from './tiro.js?v=68';
-import { pararPeso } from './peso.js?v=68';
-import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=68';
-import { pararLuz } from './luzes.js?v=68';
-import { pararRotina } from './rotina.js?v=68';
-import { pararFichas } from './fichas.js?v=68';
-import { pararCores } from './cores.js?v=68';
-import { pararLados } from './lados.js?v=68';
-import { pararSetas } from './setas.js?v=68';
+import { $ } from './util.js?v=69';
+import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=69';
+import { frase, pararVoz, SOM } from './som.js?v=69';
+import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=69';
+import { pararChuva } from './chuva.js?v=69';
+import { pararMat } from './matematica.js?v=69';
+import { desenharTiro, pararTiro, tiro } from './tiro.js?v=69';
+import { pararPeso } from './peso.js?v=69';
+import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=69';
+import { pararLuz } from './luzes.js?v=69';
+import { pararRotina } from './rotina.js?v=69';
+import { pararFichas } from './fichas.js?v=69';
+import { pararCores } from './cores.js?v=69';
+import { pararLados } from './lados.js?v=69';
+import { pararSetas } from './setas.js?v=69';
+import { pararVistas } from './vistas.js?v=69';
 
 // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
 const ENFEITES = {
@@ -58,7 +59,7 @@ function mostrar(id) {
 const ABA_DA_TELA = {
   'tela-inicio': 'inicio', 'tela-jogos': 'jogos', 'tela-missoes': 'jogos', 'tela-regra': 'jogos', 'tela-chuva-menu': 'jogos',
   'tela-mat-menu': 'jogos', 'tela-tiro-menu': 'jogos', 'tela-peso-menu': 'jogos', 'tela-luzes-menu': 'jogos', 'tela-fim': 'jogos',
-  'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-cores-menu': 'jogos', 'tela-lados-menu': 'jogos', 'tela-setas-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
+  'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-cores-menu': 'jogos', 'tela-lados-menu': 'jogos', 'tela-setas-menu': 'jogos', 'tela-vistas-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
 };
 function encaixarTela() {
   const tela = document.querySelector('.tela.ativa');
@@ -163,7 +164,7 @@ $('menu-app-lista').addEventListener('click', (e) => { if (e.target.closest('.me
 document.addEventListener('click', (e) => { if (!e.target.closest('#menu-app')) abrirMenu(false); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirMenu(false); });
 
-function pararJogos() { pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararSetas(); pararVoz(); }
+function pararJogos() { pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararSetas(); pararVistas(); pararVoz(); }
 const irParaInicio = () => { pararJogos(); $('escolha-prof').hidden = true; telaInicio(); };
 $('btn-logo-inicio').onclick = irParaInicio;
 $('btn-menu-inicio').onclick = irParaInicio;

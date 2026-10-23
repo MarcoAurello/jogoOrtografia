@@ -1,23 +1,24 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Relatório do fim do jogo: textos, gráficos, envio por e-mail (com fila offline), confete e PDF. */
 
-import { $, seguro, semHTML, sortear } from './util.js?v=68';
-import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=68';
-import { frase, SOM } from './som.js?v=68';
-import { mascote, mostrar } from './telas.js?v=68';
-import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=68';
-import { comecarMissao, telaMissoes } from './ortografia.js?v=68';
-import { comecarChuva, telaChuvaMenu } from './chuva.js?v=68';
-import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=68';
-import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=68';
-import { comecarPeso, telaPesoMenu } from './peso.js?v=68';
-import { comecarQuiz, telaQuizMenu } from './quiz.js?v=68';
-import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=68';
-import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=68';
-import { comecarFichas, telaFichasMenu } from './fichas.js?v=68';
-import { comecarCores, telaCoresMenu } from './cores.js?v=68';
-import { comecarLados, telaLadosMenu } from './lados.js?v=68';
-import { comecarSetas, telaSetasMenu } from './setas.js?v=68';
+import { $, seguro, semHTML, sortear } from './util.js?v=69';
+import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=69';
+import { frase, SOM } from './som.js?v=69';
+import { mascote, mostrar } from './telas.js?v=69';
+import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=69';
+import { comecarMissao, telaMissoes } from './ortografia.js?v=69';
+import { comecarChuva, telaChuvaMenu } from './chuva.js?v=69';
+import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=69';
+import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=69';
+import { comecarPeso, telaPesoMenu } from './peso.js?v=69';
+import { comecarQuiz, telaQuizMenu } from './quiz.js?v=69';
+import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=69';
+import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=69';
+import { comecarFichas, telaFichasMenu } from './fichas.js?v=69';
+import { comecarCores, telaCoresMenu } from './cores.js?v=69';
+import { comecarLados, telaLadosMenu } from './lados.js?v=69';
+import { comecarSetas, telaSetasMenu } from './setas.js?v=69';
+import { comecarVistas, telaVistasMenu } from './vistas.js?v=69';
 
 // ---------- Relatório de dificuldades ----------
 function montarRelatorio() {
@@ -52,6 +53,9 @@ function textosRelatorio(mis) {
   if (mis.quiz) return { tipo: 'questionario', assunto: 'Questionário da aula', unidade: 'pergunta', revisar: 'Perguntas para revisar',
     certo: 'Pergunta e resposta certa', tentou: 'Você respondeu', tentouPdf: 'O aluno respondeu', porRegra: 'Acertos',
     niveis: 'Nível', atividade: 'Atividade', outras: '📝 Outro questionário' };
+  if (mis.vistas) return { tipo: 'vistas', assunto: 'Percepção espacial (vista de lado e de cima)', unidade: 'pirâmide', revisar: 'Pirâmides para revisar',
+    certo: 'Pirâmide (de baixo para cima)', tentou: 'Você escolheu', tentouPdf: 'O aluno escolheu', porRegra: 'Acertos por tipo de vista',
+    niveis: 'Nível em cada pirâmide', atividade: 'Atividade', outras: '👁️ De Lado e de Cima', tempos: 'Tempo para responder cada pirâmide' };
   if (mis.setas) return { tipo: 'setas', assunto: 'Atenção e flexibilidade (setas e cores)', unidade: 'sequência', revisar: 'Sequências para revisar',
     certo: 'Setas e cores certas', tentou: 'Você escolheu', tentouPdf: 'O aluno escolheu', porRegra: 'Acertos por número de setas',
     niveis: 'Nível em cada sequência', atividade: 'Atividade', outras: '🧭 Setas e Cores', tempos: 'Tempo para responder cada sequência' };
@@ -222,7 +226,7 @@ function graficosDoRelatorio(rel, mis) {
 function desenharRelatorio(rel, estrelas) {
   const data = new Date().toLocaleDateString('pt-BR');
   const tx = textosRelatorio(missao);
-  const caixa = (s) => (missao.quiz || missao.rotina || missao.luzes || missao.fichas || missao.cores || missao.lados || missao.setas ? s : s.toUpperCase());   // palavras em caixa alta; frases e perguntas como estão
+  const caixa = (s) => (missao.quiz || missao.rotina || missao.luzes || missao.fichas || missao.cores || missao.lados || missao.setas || missao.vistas ? s : s.toUpperCase());   // palavras em caixa alta; frases e perguntas como estão
   $('relatorio-info').innerHTML = `<b>Aluno:</b> ${seguro(aluno)} · <b>Data:</b> ${data} · <b>${tx.atividade}:</b> ${seguro(missao.titulo)}<br>`
     + `<b>Acertos de primeira:</b> ${rel.dePrimeiraN} de ${rel.respondidas} · <b>Estrelas:</b> ${estrelas} de 3`
     + (missao.extra ? `<br>${seguro(missao.extra)}` : '')
@@ -453,7 +457,7 @@ async function baixarPDF() {
       y += 7;
     };
     cabecalho();
-    const caixa = (s) => (mis.quiz || mis.rotina || mis.luzes || mis.fichas || mis.cores || mis.lados || mis.setas ? s : s.toUpperCase());
+    const caixa = (s) => (mis.quiz || mis.rotina || mis.luzes || mis.fichas || mis.cores || mis.lados || mis.setas || mis.vistas ? s : s.toUpperCase());
     rel.comErro.forEach((r, i) => {
       // textos longos (perguntas do questionário) quebram em várias linhas dentro da coluna
       doc.setFontSize(11);
@@ -481,8 +485,8 @@ async function baixarPDF() {
   doc.save(`relatorio-${nomeArquivo(aluno)}-${nomeArquivo(mis.titulo)}.pdf`);
 }
 
-$('btn-repetir').onclick = () => (missao.quiz ? comecarQuiz(missao.quizId) : missao.setas ? comecarSetas() : missao.cores ? comecarCores() : missao.lados ? comecarLados() : missao.fichas ? comecarFichas() : missao.rotina ? comecarRotina() : missao.luzes ? comecarLuz() : missao.peso ? comecarPeso() : missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
-$('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.setas ? telaSetasMenu() : missao.cores ? telaCoresMenu() : missao.lados ? telaLadosMenu() : missao.fichas ? telaFichasMenu() : missao.rotina ? telaRotinaMenu() : missao.luzes ? telaLuzesMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
+$('btn-repetir').onclick = () => (missao.quiz ? comecarQuiz(missao.quizId) : missao.setas ? comecarSetas() : missao.vistas ? comecarVistas() : missao.cores ? comecarCores() : missao.lados ? comecarLados() : missao.fichas ? comecarFichas() : missao.rotina ? comecarRotina() : missao.luzes ? comecarLuz() : missao.peso ? comecarPeso() : missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
+$('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.setas ? telaSetasMenu() : missao.vistas ? telaVistasMenu() : missao.cores ? telaCoresMenu() : missao.lados ? telaLadosMenu() : missao.fichas ? telaFichasMenu() : missao.rotina ? telaRotinaMenu() : missao.luzes ? telaLuzesMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
 $('btn-pdf').onclick = () => { baixarPDF().catch((e) => { console.error('PDF:', e); window.print(); }); };
 
 export { CHAVE_RELATORIO, enviarFila, fimDaMissao, ultimoRelatorio, URL_RELATORIO };

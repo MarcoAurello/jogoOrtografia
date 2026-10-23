@@ -1778,6 +1778,57 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .setas-chave, .setas-legenda.mudou .setas-chave, .setas-casa, .setas-casa.pintada, .setas-fila.tremer, .setas-opcao, .setas-opcao.certa, .setas-opcao.errada { animation: none; }
 }
 
+/* ---------- De Lado e de Cima ---------- */
+/* capa do cartão: a pirâmide de lado, uma seta e o alvo visto de cima */
+.vistas-capa { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px;
+  background: linear-gradient(160deg, #f3f8ff, #dcebff); box-sizing: border-box; }
+.vistas-capa svg { width: 38%; height: auto; overflow: visible; }
+.vistas-capa svg :is(rect, path, circle) { stroke: #13294b; stroke-width: 2.5; }
+.vistas-capa b { font-size: 26px; color: var(--primaria-escura); }
+
+/* a figura da pergunta, num quadro com o rótulo da vista */
+.vistas-quadro { position: relative; margin: 4px auto 0; width: 100%; max-width: 420px; padding: 26px 12px 12px; box-sizing: border-box;
+  border: 2.5px solid #13294b; border-radius: 20px; background: linear-gradient(170deg, #ffffff, #eef5ff); box-shadow: 0 4px 0 rgba(19, 41, 75, 0.2); }
+.vistas-rotulo { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); padding: 3px 14px; white-space: nowrap;
+  font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(14px, 2.4dvh, 17px); color: #fff;
+  background: var(--primaria-escura); border: 2.5px solid #13294b; border-radius: 99px; }
+.vistas-figura { display: grid; place-items: center; }
+.vistas-figura.lado .vistas-svg { width: min(clamp(150px, 30dvh, 260px), 62vw); }
+.vistas-figura.cima .vistas-svg { width: min(clamp(110px, 22dvh, 190px), 46vw); }
+.vistas-figura.virou { animation: setas-virar 0.6s ease-out; }
+.vistas-figura.tremer { animation: cores-tremer 0.16s linear; }
+.vistas-pergunta { margin: 8px 0 4px; text-align: center; font-family: 'Fredoka', sans-serif; font-weight: 600;
+  font-size: clamp(16px, 2.8dvh, 20px); color: var(--primaria-escura); }
+
+/* desenhos: contorno escuro; as peças caem e quicam ao empilhar e os anéis abrem do centro */
+.vistas-svg { display: block; height: auto; overflow: visible; }
+.vistas-svg :is(rect, path, circle) { stroke: #13294b; stroke-width: 2.5; }
+.vistas-svg.lado rect { filter: drop-shadow(0 -2px 0 rgba(255, 255, 255, 0.35)); }
+.vistas-peca { transform-box: fill-box; transform-origin: 50% 100%; animation: vistas-cair 0.42s cubic-bezier(0.3, 0.7, 0.4, 1.25) both; }
+.vistas-anel { transform-box: fill-box; transform-origin: center; animation: vistas-abrir 0.4s ease-out both; }
+.vistas-svg.parado .vistas-peca, .vistas-svg.parado .vistas-anel { animation: none; }
+@keyframes vistas-cair { 0% { transform: translateY(-40px); opacity: 0; } 55% { transform: translateY(0) scale(1.08, 0.82); opacity: 1; }
+  78% { transform: scale(0.96, 1.06); } 100% { transform: none; } }
+@keyframes vistas-abrir { 0% { transform: scale(0); } 65% { transform: scale(1.1); } 100% { transform: none; } }
+
+/* as opções */
+.vistas-respostas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 4px; }
+.vistas-respostas.n4 { grid-template-columns: repeat(4, 1fr); }
+.vistas-opcao { display: grid; place-items: center; padding: 10px 8px; border: 2.5px solid #13294b; border-radius: 16px; background: #fff;
+  cursor: pointer; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.25); animation: cores-nascer 0.34s ease-out both; }
+.vistas-opcao .vistas-svg { width: 100%; max-width: 110px; }
+.vistas-respostas.lado .vistas-opcao .vistas-svg { max-width: 130px; }
+.vistas-opcao:active { transform: translateY(3px); box-shadow: none; }
+.vistas-opcao:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.vistas-opcao:disabled { cursor: default; }
+.vistas-opcao.certa { background: #dff5e7; border-color: var(--verde); box-shadow: 0 4px 0 #1d6b3d; animation: cores-quique 0.45s ease-out; }
+.vistas-opcao.errada { background: #fde4e4; border-color: var(--vermelho); box-shadow: 0 4px 0 #8e1b1b; animation: tremer 0.4s ease; }
+.vistas-opcao.apagada { opacity: 0.45; }
+@media (max-width: 520px) { .vistas-respostas.n4 { grid-template-columns: repeat(2, 1fr); } .vistas-opcao .vistas-svg { max-width: 92px; } }
+@media (prefers-reduced-motion: reduce) {
+  .vistas-peca, .vistas-anel, .vistas-figura.virou, .vistas-figura.tremer, .vistas-opcao, .vistas-opcao.certa, .vistas-opcao.errada { animation: none; }
+}
+
 /* menu de categorias da lista de jogos */
 .filtro-temas { align-items: center; gap: 10px; }
 .filtro-rotulo { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; color: var(--primaria-escura); }

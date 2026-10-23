@@ -1,23 +1,24 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Ponto de entrada: importa todos os módulos, liga o botão de instalar o app e abre a primeira tela. */
 
-import { $ } from './util.js?v=68';
-import { mostrar, telaInicio } from './telas.js?v=68';
-import { carregarEmails } from './professor.js?v=68';
-import { enviarFila } from './relatorio.js?v=68';
+import { $ } from './util.js?v=69';
+import { mostrar, telaInicio } from './telas.js?v=69';
+import { carregarEmails } from './professor.js?v=69';
+import { enviarFila } from './relatorio.js?v=69';
 // cada jogo liga os próprios botões ao ser carregado
-import './ortografia.js?v=68';
-import './chuva.js?v=68';
-import './matematica.js?v=68';
-import './tiro.js?v=68';
-import './peso.js?v=68';
-import './quiz.js?v=68';
-import './luzes.js?v=68';
-import './rotina.js?v=68';
-import './fichas.js?v=68';
-import './cores.js?v=68';
-import './lados.js?v=68';
-import './setas.js?v=68';
+import './ortografia.js?v=69';
+import './chuva.js?v=69';
+import './matematica.js?v=69';
+import './tiro.js?v=69';
+import './peso.js?v=69';
+import './quiz.js?v=69';
+import './luzes.js?v=69';
+import './rotina.js?v=69';
+import './fichas.js?v=69';
+import './cores.js?v=69';
+import './lados.js?v=69';
+import './setas.js?v=69';
+import './vistas.js?v=69';
 
 // ---------- Instalar como app ----------
 let pedidoInstalacao = null;

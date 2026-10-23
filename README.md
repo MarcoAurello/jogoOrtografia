@@ -57,6 +57,18 @@ As faixas erradas imitam os erros comuns: usar as cores de antes (logo depois da
 oposto (↑ com ↓), trocar a ordem e olhar a seta errada. A rodada tem 15 perguntas, e o relatório conta também quantas
 vezes as cores mudaram e quantos erros vieram logo depois da mudança.
 
+## De Lado e de Cima (percepção espacial)
+
+Fica em **Psicopedagogia**, baseado na folha de atividades das pirâmides de argolas. Uma pirâmide aparece **vista de lado**
+(a peça de baixo é a maior e a de cima é uma bolinha) e o aluno escolhe como ela fica **vista de cima**: anéis um dentro do
+outro, com a peça de baixo por fora e a de cima no meio (no computador, também pelas teclas 1 a 4). **De vez em quando o jogo
+inverte**: depois de 3 ou 4 perguntas normais, vêm 1 ou 2 ao contrário (mostra o alvo de cima e o aluno acha a pirâmide de
+lado), com aviso e a figura virando. As peças caem e quicam ao empilhar e os anéis abrem do centro. Acertar sobe um nível e
+errar desce um. São 6 níveis, em `NIVEIS_VISTAS` no `js/vistas.js`: de 2 a 5 peças, 3 opções e depois 4, e nos níveis altos
+uma cor pode se repetir (sem ficar encostada). As opções erradas imitam os erros comuns: virar a ordem (pôr a peça de cima
+por fora), trocar duas peças vizinhas e errar uma cor. A rodada tem 15 perguntas, e o relatório separa os acertos de cada
+sentido (de lado para de cima e de cima para de lado) e conta quantas vezes o aluno virou a ordem.
+
 ## Peso Certo (medidas de massa)
 
 Balança de dois pratos: o objeto fica no prato da esquerda e o aluno coloca no da direita (tocando ou arrastando) os pesos
@@ -161,7 +173,7 @@ Abra o `index.html` no navegador.
   - `relatorio.js` — fim do jogo: textos, gráficos, envio por e-mail (com fila sem internet), confete e PDF
   - um arquivo por jogo: `ortografia.js`, `chuva.js` (Chuva de Erros), `matematica.js` (Chuva de Matemática), `tiro.js`,
     `peso.js`, `quiz.js` (questionário do aluno), `luzes.js` (Jogo do Reflexo 1 e 2), `rotina.js`, `fichas.js`,
-    `cores.js` (Somando as Cores), `lados.js` (Esquerda e Direita) e `setas.js` (Setas e Cores). Cada um tem as telas `telaXMenu`, `comecarX`, `pararX`
+    `cores.js` (Somando as Cores), `lados.js` (Esquerda e Direita), `setas.js` (Setas e Cores) e `vistas.js` (De Lado e de Cima). Cada um tem as telas `telaXMenu`, `comecarX`, `pararX`
     e liga os próprios botões (ids com o prefixo do jogo, ex.: `cores-`, `lados-`)
   - os imports levam o mesmo `?v=` do `index.html` (o `ferramentas/versao.ps1` troca todos); ao criar um módulo novo,
     ponha-o também na lista `ARQUIVOS` do `service-worker.js`
