@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Questionário da aula (lado do aluno). */
 
-import { $, embaralhar, seguro, sortear } from './util.js?v=69';
-import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=69';
-import { SOM } from './som.js?v=69';
-import { mascote, mostrar, telaInicio } from './telas.js?v=69';
-import { escolherProfessorE, gravarJSON, lerDoScript, lerJSON } from './professor.js?v=69';
-import { fimDaMissao, ultimoRelatorio, URL_RELATORIO } from './relatorio.js?v=69';
+import { $, embaralhar, seguro, sortear } from './util.js?v=84';
+import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=84';
+import { SOM } from './som.js?v=84';
+import { mascote, mostrar, telaInicio } from './telas.js?v=84';
+import { escolherProfessorE, gravarJSON, lerDoScript, lerJSON } from './professor.js?v=84';
+import { fimDaMissao, ultimoRelatorio, URL_RELATORIO } from './relatorio.js?v=84';
 
 // ---------- Questionário da aula (aluno) ----------
 // Os questionários vêm da planilha do professor (pelo script). Uma pergunta por vez, as respostas
@@ -24,10 +24,11 @@ async function telaQuizMenu() {
   mascote('davi-quiz', 'oi');
   mostrar('tela-quiz-menu');
   $('quiz-voltar').hidden = !!QUIZ_DO_LINK;
-  const desenhar = (todos, aviso) => {
+  const desenhar = (todos, aviso, carregando = false) => {
     const lista = QUIZ_DO_LINK ? todos.filter((q) => String(q.id) === QUIZ_DO_LINK) : todos;
     if (QUIZ_DO_LINK && !lista.length && !aviso) aviso = 'Este link não abre nenhum questionário: ele pode ter sido excluído. Peça um novo link ao professor.';
     $('quiz-status').textContent = aviso || (lista.length ? '' : 'O professor ainda não criou nenhum questionário.');
+    $('quiz-status').classList.toggle('carregando', carregando);
     $('lista-quiz').innerHTML = '';
     for (const q of lista) {
       const b = document.createElement('button');
@@ -39,7 +40,7 @@ async function telaQuizMenu() {
     }
   };
   const copia = lerJSON(CHAVE_QUIZ_LISTA, []);
-  desenhar(copia, URL_RELATORIO ? 'Buscando questionários…' : 'Os questionários ainda não foram ligados no jogo.');
+  desenhar(copia, URL_RELATORIO ? 'Buscando questionários…' : 'Os questionários ainda não foram ligados no jogo.', !!URL_RELATORIO);
   if (!URL_RELATORIO) return;
   try {
     const { lista } = await lerDoScript('questionarios');
@@ -54,9 +55,11 @@ async function telaQuizMenu() {
 
 async function comecarQuiz(id) {
   $('quiz-status').textContent = 'Abrindo…';
+  $('quiz-status').classList.add('carregando');
   let q = null;
   try { q = (await lerDoScript('questionario', `&id=${encodeURIComponent(id)}`)).questionario; gravarJSON(chaveQuiz(id), q); }
   catch (e) { q = lerJSON(chaveQuiz(id), null); }
+  $('quiz-status').classList.remove('carregando');
   if (!q || !q.perguntas.length) { $('quiz-status').textContent = 'Não deu para abrir este questionário agora (sem internet?).'; return; }
   const regra = { id: 'quiz-' + q.id, titulo: q.titulo.slice(0, 40), icone: '📝', cor: '#7b4fc9',
     regra: 'Reveja estas perguntas com a turma: compare a resposta certa com a que o aluno marcou.' };

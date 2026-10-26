@@ -1,23 +1,28 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=69';
-import { SOM } from './som.js?v=69';
-import { mostrar, telaInicio } from './telas.js?v=69';
-import { telaMissoes } from './ortografia.js?v=69';
-import { telaChuvaMenu } from './chuva.js?v=69';
-import { telaMatMenu } from './matematica.js?v=69';
-import { telaTiroMenu } from './tiro.js?v=69';
-import { telaPesoMenu } from './peso.js?v=69';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=69';
-import { telaLuzesMenu } from './luzes.js?v=69';
-import { telaRotinaMenu } from './rotina.js?v=69';
-import { telaFichasMenu } from './fichas.js?v=69';
-import { telaCoresMenu } from './cores.js?v=69';
-import { telaLadosMenu } from './lados.js?v=69';
-import { telaSetasMenu } from './setas.js?v=69';
-import { telaVistasMenu } from './vistas.js?v=69';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=69';
+import { $, seguro } from './util.js?v=84';
+import { SOM } from './som.js?v=84';
+import { mostrar, telaInicio } from './telas.js?v=84';
+import { telaMissoes } from './ortografia.js?v=84';
+import { telaChuvaMenu } from './chuva.js?v=84';
+import { telaMatMenu } from './matematica.js?v=84';
+import { telaTiroMenu } from './tiro.js?v=84';
+import { telaPesoMenu } from './peso.js?v=84';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=84';
+import { telaLuzesMenu } from './luzes.js?v=84';
+import { telaRotinaMenu } from './rotina.js?v=84';
+import { telaFichasMenu } from './fichas.js?v=84';
+import { telaCoresMenu } from './cores.js?v=84';
+import { telaLadosMenu } from './lados.js?v=84';
+import { telaSetasMenu } from './setas.js?v=84';
+import { telaVistasMenu } from './vistas.js?v=84';
+import { telaDinosMenu } from './dinos.js?v=84';
+import { telaSimbolosMenu } from './simbolos.js?v=84';
+import { telaTabuadaMenu } from './tabuada.js?v=84';
+import { telaClassesMenu } from './classes.js?v=84';
+import { telaGraficosMenu } from './graficos.js?v=84';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=84';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -29,7 +34,7 @@ const CHAVE_EMAIL_ESCOLHIDO = 'pleno-ortografia:email-escolhido';  // e-mail esc
 let senhaProfessor = '';   // a senha digitada, mandada ao script para gravar questionários
 const lerJSON = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) || padrao; } catch (e) { return padrao; } };
 const gravarJSON = (chave, valor) => { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) { /* sem armazenamento */ } };
-const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.setas ? 'setas' : mis.vistas ? 'vistas' : mis.cores ? 'cores' : mis.lados ? 'lados' : mis.fichas ? 'fichas' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
+const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.setas ? 'setas' : mis.vistas ? 'vistas' : mis.dinos ? 'dinos' : mis.simbolos ? 'simbolos' : mis.tabuada ? 'tabuada' : mis.classes ? 'classes' : mis.graficos ? 'graficos' : mis.cores ? 'cores' : mis.lados ? 'lados' : mis.fichas ? 'fichas' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
 let emailEscolhido = (() => { try { return localStorage.getItem(CHAVE_EMAIL_ESCOLHIDO) || ''; } catch (e) { return ''; } })();
 const listaEmails = () => lerJSON(CHAVE_EMAILS, []);
 // o e-mail para onde vai o relatório (só se estiver na lista da planilha)
@@ -109,9 +114,11 @@ function telaProfessor() {
   setTimeout(() => $('professor-senha').focus(), 300);
 }
 
-function avisoEmail(texto, ok) {
+// carregando: mostra o reloginho animado enquanto espera a planilha
+function avisoEmail(texto, ok, carregando = false) {
   $('aviso-email').textContent = texto;
   $('aviso-email').classList.toggle('aviso-ok', !!ok);
+  $('aviso-email').classList.toggle('carregando', carregando);
 }
 const mensagemDoErro = (err, padrao) => ({
   senha: 'A planilha não aceitou a senha: confira a SENHA_PROFESSOR no script do Google.',
@@ -122,7 +129,7 @@ const mensagemDoErro = (err, padrao) => ({
 // lista de professores com o botão de remover (grava direto na aba "E-mails")
 function listarEmailsProfessor() {
   const lista = listaEmails();
-  $('lista-emails-prof').innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhum e-mail ainda: cadastre o primeiro abaixo.</p>';
+  $('lista-emails-prof').innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhum e-mail ainda: cadastre o primeiro aqui em cima.</p>';
   for (const x of lista) {
     const item = document.createElement('div');
     item.className = 'quiz-item';
@@ -149,7 +156,7 @@ $('form-novo-email').onsubmit = async (e) => {
   e.preventDefault();
   const nome = $('novo-email-nome').value.trim();
   const email = $('novo-email-email').value.trim().toLowerCase();
-  avisoEmail('Salvando na planilha…');
+  avisoEmail('Salvando na planilha…', false, true);
   try {
     const { emails } = await gravarNoScript({ acao: 'adicionarEmail', nome, email });
     gravarJSON(CHAVE_EMAILS, emails || []);
@@ -195,18 +202,19 @@ $('btn-prof-quiz').onclick = () => {
 document.querySelectorAll('.prof-voltar').forEach((b) => { b.onclick = () => parteProfessor('menu'); });
 
 // ---------- Questionários da aula: cadastro pelo professor ----------
-function avisoQuiz(texto, ok) {
+function avisoQuiz(texto, ok, carregando = false) {
   $('aviso-quiz').textContent = texto;
   $('aviso-quiz').classList.toggle('aviso-ok', !!ok);
+  $('aviso-quiz').classList.toggle('carregando', carregando);
 }
 
 async function listarQuestionariosProfessor() {
   const caixa = $('lista-quiz-prof');
-  caixa.innerHTML = '<p class="quiz-status">Buscando questionários…</p>';
+  caixa.innerHTML = '<p class="quiz-status carregando">Buscando questionários…</p>';
   try {
     const { lista } = await lerDoScript('questionarios');
     gravarJSON(CHAVE_QUIZ_LISTA, lista);
-    caixa.innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhum questionário ainda. Crie o primeiro abaixo!</p>';
+    caixa.innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhum questionário ainda. Crie o primeiro em ➕ Novo questionário, aqui em cima!</p>';
     for (const q of lista) {
       const item = document.createElement('div');
       item.className = 'quiz-item';
@@ -250,6 +258,11 @@ const JOGOS_DO_LINK = {
   lados: { nome: 'Esquerda e Direita', abrir: () => telaLadosMenu() },
   setas: { nome: 'Setas e Cores', abrir: () => telaSetasMenu() },
   vistas: { nome: 'De Lado e de Cima', abrir: () => telaVistasMenu() },
+  dinos: { nome: 'Memória dos Dinossauros', abrir: () => telaDinosMenu() },
+  forma: { nome: 'Atenção à Forma', abrir: () => telaSimbolosMenu() },
+  tabuada: { nome: 'Tetris da Tabuada', abrir: () => telaTabuadaMenu() },
+  classes: { nome: 'Classes de Palavras', abrir: () => telaClassesMenu() },
+  graficos: { nome: 'Jogo dos Gráficos', abrir: () => telaGraficosMenu() },
 };
 const JOGOS_DE_FORA = [
   { nome: 'ABC da Tia Ana', link: 'https://abcdaana.vercel.app/' },
@@ -353,7 +366,7 @@ function carregarLeitorXLSX() {
 $('quiz-arquivo').onchange = async (e) => {
   const arquivo = e.target.files[0];
   if (!arquivo) return;
-  avisoQuiz('Lendo a planilha…');
+  avisoQuiz('Lendo a planilha…', false, true);
   try {
     let linhas;
     if (/\.(csv|txt)$/i.test(arquivo.name)) linhas = lerCSV(await arquivo.text());
@@ -385,7 +398,7 @@ $('btn-quiz-salvar').onclick = async () => {
   const incompleta = perguntas.findIndex((q) => !q.pergunta || !q.certa || !q.erradas.length);
   if (!perguntas.length) { avisoQuiz('Adicione pelo menos uma pergunta.'); return; }
   if (incompleta >= 0) { avisoQuiz(`A pergunta ${incompleta + 1} precisa do texto, da resposta certa e de pelo menos uma errada.`); return; }
-  avisoQuiz('Salvando na planilha…');
+  avisoQuiz('Salvando na planilha…', false, true);
   try {
     await gravarNoScript({ acao: 'salvarQuestionario', titulo, perguntas });
     SOM.certo();

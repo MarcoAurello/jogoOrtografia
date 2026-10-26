@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=69">
+  <link rel="stylesheet" href="style.css?v=84">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -36,7 +36,7 @@
           <a class="menu-item" href="manual.html#video">▶️ Vídeo da plataforma</a>
         </div>
       </div>
-      <button class="btn-logo" id="btn-logo-inicio" type="button" aria-label="Ir para o início"><img class="logo" src="assets/logo-pg.png" alt="Pedagogia Gamificada"></button>
+      <button class="btn-logo" id="btn-logo-inicio" type="button" aria-label="Ir para o início"><img class="logo" src="assets/logo-pg-168.png" alt="Pedagogia Gamificada"></button>
       <button class="btn-icone" id="btn-som" type="button" aria-label="Som ligado">🔊</button>
     </header>
 
@@ -523,6 +523,180 @@
       <p class="cores-msg" id="vistas-msg" role="status"></p>
     </section>
 
+    <!-- Memória dos Dinossauros: instruções -->
+    <section class="tela" id="tela-dinos-menu">
+      <h2 class="subtitulo">🦕 Memória dos Dinossauros</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-dinos"></div>
+        <div class="balao balao-esq">
+          Uma fila de <b>dinossauros</b> aparece por <b>3 segundos</b> e se esconde no mato.
+          Guarde a ordem e as cores! Depois, toque na fila <b>igual</b> entre as 4. Acertou? Vem um dinossauro a mais! 🧠
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-dinos-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="dinos-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Memória dos Dinossauros: o jogo -->
+    <section class="tela tela-jogo" id="tela-dinos" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="dinos-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="dinos-nivel"></span>
+        <span class="chuva-placar"><span id="dinos-pontos">0</span> pts · <span id="dinos-contador"></span></span>
+      </div>
+      <div class="dinos-palco" id="dinos-palco">
+        <div class="dinos-tempo" id="dinos-tempo" hidden><i></i></div>
+        <div class="dinos-fila" id="dinos-fila" aria-live="polite"></div>
+      </div>
+      <p class="vistas-pergunta" id="dinos-pergunta" hidden>Qual a sequência de dinossauros?</p>
+      <div class="dinos-respostas" id="dinos-respostas"></div>
+      <p class="cores-msg" id="dinos-msg" role="status"></p>
+    </section>
+
+    <!-- Atenção à Forma: instruções -->
+    <section class="tela" id="tela-simbolos-menu">
+      <h2 class="subtitulo">🃏 Atenção à Forma</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-simbolos"></div>
+        <div class="balao balao-esq">
+          Em cima aparece uma <b>carta</b> com uma figura montada com várias peças. No <b>tabuleiro</b> embaixo, toque nas peças
+          da figura <b>exatamente iguais</b>: mesma <b>forma</b> e mesma <b>cor</b>. Cuidado: a mesma forma de outra cor é erro!
+          Cada acerto sai da carta. Corra: são <b>1,5 segundo por peça</b>; se o tempo acabar, a carta passa. 🔍
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-simbolos-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="simbolos-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Atenção à Forma: o jogo -->
+    <section class="tela tela-jogo" id="tela-simbolos" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="simbolos-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="simbolos-nivel"></span>
+        <span class="chuva-placar"><span id="simbolos-pontos">0</span> pts · <span id="simbolos-contador"></span></span>
+      </div>
+      <div class="simbolos-mesa">
+        <div class="simb-tempo" id="simbolos-tempo" aria-hidden="true"><i></i></div>
+        <div class="simbolos-carta" id="simbolos-carta" aria-label="Figura da carta"></div>
+      </div>
+      <div class="simbolos-tabuleiro" id="simbolos-tabuleiro" aria-label="Tabuleiro"></div>
+      <p class="cores-msg" id="simbolos-msg" role="status"></p>
+    </section>
+
+    <!-- Tetris da Tabuada: instruções -->
+    <section class="tela" id="tela-tabuada-menu">
+      <h2 class="subtitulo">🔢 Tetris da Tabuada</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-tabuada"></div>
+        <div class="balao balao-esq">
+          Os <b>quadrados</b> com resultados da <b>tabuada</b> caem e se empilham no pote. Monte a <b>conta</b> no teclado
+          (número, operação, número, como <b>7 × 8</b>) e toque no quadrado com o <b>resultado</b> para estourar! O resultado
+          não aparece: é você quem sabe! Se o mesmo número cair de novo, o jogo pode pedir <b>outra forma</b> (12 = 3 × 4 = 2 × 6).
+          Não deixe a pilha chegar ao <b>topo</b>. A cada 4 quadrados, números mais difíceis (56, 72, 81...), mais
+          velocidade e quadrados <b>maiores</b>! ⚡
+          <small class="lados-teclas">No computador: números de 1 a 9, <b>+ − * /</b> e <b>Esc</b> para limpar.</small>
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-tabuada-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="tabuada-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Tetris da Tabuada: o jogo -->
+    <section class="tela tela-jogo" id="tela-tabuada" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="tabuada-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="tab-nivel"></span>
+        <span class="chuva-placar"><span id="tab-pontos">0</span> pts · <span id="tab-contador"></span></span>
+      </div>
+      <div class="chuva-arena tab-pote" id="tab-pote">
+        <canvas id="tab-canvas" aria-label="Pote com os quadrados"></canvas>
+      </div>
+      <div class="tab-lado">
+        <div class="tab-conta" id="tab-conta" aria-live="polite">
+          <span class="tab-num" id="tab-n1">?</span><span class="tab-sinal" id="tab-op">?</span><span class="tab-num" id="tab-n2">?</span>
+          <span class="tab-igual">=</span><span class="tab-res" id="tab-res">?</span>
+          <button class="btn-sec btn-pequeno tab-limpar" id="tab-limpar" type="button">Limpar</button>
+        </div>
+        <div class="tab-teclado" id="tab-teclado">
+          <div class="tab-nums">
+            <div class="tab-linha"><button class="tab-tecla" data-n="1" type="button">1</button><button class="tab-tecla" data-n="2" type="button">2</button><button class="tab-tecla" data-n="3" type="button">3</button><button class="tab-tecla" data-n="4" type="button">4</button><button class="tab-tecla" data-n="5" type="button">5</button></div>
+            <div class="tab-linha"><button class="tab-tecla" data-n="6" type="button">6</button><button class="tab-tecla" data-n="7" type="button">7</button><button class="tab-tecla" data-n="8" type="button">8</button><button class="tab-tecla" data-n="9" type="button">9</button></div>
+          </div>
+          <div class="tab-ops">
+            <button class="tab-tecla op" data-op="+" type="button" aria-label="mais">+</button><button class="tab-tecla op" data-op="−" type="button" aria-label="menos">−</button><button class="tab-tecla op" data-op="×" type="button" aria-label="vezes">×</button><button class="tab-tecla op" data-op="÷" type="button" aria-label="dividido">÷</button>
+          </div>
+        </div>
+        <p class="cores-msg" id="tab-msg" role="status"></p>
+      </div>
+    </section>
+
+    <!-- Classes de Palavras: instruções -->
+    <section class="tela" id="tela-classes-menu">
+      <h2 class="subtitulo">📖 Classes de Palavras</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-classes"></div>
+        <div class="balao balao-esq">
+          Aparece uma <b>frase</b>. Toque numa palavra <b>sublinhada</b> e depois na <b>classe</b> dela: artigo, substantivo,
+          adjetivo, verbo... Acertou, a palavra fica <b>verde</b>! Errou, o Plenix explica. Começa com frases curtas, como
+          <b>“O carro é verde.”</b>, e vai aumentando: entram pronome, numeral, advérbio e, no fim, preposição, conjunção e
+          interjeição. 📚
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-classes-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="classes-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Classes de Palavras: o jogo -->
+    <section class="tela tela-jogo" id="tela-classes" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="classes-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="classes-nivel"></span>
+        <span class="chuva-placar"><span id="classes-pontos">0</span> pts · <span id="classes-contador"></span></span>
+      </div>
+      <div class="classes-frase" id="classes-frase" aria-live="polite"></div>
+      <p class="cores-msg classes-msg" id="classes-msg" role="status"></p>
+      <div class="classes-botoes" id="classes-botoes" aria-label="Classes de palavras"></div>
+    </section>
+
+    <!-- Jogo dos Gráficos: escolha do nível -->
+    <section class="tela" id="tela-graficos-menu">
+      <h2 class="subtitulo">📊 Jogo dos Gráficos</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-graficos"></div>
+        <div class="balao balao-esq">
+          Leia a frase com os dados e toque no <b>gráfico certo</b>: só um dos três mostra os números do jeito certo!
+          Tem gráfico de <b>colunas</b>, de <b>barras</b>, de <b>linha</b> e de <b>pizza</b>. Escolha o nível: 📊
+        </div>
+      </div>
+      <div class="grade-missoes" id="graficos-niveis"></div>
+      <button class="btn-sec" id="graficos-voltar" type="button">← Jogos</button>
+    </section>
+
+    <!-- Jogo dos Gráficos: o jogo -->
+    <section class="tela tela-jogo" id="tela-graficos" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="graficos-sair" type="button">← Níveis</button>
+        <span class="barra-titulo" id="graficos-nivel"></span>
+        <span class="chuva-placar"><span id="graficos-pontos">0</span> pts</span>
+      </div>
+      <div class="graficos-enunciado">
+        <span class="graficos-tipo" id="graficos-tipo"></span>
+        <p class="graficos-pergunta" id="graficos-pergunta"></p>
+        <small class="graficos-instrucao">Toque no gráfico certo:</small>
+      </div>
+      <div class="graficos-opcoes" id="graficos-opcoes"></div>
+      <p class="cores-msg graficos-msg" id="graficos-msg" role="status"></p>
+      <button class="btn-grande graficos-proxima" id="btn-graficos-proxima" type="button" hidden>Próxima ▶</button>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -618,7 +792,6 @@
         <h3 class="chuva-pergunta">📧 E-mails dos relatórios</h3>
         <p class="professor-ajuda">Ficam na aba <b>"E-mails"</b> da planilha do Google (A nome, B e-mail).
           Antes de abrir cada jogo, o aluno escolhe para quem vai o relatório.</p>
-        <div class="lista-quiz" id="lista-emails-prof"></div>
         <form class="cadastro-email" id="form-novo-email" autocomplete="off">
           <label class="campo campo-jogo"><span>Nome do professor</span>
             <input type="text" id="novo-email-nome" maxlength="60" placeholder="Ex.: Prof. Maria"></label>
@@ -627,15 +800,13 @@
           <p class="erro-login" id="aviso-email" role="status"></p>
           <button class="btn-grande" type="submit">➕ Adicionar</button>
         </form>
+        <div class="lista-quiz" id="lista-emails-prof"></div>
       </div>
       <div class="cartao cartao-login" id="painel-questionarios" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
         <h3 class="chuva-pergunta">📝 Questionários da aula</h3>
         <p class="professor-ajuda">Ficam guardados na planilha do Google: uma aba <b>"Q: nome"</b> para cada questionário.
           Cada um tem um <b>link</b> que abre direto nele: é só copiar e mandar para a turma.</p>
-        <a class="btn-sec btn-modelo" href="assets/modelo-questionario.xlsx" download="modelo-questionario.xlsx">📥 Baixar planilha modelo</a>
-        <div class="lista-quiz" id="lista-quiz-prof"></div>
-        <p class="erro-login" id="aviso-link" role="status"></p>
         <details class="emails-jogos" id="novo-questionario">
           <summary>➕ Novo questionário</summary>
           <label class="campo campo-jogo"><span>Nome do questionário</span>
@@ -649,6 +820,9 @@
           <p class="erro-login" id="aviso-quiz" role="status"></p>
           <button class="btn-grande" id="btn-quiz-salvar" type="button">Salvar questionário ✔</button>
         </details>
+        <a class="btn-sec btn-modelo" href="assets/modelo-questionario.xlsx" download="modelo-questionario.xlsx">📥 Baixar planilha modelo</a>
+        <div class="lista-quiz" id="lista-quiz-prof"></div>
+        <p class="erro-login" id="aviso-link" role="status"></p>
       </div>
       <a class="btn-sec btn-manual" href="manual.html#professor">📘 Manual do professor</a>
       <button class="btn-sec" id="professor-voltar" type="button">← Início</button>
@@ -680,10 +854,41 @@
           <span class="jogo-card-nome">Chuva de Erros</span>
           <span class="jogo-card-texto">Pegue as palavras antes que sumam!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-classes" type="button" data-tema="portugues" style="--c:#1e64d2">
+          <span class="jogo-card-capa classes-capa" aria-hidden="true">
+            <span style="--cor:#1fa2b0">O<small>artigo</small></span><span style="--cor:#1e64d2">carro<small>substantivo</small></span><span style="--cor:#2e9e5b">é<small>verbo</small></span><span style="--cor:#e53935">verde<small>adjetivo</small></span>
+          </span>
+          <span class="jogo-card-nome">Classes de Palavras</span>
+          <span class="jogo-card-texto">Toque na palavra e descubra a classe dela!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-mat" type="button" data-tema="matematica" style="--c:#0b3d91">
           <img class="jogo-card-capa" src="assets/capa-chuva-matematica.jpg" alt="" width="600" height="691">
           <span class="jogo-card-nome">Chuva de Matemática</span>
           <span class="jogo-card-texto">Responda a conta antes que ela caia!</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-tabuada" type="button" data-tema="matematica" style="--c:#1e64d2">
+          <span class="jogo-card-capa tab-capa" aria-hidden="true">
+            <i style="--cor:#2e9e5b;left:8%;bottom:6%">72</i><i style="--cor:#e53935;left:30%;bottom:6%">24</i><i class="g" style="--cor:#1e64d2;left:52%;bottom:6%">56</i>
+            <i style="--cor:#8e44ad;left:8%;bottom:34%">81</i><i style="--cor:#f57c00;left:30%;bottom:62%">36</i><i style="--cor:#1fa2b0;left:52%;bottom:62%">63</i>
+            <b>7 × 8 = 56</b>
+          </span>
+          <span class="jogo-card-nome">Tetris da Tabuada</span>
+          <span class="jogo-card-texto">Tabuada contra o tempo: estoure os quadrados antes que cheguem ao topo!</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-graficos" type="button" data-tema="matematica" style="--c:#1e64d2">
+          <span class="jogo-card-capa graficos-capa" aria-hidden="true">
+            <svg viewBox="0 0 200 120">
+              <g stroke="#13294b" stroke-width="2.5" stroke-linejoin="round">
+                <circle cx="38" cy="38" r="28" fill="#1e64d2"/><path d="M38 38 L38 10 A28 28 0 0 1 66 38 Z" fill="#f7c600"/><path d="M38 38 L66 38 A28 28 0 0 1 38 66 Z" fill="#e53935"/>
+                <rect x="84" y="14" width="56" height="12" rx="3" fill="#2e9e5b"/><rect x="84" y="32" width="88" height="12" rx="3" fill="#e53935"/><rect x="84" y="50" width="40" height="12" rx="3" fill="#1e64d2"/>
+                <rect x="14" y="88" width="14" height="22" rx="3" fill="#8e44ad"/><rect x="34" y="76" width="14" height="34" rx="3" fill="#f7c600"/><rect x="54" y="92" width="14" height="18" rx="3" fill="#2e9e5b"/>
+                <polyline points="96,104 120,86 144,94 172,72" fill="none" stroke="#1e64d2" stroke-width="4"/>
+              </g>
+              <g fill="#fff" stroke="#1e64d2" stroke-width="2.5"><circle cx="96" cy="104" r="4"/><circle cx="120" cy="86" r="4"/><circle cx="144" cy="94" r="4"/><circle cx="172" cy="72" r="4"/></g>
+            </svg>
+          </span>
+          <span class="jogo-card-nome">Jogo dos Gráficos</span>
+          <span class="jogo-card-texto">Pizza, barras, colunas e linha: qual gráfico está certo?</span>
         </button>
         <button class="jogo-card com-capa" id="btn-tiro" type="button" data-tema="matematica" style="--c:#0a8fc2">
           <img class="jogo-card-capa" src="assets/tiro/capa-tiro-certo.jpg" alt="" width="640" height="627">
@@ -760,6 +965,16 @@
           </span>
           <span class="jogo-card-nome">De Lado e de Cima</span>
           <span class="jogo-card-texto">Como fica a pirâmide vista de cima?</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-dinos" type="button" data-tema="psicopedagogia" style="--c:#3fae5a">
+          <span class="jogo-card-capa dinos-capa" id="dinos-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Memória dos Dinossauros</span>
+          <span class="jogo-card-texto">Guarde a fila de dinossauros e ache a igual!</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-simbolos" type="button" data-tema="psicopedagogia" style="--c:#8e44ad">
+          <span class="jogo-card-capa simbolos-capa" id="simbolos-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Atenção à Forma</span>
+          <span class="jogo-card-texto">Ache as peças da figura: mesma forma e cor!</span>
         </button>
         <!-- jogo externo: abre o jogo de raciocínio e estratégia em outra aba -->
         <a class="jogo-card com-capa" id="btn-psico" href="https://nagila.vercel.app/" target="_blank" rel="noopener" data-tema="psicopedagogia" style="--c:#2e7dbf">
@@ -895,9 +1110,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=69"></script>
-  <script src="dados.js?v=69"></script>
-  <script type="module" src="js/main.js?v=69"></script>
+  <script src="plenix.js?v=84"></script>
+  <script src="dados.js?v=84"></script>
+  <script type="module" src="js/main.js?v=84"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

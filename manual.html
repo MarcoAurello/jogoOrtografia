@@ -70,6 +70,22 @@
     .passo p { margin: 0 0 8px; }
     .passo ul, .passo ol { margin: 0 0 8px; padding-left: 20px; }
     .print { border-radius: 16px; overflow: hidden; border: 3px solid var(--texto); background: var(--branco); }
+    main img[loading="lazy"] { background-color: var(--fundo); }   /* enquanto a imagem chega, o espaço dela já aparece */
+
+    /* tutorial do YouTube: só a capa até tocar (o player do YouTube é pesado e só carrega quando for assistir) */
+    .tutorial-yt { margin: 10px 0 12px; }
+    .yt-capa, .yt-player { position: relative; display: block; width: 100%; max-width: 230px; aspect-ratio: 9 / 16; border-radius: 16px; overflow: hidden;
+      border: 3px solid var(--texto); background: #000; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.12); }
+    .yt-capa { padding: 0; cursor: pointer; }
+    .yt-capa img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.25s; }
+    .yt-capa:hover img { transform: scale(1.04); }
+    .yt-play { position: absolute; left: 50%; top: 50%; width: 64px; height: 46px; transform: translate(-50%, -50%); border-radius: 14px;
+      background: #e62117; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); transition: transform 0.15s; }
+    .yt-play::after { content: ''; position: absolute; left: 25px; top: 13px; border-style: solid; border-width: 10px 0 10px 17px; border-color: transparent transparent transparent #fff; }
+    .yt-capa:hover .yt-play { transform: translate(-50%, -50%) scale(1.1); }
+    .yt-capa:focus-visible { outline: 4px solid #e8c400; outline-offset: 3px; }
+    .yt-player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .yt-legenda { margin: 6px 0 0; font-size: 14px; color: var(--cinza); }
     .dica { background: #fff8d6; border-left: 5px solid #e8c400; border-radius: 10px; padding: 10px 14px; margin: 8px 0 0; font-size: 15px; }
     .aviso { background: #e9f7ef; border-left: 5px solid var(--verde); border-radius: 10px; padding: 10px 14px; margin: 8px 0 0; font-size: 15px; }
     .botao { display: inline-block; white-space: nowrap; font-weight: 800; background: var(--fundo); border: 1px solid var(--borda); border-radius: 8px; padding: 0 6px; }
@@ -112,7 +128,7 @@
 </head>
 <body>
   <header class="topo">
-    <img class="logo" src="assets/logo-pg.png" alt="Pedagogia Gamificada" width="84" height="84">
+    <img class="logo" src="assets/logo-pg-168.png" alt="Pedagogia Gamificada" width="84" height="84">
     <h1>📘 Manual do usuário</h1>
     <p>Jogos Educacionais: o aluno joga, o professor analisa. Aqui você aprende a usar a Área do professor e a jogar cada jogo.</p>
   </header>
@@ -128,7 +144,7 @@
     <!-- vídeo de apresentação (2 min 23 s) -->
     <section class="video" id="video">
       <h2>▶️ Assista o vídeo da plataforma</h2>
-      <video controls preload="metadata" playsinline poster="assets/video/capa-video.jpg" width="1920" height="1080">
+      <video controls preload="none" playsinline poster="assets/video/capa-video.jpg" width="1920" height="1080">
         <source src="assets/video/jogos-educacionais.mp4" type="video/mp4">
         Seu navegador não conseguiu abrir o vídeo.
       </video>
@@ -151,7 +167,7 @@
             <span class="botao">☰ Menu</span> e escolha <span class="botao">🧑‍🏫 Área do professor</span>.</p>
           <p>No mesmo menu ficam também <b>Instalar app</b>, <b>Trocar aluno</b>, o <b>Manual do usuário</b> e o <b>Vídeo da plataforma</b>.</p>
         </div>
-        <img class="print" src="assets/manual/p01-inicio.jpg" alt="Menu aberto no topo do app com a opção Área do professor" width="400" height="820" loading="lazy">
+        <img class="print" src="assets/manual/p01-inicio.jpg" alt="Menu aberto no topo do app com a opção Área do professor" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo">
@@ -161,7 +177,7 @@
           <p>Digite a senha e toque em <span class="botao">Entrar ▶</span>. A senha protege a área para que os alunos não mexam nos cadastros.</p>
           <p class="dica">💡 Não sabe a senha? Peça ao responsável pelos jogos na escola.</p>
         </div>
-        <img class="print" src="assets/manual/p02-senha.jpg" alt="Campo Senha do professor e botão Entrar" width="400" height="440" loading="lazy">
+        <img class="print" src="assets/manual/p02-senha.jpg" alt="Campo Senha do professor e botão Entrar" width="400" height="440" loading="lazy" decoding="async">
       </div>
 
       <div class="passo">
@@ -175,7 +191,7 @@
           </ul>
           <p>Dentro de cada parte, o botão <span class="botao">← Voltar</span> traz você de novo para este menu.</p>
         </div>
-        <img class="print" src="assets/manual/p03-menu.jpg" alt="Menu com os botões E-mails dos relatórios, Questionários da aula e Links dos jogos" width="400" height="720" loading="lazy">
+        <img class="print" src="assets/manual/p03-menu.jpg" alt="Menu com os botões E-mails dos relatórios, Questionários da aula e Links dos jogos" width="400" height="720" loading="lazy" decoding="async">
       </div>
 
       <h3 class="grupo">📧 Cadastrar o e-mail que recebe os relatórios</h3>
@@ -188,7 +204,7 @@
             Embaixo, escreva o <b>nome do professor</b> (é o nome que o aluno vai ver) e o <b>e-mail</b>, e toque em
             <span class="botao">➕ Adicionar</span>.</p>
         </div>
-        <img class="print" src="assets/manual/p04-emails.jpg" alt="Lista de e-mails e formulário com nome e e-mail preenchidos" width="400" height="820" loading="lazy">
+        <img class="print" src="assets/manual/p04-emails.jpg" alt="Lista de e-mails e formulário com nome e e-mail preenchidos" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo">
@@ -199,7 +215,7 @@
           <p>Para tirar alguém, toque em <span class="botao">🗑️ Remover</span> ao lado do nome.</p>
           <p class="dica">💡 Os e-mails ficam na aba <b>"E-mails"</b> da planilha do Google (coluna A o nome, coluna B o e-mail). Se preferir, também dá para editar direto na planilha.</p>
         </div>
-        <img class="print" src="assets/manual/p05-email-ok.jpg" alt="Mensagem verde confirmando que o professor entrou na lista" width="400" height="820" loading="lazy">
+        <img class="print" src="assets/manual/p05-email-ok.jpg" alt="Mensagem verde confirmando que o professor entrou na lista" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo">
@@ -211,7 +227,7 @@
             os erros e o que precisa revisar.</p>
           <p class="aviso">✔ O app lembra a última escolha do aluno, então nas próximas vezes o professor já vem marcado.</p>
         </div>
-        <img class="print" src="assets/manual/p09-escolha-prof.jpg" alt="Janela Para quem vai o relatório, com a lista de professores" width="400" height="820" loading="lazy">
+        <img class="print" src="assets/manual/p09-escolha-prof.jpg" alt="Janela Para quem vai o relatório, com a lista de professores" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <h3 class="grupo">📝 Criar e compartilhar um questionário</h3>
@@ -224,7 +240,7 @@
             e dois botões: <span class="botao">🔗 Copiar link</span> e <span class="botao">🗑️ Excluir</span>.</p>
           <p>Para montar as perguntas no Excel ou no Google Planilhas, toque em <span class="botao">📥 Baixar planilha modelo</span>.</p>
         </div>
-        <img class="print" src="assets/manual/p06-quiz-lista.jpg" alt="Lista de questionários com os botões Copiar link e Excluir" width="400" height="820" loading="lazy">
+        <img class="print" src="assets/manual/p06-quiz-lista.jpg" alt="Lista de questionários com os botões Copiar link e Excluir" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo roxo">
@@ -242,6 +258,13 @@
             </li>
             <li>Toque em <span class="botao">Salvar questionário ✔</span>.</li>
           </ol>
+          <div class="tutorial-yt">
+            <button class="yt-capa" type="button" data-video="SQTBViShdW0" aria-label="Assistir o tutorial em vídeo: criar um questionário novo">
+              <img src="https://i.ytimg.com/vi/SQTBViShdW0/hqdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async">
+              <span class="yt-play" aria-hidden="true"></span>
+            </button>
+            <p class="yt-legenda">▶️ Tutorial em vídeo · <a href="https://youtube.com/shorts/SQTBViShdW0" target="_blank" rel="noopener">abrir no YouTube ↗</a></p>
+          </div>
           <p>Como montar a planilha (a primeira linha pode ser o cabeçalho):</p>
           <table class="planilha">
             <tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
@@ -250,7 +273,7 @@
           </table>
           <p class="dica">💡 Cada pergunta precisa de 1 resposta certa e pelo menos 1 errada. No jogo, as respostas aparecem sempre embaralhadas.</p>
         </div>
-        <img class="print" src="assets/manual/p07-quiz-novo.jpg" alt="Formulário de novo questionário com uma pergunta preenchida" width="400" height="820" loading="lazy">
+        <img class="print" src="assets/manual/p07-quiz-novo.jpg" alt="Formulário de novo questionário com uma pergunta preenchida" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo roxo">
@@ -262,7 +285,7 @@
           <p>Agora é só <b>colar</b> no grupo de WhatsApp da turma, no e-mail ou no mural da escola.</p>
           <p class="aviso">✔ O link funciona pela internet, em qualquer celular ou computador. O aluno não precisa instalar nada.</p>
         </div>
-        <img class="print" src="assets/manual/p08-link.jpg" alt="Mensagem verde: link do questionário copiado" width="400" height="820" loading="lazy">
+        <img class="print" src="assets/manual/p08-link.jpg" alt="Mensagem verde: link do questionário copiado" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo roxo">
@@ -274,7 +297,7 @@
           <p>O aluno também pode achar o questionário pela tela inicial, no botão <b>📝 Questionário da aula</b>.</p>
           <p class="dica">💡 Para apagar um questionário, toque em <span class="botao">🗑️ Excluir</span>. A aba dele some da planilha e o link deixa de funcionar.</p>
         </div>
-        <img class="print" src="assets/manual/p10-quiz-aluno.jpg" alt="Pergunta do questionário na tela do aluno, com quatro respostas" width="400" height="660" loading="lazy">
+        <img class="print" src="assets/manual/p10-quiz-aluno.jpg" alt="Pergunta do questionário na tela do aluno, com quatro respostas" width="400" height="660" loading="lazy" decoding="async">
       </div>
 
       <h3 class="grupo">🔗 Compartilhar um jogo</h3>
@@ -289,7 +312,7 @@
             sem precisar procurar na lista.</p>
           <p class="dica">💡 Os jogos com <b>↗</b> (ABC da Tia Ana, Desafio da Rotina, Desafio das Peças e Hive) são de outros sites: o link copiado é o endereço do próprio jogo.</p>
         </div>
-        <img class="print" src="assets/manual/p11-links-jogos.jpg" alt="Lista Links dos jogos com o botão Copiar link em cada jogo" width="400" height="820" loading="lazy">
+        <img class="print" src="assets/manual/p11-links-jogos.jpg" alt="Lista Links dos jogos com o botão Copiar link em cada jogo" width="400" height="820" loading="lazy" decoding="async">
       </div>
     </section>
 
@@ -310,7 +333,7 @@
           </ol>
           <p class="dica">💡 Os jogos com <b>↗</b> no cartão são de outros sites: abrem em outra aba e têm o próprio relatório, que não vem para o e-mail cadastrado aqui.</p>
         </div>
-        <img class="print" src="assets/manual/g00-lista.jpg" alt="Tela Escolha um jogo com o menu Categoria e os cartões dos jogos" width="400" height="711" loading="lazy">
+        <img class="print" src="assets/manual/g00-lista.jpg" alt="Tela Escolha um jogo com o menu Categoria e os cartões dos jogos" width="400" height="711" loading="lazy" decoding="async">
       </div>
 
       <!-- Jogo de Ortografia -->
@@ -334,8 +357,8 @@
             </ol>
           </div>
           <div class="jogo-imagens">
-            <img src="assets/manual/g01-orto-niveis.jpg" alt="Escolha do nível no Jogo de Ortografia" width="400" height="820" loading="lazy">
-            <img src="assets/manual/g02-orto-pergunta.jpg" alt="Pergunta com figura e letras para completar a palavra" width="400" height="700" loading="lazy">
+            <img src="assets/manual/g01-orto-niveis.jpg" alt="Escolha do nível no Jogo de Ortografia" width="400" height="820" loading="lazy" decoding="async">
+            <img src="assets/manual/g02-orto-pergunta.jpg" alt="Pergunta com figura e letras para completar a palavra" width="400" height="700" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -360,8 +383,8 @@
             </ol>
           </div>
           <div class="jogo-imagens">
-            <img src="assets/capa-chuva-erros.jpg" alt="Capa da Chuva de Erros" width="760" height="428" loading="lazy">
-            <img src="assets/manual/g03-chuva.jpg" alt="Palavras caindo na Chuva de Erros" width="400" height="690" loading="lazy">
+            <img src="assets/capa-chuva-erros.jpg" alt="Capa da Chuva de Erros" width="760" height="428" loading="lazy" decoding="async">
+            <img src="assets/manual/g03-chuva.jpg" alt="Palavras caindo na Chuva de Erros" width="400" height="690" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -385,8 +408,8 @@
             </ol>
           </div>
           <div class="jogo-imagens">
-            <img src="assets/capa-chuva-matematica.jpg" alt="Capa da Chuva de Matemática" width="600" height="691" loading="lazy">
-            <img src="assets/manual/g04-mat.jpg" alt="Conta 5 + 3 caindo e quatro respostas" width="400" height="670" loading="lazy">
+            <img src="assets/capa-chuva-matematica.jpg" alt="Capa da Chuva de Matemática" width="600" height="691" loading="lazy" decoding="async">
+            <img src="assets/manual/g04-mat.jpg" alt="Conta 5 + 3 caindo e quatro respostas" width="400" height="670" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -410,8 +433,8 @@
             </ol>
           </div>
           <div class="jogo-imagens">
-            <img src="assets/tiro/capa-tiro-certo.jpg" alt="Capa do Tiro Certo" width="640" height="627" loading="lazy">
-            <img src="assets/manual/g05-tiro.jpg" alt="Transferidor com o canhão e o míssil" width="400" height="770" loading="lazy">
+            <img src="assets/tiro/capa-tiro-certo.jpg" alt="Capa do Tiro Certo" width="640" height="627" loading="lazy" decoding="async">
+            <img src="assets/manual/g05-tiro.jpg" alt="Transferidor com o canhão e o míssil" width="400" height="770" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -437,8 +460,8 @@
             </ol>
           </div>
           <div class="jogo-imagens">
-            <img src="assets/capa-peso-certo.jpg" alt="Capa do Peso Certo" width="760" height="387" loading="lazy">
-            <img src="assets/manual/g06-peso.jpg" alt="Balança travada com uma melancia de 3 kg e os pesos embaixo" width="400" height="820" loading="lazy">
+            <img src="assets/capa-peso-certo.jpg" alt="Capa do Peso Certo" width="760" height="387" loading="lazy" decoding="async">
+            <img src="assets/manual/g06-peso.jpg" alt="Balança travada com uma melancia de 3 kg e os pesos embaixo" width="400" height="820" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -462,7 +485,7 @@
             <p class="dica">💡 Como o professor cria e compartilha: veja os <a href="#professor">passos 7 a 10</a>.</p>
           </div>
           <div class="jogo-imagens uma">
-            <img src="assets/manual/p10-quiz-aluno.jpg" alt="Pergunta do questionário" width="400" height="660" loading="lazy">
+            <img src="assets/manual/p10-quiz-aluno.jpg" alt="Pergunta do questionário" width="400" height="660" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -491,8 +514,8 @@
             </ol>
           </div>
           <div class="jogo-imagens">
-            <img src="assets/capa-reflexo.jpg" alt="Lâmpada azul acesa no Jogo do Reflexo" width="368" height="265" loading="lazy">
-            <img src="assets/manual/g07-reflexo.jpg" alt="Tela do Jogo do Reflexo com as lâmpadas e os botões" width="400" height="480" loading="lazy">
+            <img src="assets/capa-reflexo.jpg" alt="Lâmpada azul acesa no Jogo do Reflexo" width="368" height="265" loading="lazy" decoding="async">
+            <img src="assets/manual/g07-reflexo.jpg" alt="Tela do Jogo do Reflexo com as lâmpadas e os botões" width="400" height="480" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -519,8 +542,8 @@
             </ol>
           </div>
           <div class="jogo-imagens">
-            <img src="assets/capa-reflexo2.jpg" alt="Lâmpada azul acesa, copos e bolinhas no Jogo do Reflexo Nível 2" width="368" height="300" loading="lazy">
-            <img src="assets/manual/g08-reflexo2.jpg" alt="Tela do Jogo do Reflexo Nível 2" width="400" height="600" loading="lazy">
+            <img src="assets/capa-reflexo2.jpg" alt="Lâmpada azul acesa, copos e bolinhas no Jogo do Reflexo Nível 2" width="368" height="300" loading="lazy" decoding="async">
+            <img src="assets/manual/g08-reflexo2.jpg" alt="Tela do Jogo do Reflexo Nível 2" width="400" height="600" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -547,8 +570,8 @@
             </ol>
           </div>
           <div class="jogo-imagens">
-            <img src="assets/capa-rotina.jpg" alt="Passos da rotina Escovar os dentes, três já na ordem certa" width="368" height="300" loading="lazy">
-            <img src="assets/manual/g09-rotina.jpg" alt="Tela da Rotina Certa com a pilha de passos" width="375" height="630" loading="lazy">
+            <img src="assets/capa-rotina.jpg" alt="Passos da rotina Escovar os dentes, três já na ordem certa" width="368" height="300" loading="lazy" decoding="async">
+            <img src="assets/manual/g09-rotina.jpg" alt="Tela da Rotina Certa com a pilha de passos" width="375" height="630" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -575,8 +598,8 @@
             </ol>
           </div>
           <div class="jogo-imagens">
-            <img src="assets/capa-fichas.jpg" alt="Bandeja com fichas vermelhas, azuis e a vaga da amarela" width="368" height="300" loading="lazy">
-            <img src="assets/manual/g10-fichas.jpg" alt="Tela das Fichas Coloridas com a cartela 3 e as fichas" width="375" height="667" loading="lazy">
+            <img src="assets/capa-fichas.jpg" alt="Bandeja com fichas vermelhas, azuis e a vaga da amarela" width="368" height="300" loading="lazy" decoding="async">
+            <img src="assets/manual/g10-fichas.jpg" alt="Tela das Fichas Coloridas com a cartela 3 e as fichas" width="375" height="667" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -604,7 +627,7 @@
             </ol>
           </div>
           <div class="jogo-imagens uma">
-            <img src="assets/capa-abc-tia-ana.jpg" alt="Capa do ABC da Tia Ana" width="480" height="619" loading="lazy">
+            <img src="assets/capa-abc-tia-ana.jpg" alt="Capa do ABC da Tia Ana" width="480" height="619" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -629,7 +652,7 @@
             </ol>
           </div>
           <div class="jogo-imagens uma">
-            <img src="assets/capa-ingles-rotina.jpg" alt="Capa do Desafio da Rotina" width="500" height="500" loading="lazy">
+            <img src="assets/capa-ingles-rotina.jpg" alt="Capa do Desafio da Rotina" width="500" height="500" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -654,7 +677,7 @@
             </ol>
           </div>
           <div class="jogo-imagens uma">
-            <img src="assets/capa-psico-estrategia.jpg" alt="Tabuleiro do Desafio das Peças" width="518" height="707" loading="lazy">
+            <img src="assets/capa-psico-estrategia.jpg" alt="Tabuleiro do Desafio das Peças" width="518" height="707" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -680,7 +703,7 @@
             </ol>
           </div>
           <div class="jogo-imagens uma">
-            <img src="assets/capa-hive.jpg" alt="Tabuleiro de colmeia do Hive" width="416" height="412" loading="lazy">
+            <img src="assets/capa-hive.jpg" alt="Tabuleiro de colmeia do Hive" width="416" height="412" loading="lazy" decoding="async">
           </div>
         </div>
       </article>
@@ -692,5 +715,22 @@
     <p>© <b>Davi e Marco</b> — Todos os direitos reservados<br>
       <a href="https://sitejodospedagogicos.vercel.app/" target="_blank" rel="noopener">Pedagogia Gamificada ↗</a></p>
   </footer>
+  <script>
+    // tutoriais do YouTube: troca a capa pelo player só quando tocar (a página abre mais rápido)
+    document.querySelectorAll('.yt-capa').forEach((b) => {
+      b.onclick = () => {
+        const caixa = document.createElement('div');
+        caixa.className = 'yt-player';
+        const f = document.createElement('iframe');
+        f.src = `https://www.youtube-nocookie.com/embed/${b.dataset.video}?autoplay=1&rel=0&playsinline=1`;
+        f.title = b.getAttribute('aria-label');
+        f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        f.referrerPolicy = 'strict-origin-when-cross-origin';
+        f.allowFullscreen = true;
+        caixa.append(f);
+        b.replaceWith(caixa);
+      };
+    });
+  </script>
 </body>
 </html>

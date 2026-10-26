@@ -1,6 +1,6 @@
 // Guarda os arquivos do jogo para funcionar offline.
 // Ao mudar qualquer arquivo do jogo, aumente a VERSAO para os aparelhos baixarem a nova.
-const VERSAO = 'ortografia-pleno-v69';
+const VERSAO = 'ortografia-pleno-v84';
 
 const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
   .flatMap((id) => Array.from({ length: 10 }, (_, i) => `./assets/figuras/${id}-${i}.jpg`));
@@ -8,29 +8,36 @@ const FIGURAS = ['c-cedilha', 'r-rr', 'm-n', 'g-j', 'x-ch', 'acentos']
 const ARQUIVOS = [
   './',
   './index.html',
-  './style.css?v=69',
-  './js/main.js?v=69',
-  './js/util.js?v=69',
-  './js/estado.js?v=69',
-  './js/som.js?v=69',
-  './js/telas.js?v=69',
-  './js/professor.js?v=69',
-  './js/ortografia.js?v=69',
-  './js/chuva.js?v=69',
-  './js/matematica.js?v=69',
-  './js/tiro.js?v=69',
-  './js/peso.js?v=69',
-  './js/quiz.js?v=69',
-  './js/luzes.js?v=69',
-  './js/rotina.js?v=69',
-  './js/fichas.js?v=69',
-  './js/cores.js?v=69',
-  './js/lados.js?v=69',
-  './js/setas.js?v=69',
-  './js/vistas.js?v=69',
-  './js/relatorio.js?v=69',
-  './dados.js?v=69',
-  './plenix.js?v=69',
+  './style.css?v=84',
+  './js/main.js?v=84',
+  './js/util.js?v=84',
+  './js/estado.js?v=84',
+  './js/som.js?v=84',
+  './js/telas.js?v=84',
+  './js/professor.js?v=84',
+  './js/ortografia.js?v=84',
+  './js/chuva.js?v=84',
+  './js/matematica.js?v=84',
+  './js/tiro.js?v=84',
+  './js/peso.js?v=84',
+  './js/quiz.js?v=84',
+  './js/luzes.js?v=84',
+  './js/rotina.js?v=84',
+  './js/fichas.js?v=84',
+  './js/cores.js?v=84',
+  './js/lados.js?v=84',
+  './js/setas.js?v=84',
+  './js/vistas.js?v=84',
+  './js/dinos.js?v=84',
+  './js/simbolos.js?v=84',
+  './js/tabuada.js?v=84',
+  './js/classes.js?v=84',
+  './js/dados-classes.js?v=84',
+  './js/graficos.js?v=84',
+  './js/dados-graficos.js?v=84',
+  './js/relatorio.js?v=84',
+  './dados.js?v=84',
+  './plenix.js?v=84',
   './assets/plenix/plenix_spritesheet_1x.png',
   './assets/tiro/canhao-cano.png',
   './assets/tiro/canhao-carreta.png',
@@ -83,6 +90,7 @@ const ARQUIVOS = [
   './vendor/jspdf.umd.min.js',
   './manifest.json',
   './assets/logo-pg.png',
+  './assets/logo-pg-168.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
@@ -126,6 +134,18 @@ self.addEventListener('fetch', (e) => {
   if (url.origin !== location.origin) return;
   // vídeo: o navegador pede em pedaços (Range) e o cache não guarda pedaços; vai direto ao servidor
   if (url.pathname.endsWith('.mp4')) return;
+
+  // Imagens: mostra na hora a cópia guardada e atualiza a cópia por trás (as imagens quase nunca mudam;
+  // esperar o servidor a cada figura deixava o manual e as listas lentos)
+  if (/\.(png|jpe?g|webp|gif|svg)$/i.test(url.pathname)) {
+    const daRede = fetch(e.request).then((resposta) => {
+      if (resposta.ok) { const copia = resposta.clone(); caches.open(VERSAO).then((cache) => cache.put(e.request, copia)); }
+      return resposta;
+    });
+    e.respondWith(caches.match(e.request, { ignoreSearch: true }).then((salva) => salva || daRede));
+    e.waitUntil(daRede.catch(() => {}));
+    return;
+  }
 
   // Arquivos do jogo: sempre confere com o servidor (sem usar cópia velha do navegador)
   // e só usa o cache quando estiver sem internet

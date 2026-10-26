@@ -69,6 +69,79 @@ uma cor pode se repetir (sem ficar encostada). As opções erradas imitam os err
 por fora), trocar duas peças vizinhas e errar uma cor. A rodada tem 15 perguntas, e o relatório separa os acertos de cada
 sentido (de lado para de cima e de cima para de lado) e conta quantas vezes o aluno virou a ordem.
 
+## Memória dos Dinossauros (memória visual de sequência)
+
+Fica em **Psicopedagogia**, baseado na folha de atividades dos dinossauros. Em cada rodada uma fila de dinossauros aparece por **3 segundos** (com uma barra mostrando o tempo; filas com mais de 4 ganham meio
+segundo por dinossauro) e se esconde atrás do mato. Vem a pergunta **"Qual a sequência de dinossauros?"** com 4 filas para
+escolher (no computador, também pelas teclas 1 a 4). Acertou: a próxima fila tem um dinossauro a mais (1, 2, 3… até 8);
+errou: um a menos. A rodada tem 12 sequências. São 9 personagens desenhados em SVG no `js/dinos.js`, no estilo da folha
+(Rex verde e laranja, Tricerátops azul, Estegossauro verde e amarelo, Pterodáctilo roxo e lilás, Braquiossauro verde-água e
+vermelho): as espécies repetidas em outra cor treinam o olhar no detalhe. As filas erradas imitam os erros de memória:
+trocar pela mesma espécie de outra cor, trocar dois vizinhos de lugar, inverter a fila, trocar o primeiro com o último e
+trocar um dinossauro por outro. O relatório mostra a maior sequência acertada e separa os erros de ordem dos erros de dinossauro.
+
+## Atenção à Forma (atenção seletiva e discriminação visual)
+
+Fica em **Psicopedagogia**, baseado na placa de pinos com cartas de modelo. No alto aparece uma **carta** com uma figura
+montada com várias peças (sorvete, barco, peixe, casa, árvore, foguete, carro, flor, robô e o modelo da placa); embaixo, um
+**tabuleiro** verde (como a placa de pinos) com peças soltas. O aluno toca nas peças da figura **exatamente iguais: mesma
+forma e mesma cor** (a posição muda). Cada acerto voa até a carta e a peça sai dela; figura completa, vem a próxima carta.
+**A mesma forma de outra cor é erro** (a armadilha principal); também há a mesma cor em outra forma e as formas parecidas.
+Cada carta tem **1,5 segundo por peça** da figura (barra de tempo em cima da carta): se o tempo acabar, a carta passa e a
+próxima fica mais fácil. Carta sem toque errado: a próxima figura tem mais peças e o tabuleiro mais armadilhas; com 2 toques
+errados ou mais, fica mais fácil. São 6 níveis, em `NIVEIS_SIMB` no `js/simbolos.js` (figuras de 3 a 10 peças, de 3 a 8
+armadilhas), e 8 cartas por partida. O relatório mostra quantas figuras foram completadas no tempo e separa os toques
+errados (mesma forma de outra cor, mesma cor de forma parecida, mesma cor de outra forma). Link do jogo: `?jogo=forma`.
+
+## Tetris da Tabuada (tabuada de 1 a 9)
+
+Fica em **Matemática**. Quadrados com **resultados da tabuada** caem em colunas e se empilham no pote, como no Tetris
+(sem rolar: ficam buracos). O aluno monta a conta no teclado da tela (número, operação, número, como **7 × 8**; a conta e
+o resultado aparecem na barra) e toca no quadrado com o **resultado** (56), que estoura; os quadrados de cima caem no lugar.
+As outras operações do teclado também valem (12 = 9 + 3), mas os números grandes só saem pela tabuada. Tocar num quadrado
+com outro número conta como erro. No computador: números de 1 a 9, **+ − * /** e **Esc** para limpar. A cada 4 quadrados
+estourados sobe um nível: a tabuada vai do 5 ao 9, entram cada vez mais os resultados que mais confundem (36, 42, 48, 49,
+54, 56, 63, 64, 72, 81), os quadrados caem mais depressa e ficam **maiores** (de 1 casa a 2 x 2 e 3 x 3, enchendo o pote
+mais rápido; quadrado grande vale mais pontos). Veja `NIVEIS_TAB` e `DIFICEIS` no `js/tabuada.js`. O jogo **só acaba
+quando a pilha chega ao topo do pote** (a borda de cima pisca em vermelho quando falta pouco). O relatório mostra quantos
+O resultado da conta não aparece na barra (a criança é quem sabe quanto dá), e se o mesmo número cair de
+novo, repetir a mesma conta não vale quando a tabuada tem outra forma: o jogo pede outra (12 = 3 × 4 = 2 × 6; 3 × 4 e 4 × 3
+contam como a mesma). quadrados estourou, os quadrados por tabuada e os toques errados.
+
+## Classes de Palavras
+
+Fica em **Português**, no jeito do Jogo de Ortografia. Aparece uma frase; o aluno toca numa palavra sublinhada e depois na
+**classe** dela. Acertou: a palavra fica verde com o nome da classe. Errou: o jogo explica por que aquela classe não serve;
+no segundo erro mostra a classe certa (com a regra e uma dica para as trocas comuns, como artigo × numeral ou adjetivo ×
+advérbio). Cada palavra acertada ganha o **tipo** na etiqueta e uma explicação ligada à frase: advérbio de tempo,
+lugar, modo, intensidade ou negação ("responde à pergunta “chegou quando?”"); pronome pessoal, possessivo, demonstrativo,
+indefinido ou de tratamento; numeral cardinal, ordinal, multiplicativo ou fracionário; artigo definido ou indefinido;
+substantivo comum ou próprio; verbo de ação, de estado (de ligação), de posse, de sentimento ou fenômeno da natureza;
+conjunção aditiva, adversativa, alternativa, explicativa, condicional, temporal ou concessiva; interjeição de alegria, dor,
+espanto, alívio... No primeiro erro, além de dizer por que a classe marcada não serve, o jogo dá uma dica que aponta o
+caminho sem entregar a resposta. Os tipos ficam em `TIPOS_PALAVRA` no `js/classes.js`. Começa **fácil**, com frases curtas como "O carro é verde." (artigo, substantivo, verbo e adjetivo), e **vai
+aumentando**: duas frases seguidas sem erro sobem uma etapa (**médio**: pronome, numeral e advérbio; **difícil**:
+preposição, conjunção e interjeição); uma frase com 3 erros ou mais desce uma. As palavras de classes que ainda não
+entraram aparecem já classificadas, em cinza; as contrações (no, na, do, da, à...) vêm prontas como "preposição + artigo".
+A partida tem 12 frases, e o relatório mostra os acertos por classe e as palavras para revisar.
+
+As **140 frases** (50 fáceis, 45 médias e 45 difíceis) ficam em `js/dados-classes.js`, cada palavra com a sua classe:
+`'O/ar carro/su é/ve verde/aj .'` (ar artigo, su substantivo, aj adjetivo, pn pronome, nu numeral, ve verbo, av advérbio,
+pr preposição, cj conjunção, ij interjeição, pa preposição + artigo). Para criar mais, é só seguir o mesmo jeito.
+
+## Jogo dos Gráficos (leitura de gráficos)
+
+Fica em **Matemática**. Aparece uma frase curta com dados ("Luiz vendeu 3 carros, Lucas 2 e Ana 7.") e **três gráficos**:
+só um mostra os dados certos. São quatro tipos, como no cartaz dos tipos de gráficos: **colunas** (barras em pé),
+**barras** (deitadas), **linha** e **pizza** (setores). Os gráficos errados imitam erros reais de leitura: valores de duas
+categorias trocados, um valor errado, a ordem do tempo invertida (na linha) e, na pizza, fatias trocadas ou de tamanho
+errado. Os três usam a mesma escala e a mesma cor para cada categoria. Errou: o gráfico escolhido fica vermelho com a
+explicação do que está errado nele, e dá para tentar de novo; no segundo erro o jogo mostra o certo. Três **níveis**,
+escolhidos no menu (com estrelas): **Fácil** (números pequenos, escritos nas colunas e barras; colunas, barras e pizza
+simples), **Médio** (dezenas, os números somem do gráfico e entra a linha) e **Difícil** (centenas, milhares e decimais;
+os gráficos errados diferem pouco). Cada partida tem 8 perguntas, alternando os tipos. As 55 perguntas ficam em
+`js/dados-graficos.js` (nível, tipo, frase, categorias e valores); os gráficos errados são criados pelo jogo.
+
 ## Peso Certo (medidas de massa)
 
 Balança de dois pratos: o objeto fica no prato da esquerda e o aluno coloca no da direita (tocando ou arrastando) os pesos
@@ -173,7 +246,7 @@ Abra o `index.html` no navegador.
   - `relatorio.js` — fim do jogo: textos, gráficos, envio por e-mail (com fila sem internet), confete e PDF
   - um arquivo por jogo: `ortografia.js`, `chuva.js` (Chuva de Erros), `matematica.js` (Chuva de Matemática), `tiro.js`,
     `peso.js`, `quiz.js` (questionário do aluno), `luzes.js` (Jogo do Reflexo 1 e 2), `rotina.js`, `fichas.js`,
-    `cores.js` (Somando as Cores), `lados.js` (Esquerda e Direita), `setas.js` (Setas e Cores) e `vistas.js` (De Lado e de Cima). Cada um tem as telas `telaXMenu`, `comecarX`, `pararX`
+    `cores.js` (Somando as Cores), `lados.js` (Esquerda e Direita), `setas.js` (Setas e Cores), `vistas.js` (De Lado e de Cima), `dinos.js` (Memória dos Dinossauros), `simbolos.js` (Atenção à Forma), `tabuada.js` (Tetris da Tabuada), `classes.js` (Classes de Palavras, com as frases em `dados-classes.js`) e `graficos.js` (Jogo dos Gráficos, com as perguntas em `dados-graficos.js`). Cada um tem as telas `telaXMenu`, `comecarX`, `pararX`
     e liga os próprios botões (ids com o prefixo do jogo, ex.: `cores-`, `lados-`)
   - os imports levam o mesmo `?v=` do `index.html` (o `ferramentas/versao.ps1` troca todos); ao criar um módulo novo,
     ponha-o também na lista `ARQUIVOS` do `service-worker.js`

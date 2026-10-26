@@ -1,22 +1,27 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Telas e navegação: moldura, mascote, troca de telas, encaixe na tela, login, menu do topo, barra inferior e filtro dos jogos. */
 
-import { $ } from './util.js?v=69';
-import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=69';
-import { frase, pararVoz, SOM } from './som.js?v=69';
-import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=69';
-import { pararChuva } from './chuva.js?v=69';
-import { pararMat } from './matematica.js?v=69';
-import { desenharTiro, pararTiro, tiro } from './tiro.js?v=69';
-import { pararPeso } from './peso.js?v=69';
-import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=69';
-import { pararLuz } from './luzes.js?v=69';
-import { pararRotina } from './rotina.js?v=69';
-import { pararFichas } from './fichas.js?v=69';
-import { pararCores } from './cores.js?v=69';
-import { pararLados } from './lados.js?v=69';
-import { pararSetas } from './setas.js?v=69';
-import { pararVistas } from './vistas.js?v=69';
+import { $ } from './util.js?v=84';
+import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=84';
+import { frase, pararVoz, SOM } from './som.js?v=84';
+import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=84';
+import { pararChuva } from './chuva.js?v=84';
+import { pararMat } from './matematica.js?v=84';
+import { desenharTiro, pararTiro, tiro } from './tiro.js?v=84';
+import { pararPeso } from './peso.js?v=84';
+import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=84';
+import { pararLuz } from './luzes.js?v=84';
+import { pararRotina } from './rotina.js?v=84';
+import { pararFichas } from './fichas.js?v=84';
+import { pararCores } from './cores.js?v=84';
+import { pararLados } from './lados.js?v=84';
+import { pararSetas } from './setas.js?v=84';
+import { pararVistas } from './vistas.js?v=84';
+import { pararDinos } from './dinos.js?v=84';
+import { pararSimbolos } from './simbolos.js?v=84';
+import { pararTabuada } from './tabuada.js?v=84';
+import { pararClasses } from './classes.js?v=84';
+import { pararGraficos } from './graficos.js?v=84';
 
 // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
 const ENFEITES = {
@@ -59,7 +64,7 @@ function mostrar(id) {
 const ABA_DA_TELA = {
   'tela-inicio': 'inicio', 'tela-jogos': 'jogos', 'tela-missoes': 'jogos', 'tela-regra': 'jogos', 'tela-chuva-menu': 'jogos',
   'tela-mat-menu': 'jogos', 'tela-tiro-menu': 'jogos', 'tela-peso-menu': 'jogos', 'tela-luzes-menu': 'jogos', 'tela-fim': 'jogos',
-  'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-cores-menu': 'jogos', 'tela-lados-menu': 'jogos', 'tela-setas-menu': 'jogos', 'tela-vistas-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
+  'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-cores-menu': 'jogos', 'tela-lados-menu': 'jogos', 'tela-setas-menu': 'jogos', 'tela-vistas-menu': 'jogos', 'tela-dinos-menu': 'jogos', 'tela-simbolos-menu': 'jogos', 'tela-tabuada-menu': 'jogos', 'tela-classes-menu': 'jogos', 'tela-graficos-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
 };
 function encaixarTela() {
   const tela = document.querySelector('.tela.ativa');
@@ -87,7 +92,8 @@ function encaixarTela() {
     el.style.width = `${Math.max(120, Math.min(el.parentElement.clientWidth, Math.floor(sobra * proporcao)))}px`;
   }
   // celular deitado e o jogo não cabe (ou a área ficou pequena demais): pede para virar o aparelho
-  const naoCabe = emJogo && (tela.scrollHeight > tela.clientHeight + 2
+  // (as telas com data-girar="nao" só rolam por dentro, sem o aviso)
+  const naoCabe = emJogo && tela.dataset.girar !== 'nao' && (tela.scrollHeight > tela.clientHeight + 2
     || [...tela.querySelectorAll('[data-encaixe]')].some((el) => el.offsetWidth < 200));
   document.body.classList.toggle('girar', naoCabe && window.innerWidth > window.innerHeight);
   if (typeof tiro !== 'undefined' && tiro) desenharTiro();
@@ -164,7 +170,7 @@ $('menu-app-lista').addEventListener('click', (e) => { if (e.target.closest('.me
 document.addEventListener('click', (e) => { if (!e.target.closest('#menu-app')) abrirMenu(false); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirMenu(false); });
 
-function pararJogos() { pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararSetas(); pararVistas(); pararVoz(); }
+function pararJogos() { pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararSetas(); pararVistas(); pararDinos(); pararSimbolos(); pararTabuada(); pararClasses(); pararGraficos(); pararVoz(); }
 const irParaInicio = () => { pararJogos(); $('escolha-prof').hidden = true; telaInicio(); };
 $('btn-logo-inicio').onclick = irParaInicio;
 $('btn-menu-inicio').onclick = irParaInicio;
