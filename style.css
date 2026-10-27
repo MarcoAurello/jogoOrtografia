@@ -2323,3 +2323,27 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 .giro-opcao.errada { border-color: #e53935; box-shadow: 0 0 0 4px #f8c4c2; }
 .giro-opcao:disabled { cursor: default; }
 @media (min-width: 720px) { .giro-opcoes { grid-template-columns: repeat(4, 1fr); } }
+
+/* ---------- Jogo da Hora ---------- */
+.hora-pergunta { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 16px; background: var(--branco); box-shadow: var(--sombra); }
+.hora-pergunta p { flex: 1; margin: 0; font-weight: 800; font-size: clamp(16px, 2.6dvh, 20px); color: var(--texto); }
+.hora-alvo.analogico { flex: 0 0 auto; width: clamp(110px, min(34vw, 20dvh), 180px); }
+.hora-alvo.digital { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 14px;
+  border-radius: 14px; border: 3px solid #1e88e5; background: #f4f9ff; }
+.relogio { display: block; width: 100%; height: auto; }
+.relogio-digital { font-family: 'Fredoka', monospace; font-weight: 700; font-size: clamp(30px, 6dvh, 46px); letter-spacing: 2px; color: #13294b; line-height: 1.1; }
+.hora-periodo { font-size: 13px; font-weight: 700; color: var(--cinza-texto); white-space: nowrap; }
+.hora-msg { min-height: 1.3em; margin: 8px 0 6px; text-align: center; font-weight: 700; font-size: clamp(14px, 2.2dvh, 17px); color: var(--primaria-escura); }
+.hora-msg.ok { color: #1d6b3d; }
+.hora-msg.erro { color: #b42318; }
+.hora-opcoes { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(8px, 2.5vw, 16px); align-content: center; justify-items: center; }
+.hora-opcao { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: 100%; padding: 8px;
+  border-radius: 16px; background: var(--branco); border: 3px solid #d6e6ea; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.12); }
+.de-relogios .hora-opcao { width: min(100%, 22dvh, 180px); aspect-ratio: 1; }
+.de-digitais .hora-opcao { min-height: 72px; }
+.de-digitais .relogio-digital { font-size: clamp(26px, 4.6dvh, 38px); }
+.hora-opcao.certa { border-color: #2e9e5b; box-shadow: 0 0 0 4px #b7e4c7; }
+.hora-opcao.errada { border-color: #e53935; box-shadow: 0 0 0 4px #f8c4c2; }
+.hora-ajuda-exemplos { display: flex; justify-content: center; gap: 16px; margin: 6px 0; }
+#hora-ajuda { padding-top: 76px; }
+.hora-ajuda-exemplos div { display: flex; flex-direction: column; align-items: center; width: min(90px, 13dvh); font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 20px; }

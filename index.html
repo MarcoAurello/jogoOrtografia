@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=95">
+  <link rel="stylesheet" href="style.css?v=96">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -862,6 +862,51 @@
       <div class="giro-opcoes" id="giro-opcoes" aria-label="Alternativas"></div>
     </section>
 
+    <!-- Jogo da Hora: instruções -->
+    <section class="tela" id="tela-hora-menu">
+      <h2 class="subtitulo">🕒 Jogo da Hora</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-hora"></div>
+        <div class="balao balao-esq">
+          Vamos ler as horas! Às vezes aparece a <b>hora digital</b> e você acha o <b>relógio de ponteiros</b> certo;
+          às vezes aparece o relógio e você acha a <b>hora digital</b>. O ponteiro <b>pequeno</b> mostra a hora e o
+          <b>grande</b> mostra os minutos. Depois vêm o <b>AM</b> e o <b>PM</b>! ⏰
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-hora-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="hora-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Jogo da Hora: o jogo -->
+    <section class="tela tela-jogo" id="tela-hora">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="hora-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="hora-nivel"></span>
+        <span class="chuva-placar"><span id="hora-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="hora-contador"></span>
+        <span id="hora-tempo"></span>
+      </div>
+      <div class="hora-pergunta" id="hora-pergunta"></div>
+      <p class="hora-msg" id="hora-msg" role="status"></p>
+      <div class="hora-opcoes" id="hora-opcoes" aria-label="Alternativas"></div>
+      <!-- errou 2 vezes seguidas: janelinha que ensina a ler o relógio -->
+      <div class="barcos-ajuda" id="hora-ajuda" hidden>
+        <div class="cartao barcos-ajuda-cartao" role="dialog" aria-modal="true" aria-labelledby="hora-ajuda-titulo">
+          <h3 class="chuva-pergunta" id="hora-ajuda-titulo">⏰ Vamos lembrar: como ler o relógio</h3>
+          <div class="hora-ajuda-exemplos" id="hora-ajuda-exemplos"></div>
+          <p class="barcos-ajuda-dica">O ponteiro <b>pequeno</b> mostra a <b>hora</b>. O ponteiro <b style="color:#e53935">grande</b> mostra os <b>minutos</b>:
+            cada número vale 5 minutos (no 3 são 15, no 6 são 30, no 9 são 45). No 12, é hora certinha!</p>
+          <p class="barcos-ajuda-dica"><b>AM</b> = da meia-noite ao meio-dia (madrugada 🌙 e manhã ☀️).<br>
+            <b>PM</b> = do meio-dia à meia-noite (tarde ☀️ e noite 🌙).<br>Exemplo: <b>3:00 PM</b> é a mesma hora que <b>15:00</b>.</p>
+          <button class="btn-grande" id="btn-hora-entendi" type="button">Entendi! ▶</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -1111,6 +1156,11 @@
           <span class="jogo-card-nome">Giro Imaginário</span>
           <span class="jogo-card-texto">Imagine a figura girando e ache como ficou!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-hora" type="button" data-tema="matematica psicopedagogia" style="--c:#fb8c00">
+          <img class="jogo-card-capa" src="assets/capa-hora.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Jogo da Hora</span>
+          <span class="jogo-card-texto">Relógio de ponteiros e digital, com AM e PM!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -1294,9 +1344,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=95"></script>
-  <script src="dados.js?v=95"></script>
-  <script type="module" src="js/main.js?v=95"></script>
+  <script src="plenix.js?v=96"></script>
+  <script src="dados.js?v=96"></script>
+  <script type="module" src="js/main.js?v=96"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
