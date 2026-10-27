@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=85">
+  <link rel="stylesheet" href="style.css?v=87">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -732,6 +732,50 @@
       <button class="btn-sec" id="btn-escondida-limpar" type="button">↺ Limpar a marcação</button>
     </section>
 
+    <!-- Copie Certo: instruções -->
+    <section class="tela" id="tela-copia-menu">
+      <h2 class="subtitulo">🧱 Copie Certo</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-copia"></div>
+        <div class="balao balao-esq">
+          Observe o <b>modelo</b> pequeno e monte <b>igualzinho</b> no quadro grande! Escolha a <b>cor</b>,
+          arraste a <b>peça</b> (quadrado ou triângulo) até o quadradinho certo, com a mesma <b>direção</b>.
+          Tocou numa peça do quadro? Ela sai. No fim, toque em <b>✔ Conferir</b>. 🧱
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-copia-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="copia-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Copie Certo: o jogo -->
+    <section class="tela tela-jogo" id="tela-copia">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="copia-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="copia-nivel"></span>
+        <span class="chuva-placar"><span id="copia-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="copia-contador"></span>
+        <span id="copia-tempo"></span>
+      </div>
+      <div class="copia-area">
+        <div class="copia-lado">
+          <span class="copia-rotulo">Modelo</span>
+          <div class="copia-modelo" id="copia-modelo" aria-label="Modelo para copiar"></div>
+        </div>
+        <div class="copia-quadro" id="copia-quadro" aria-label="Quadro para montar"></div>
+      </div>
+      <p class="copia-msg" id="copia-msg" role="status"></p>
+      <div class="copia-cores" id="copia-cores" aria-label="Cores"></div>
+      <div class="copia-pecas" id="copia-pecas" aria-label="Peças"></div>
+      <div class="copia-botoes">
+        <button class="btn-sec" id="btn-copia-limpar" type="button">↺ Limpar</button>
+        <button class="btn-grande" id="btn-copia-conferir" type="button">✔ Conferir</button>
+      </div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -966,6 +1010,11 @@
           <span class="jogo-card-nome">Palavra Escondida</span>
           <span class="jogo-card-texto">Ache a palavra no meio das letras!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-copia" type="button" data-tema="matematica psicopedagogia" style="--c:#2b4a9a">
+          <img class="jogo-card-capa" src="assets/capa-copia.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Copie Certo</span>
+          <span class="jogo-card-texto">Monte igualzinho ao modelo!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -1149,9 +1198,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=85"></script>
-  <script src="dados.js?v=85"></script>
-  <script type="module" src="js/main.js?v=85"></script>
+  <script src="plenix.js?v=87"></script>
+  <script src="dados.js?v=87"></script>
+  <script type="module" src="js/main.js?v=87"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

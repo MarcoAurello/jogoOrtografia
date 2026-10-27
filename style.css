@@ -2214,3 +2214,44 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 .tela-jogo > .escondida-dica { flex: 0 0 auto; }
 #tela-escondida .escondida-dica { margin-top: auto; }   /* o bloco do jogo fica no meio do espaço que sobra */
 #tela-escondida #btn-escondida-limpar { margin-bottom: auto; }
+
+/* ---------- Copie Certo ---------- */
+.copia-area { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; gap: clamp(8px, 2.5vw, 20px); }
+.copia-lado { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.copia-rotulo { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 14px; color: var(--primaria-escura); }
+.copia-modelo, .copia-quadro { display: grid; grid-template-columns: repeat(4, 1fr); background: #13294b; gap: 2px; border: 2px solid #13294b; border-radius: 6px; }
+.copia-modelo { width: clamp(78px, min(24vw, 15dvh), 140px); }
+.copia-quadro { width: min(64vw, 40dvh, 380px); touch-action: none; }
+.casa-modelo, .casa-copia { position: relative; aspect-ratio: 1; background: #fff; padding: 0; border-radius: 0; overflow: hidden; }
+.casa-copia { cursor: pointer; transition: background 0.15s; }
+.casa-copia.alvo { background: #fff3c4; }
+.casa-copia.presa { background: #e3f6ea; cursor: default; }
+.casa-copia.errada { background: #fde0de; box-shadow: inset 0 0 0 3px #e53935; }
+.casa-copia.encaixou .peca-copia { animation: peca-encaixe 0.25s ease-out; }
+.casa-copia.festa .peca-copia { animation: peca-festa 0.45s ease-out; }
+@keyframes peca-encaixe { 0% { transform: scale(1.25); } 60% { transform: scale(0.92); } 100% { transform: none; } }
+@keyframes peca-festa { 40% { filter: brightness(1.25); transform: scale(1.06); } }
+.copia-quadro.tremer { animation: luz-tremer 0.16s linear 2; }
+/* a peça: um quadradinho colorido; os triângulos são metade dele, cortada na diagonal */
+.peca-copia { position: absolute; inset: 0; background: var(--cor); }
+.peca-copia.forma-a { clip-path: polygon(0 0, 100% 0, 0 100%); }
+.peca-copia.forma-b { clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.peca-copia.forma-c { clip-path: polygon(0 0, 100% 100%, 0 100%); }
+.peca-copia.forma-d { clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+.copia-msg { min-height: 1.3em; margin: 6px 0 4px; text-align: center; font-weight: 700; font-size: clamp(14px, 2.2dvh, 17px); color: var(--primaria-escura); }
+.copia-msg.ok { color: #1d6b3d; }
+.copia-msg.erro { color: #b42318; }
+.copia-cores { display: flex; justify-content: center; gap: 10px; margin-bottom: 6px; }
+.copia-cores[hidden] { display: none; }
+.pote-copia { width: 40px; height: 40px; border-radius: 50%; background: var(--cor); border: 3px solid #fff; box-shadow: 0 0 0 2px #c9d6dc; padding: 0; }
+.pote-copia.ativo { box-shadow: 0 0 0 3px #13294b; transform: scale(1.12); }
+.copia-pecas { display: flex; justify-content: center; gap: clamp(8px, 2.5vw, 16px); margin-bottom: 6px; }
+.peca-btn { position: relative; width: clamp(46px, min(13vw, 7.5dvh), 64px); aspect-ratio: 1; padding: 0; border-radius: 8px;
+  background: #fff; border: 2px solid #c9d6dc; overflow: hidden; touch-action: none; cursor: grab; }
+.peca-btn .peca-copia { inset: 6px; }
+.peca-btn.escolhida { border-color: #13294b; box-shadow: 0 0 0 3px #ffd54f; }
+.fantasma-copia { position: fixed; left: 0; top: 0; z-index: 200; pointer-events: none; }
+.fantasma-copia .peca-copia { inset: 0; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.3)); }
+.copia-botoes { display: flex; justify-content: center; align-items: center; gap: 10px; }
+.copia-botoes .btn-grande, .copia-botoes .btn-sec { margin: 0; }
+#btn-copia-conferir:disabled { opacity: 0.5; }

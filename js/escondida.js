@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Palavra Escondida. */
 
-import { $, sortear } from './util.js?v=85';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=85';
-import { SOM, tocar } from './som.js?v=85';
-import { mascote, mostrar, telaJogos } from './telas.js?v=85';
-import { escolherProfessorE } from './professor.js?v=85';
-import { segundos } from './luzes.js?v=85';
-import { fimDaMissao } from './relatorio.js?v=85';
+import { $, sortear } from './util.js?v=87';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=87';
+import { SOM, tocar } from './som.js?v=87';
+import { mascote, mostrar, telaJogos } from './telas.js?v=87';
+import { escolherProfessorE } from './professor.js?v=87';
+import { segundos } from './luzes.js?v=87';
+import { fimDaMissao } from './relatorio.js?v=87';
 
 // ---------- Palavra Escondida ----------
 // Atenção seletiva, leitura e rapidez. Uma pilha de 10 vagas recebe uma letra a cada 2 segundos: palavras escondidas
