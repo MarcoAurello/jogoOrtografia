@@ -2433,3 +2433,29 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .menu-inicio .jogo-card-nome { font-size: clamp(15px, 4.4vw, 20px); line-height: 1.15; overflow-wrap: anywhere; }
   .menu-inicio .jogo-card-texto { font-size: 12px; }
 }
+
+/* ---------- Descobrindo o Peso ---------- */
+.descobrir-balancas { flex: 1 1 0; min-height: 0; display: flex; align-items: flex-end; justify-content: center; gap: 8px; overflow: hidden; }
+.balanca-peso { display: block; max-width: 100%; }
+.descobrir-balancas .balanca-peso { height: 100%; max-height: 36dvh; width: auto; }
+.balancas-2 .balanca-peso { max-width: 49%; }
+.descobrir-pergunta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 14px; margin: 6px 0; padding: 8px 10px;
+  border-radius: 14px; background: var(--branco); box-shadow: var(--sombra); font-weight: 800; font-size: clamp(16px, 2.6dvh, 20px); color: var(--texto); }
+.descobrir-legenda { display: flex; flex-wrap: wrap; gap: 6px 12px; justify-content: center; }
+.descobrir-legenda.dica { font-size: 14px; color: #8e44ad; }
+.legenda-peso { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 10px; background: #f3f6f9; }
+.descobrir-quanto { display: inline-flex; align-items: center; gap: 6px; color: #c2185b; }
+.forma-peso { width: 1.6em; height: 1.6em; vertical-align: middle; }
+.descobrir-opcoes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.descobrir-opcao { min-height: clamp(48px, 7.5dvh, 64px); border-radius: 16px; background: var(--branco); border: 3px solid #d6e6ea;
+  box-shadow: 0 4px 0 rgba(19, 41, 75, 0.12); font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(22px, 3.6dvh, 30px); color: #13294b; }
+.descobrir-opcao:active { transform: scale(0.97); }
+.descobrir-opcao.certa { border-color: #2e9e5b; background: #e3f6ea; }
+.descobrir-opcao.errada { border-color: #e53935; background: #fde0de; }
+.descobrir-msg { min-height: 1.3em; margin: 8px 0 0; text-align: center; font-weight: 700; font-size: clamp(14px, 2.2dvh, 17px); color: var(--primaria-escura); }
+.descobrir-msg.ok { color: #1d6b3d; }
+.descobrir-msg.erro { color: #b42318; }
+.descobrir-conta { display: block; margin-top: 4px; font-family: 'Fredoka', sans-serif; font-size: 1.15em; color: #13294b; }
+#descobrir-tempo { white-space: nowrap; }
+#descobrir-ajuda { padding-top: 76px; }
+.descobrir-ajuda-exemplo .balanca-peso { display: block; width: 150px; height: auto; margin: 0 auto; }

@@ -1,34 +1,35 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=103';
-import { SOM } from './som.js?v=103';
-import { mostrar, telaInicio } from './telas.js?v=103';
-import { telaMissoes } from './ortografia.js?v=103';
-import { telaChuvaMenu } from './chuva.js?v=103';
-import { telaMatMenu } from './matematica.js?v=103';
-import { telaTiroMenu } from './tiro.js?v=103';
-import { telaPesoMenu } from './peso.js?v=103';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=103';
-import { telaLuzesMenu } from './luzes.js?v=103';
-import { telaRotinaMenu } from './rotina.js?v=103';
-import { telaFichasMenu } from './fichas.js?v=103';
-import { telaEscondidaMenu } from './escondida.js?v=103';
-import { telaCopiaMenu } from './copia.js?v=103';
-import { telaBarcosMenu } from './barcos.js?v=103';
-import { telaGiroMenu } from './giro.js?v=103';
-import { telaHoraMenu } from './hora.js?v=103';
-import { telaSomandoMenu } from './somando.js?v=103';
-import { telaCoresMenu } from './cores.js?v=103';
-import { telaLadosMenu } from './lados.js?v=103';
-import { telaSetasMenu } from './setas.js?v=103';
-import { telaVistasMenu } from './vistas.js?v=103';
-import { telaDinosMenu } from './dinos.js?v=103';
-import { telaSimbolosMenu } from './simbolos.js?v=103';
-import { telaTabuadaMenu } from './tabuada.js?v=103';
-import { telaClassesMenu } from './classes.js?v=103';
-import { telaGraficosMenu } from './graficos.js?v=103';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=103';
+import { $, seguro } from './util.js?v=104';
+import { SOM } from './som.js?v=104';
+import { mostrar, telaInicio } from './telas.js?v=104';
+import { telaMissoes } from './ortografia.js?v=104';
+import { telaChuvaMenu } from './chuva.js?v=104';
+import { telaMatMenu } from './matematica.js?v=104';
+import { telaTiroMenu } from './tiro.js?v=104';
+import { telaPesoMenu } from './peso.js?v=104';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=104';
+import { telaLuzesMenu } from './luzes.js?v=104';
+import { telaRotinaMenu } from './rotina.js?v=104';
+import { telaFichasMenu } from './fichas.js?v=104';
+import { telaEscondidaMenu } from './escondida.js?v=104';
+import { telaCopiaMenu } from './copia.js?v=104';
+import { telaBarcosMenu } from './barcos.js?v=104';
+import { telaGiroMenu } from './giro.js?v=104';
+import { telaHoraMenu } from './hora.js?v=104';
+import { telaSomandoMenu } from './somando.js?v=104';
+import { telaDescobrirMenu } from './descobrir.js?v=104';
+import { telaCoresMenu } from './cores.js?v=104';
+import { telaLadosMenu } from './lados.js?v=104';
+import { telaSetasMenu } from './setas.js?v=104';
+import { telaVistasMenu } from './vistas.js?v=104';
+import { telaDinosMenu } from './dinos.js?v=104';
+import { telaSimbolosMenu } from './simbolos.js?v=104';
+import { telaTabuadaMenu } from './tabuada.js?v=104';
+import { telaClassesMenu } from './classes.js?v=104';
+import { telaGraficosMenu } from './graficos.js?v=104';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=104';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -40,7 +41,7 @@ const CHAVE_EMAIL_ESCOLHIDO = 'pleno-ortografia:email-escolhido';  // e-mail esc
 let senhaProfessor = '';   // a senha digitada, mandada ao script para gravar questionários
 const lerJSON = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) || padrao; } catch (e) { return padrao; } };
 const gravarJSON = (chave, valor) => { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) { /* sem armazenamento */ } };
-const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.somando ? 'somando' : mis.hora ? 'hora' : mis.giro ? 'giro' : mis.barcos ? 'barcos' : mis.copia ? 'copia' : mis.escondida ? 'escondida' : mis.setas ? 'setas' : mis.vistas ? 'vistas' : mis.dinos ? 'dinos' : mis.simbolos ? 'simbolos' : mis.tabuada ? 'tabuada' : mis.classes ? 'classes' : mis.graficos ? 'graficos' : mis.cores ? 'cores' : mis.lados ? 'lados' : mis.fichas ? 'fichas' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
+const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.descobrir ? 'descobrir' : mis.somando ? 'somando' : mis.hora ? 'hora' : mis.giro ? 'giro' : mis.barcos ? 'barcos' : mis.copia ? 'copia' : mis.escondida ? 'escondida' : mis.setas ? 'setas' : mis.vistas ? 'vistas' : mis.dinos ? 'dinos' : mis.simbolos ? 'simbolos' : mis.tabuada ? 'tabuada' : mis.classes ? 'classes' : mis.graficos ? 'graficos' : mis.cores ? 'cores' : mis.lados ? 'lados' : mis.fichas ? 'fichas' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
 let emailEscolhido = (() => { try { return localStorage.getItem(CHAVE_EMAIL_ESCOLHIDO) || ''; } catch (e) { return ''; } })();
 const listaEmails = () => lerJSON(CHAVE_EMAILS, []);
 // o e-mail para onde vai o relatório (só se estiver na lista da planilha)
@@ -271,6 +272,7 @@ const JOGOS_DO_LINK = {
   giro: { nome: 'Giro Imaginário', abrir: () => telaGiroMenu() },
   hora: { nome: 'Jogo da Hora', abrir: () => telaHoraMenu() },
   somando: { nome: 'Somando Imagens', abrir: () => telaSomandoMenu() },
+  descobrir: { nome: 'Descobrindo o Peso', abrir: () => telaDescobrirMenu() },
   cores: { nome: 'Somando as Cores', abrir: () => telaCoresMenu() },
   lados: { nome: 'Esquerda e Direita', abrir: () => telaLadosMenu() },
   setas: { nome: 'Setas e Cores', abrir: () => telaSetasMenu() },

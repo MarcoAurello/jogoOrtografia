@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=103">
+  <link rel="stylesheet" href="style.css?v=104">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -987,6 +987,48 @@
       </div>
     </section>
 
+    <!-- Descobrindo o Peso: instruções -->
+    <section class="tela" id="tela-descobrir-menu">
+      <h2 class="subtitulo">⚖️ Descobrindo o Peso</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-descobrir"></div>
+        <div class="balao balao-esq">
+          A balança mostra o <b>peso total</b> das peças. Você já sabe quanto pesam algumas delas: descubra quanto pesa a
+          peça que falta! Dica: <b>tire</b> do total o que você já sabe. Duas peças iguais pesam igual. Acertou, fica mais
+          difícil; errou, fica mais fácil. 🕵️
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-descobrir-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="descobrir-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Descobrindo o Peso: o jogo -->
+    <section class="tela tela-jogo" id="tela-descobrir">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="descobrir-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="descobrir-nivel"></span>
+        <span class="chuva-placar"><span id="descobrir-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="descobrir-contador"></span>
+        <span id="descobrir-tempo"></span>
+      </div>
+      <div class="descobrir-balancas" id="descobrir-balancas"></div>
+      <div class="descobrir-pergunta" id="descobrir-pergunta"></div>
+      <div class="descobrir-opcoes" id="descobrir-opcoes" aria-label="Alternativas"></div>
+      <p class="descobrir-msg" id="descobrir-msg" role="status"></p>
+      <!-- errou 2 vezes seguidas: janelinha que ensina a descobrir o peso -->
+      <div class="barcos-ajuda" id="descobrir-ajuda" hidden>
+        <div class="cartao barcos-ajuda-cartao" role="dialog" aria-modal="true" aria-labelledby="descobrir-ajuda-titulo">
+          <h3 class="chuva-pergunta" id="descobrir-ajuda-titulo">⚖️ Vamos lembrar: como descobrir o peso</h3>
+          <div class="descobrir-ajuda-exemplo" id="descobrir-ajuda-exemplo"></div>
+          <button class="btn-grande" id="btn-descobrir-entendi" type="button">Entendi! ▶</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -1271,6 +1313,11 @@
           <span class="jogo-card-nome">Somando Imagens</span>
           <span class="jogo-card-texto">Some e subtraia figuras coloridas de cabeça!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-descobrir" type="button" data-tema="matematica psicopedagogia" style="--c:#e8553f">
+          <img class="jogo-card-capa" src="assets/capa-descobrir.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Descobrindo o Peso</span>
+          <span class="jogo-card-texto">A balança mostra o total: quanto pesa a peça que falta?</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -1465,9 +1512,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=103"></script>
-  <script src="dados.js?v=103"></script>
-  <script type="module" src="js/main.js?v=103"></script>
+  <script src="plenix.js?v=104"></script>
+  <script src="dados.js?v=104"></script>
+  <script type="module" src="js/main.js?v=104"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
