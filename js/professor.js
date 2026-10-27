@@ -1,42 +1,43 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=111';
-import { SOM } from './som.js?v=111';
-import { mostrar, telaInicio } from './telas.js?v=111';
-import { telaMissoes } from './ortografia.js?v=111';
-import { telaChuvaMenu } from './chuva.js?v=111';
-import { telaMatMenu } from './matematica.js?v=111';
-import { telaTiroMenu } from './tiro.js?v=111';
-import { telaPesoMenu } from './peso.js?v=111';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=111';
-import { telaLuzesMenu } from './luzes.js?v=111';
-import { telaRotinaMenu } from './rotina.js?v=111';
-import { telaFichasMenu } from './fichas.js?v=111';
-import { telaEscondidaMenu } from './escondida.js?v=111';
-import { telaCopiaMenu } from './copia.js?v=111';
-import { telaBarcosMenu } from './barcos.js?v=111';
-import { telaGiroMenu } from './giro.js?v=111';
-import { telaHoraMenu } from './hora.js?v=111';
-import { telaSomandoMenu } from './somando.js?v=111';
-import { telaDescobrirMenu } from './descobrir.js?v=111';
-import { telaChavesMenu } from './chaves.js?v=111';
-import { telaCoresMenu } from './cores.js?v=111';
-import { telaLadosMenu } from './lados.js?v=111';
-import { telaSetasMenu } from './setas.js?v=111';
-import { telaVistasMenu } from './vistas.js?v=111';
-import { telaDinosMenu } from './dinos.js?v=111';
-import { telaSimbolosMenu } from './simbolos.js?v=111';
-import { telaTabuadaMenu } from './tabuada.js?v=111';
-import { telaClassesMenu } from './classes.js?v=111';
-import { telaGraficosMenu } from './graficos.js?v=111';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=111';
+import { $, seguro } from './util.js?v=112';
+import { SOM } from './som.js?v=112';
+import { mostrar, telaInicio } from './telas.js?v=112';
+import { telaMissoes } from './ortografia.js?v=112';
+import { telaChuvaMenu } from './chuva.js?v=112';
+import { telaMatMenu } from './matematica.js?v=112';
+import { telaTiroMenu } from './tiro.js?v=112';
+import { telaPesoMenu } from './peso.js?v=112';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=112';
+import { telaLuzesMenu } from './luzes.js?v=112';
+import { telaRotinaMenu } from './rotina.js?v=112';
+import { telaFichasMenu } from './fichas.js?v=112';
+import { telaEscondidaMenu } from './escondida.js?v=112';
+import { telaCopiaMenu } from './copia.js?v=112';
+import { telaBarcosMenu } from './barcos.js?v=112';
+import { telaGiroMenu } from './giro.js?v=112';
+import { telaHoraMenu } from './hora.js?v=112';
+import { telaSomandoMenu } from './somando.js?v=112';
+import { telaDescobrirMenu } from './descobrir.js?v=112';
+import { telaChavesMenu } from './chaves.js?v=112';
+import { telaCoresMenu } from './cores.js?v=112';
+import { telaLadosMenu } from './lados.js?v=112';
+import { telaSetasMenu } from './setas.js?v=112';
+import { telaVistasMenu } from './vistas.js?v=112';
+import { telaDinosMenu } from './dinos.js?v=112';
+import { telaSimbolosMenu } from './simbolos.js?v=112';
+import { telaTabuadaMenu } from './tabuada.js?v=112';
+import { telaClassesMenu } from './classes.js?v=112';
+import { telaGraficosMenu } from './graficos.js?v=112';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=112';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
 // e o aluno escolhe, ao entrar, para qual professor vai o relatório. O aparelho guarda uma cópia da lista
 // (para funcionar sem internet) e lembra a última escolha.
 const SENHA_PROFESSOR = 'app0707';   // conferida aqui (para os alunos não mexerem) e de novo no script
+const SENHA_ADMIN = 'app1234';       // administrador da plataforma: cria e edita as escolas (js/escola.js)
 const CHAVE_EMAILS = 'pleno-ortografia:emails';                    // cópia da aba "E-mails" [{ nome, email }]
 const CHAVE_EMAIL_ESCOLHIDO = 'pleno-ortografia:email-escolhido';  // e-mail escolhido, ou 'nenhum'
 let senhaProfessor = '';   // a senha digitada, mandada ao script para gravar questionários
@@ -115,6 +116,7 @@ function parteProfessor(qual) {
   $('painel-questionarios').hidden = qual !== 'quiz';
   $('painel-links').hidden = qual !== 'links';
   $('painel-competicoes').hidden = qual !== 'comp';
+  $('painel-escolas').hidden = qual !== 'escolas';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -169,7 +171,11 @@ $('form-novo-email').onsubmit = async (e) => {
 
 $('form-senha-professor').onsubmit = async (e) => {
   e.preventDefault();
-  if ($('professor-senha').value.trim() !== SENHA_PROFESSOR) {
+  const senha = $('professor-senha').value.trim();
+  // administrador: o menu mostra só as Escolas; professor: tudo, menos as Escolas
+  const admin = senha === SENHA_ADMIN;
+  document.querySelectorAll('#menu-professor .jogo-card').forEach((c) => { c.hidden = admin !== (c.id === 'btn-prof-escolas'); });
+  if (senha !== SENHA_PROFESSOR && !admin) {
     $('erro-professor').textContent = 'Senha incorreta. 🔒';
     SOM.errado();
     return;
@@ -411,4 +417,4 @@ $('btn-quiz-salvar').onclick = async () => {
 $('btn-professor').onclick = () => { SOM.clique(); telaProfessor(); };
 $('professor-voltar').onclick = telaInicio;
 
-export { carregarEmails, definirEmailCompeticao, emailDoRelatorio, escolherProfessorE, gravarJSON, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, lerJSON, listaEmails, parteProfessor, telaProfessor };
+export { carregarEmails, definirEmailCompeticao, SENHA_ADMIN, emailDoRelatorio, escolherProfessorE, gravarJSON, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, lerJSON, listaEmails, parteProfessor, telaProfessor };

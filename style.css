@@ -2489,3 +2489,20 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 .saiba-texto p { margin: 6px 0; line-height: 1.5; }
 .saiba-texto ul { margin: 6px 0 10px; padding-left: 20px; line-height: 1.5; }
 .saiba-texto li { margin: 4px 0; }
+
+/* ---------- Escolas: o nome da escola e o painel do administrador ---------- */
+.escola-nome { margin: -4px auto 6px; text-align: center; font-family: 'Fredoka', sans-serif; font-weight: 700;
+  font-size: clamp(18px, 3.4vw, 26px); color: var(--primaria-escura); }
+.escola-nome[hidden] { display: none; }
+body.com-escola .topo .logo { border-radius: 50%; background: #fff; object-fit: contain; aspect-ratio: 1; padding: 2px; }
+.escola-cores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.campo input[type="color"] { width: 100%; height: 44px; padding: 2px; border-radius: 10px; }
+.escola-logo-previa { display: block; width: 84px; height: 84px; object-fit: contain; margin: 4px auto; border-radius: 12px; background: #f3f6f9; }
+.escola-logo-previa[hidden] { display: none; }
+.escola-previa { margin: 8px 0; border-radius: 14px; overflow: hidden; border: 2px solid #e3edf0; text-align: center; background: #fff; }
+.escola-previa-topo { padding: 8px; background: var(--cor); }
+.escola-previa-topo img { width: 56px; height: 56px; border-radius: 50%; background: #fff; object-fit: contain; }
+.escola-previa-nome { margin: 6px 0 2px; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 20px; color: var(--cor); }
+.escola-previa-slogan { display: inline-block; margin: 0 0 10px; padding: 3px 10px; border-radius: 8px; background: var(--destaque); font-weight: 800; font-size: 14px; }
+.escola-item { flex-wrap: wrap; border-left-width: 8px; }
+.escola-logo-mini { width: 44px; height: 44px; border-radius: 50%; object-fit: contain; background: #f3f6f9; }

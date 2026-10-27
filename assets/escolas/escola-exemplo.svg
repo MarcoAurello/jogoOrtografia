@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 168">
+  <!-- Logo fictício da Escola Exemplo (demonstração da plataforma) -->
+  <circle cx="84" cy="84" r="82" fill="#ffffff"/>
+  <circle cx="84" cy="84" r="74" fill="#2e7d32"/>
+  <path d="M84 28 L126 45 V84 C126 110 107 130 84 141 C61 130 42 110 42 84 V45 Z" fill="#ffffff"/>
+  <path d="M84 38 L116 51 V84 C116 103 102 118 84 127 C66 118 52 103 52 84 V51 Z" fill="#ffb300"/>
+  <path d="M60 70 Q72 64 84 70 V104 Q72 98 60 104 Z" fill="#ffffff" stroke="#1b5e20" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M108 70 Q96 64 84 70 V104 Q96 98 108 104 Z" fill="#ffffff" stroke="#1b5e20" stroke-width="2.5" stroke-linejoin="round"/>
+  <polygon points="84,44 88,54 99,54 90,60 93,70 84,64 75,70 78,60 69,54 80,54" fill="#ffffff"/>
+</svg>

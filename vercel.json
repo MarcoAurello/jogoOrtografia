@@ -1,0 +1,6 @@
+{
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/:escola([A-Za-z0-9_-]{3,40})", "destination": "/index.html" }
+  ]
+}

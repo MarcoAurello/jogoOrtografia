@@ -5,6 +5,7 @@
    - abas "Q: <nome>": um questionário da aula em cada aba (A pergunta, B resposta certa, C a E respostas erradas);
    - aba "Relatórios": uma linha para cada relatório enviado;
    - aba "Competições": as competições criadas pelo professor (código, jogo, hora de encerrar);
+   - aba "Escolas": as versões do app com o logo, as cores e o nome de cada escola (criadas pelo administrador);
    - aba "Ranking": a melhor partida de cada aluno em cada competição (nada é apagado: depois da hora, só não entra mais ninguém).
    O jogo lê a lista de e-mails e os questionários (doGet) e manda relatórios e alterações do professor (doPost).
    Os relatórios só podem ir para e-mails que estão na aba "E-mails" (ninguém usa o script para mandar e-mail a outros).
@@ -13,6 +14,7 @@
 
 const CHAVE = 'jogo-ortografia';      // a mesma CHAVE_RELATORIO do js/relatorio.js (só evita envios por engano)
 const SENHA_PROFESSOR = 'app0707';    // a mesma senha da Área do professor: exigida para mudar e-mails e questionários
+const SENHA_ADMIN = 'app1234';        // a mesma SENHA_ADMIN do js/professor.js: cria e edita as escolas
 const MAX_ITENS = 120;
 const PREFIXO_QUESTIONARIO = 'Q: ';   // abas criadas pelo jogo; à mão vale "Q:" com ou sem espaço
 const ABA_QUESTIONARIO = /^Q:\s*/i;
@@ -54,6 +56,7 @@ function doGet(e) {
     if (acao === 'questionario') return resposta({ ok: true, questionario: lerQuestionario(e.parameter.id) });
     if (acao === 'competicoes') return resposta({ ok: true, lista: listarCompeticoes(false) });
     if (acao === 'ranking') return resposta({ ok: true, ...rankingDaCompeticao(e.parameter.id) });
+    if (acao === 'escola') return resposta({ ok: true, escola: lerEscola(e.parameter.id) });
     return resposta({ ok: true, versao: 4 });
   } catch (err) {
     return resposta({ ok: false, erro: String(err) });
@@ -68,6 +71,12 @@ function doPost(e) {
     // competição: o aluno entra com o código e manda a pontuação (sem a senha do professor)
     if (d.acao === 'entrarCompeticao') return resposta({ ok: true, competicao: entrarCompeticao(d.id, d.codigo) });
     if (d.acao === 'resultadoCompeticao') return resposta({ ok: true, ...guardarResultado(d) });
+    // administrador da plataforma: escolas (com a SENHA_ADMIN)
+    if (d.acao === 'salvarEscola' || d.acao === 'escolasAdmin') {
+      if (d.senha !== SENHA_ADMIN) return resposta({ ok: false, erro: 'senha' });
+      if (d.acao === 'salvarEscola') return resposta({ ok: true, escola: salvarEscola(d.escola || {}) });
+      return resposta({ ok: true, lista: listarEscolas() });
+    }
     if (d.acao) {
       if (d.senha !== SENHA_PROFESSOR) return resposta({ ok: false, erro: 'senha' });
       if (d.acao === 'entrar') return resposta({ ok: true });
@@ -292,6 +301,43 @@ function rankingDaCompeticao(id) {
     .sort((a, b) => b.pontos - a.pontos || b.acertos - a.acertos || a.em - b.em)
     .map(({ em, ...r }) => r);
   return { competicao: competicaoDaLinha(v, false), ranking };
+}
+
+// ---------- escolas ----------
+// Cada escola é uma linha da aba "Escolas": o endereço (o que vem depois de .com.br/), o nome, o slogan, as cores,
+// o logo (uma imagem pequena, guardada como texto) e, se tiver, o script da planilha própria da escola.
+const COLUNAS_ESCOLA = ['Endereço', 'Nome', 'Slogan', 'Cor principal', 'Cor de destaque', 'Logo', 'Script da planilha', 'Atualizada em'];
+const abaEscolas = () => abaCom('Escolas', COLUNAS_ESCOLA);
+const corOk = (c) => (/^#[0-9a-f]{6}$/i.test(String(c || '')) ? String(c) : '');
+function escolaDaLinha(v) {
+  return { id: String(v[0]), nome: String(v[1]), slogan: String(v[2] || ''), cor: corOk(v[3]), destaque: corOk(v[4]),
+    logo: String(v[5] || ''), script: String(v[6] || '') };
+}
+function lerEscola(id) {
+  const achada = linhasDe(abaEscolas(), COLUNAS_ESCOLA.length).find((x) => String(x.v[0]).toLowerCase() === texto(id, 40).toLowerCase());
+  return achada ? escolaDaLinha(achada.v) : null;
+}
+function listarEscolas() {
+  return linhasDe(abaEscolas(), COLUNAS_ESCOLA.length).map((x) => escolaDaLinha(x.v));
+}
+function salvarEscola(e) {
+  const id = texto(e.id, 40);
+  if (!/^[A-Za-z0-9_-]{3,40}$/.test(id)) throw new Error('endereco');
+  const nome = texto(e.nome, 60);
+  if (!nome) throw new Error('nome');
+  const logo = String(e.logo || '');
+  if (logo.length > 49000 || (logo && !/^(data:image\/(png|jpeg|webp|svg\+xml);base64,|https:\/\/)/.test(logo))) throw new Error('logo');
+  const script = texto(e.script, 200);
+  const linha = [id, nome, texto(e.slogan, 80), corOk(e.cor), corOk(e.destaque), logo, /^https:\/\/script\.google\.com\//.test(script) ? script : '', new Date()];
+  const trava = LockService.getScriptLock();
+  trava.waitLock(10000);
+  try {
+    const aba = abaEscolas();
+    const achada = linhasDe(aba, 1).find((x) => String(x.v[0]).toLowerCase() === id.toLowerCase());
+    if (achada) aba.getRange(achada.linha, 1, 1, linha.length).setValues([linha]);
+    else aba.appendRow(linha);
+  } finally { trava.releaseLock(); }
+  return escolaDaLinha(linha);
 }
 
 // ---------- relatório por e-mail ----------

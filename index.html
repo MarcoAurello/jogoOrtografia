@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=111">
+  <link rel="stylesheet" href="style.css?v=112">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -46,6 +46,7 @@
         <span class="cor-amarelo">JOGOS</span>
         <span class="cor-azul">PSICOPEDAGÓGICOS</span>
       </h1>
+      <p class="escola-nome" hidden></p>
       <p class="slogan">Jogos com relatórios de desempenho</p>
       <form class="cartao cartao-login" id="form-login" autocomplete="off">
         <div class="davi-area" id="davi-login"></div>
@@ -69,6 +70,7 @@
         <span class="cor-amarelo">JOGOS</span>
         <span class="cor-azul">PSICOPEDAGÓGICOS</span>
       </h1>
+      <p class="escola-nome" hidden></p>
       <p class="slogan">Jogos com relatórios de desempenho</p>
       <div class="cena">
         <div class="davi-area grande" id="davi-inicio"></div>
@@ -1168,6 +1170,11 @@
           <span class="jogo-card-nome">Competições</span>
           <span class="jogo-card-texto">Criar uma competição de um jogo ou questionário, ver o código e o ranking</span>
         </button>
+        <button class="jogo-card" id="btn-prof-escolas" type="button" style="--c:#13294b" hidden>
+          <span class="jogo-card-icone">🏫</span>
+          <span class="jogo-card-nome">Escolas</span>
+          <span class="jogo-card-texto">Criar a versão de uma escola, com logo, cores e endereço próprios</span>
+        </button>
         <button class="jogo-card" id="btn-prof-links" type="button" style="--c:#e0a100">
           <span class="jogo-card-icone">🔗</span>
           <span class="jogo-card-nome">Links dos jogos</span>
@@ -1193,6 +1200,38 @@
           <button class="btn-grande" type="submit">🏆 Criar competição</button>
         </form>
         <div class="lista-quiz" id="lista-comp-prof"></div>
+      </div>
+      <div class="cartao cartao-login" id="painel-escolas" hidden>
+        <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
+        <h3 class="chuva-pergunta">🏫 Escolas</h3>
+        <p class="professor-ajuda">Cada escola ganha um endereço próprio (<b>pedagociagamificada.com.br/nomeDaEscola</b>) com o
+          <b>logo</b>, as <b>cores</b> e o <b>nome</b> dela, e todos os jogos. As escolas ficam na aba <b>"Escolas"</b> da planilha principal.</p>
+        <form class="cadastro-email" id="form-escola" autocomplete="off">
+          <label class="campo campo-jogo"><span>Endereço (o que vem depois de .com.br/)</span>
+            <input type="text" id="escola-id" maxlength="40" placeholder="Ex.: colegioNovo" spellcheck="false" autocapitalize="off"></label>
+          <label class="campo campo-jogo"><span>Nome da escola</span>
+            <input type="text" id="escola-nome" maxlength="60" placeholder="Ex.: Colégio Novo Saber"></label>
+          <label class="campo campo-jogo"><span>Slogan (opcional)</span>
+            <input type="text" id="escola-slogan" maxlength="80" placeholder="Ex.: Aprender é uma aventura!"></label>
+          <div class="escola-cores">
+            <label class="campo campo-jogo"><span>Cor principal</span><input type="color" id="escola-cor" value="#1fa2b0"></label>
+            <label class="campo campo-jogo"><span>Cor de destaque</span><input type="color" id="escola-destaque" value="#f9c62b"></label>
+          </div>
+          <label class="campo campo-jogo"><span>Logo (imagem PNG ou JPG)</span>
+            <input type="file" id="escola-logo" accept="image/*"></label>
+          <img class="escola-logo-previa" id="escola-logo-previa" alt="Logo escolhido" hidden>
+          <label class="campo campo-jogo"><span>Script da planilha da escola (opcional)</span>
+            <input type="url" id="escola-script" placeholder="Vazio: usa a planilha principal" spellcheck="false"></label>
+          <div class="escola-previa" id="escola-previa" aria-label="Prévia">
+            <div class="escola-previa-topo"><img id="escola-previa-logo" alt=""></div>
+            <p class="escola-previa-nome" id="escola-previa-nome"></p>
+            <p class="escola-previa-slogan" id="escola-previa-slogan"></p>
+          </div>
+          <p class="erro-login" id="aviso-escola" role="status"></p>
+          <button class="btn-grande" id="btn-escola-salvar" type="submit">🏫 Criar escola</button>
+          <button class="btn-sec" id="btn-escola-limpar" type="button">Limpar</button>
+        </form>
+        <div class="lista-quiz" id="lista-escolas"></div>
       </div>
       <div class="cartao cartao-login" id="painel-links" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
@@ -1576,9 +1615,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=111"></script>
-  <script src="dados.js?v=111"></script>
-  <script type="module" src="js/main.js?v=111"></script>
+  <script src="plenix.js?v=112"></script>
+  <script src="dados.js?v=112"></script>
+  <script type="module" src="js/main.js?v=112"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
