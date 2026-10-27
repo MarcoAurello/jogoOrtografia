@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Palavra Escondida. */
 
-import { $, sortear } from './util.js?v=105';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=105';
-import { SOM, tocar } from './som.js?v=105';
-import { mascote, mostrar, telaJogos } from './telas.js?v=105';
-import { escolherProfessorE } from './professor.js?v=105';
-import { segundos } from './luzes.js?v=105';
-import { fimDaMissao } from './relatorio.js?v=105';
+import { $, sortear } from './util.js?v=106';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=106';
+import { SOM, tocar } from './som.js?v=106';
+import { mascote, mostrar, telaJogos } from './telas.js?v=106';
+import { escolherProfessorE } from './professor.js?v=106';
+import { segundos } from './luzes.js?v=106';
+import { fimDaMissao } from './relatorio.js?v=106';
 
 // ---------- Palavra Escondida ----------
 // Atenção seletiva, leitura e rapidez. As letras chegam em LINHAS: cada linha nova entra em cima e empurra as outras
@@ -16,7 +16,7 @@ import { fimDaMissao } from './relatorio.js?v=105';
 // dedo); acertou, a linha some. Com o quadro cheio, a linha de baixo (a mais antiga) cai e a palavra é perdida.
 // O ritmo se ajusta: quanto mais rápido a criança acha as palavras, mais rápido entram as linhas. Marcou errado:
 // entram 2 linhas de uma vez. Quanto menos tempo depois que a linha entrou, mais pontos.
-// A figura da palavra fica no começo de cada linha, em todos os níveis. Nível 1: palavras de 5 e 6 letras; nível 2: de 6 e 7;
+// Sem dica: só as letras (a criança reconhece a palavra lendo a linha). Nível 1: palavras de 5 e 6 letras; nível 2: de 6 e 7;
 // nível 3: de 7 a 9 letras.
 const ESCONDIDA = { PALAVRAS: 10, NIVEL_MAX: 3, LINHAS: 6, COLUNAS: 10, RITMO_INICIAL: 7000, RITMO_MIN: 2500, RITMO_MAX: 9000 };
 // [palavra, figura, categoria] (sem acentos, para as letras ficarem iguais às do teclado)
@@ -34,9 +34,9 @@ const PALAVRAS_ESCONDIDAS = {
 };
 const TIPOS_ESCONDIDA = {
   1: { id: 'esc1', titulo: 'Palavras curtas (5 e 6 letras)', icone: '🖼️', cor: '#7b4fc9',
-    regra: 'Olhar a figura, pensar no nome e procurar as letras dele em sequência no meio das letras da linha.' },
+    regra: 'Ler a linha da esquerda para a direita e reconhecer uma palavra inteira no meio das letras soltas.' },
   2: { id: 'esc2', titulo: 'Palavras médias (6 e 7 letras)', icone: '🔤', cor: '#7b4fc9',
-    regra: 'Pensar no nome da figura letra por letra e conferir a palavra inteira, sem parar no começo dela.' },
+    regra: 'Conferir a palavra inteira, letra por letra, sem parar no começo dela.' },
   3: { id: 'esc3', titulo: 'Palavras longas (7 a 9 letras)', icone: '🔢', cor: '#7b4fc9',
     regra: 'Palavras longas: ler a linha com atenção, ignorando as iscas (pedaços parecidos com o começo) até achar a palavra inteira.' },
 };
@@ -122,8 +122,6 @@ function agendarLinha(vezes = 1) {
   ritmo.classList.add('andando');
 }
 
-// dica no começo da linha: a figura da palavra
-const dicaLinha = (x) => `<span class="dica-figura" title="${x.palavra.length} letras">${x.figura}</span>`;
 
 function desenharLinhas() {
   const e = escondida;
@@ -135,7 +133,7 @@ function desenharLinhas() {
   const vagas = Array.from({ length: ESCONDIDA.LINHAS }, (_, n) => e.linhas[n]);
   $('escondida-grade').innerHTML = vagas.map((x, n) => (x
     ? `<div class="linha-escondida${x.nova ? ' entrou' : ''}${cheio && n === ESCONDIDA.LINHAS - 1 ? ' vai-cair' : ''}" data-l="${x.id}">
-        <span class="dica-linha" aria-label="Dica">${dicaLinha(x)}</span>${x.letras.map((l, i) =>
+        ${x.letras.map((l, i) =>
           `<button class="letra-escondida${e.sel && e.sel.l === x.id && i >= e.sel.a && i <= e.sel.b ? ' marcada' : ''}" type="button" data-l="${x.id}" data-i="${i}">${l}</button>`).join('')}
       </div>`
     : '<div class="linha-escondida vazia" aria-hidden="true"></div>')).join('');

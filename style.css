@@ -2377,8 +2377,8 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 
 /* Palavra Escondida: linhas de letras (cada linha esconde uma palavra) */
 #escondida-grade { display: flex; flex-direction: column; justify-content: flex-start; gap: clamp(5px, 1.2dvh, 10px); padding: 10px 6px; flex: 0 0 auto; min-height: 0; margin: auto 0; }
-.linha-escondida { display: grid; grid-template-columns: 1.5fr repeat(10, 1fr); gap: clamp(2px, 0.7vw, 5px); align-items: center; }
-.linha-escondida.vazia { aspect-ratio: 11.5 / 1; border-radius: 10px; border: 2px dashed #e3edf0; }
+.linha-escondida { display: grid; grid-template-columns: repeat(10, 1fr); gap: clamp(2px, 0.7vw, 5px); align-items: center; }
+.linha-escondida.vazia { aspect-ratio: 10 / 1; border-radius: 10px; border: 2px dashed #e3edf0; }
 .linha-escondida.entrou { animation: linha-entrou 0.35s ease-out; }
 @keyframes linha-entrou { from { transform: translateY(-16px); opacity: 0; } to { transform: none; opacity: 1; } }
 .linha-escondida.saindo { animation: linha-sai 0.4s ease-in forwards; }

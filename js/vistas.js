@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* De Lado e de Cima. */
 
-import { $, embaralhar, sortear } from './util.js?v=105';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=105';
-import { SOM, tocar } from './som.js?v=105';
-import { mascote, mostrar, telaJogos } from './telas.js?v=105';
-import { escolherProfessorE } from './professor.js?v=105';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=105';
+import { $, embaralhar, sortear } from './util.js?v=106';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=106';
+import { SOM, tocar } from './som.js?v=106';
+import { mascote, mostrar, telaJogos } from './telas.js?v=106';
+import { escolherProfessorE } from './professor.js?v=106';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=106';
 
 // ---------- De Lado e de Cima ----------
 // Percepção espacial e raciocínio sobre a ordem das cores. Uma pirâmide de argolas (a peça de baixo é a maior e a de
