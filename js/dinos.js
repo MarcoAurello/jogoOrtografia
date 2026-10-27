@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Memória dos Dinossauros. */
 
-import { $, embaralhar, sortear } from './util.js?v=84';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=84';
-import { SOM, tocar } from './som.js?v=84';
-import { mascote, mostrar, telaJogos } from './telas.js?v=84';
-import { escolherProfessorE } from './professor.js?v=84';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=84';
+import { $, embaralhar, sortear } from './util.js?v=85';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=85';
+import { SOM, tocar } from './som.js?v=85';
+import { mascote, mostrar, telaJogos } from './telas.js?v=85';
+import { escolherProfessorE } from './professor.js?v=85';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=85';
 
 // ---------- Memória dos Dinossauros ----------
 // Memória visual de sequência (memória de trabalho). Em cada rodada uma fila de

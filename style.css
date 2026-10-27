@@ -2173,3 +2173,44 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 
 /* e-mails dos relatórios: o cadastro fica em cima e a lista dos cadastrados embaixo */
 #form-novo-email { margin-bottom: 14px; }
+
+/* ---------- Palavra Escondida ---------- */
+.escondida-dica { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0 0 8px; padding: 8px 12px;
+  border-radius: 14px; background: #f3edfc; color: var(--texto); font-weight: 700; font-size: clamp(15px, 2.4dvh, 18px); text-align: left; }
+.escondida-figura { font-size: clamp(32px, 6dvh, 48px); line-height: 1; }
+.escondida-grade {
+  flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: repeat(var(--cols, 9), 1fr); align-content: center; gap: clamp(3px, 0.8vw, 6px);
+  padding: 10px; border-radius: 16px; background: var(--branco); box-shadow: var(--sombra); touch-action: none; user-select: none;
+}
+.escondida-grade.tremer { animation: luz-tremer 0.16s linear 2; }
+/* filas separadas por um respiro maior, para ler fila por fila */
+.letra-escondida {
+  aspect-ratio: 1; min-width: 0; padding: 0; border-radius: 8px; background: #eef4f6; color: var(--texto);
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(16px, min(5.2vw, 3.6dvh), 30px); line-height: 1;
+  transition: transform 0.08s, background 0.12s;
+}
+.letra-escondida.marcada { background: #ffe082; color: #5d4300; transform: scale(1.06); }
+.letra-escondida.achada { background: #2e9e5b; color: #fff; animation: letra-achada 0.4s ease-out; }
+.letra-escondida.mostrada { background: #e53935; color: #fff; }
+@keyframes letra-achada { 40% { transform: translateY(-4px) scale(1.12); } }
+.escondida-msg { min-height: 1.4em; margin: 8px 0 2px; text-align: center; font-family: 'Fredoka', sans-serif; font-weight: 600;
+  font-size: clamp(15px, 2.4dvh, 19px); color: var(--primaria-escura); }
+.escondida-msg.ok { color: #1d6b3d; }
+.escondida-msg.erro { color: #b42318; }
+#btn-escondida-limpar { margin-top: 4px; }
+
+/* Palavra Escondida: pilha de 10 vagas numa fila só */
+#escondida-grade { --cols: 10; flex: 0 0 auto; grid-template-columns: repeat(10, 1fr); padding: 10px 8px; }
+.vaga-escondida { aspect-ratio: 1; border-radius: 8px; border: 2px dashed #d6e6ea; }
+.letra-escondida.entrou { animation: letra-entrou 0.35s ease-out; }
+@keyframes letra-entrou { 0% { transform: translateX(30px) scale(0.6); opacity: 0; } 70% { transform: translateX(-2px) scale(1.06); } 100% { transform: none; opacity: 1; } }
+.letra-escondida.achada { animation: letra-sai 0.38s ease-in forwards; }
+@keyframes letra-sai { 0% { transform: none; } 40% { transform: translateY(-6px) scale(1.15); } 100% { transform: translateY(-30px) scale(0.6); opacity: 0; } }
+#escondida-grade.quase-cheia { box-shadow: 0 0 0 3px #f6b26b, var(--sombra); }
+.escondida-ritmo { height: 6px; margin: 6px 4px 0; border-radius: 999px; background: #e3edf0; overflow: hidden; }
+.escondida-ritmo span { display: block; height: 100%; width: 0; background: var(--primaria); border-radius: 999px; }
+.escondida-ritmo span.andando { animation: ritmo-andando 2s linear forwards; }
+@keyframes ritmo-andando { from { width: 0; } to { width: 100%; } }
+.tela-jogo > .escondida-dica { flex: 0 0 auto; }
+#tela-escondida .escondida-dica { margin-top: auto; }   /* o bloco do jogo fica no meio do espaço que sobra */
+#tela-escondida #btn-escondida-limpar { margin-bottom: auto; }

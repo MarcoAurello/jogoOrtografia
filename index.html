@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=84">
+  <link rel="stylesheet" href="style.css?v=85">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -697,6 +697,41 @@
       <button class="btn-grande graficos-proxima" id="btn-graficos-proxima" type="button" hidden>Próxima ▶</button>
     </section>
 
+    <!-- Palavra Escondida: instruções -->
+    <section class="tela" id="tela-escondida-menu">
+      <h2 class="subtitulo">🔎 Palavra Escondida</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-escondida"></div>
+        <div class="balao balao-esq">
+          A cada <b>2 segundos</b> entra uma letra na pilha, e no meio delas vêm <b>palavras escondidas</b>!
+          Use a dica, ache a palavra e <b>toque nas letras dela</b> (ou arraste o dedo): ela sai da pilha.
+          Se a pilha encher, as letras mais antigas vão embora. Cuidado com as <b>iscas</b>! Quanto <b>mais rápido</b>, mais pontos! ⚡
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-escondida-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="escondida-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Palavra Escondida: o jogo -->
+    <section class="tela tela-jogo" id="tela-escondida">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="escondida-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="escondida-nivel"></span>
+        <span class="chuva-placar"><span id="escondida-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="escondida-contador"></span>
+        <span id="escondida-tempo"></span>
+      </div>
+      <div class="escondida-dica" id="escondida-dica"></div>
+      <div class="escondida-grade" id="escondida-grade" role="grid" aria-label="Pilha de letras"></div>
+      <div class="escondida-ritmo" aria-hidden="true"><span id="escondida-ritmo"></span></div>
+      <p class="escondida-msg" id="escondida-msg" role="status"></p>
+      <button class="btn-sec" id="btn-escondida-limpar" type="button">↺ Limpar a marcação</button>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -838,7 +873,6 @@
           <option value="todos">🎮 Todos os jogos</option>
           <option value="portugues">📚 Português</option>
           <option value="matematica">🔢 Matemática</option>
-          <option value="abc">🔤 ABC</option>
           <option value="ingles">🌎 Inglês</option>
           <option value="psicopedagogia">🧠 Psicopedagogia</option>
         </select>
@@ -901,7 +935,7 @@
           <span class="jogo-card-texto">Equilibre a balança com os pesos!</span>
         </button>
         <!-- jogo externo: abre o site da Tia Ana em outra aba -->
-        <a class="jogo-card com-capa" id="btn-abc" href="https://abcdaana.vercel.app/" target="_blank" rel="noopener" data-tema="abc portugues psicopedagogia" style="--c:#c2185b">
+        <a class="jogo-card com-capa" id="btn-abc" href="https://abcdaana.vercel.app/" target="_blank" rel="noopener" data-tema="portugues psicopedagogia" style="--c:#c2185b">
           <img class="jogo-card-capa" src="assets/capa-abc-tia-ana.jpg" alt="" width="480" height="619">
           <span class="jogo-card-nome">ABC da Tia Ana</span>
           <span class="jogo-card-texto">Aprender brincando com as letras ↗</span>
@@ -926,6 +960,11 @@
           <img class="jogo-card-capa" src="assets/capa-rotina.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Rotina Certa</span>
           <span class="jogo-card-texto">Coloque os passos do dia na ordem certa!</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-escondida" type="button" data-tema="portugues psicopedagogia" style="--c:#7b4fc9">
+          <img class="jogo-card-capa" src="assets/capa-escondida.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Palavra Escondida</span>
+          <span class="jogo-card-texto">Ache a palavra no meio das letras!</span>
         </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
@@ -1110,9 +1149,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=84"></script>
-  <script src="dados.js?v=84"></script>
-  <script type="module" src="js/main.js?v=84"></script>
+  <script src="plenix.js?v=85"></script>
+  <script src="dados.js?v=85"></script>
+  <script type="module" src="js/main.js?v=85"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

@@ -21,6 +21,7 @@ const TEXTOS = {
   medidas: { assunto: 'Medidas de massa', unidade: 'objeto', revisar: 'Objetos para revisar', certo: 'Objeto e peso', tentou: 'Passou do ponto com', porRegra: 'Acertos por unidade', niveis: 'Nível', nivelMax: 3 },
   angulos: { assunto: 'Ângulos', unidade: 'ângulo', revisar: 'Ângulos para revisar', certo: 'Ângulo certo', tentou: 'O aluno escolheu', porRegra: 'Acertos por tipo de ângulo', niveis: 'Nível em cada míssil', nivelMax: 5 },
   atencao: { assunto: 'Atenção e memória', unidade: 'sequência', revisar: 'Sequências para revisar', certo: 'Sequência que piscou', tentou: 'O que o aluno fez', porRegra: 'Acertos por tamanho da sequência', niveis: 'Nível em cada rodada', nivelMax: 8 },
+  escondida: { assunto: 'Atenção e leitura (palavra escondida)', unidade: 'palavra', revisar: 'Palavras para revisar', certo: 'Palavra escondida', tentou: 'O que marcou antes', porRegra: 'Acertos por tipo de dica', niveis: 'Nível em cada palavra', nivelMax: 3 },
   fichas: { assunto: 'Agrupar e trocar (valor das fichas)', unidade: 'jogada', revisar: 'Jogadas para revisar', certo: 'Jogada', tentou: 'O que aconteceu', porRegra: 'Acertos por tipo', niveis: 'Nível', nivelMax: 3 },
   cores: { assunto: 'Coordenadas e cálculo (tabela de cores)', unidade: 'conta', revisar: 'Contas para revisar', certo: 'Conta certa', tentou: 'O aluno respondeu', porRegra: 'Acertos por tipo de conta', niveis: 'Nível em cada conta', nivelMax: 8 },
   lateralidade: { assunto: 'Lateralidade e atenção (esquerda, direita, cima e baixo)', unidade: 'comando', revisar: 'Comandos para revisar', certo: 'Comando', tentou: 'O que aconteceu', porRegra: 'Acertos por tipo de comando', niveis: 'Nível em cada comando', nivelMax: 8 },
@@ -168,6 +169,7 @@ function enviarRelatorio(d) {
     : d.tipo === 'atencao' ? 'atencao'
     : d.tipo === 'sequencia' ? 'sequencia'
     : d.tipo === 'fichas' ? 'fichas'
+    : d.tipo === 'escondida' ? 'escondida'
     : d.tipo === 'cores' ? 'cores'
     : d.tipo === 'lateralidade' ? 'lateralidade'
     : d.tipo === 'setas' ? 'setas'
@@ -278,7 +280,7 @@ function graficosEmail(r) {
       + `<div style="font-size:9px;color:#64748b">${x.t == null ? '–' : String(x.t).replace('.', ',')}</div>`
       + `<div style="height:${Math.max(4, Math.round(((x.t == null ? maior : x.t) * 90) / maior))}px;background:${x.t == null ? '#b0bec5' : x.ok ? VERDE : VERMELHO};border-radius:3px 3px 0 0"></div>`
       + `<div style="font-size:10px;color:#64748b">${i + 1}</div></td>`).join('');
-    html += `<h3 style="color:#1fa2b0;margin:18px 0 6px">${r.tx === TEXTOS.sequencia ? 'Tempo para ordenar cada rotina' : r.tx === TEXTOS.fichas ? 'Tempo para fazer as trocas em cada jogada' : r.tx === TEXTOS.cores ? 'Tempo para resolver cada conta' : r.tx === TEXTOS.lateralidade ? 'Tempo de resposta em cada comando' : r.tx === TEXTOS.setas ? 'Tempo para responder cada sequência' : r.tx === TEXTOS.vistas ? 'Tempo para responder cada pirâmide' : r.tx === TEXTOS.dinos ? 'Tempo para escolher cada sequência' : r.tx === TEXTOS.simbolos ? 'Tempo para completar cada carta' : r.tx === TEXTOS.tabuada ? 'Tempo para estourar cada quadrado' : 'Tempo de resposta em cada rodada'} (segundos)</h3>`
+    html += `<h3 style="color:#1fa2b0;margin:18px 0 6px">${r.tx === TEXTOS.sequencia ? 'Tempo para ordenar cada rotina' : r.tx === TEXTOS.fichas ? 'Tempo para fazer as trocas em cada jogada' : r.tx === TEXTOS.escondida ? 'Tempo para achar cada palavra' : r.tx === TEXTOS.cores ? 'Tempo para resolver cada conta' : r.tx === TEXTOS.lateralidade ? 'Tempo de resposta em cada comando' : r.tx === TEXTOS.setas ? 'Tempo para responder cada sequência' : r.tx === TEXTOS.vistas ? 'Tempo para responder cada pirâmide' : r.tx === TEXTOS.dinos ? 'Tempo para escolher cada sequência' : r.tx === TEXTOS.simbolos ? 'Tempo para completar cada carta' : r.tx === TEXTOS.tabuada ? 'Tempo para estourar cada quadrado' : 'Tempo de resposta em cada rodada'} (segundos)</h3>`
       + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="height:125px"><tr>${colunas}</tr></table>`
       + `<p style="font-size:12px;color:#64748b;margin:4px 0 0">Barra mais baixa = resposta mais rápida. <span style="color:${VERDE}">■</span> acertou &nbsp; <span style="color:${VERMELHO}">■</span> errou &nbsp; <span style="color:#b0bec5">■</span> não respondeu</p>`;
   }

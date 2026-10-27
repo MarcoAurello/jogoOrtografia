@@ -1,28 +1,29 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=84';
-import { SOM } from './som.js?v=84';
-import { mostrar, telaInicio } from './telas.js?v=84';
-import { telaMissoes } from './ortografia.js?v=84';
-import { telaChuvaMenu } from './chuva.js?v=84';
-import { telaMatMenu } from './matematica.js?v=84';
-import { telaTiroMenu } from './tiro.js?v=84';
-import { telaPesoMenu } from './peso.js?v=84';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=84';
-import { telaLuzesMenu } from './luzes.js?v=84';
-import { telaRotinaMenu } from './rotina.js?v=84';
-import { telaFichasMenu } from './fichas.js?v=84';
-import { telaCoresMenu } from './cores.js?v=84';
-import { telaLadosMenu } from './lados.js?v=84';
-import { telaSetasMenu } from './setas.js?v=84';
-import { telaVistasMenu } from './vistas.js?v=84';
-import { telaDinosMenu } from './dinos.js?v=84';
-import { telaSimbolosMenu } from './simbolos.js?v=84';
-import { telaTabuadaMenu } from './tabuada.js?v=84';
-import { telaClassesMenu } from './classes.js?v=84';
-import { telaGraficosMenu } from './graficos.js?v=84';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=84';
+import { $, seguro } from './util.js?v=85';
+import { SOM } from './som.js?v=85';
+import { mostrar, telaInicio } from './telas.js?v=85';
+import { telaMissoes } from './ortografia.js?v=85';
+import { telaChuvaMenu } from './chuva.js?v=85';
+import { telaMatMenu } from './matematica.js?v=85';
+import { telaTiroMenu } from './tiro.js?v=85';
+import { telaPesoMenu } from './peso.js?v=85';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=85';
+import { telaLuzesMenu } from './luzes.js?v=85';
+import { telaRotinaMenu } from './rotina.js?v=85';
+import { telaFichasMenu } from './fichas.js?v=85';
+import { telaEscondidaMenu } from './escondida.js?v=85';
+import { telaCoresMenu } from './cores.js?v=85';
+import { telaLadosMenu } from './lados.js?v=85';
+import { telaSetasMenu } from './setas.js?v=85';
+import { telaVistasMenu } from './vistas.js?v=85';
+import { telaDinosMenu } from './dinos.js?v=85';
+import { telaSimbolosMenu } from './simbolos.js?v=85';
+import { telaTabuadaMenu } from './tabuada.js?v=85';
+import { telaClassesMenu } from './classes.js?v=85';
+import { telaGraficosMenu } from './graficos.js?v=85';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=85';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -34,7 +35,7 @@ const CHAVE_EMAIL_ESCOLHIDO = 'pleno-ortografia:email-escolhido';  // e-mail esc
 let senhaProfessor = '';   // a senha digitada, mandada ao script para gravar questionários
 const lerJSON = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) || padrao; } catch (e) { return padrao; } };
 const gravarJSON = (chave, valor) => { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) { /* sem armazenamento */ } };
-const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.setas ? 'setas' : mis.vistas ? 'vistas' : mis.dinos ? 'dinos' : mis.simbolos ? 'simbolos' : mis.tabuada ? 'tabuada' : mis.classes ? 'classes' : mis.graficos ? 'graficos' : mis.cores ? 'cores' : mis.lados ? 'lados' : mis.fichas ? 'fichas' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
+const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.escondida ? 'escondida' : mis.setas ? 'setas' : mis.vistas ? 'vistas' : mis.dinos ? 'dinos' : mis.simbolos ? 'simbolos' : mis.tabuada ? 'tabuada' : mis.classes ? 'classes' : mis.graficos ? 'graficos' : mis.cores ? 'cores' : mis.lados ? 'lados' : mis.fichas ? 'fichas' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
 let emailEscolhido = (() => { try { return localStorage.getItem(CHAVE_EMAIL_ESCOLHIDO) || ''; } catch (e) { return ''; } })();
 const listaEmails = () => lerJSON(CHAVE_EMAILS, []);
 // o e-mail para onde vai o relatório (só se estiver na lista da planilha)
@@ -254,6 +255,7 @@ const JOGOS_DO_LINK = {
   reflexo2: { nome: 'Jogo do Reflexo Nível 2', abrir: () => telaLuzesMenu(2) },
   rotina: { nome: 'Rotina Certa', abrir: () => telaRotinaMenu() },
   fichas: { nome: 'Fichas Coloridas', abrir: () => telaFichasMenu() },
+  escondida: { nome: 'Palavra Escondida', abrir: () => telaEscondidaMenu() },
   cores: { nome: 'Somando as Cores', abrir: () => telaCoresMenu() },
   lados: { nome: 'Esquerda e Direita', abrir: () => telaLadosMenu() },
   setas: { nome: 'Setas e Cores', abrir: () => telaSetasMenu() },
