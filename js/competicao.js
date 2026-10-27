@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Competição: o professor cria (jogo + hora de encerrar), a turma entra com o código e o ranking fica na planilha. */
 
-import { $, seguro } from './util.js?v=109';
-import { aluno } from './estado.js?v=109';
-import { SOM } from './som.js?v=109';
-import { mostrar } from './telas.js?v=109';
-import { definirEmailCompeticao, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=109';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=109';
-import { comecarQuiz } from './quiz.js?v=109';
+import { $, seguro } from './util.js?v=110';
+import { aluno } from './estado.js?v=110';
+import { SOM } from './som.js?v=110';
+import { mostrar } from './telas.js?v=110';
+import { definirEmailCompeticao, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=110';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=110';
+import { comecarQuiz } from './quiz.js?v=110';
 
 // ---------- Competição ----------
 // A aba Competição lista as competições abertas (e as que encerraram há pouco, só com o ranking). Para entrar, o aluno
@@ -275,7 +275,7 @@ function prepararFormulario() {
   $('comp-novo-jogo').value = escolhido;
   const emails = listaEmails();
   $('comp-novo-email').innerHTML = '<option value="">Não enviar relatório</option>'
-    + emails.map((x) => `<option value="${seguro(x.email)}">${seguro(x.nome)} (${seguro(x.email)})</option>`).join('');
+    + emails.map((x) => `<option value="${seguro(x.email)}">${seguro(x.nome)}</option>`).join('');
   if (emails.length === 1) $('comp-novo-email').value = emails[0].email;
   $('comp-novo-hora').value = '23:59';
   avisoComp('');

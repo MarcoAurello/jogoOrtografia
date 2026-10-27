@@ -1,36 +1,36 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=109';
-import { SOM } from './som.js?v=109';
-import { mostrar, telaInicio } from './telas.js?v=109';
-import { telaMissoes } from './ortografia.js?v=109';
-import { telaChuvaMenu } from './chuva.js?v=109';
-import { telaMatMenu } from './matematica.js?v=109';
-import { telaTiroMenu } from './tiro.js?v=109';
-import { telaPesoMenu } from './peso.js?v=109';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=109';
-import { telaLuzesMenu } from './luzes.js?v=109';
-import { telaRotinaMenu } from './rotina.js?v=109';
-import { telaFichasMenu } from './fichas.js?v=109';
-import { telaEscondidaMenu } from './escondida.js?v=109';
-import { telaCopiaMenu } from './copia.js?v=109';
-import { telaBarcosMenu } from './barcos.js?v=109';
-import { telaGiroMenu } from './giro.js?v=109';
-import { telaHoraMenu } from './hora.js?v=109';
-import { telaSomandoMenu } from './somando.js?v=109';
-import { telaDescobrirMenu } from './descobrir.js?v=109';
-import { telaChavesMenu } from './chaves.js?v=109';
-import { telaCoresMenu } from './cores.js?v=109';
-import { telaLadosMenu } from './lados.js?v=109';
-import { telaSetasMenu } from './setas.js?v=109';
-import { telaVistasMenu } from './vistas.js?v=109';
-import { telaDinosMenu } from './dinos.js?v=109';
-import { telaSimbolosMenu } from './simbolos.js?v=109';
-import { telaTabuadaMenu } from './tabuada.js?v=109';
-import { telaClassesMenu } from './classes.js?v=109';
-import { telaGraficosMenu } from './graficos.js?v=109';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=109';
+import { $, seguro } from './util.js?v=110';
+import { SOM } from './som.js?v=110';
+import { mostrar, telaInicio } from './telas.js?v=110';
+import { telaMissoes } from './ortografia.js?v=110';
+import { telaChuvaMenu } from './chuva.js?v=110';
+import { telaMatMenu } from './matematica.js?v=110';
+import { telaTiroMenu } from './tiro.js?v=110';
+import { telaPesoMenu } from './peso.js?v=110';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=110';
+import { telaLuzesMenu } from './luzes.js?v=110';
+import { telaRotinaMenu } from './rotina.js?v=110';
+import { telaFichasMenu } from './fichas.js?v=110';
+import { telaEscondidaMenu } from './escondida.js?v=110';
+import { telaCopiaMenu } from './copia.js?v=110';
+import { telaBarcosMenu } from './barcos.js?v=110';
+import { telaGiroMenu } from './giro.js?v=110';
+import { telaHoraMenu } from './hora.js?v=110';
+import { telaSomandoMenu } from './somando.js?v=110';
+import { telaDescobrirMenu } from './descobrir.js?v=110';
+import { telaChavesMenu } from './chaves.js?v=110';
+import { telaCoresMenu } from './cores.js?v=110';
+import { telaLadosMenu } from './lados.js?v=110';
+import { telaSetasMenu } from './setas.js?v=110';
+import { telaVistasMenu } from './vistas.js?v=110';
+import { telaDinosMenu } from './dinos.js?v=110';
+import { telaSimbolosMenu } from './simbolos.js?v=110';
+import { telaTabuadaMenu } from './tabuada.js?v=110';
+import { telaClassesMenu } from './classes.js?v=110';
+import { telaGraficosMenu } from './graficos.js?v=110';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=110';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -139,28 +139,14 @@ const mensagemDoErro = (err, padrao) => ({
   repetido: 'Este e-mail já está na lista.',
 }[String(err && err.message)] || padrao);
 
-// lista de professores com o botão de remover (grava direto na aba "E-mails")
+// lista de professores: só os nomes (o e-mail dos colegas não aparece); excluir, só direto na planilha
 function listarEmailsProfessor() {
   const lista = listaEmails();
   $('lista-emails-prof').innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhum e-mail ainda: cadastre o primeiro aqui em cima.</p>';
   for (const x of lista) {
     const item = document.createElement('div');
     item.className = 'quiz-item';
-    item.innerHTML = `<span class="quiz-item-nome">${seguro(x.nome)}</span><span class="quiz-item-qtd">${seguro(x.email)}</span>`;
-    const remover = document.createElement('button');
-    remover.type = 'button';
-    remover.className = 'quiz-excluir';
-    remover.textContent = '🗑️ Remover';
-    remover.onclick = async () => {
-      if (!window.confirm(`Remover ${x.nome} (${x.email}) da lista? Os alunos não poderão mais mandar relatórios para este e-mail.`)) return;
-      try {
-        const { emails } = await gravarNoScript({ acao: 'removerEmail', email: x.email });
-        gravarJSON(CHAVE_EMAILS, emails || []);
-        listarEmailsProfessor();
-        avisoEmail(`${x.nome} saiu da lista. ✔`, true);
-      } catch (err) { avisoEmail(mensagemDoErro(err, 'Não deu para remover (sem internet ou script desatualizado).')); }
-    };
-    item.append(remover);
+    item.innerHTML = `<span class="quiz-item-nome">📧 ${seguro(x.nome)}</span>`;
     $('lista-emails-prof').append(item);
   }
 }

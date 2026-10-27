@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=109">
+  <link rel="stylesheet" href="style.css?v=110">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1156,7 +1156,7 @@
         <button class="jogo-card" id="btn-prof-emails" type="button" style="--c:#1fa2b0">
           <span class="jogo-card-icone">📧</span>
           <span class="jogo-card-nome">E-mails dos relatórios</span>
-          <span class="jogo-card-texto">Cadastrar e excluir os professores que recebem os relatórios</span>
+          <span class="jogo-card-texto">Cadastrar os professores que recebem os relatórios</span>
         </button>
         <button class="jogo-card" id="btn-prof-quiz" type="button" style="--c:#7b4fc9">
           <span class="jogo-card-icone">📝</span>
@@ -1205,8 +1205,8 @@
       <div class="cartao cartao-login" id="info-emails" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
         <h3 class="chuva-pergunta">📧 E-mails dos relatórios</h3>
-        <p class="professor-ajuda">Ficam na aba <b>"E-mails"</b> da planilha do Google (A nome, B e-mail).
-          Antes de abrir cada jogo, o aluno escolhe para quem vai o relatório.</p>
+        <p class="professor-ajuda">Cadastre o seu nome e e-mail para receber os relatórios. Na lista aparecem só os <b>nomes</b>
+          dos professores. Para corrigir ou excluir um e-mail, peça a quem cuida da planilha (aba <b>"E-mails"</b>).</p>
         <form class="cadastro-email" id="form-novo-email" autocomplete="off">
           <label class="campo campo-jogo"><span>Nome do professor</span>
             <input type="text" id="novo-email-nome" maxlength="60" placeholder="Ex.: Prof. Maria"></label>
@@ -1575,9 +1575,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=109"></script>
-  <script src="dados.js?v=109"></script>
-  <script type="module" src="js/main.js?v=109"></script>
+  <script src="plenix.js?v=110"></script>
+  <script src="dados.js?v=110"></script>
+  <script type="module" src="js/main.js?v=110"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
