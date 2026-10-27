@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Chuva de Matemática. */
 
-import { $, embaralhar, sortear } from './util.js?v=99';
-import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=99';
-import { SOM } from './som.js?v=99';
-import { mascote, mostrar, telaJogos } from './telas.js?v=99';
-import { escolherProfessorE } from './professor.js?v=99';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=99';
+import { $, embaralhar, sortear } from './util.js?v=100';
+import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=100';
+import { SOM } from './som.js?v=100';
+import { mascote, mostrar, telaJogos } from './telas.js?v=100';
+import { escolherProfessorE } from './professor.js?v=100';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=100';
 
 // ---------- Chuva de Matemática ----------
 // Uma conta cai de cada vez e o aluno escolhe a resposta entre 4 opções antes que ela chegue ao chão.

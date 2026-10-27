@@ -2374,3 +2374,20 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 #somando-ajuda { padding-top: 76px; }
 .somando-exemplo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px; }
 .somando-exemplo .grade-som { width: 64px; }
+
+/* Palavra Escondida: linhas de letras (cada linha esconde uma palavra) */
+#escondida-grade { display: flex; flex-direction: column; justify-content: flex-start; gap: clamp(5px, 1.2dvh, 10px); padding: 10px 6px; flex: 0 0 auto; min-height: 0; margin: auto 0; }
+.linha-escondida { display: grid; grid-template-columns: 1.5fr repeat(10, 1fr); gap: clamp(2px, 0.7vw, 5px); align-items: center; }
+.linha-escondida.vazia { aspect-ratio: 11.5 / 1; border-radius: 10px; border: 2px dashed #e3edf0; }
+.linha-escondida.entrou { animation: linha-entrou 0.35s ease-out; }
+@keyframes linha-entrou { from { transform: translateY(-16px); opacity: 0; } to { transform: none; opacity: 1; } }
+.linha-escondida.saindo { animation: linha-sai 0.4s ease-in forwards; }
+@keyframes linha-sai { 40% { transform: scale(1.03); } 100% { transform: translateX(40px); opacity: 0; } }
+.linha-escondida.vai-cair .letra-escondida { background: #fde0de; }
+.linha-escondida .letra-escondida { font-size: clamp(15px, min(4.6vw, 3.4dvh), 28px); border-radius: 6px; }
+.dica-linha { display: flex; align-items: center; justify-content: center; height: 100%; min-height: 26px; border-radius: 8px; background: #f3edfc; }
+.dica-figura { font-size: clamp(18px, min(5.4vw, 3.8dvh), 30px); line-height: 1; }
+.dica-letra { display: flex; flex-direction: column; align-items: center; font-family: 'Fredoka', sans-serif; font-weight: 700;
+  font-size: clamp(14px, min(4.4vw, 3dvh), 24px); line-height: 1; color: #5b3aa0; }
+.dica-letra small { font-size: 9px; font-weight: 600; }
+#tela-escondida #btn-escondida-limpar { margin: 4px auto auto; }

@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Atenção à Forma. */
 
-import { $, embaralhar, sortear } from './util.js?v=99';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=99';
-import { SOM, tocar } from './som.js?v=99';
-import { mascote, mostrar, telaJogos } from './telas.js?v=99';
-import { escolherProfessorE } from './professor.js?v=99';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=99';
+import { $, embaralhar, sortear } from './util.js?v=100';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=100';
+import { SOM, tocar } from './som.js?v=100';
+import { mascote, mostrar, telaJogos } from './telas.js?v=100';
+import { escolherProfessorE } from './professor.js?v=100';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=100';
 
 // ---------- Atenção à Forma ----------
 // Atenção seletiva e discriminação visual (forma E cor), como a placa de pinos com cartas de modelo. No alto aparece uma

@@ -1,22 +1,23 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Palavra Escondida. */
 
-import { $, sortear } from './util.js?v=99';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=99';
-import { SOM, tocar } from './som.js?v=99';
-import { mascote, mostrar, telaJogos } from './telas.js?v=99';
-import { escolherProfessorE } from './professor.js?v=99';
-import { segundos } from './luzes.js?v=99';
-import { fimDaMissao } from './relatorio.js?v=99';
+import { $, sortear } from './util.js?v=100';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=100';
+import { SOM, tocar } from './som.js?v=100';
+import { mascote, mostrar, telaJogos } from './telas.js?v=100';
+import { escolherProfessorE } from './professor.js?v=100';
+import { segundos } from './luzes.js?v=100';
+import { fimDaMissao } from './relatorio.js?v=100';
 
 // ---------- Palavra Escondida ----------
-// Atenção seletiva, leitura e rapidez. Uma pilha de 10 vagas recebe uma letra a cada 2 segundos: palavras escondidas
-// chegam no meio de letras soltas e de "iscas" (pedaços do começo da palavra). A criança marca as letras da palavra
-// (tocando uma depois da outra ou arrastando o dedo); quando acerta, as letras dela saem da pilha e abrem espaço.
-// Pilha cheia: a letra mais antiga sai pela esquerda; se era de uma palavra ainda não achada, a palavra é perdida.
-// Quanto menos tempo depois que a palavra entrou inteira, mais pontos.
-// Nível 1: dica com figura; nível 2: só a categoria; nível 3: só o número de letras e palavras maiores.
-const ESCONDIDA = { PALAVRAS: 10, NIVEL_MAX: 3, VAGAS: 10, INTERVALO: 2000 };
+// Atenção seletiva, leitura e rapidez. As letras chegam em LINHAS: cada linha nova entra em cima e empurra as outras
+// para baixo, e cada uma esconde uma palavra no meio de letras soltas e de "iscas" (pedaços do começo da palavra).
+// A dica fica no começo da linha. A criança marca as letras da palavra (tocando uma depois da outra ou arrastando o
+// dedo); acertou, a linha some. Com o quadro cheio, a linha de baixo (a mais antiga) cai e a palavra é perdida.
+// O ritmo se ajusta: quanto mais rápido a criança acha as palavras, mais rápido entram as linhas. Marcou errado:
+// entram 2 linhas de uma vez. Quanto menos tempo depois que a linha entrou, mais pontos.
+// Nível 1: dica com figura; nível 2: só a primeira letra; nível 3: só o número de letras e palavras maiores.
+const ESCONDIDA = { PALAVRAS: 10, NIVEL_MAX: 3, LINHAS: 6, COLUNAS: 10, RITMO_INICIAL: 7000, RITMO_MIN: 2500, RITMO_MAX: 9000 };
 // [palavra, figura, categoria] (sem acentos, para as letras ficarem iguais às do teclado)
 const PALAVRAS_ESCONDIDAS = {
   1: [['PEIXE', '🐟', 'um animal'], ['TIGRE', '🐯', 'um animal'], ['ZEBRA', '🦓', 'um animal'], ['PIANO', '🎹', 'um instrumento'],
@@ -32,11 +33,11 @@ const PALAVRAS_ESCONDIDAS = {
 };
 const TIPOS_ESCONDIDA = {
   1: { id: 'esc1', titulo: 'Com a figura de dica', icone: '🖼️', cor: '#7b4fc9',
-    regra: 'Olhar a figura, pensar no nome e procurar as letras dele em sequência no meio das letras misturadas.' },
-  2: { id: 'esc2', titulo: 'Só com a categoria', icone: '🏷️', cor: '#7b4fc9',
-    regra: 'Sem a figura, só com a categoria (ex.: um animal): é preciso ler as filas e reconhecer uma palavra que combina.' },
+    regra: 'Olhar a figura, pensar no nome e procurar as letras dele em sequência no meio das letras da linha.' },
+  2: { id: 'esc2', titulo: 'Só com a primeira letra', icone: '🔤', cor: '#7b4fc9',
+    regra: 'Sem a figura, só com a primeira letra e o tamanho: ler a linha e reconhecer uma palavra inteira que começa com ela.' },
   3: { id: 'esc3', titulo: 'Só com o número de letras', icone: '🔢', cor: '#7b4fc9',
-    regra: 'Sem dica de figura nem de categoria: ler as filas com atenção, ignorando as iscas (pedaços parecidos) até achar uma palavra inteira.' },
+    regra: 'Sem dica de figura nem de letra: ler a linha com atenção, ignorando as iscas (pedaços parecidos) até achar uma palavra inteira.' },
 };
 let escondida = null;   // a partida em andamento
 const ABC_ESCONDIDA = 'ABCDEFGHIJLMNOPRSTUVZ';
@@ -51,121 +52,128 @@ function comecarEscondida() {
   pararEscondida();
   definirMissao({ id: 'escondida', escondida: true, icone: '🔎', cor: '#7b4fc9', titulo: 'Palavra Escondida (atenção, leitura e rapidez)' });
   definirResultados([]);
-  escondida = { nivel: 1, nivelMax: 1, pontos: 0, acertos: 0, perdidas: 0, geradas: 0, usadas: new Set(), rodando: true,
-    fila: [], pilha: [], palavras: [], proximoId: 1, sel: null };
+  escondida = { nivel: 1, nivelMax: 1, pontos: 0, acertos: 0, perdidas: 0, geradas: 0, erradas: 0, usadas: new Set(), rodando: true,
+    linhas: [], proximoId: 1, sel: null, ritmo: ESCONDIDA.RITMO_INICIAL, recentes: [] };
   mostrar('tela-escondida');
-  msgEscondida('As letras vão chegar! Fique de olho na dica. 👀');
-  desenharPilha();
-  escondida.relogio = setInterval(entraLetra, ESCONDIDA.INTERVALO);
-  setTimeout(entraLetra, 400);
+  msgEscondida('As linhas vão chegar! Ache a palavra de cada uma. 👀');
+  desenharLinhas();
+  escondida.proxima = setTimeout(() => entraLinha(), 500);
 }
 
 function pararEscondida() {
-  if (escondida) { escondida.rodando = false; clearInterval(escondida.relogio); clearInterval(escondida.cronometro); }
+  if (escondida) { escondida.rodando = false; clearTimeout(escondida.proxima); }
   escondida = null;
 }
 const msgEscondida = (texto, tipo = '') => { $('escondida-msg').innerHTML = texto; $('escondida-msg').className = `escondida-msg ${tipo}`; };
 
-// completa a fila de letras que vão chegar: letras soltas (às vezes com uma isca da próxima palavra) e a palavra
-function encherFila() {
+// monta uma linha: a palavra numa posição sorteada, letras soltas em volta e, se couber, uma isca (começo da palavra)
+function novaLinha() {
   const e = escondida;
-  while (e.fila.length < 12 && e.geradas < ESCONDIDA.PALAVRAS) {
-    let opcoes = PALAVRAS_ESCONDIDAS[e.nivel].filter(([p]) => !e.usadas.has(p));
-    if (!opcoes.length) opcoes = PALAVRAS_ESCONDIDAS[e.nivel];
-    const [palavra, figura, categoria] = sortear(opcoes);
-    e.usadas.add(palavra);
-    e.geradas++;
-    const w = { id: e.geradas, palavra, figura, categoria, nivel: e.nivel, chegou: 0, tentativas: [], estado: 'vindo' };
-    e.palavras.push(w);
-    const soltas = () => (Math.random() < 0.5 ? sortear([...palavra]) : sortear([...ABC_ESCONDIDA]));
-    const antes = Array.from({ length: 2 + Math.floor(Math.random() * 2) }, () => ({ l: soltas() }));
-    if (Math.random() < 0.6) {   // isca: um pedaço do começo da palavra, separado dela por letras soltas
-      const tam = 2 + Math.floor(Math.random() * Math.max(1, palavra.length - 3));
-      antes.unshift(...[...palavra.slice(0, tam)].map((l) => ({ l })), { l: sortear([...ABC_ESCONDIDA]) });
-    }
-    e.fila.push(...antes, ...[...palavra].map((l, i) => ({ l, w: w.id, ultima: i === palavra.length - 1 })));
+  let opcoes = PALAVRAS_ESCONDIDAS[e.nivel].filter(([p]) => !e.usadas.has(p));
+  if (!opcoes.length) opcoes = PALAVRAS_ESCONDIDAS[e.nivel];
+  const [palavra, figura, categoria] = sortear(opcoes);
+  e.usadas.add(palavra);
+  e.geradas++;
+  const solta = () => (Math.random() < 0.5 ? sortear([...palavra]) : sortear([...ABC_ESCONDIDA]));
+  const letras = Array.from({ length: ESCONDIDA.COLUNAS }, solta);
+  const pos = Math.floor(Math.random() * (ESCONDIDA.COLUNAS - palavra.length + 1));
+  [...palavra].forEach((l, i) => { letras[pos + i] = l; });
+  // isca: um pedaço do começo da palavra no espaço que sobrou (antes ou depois), separado dela por uma letra solta
+  const antes = pos - 1, depois = ESCONDIDA.COLUNAS - (pos + palavra.length) - 1;
+  const espaco = Math.max(antes, depois);
+  if (espaco >= 2 && Math.random() < 0.7) {
+    const tam = 2 + Math.floor(Math.random() * Math.min(espaco - 1, palavra.length - 2));
+    const ini = antes >= depois ? Math.floor(Math.random() * (antes - tam + 1)) : pos + palavra.length + 1 + Math.floor(Math.random() * (depois - tam + 1));
+    [...palavra.slice(0, tam)].forEach((l, i) => { letras[ini + i] = l; });
   }
-  if (!e.fila.length) e.fila.push({ l: sortear([...ABC_ESCONDIDA]) });   // acabaram as palavras: só letras soltas
+  return { id: e.proximoId++, letras, palavra, figura, categoria, pos, nivel: e.nivel, entrou: performance.now(), tentativas: [], nova: true };
 }
 
-// a cada 2 s entra uma letra; com a pilha cheia, a mais antiga sai pela esquerda
-function entraLetra() {
+// entra uma linha em cima (ou duas, depois de uma marcação errada); com o quadro cheio, a de baixo cai.
+// Acabaram as palavras: no lugar de entrar linha nova, a de baixo cai (bem mais devagar), para o jogo não parar.
+function entraLinha(quantas = 1, porErro = false) {
   const e = escondida;
   if (!e || !e.rodando) return;
-  encherFila();
-  if (e.pilha.length >= ESCONDIDA.VAGAS) {
-    const saiu = e.pilha.shift();
-    if (e.sel) { e.sel = { a: e.sel.a - 1, b: e.sel.b - 1 }; if (e.sel.a < 0) e.sel = null; }
-    const w = saiu.w && e.palavras.find((x) => x.id === saiu.w);
-    if (w && w.estado !== 'achada' && w.estado !== 'perdida') perderPalavra(w);
+  if (e.geradas >= ESCONDIDA.PALAVRAS) {
+    if (porErro) return;
+    if (e.linhas.length) perderLinha(e.linhas.pop());
+    desenharLinhas();
+    if (!verSeAcabou()) agendarLinha(2);
+    return;
   }
-  const nova = { ...e.fila.shift(), id: e.proximoId++, nova: true };
-  e.pilha.push(nova);
-  if (nova.ultima) { const w = e.palavras.find((x) => x.id === nova.w); if (w.estado === 'vindo') { w.estado = 'inteira'; w.chegou = performance.now(); } }
-  tocar([[440, 0.03]]);
-  desenharPilha();
-  // reinicia a barrinha que mostra quando chega a próxima letra
+  for (let k = 0; k < quantas && e.geradas < ESCONDIDA.PALAVRAS; k++) {
+    if (e.linhas.length >= ESCONDIDA.LINHAS) perderLinha(e.linhas.pop());
+    e.linhas.unshift(novaLinha());
+  }
+  tocar([[440, 0.04], [494, 0.04]]);
+  desenharLinhas();
+  if (!verSeAcabou()) agendarLinha(e.geradas < ESCONDIDA.PALAVRAS ? 1 : 2);
+}
+function agendarLinha(vezes = 1) {
+  const e = escondida;
+  clearTimeout(e.proxima);
+  e.proxima = setTimeout(() => entraLinha(), e.ritmo * vezes);
+  // a barrinha mostra quando chega a próxima linha
   const ritmo = $('escondida-ritmo');
   ritmo.classList.remove('andando');
+  ritmo.style.animationDuration = `${e.ritmo * vezes}ms`;
   void ritmo.offsetWidth;
   ritmo.classList.add('andando');
 }
 
-// palavra da vez: a mais antiga que ainda não foi achada nem perdida
-const palavraDaVez = () => escondida.palavras.find((w) => w.estado === 'vindo' || w.estado === 'inteira');
+// dica no começo da linha, conforme o nível em que a palavra foi sorteada
+const dicaLinha = (x) => (x.nivel === 1 ? `<span class="dica-figura">${x.figura}</span>`
+  : x.nivel === 2 ? `<span class="dica-letra">${x.palavra[0]}…<small>${x.palavra.length}</small></span>`
+    : `<span class="dica-letra">${x.palavra.length}<small>letras</small></span>`);
 
-function desenharPilha() {
+function desenharLinhas() {
   const e = escondida;
-  const w = palavraDaVez();
-  const letrasTxt = w ? `<b>${w.palavra.length} letras</b>` : '';
-  // o tipo de dica segue o nível atual (a palavra pode ter sido sorteada antes de o nível mudar)
-  $('escondida-dica').innerHTML = !w ? '<span class="escondida-figura">⏳</span><span>Esperando as letras…</span>'
-    : e.nivel === 1 ? `<span class="escondida-figura">${w.figura}</span><span>Ache o nome desta figura · ${letrasTxt}</span>`
-      : e.nivel === 2 ? `<span class="escondida-figura">🏷️</span><span>Ache <b>${w.categoria}</b> · ${letrasTxt}</span>`
-        : `<span class="escondida-figura">🔢</span><span>Ache uma palavra de ${letrasTxt}</span>`;
   $('escondida-nivel').textContent = `🔎 Nível ${e.nivel} de ${ESCONDIDA.NIVEL_MAX}`;
   $('escondida-pontos').textContent = e.pontos;
-  $('escondida-contador').textContent = `Palavra ${Math.min(ESCONDIDA.PALAVRAS, e.acertos + e.perdidas + 1)} de ${ESCONDIDA.PALAVRAS}`;
-  const vagas = Array.from({ length: ESCONDIDA.VAGAS }, (_, i) => e.pilha[i]);
-  $('escondida-grade').innerHTML = vagas.map((x, i) => (x
-    ? `<button class="letra-escondida${x.nova ? ' entrou' : ''}${e.sel && i >= e.sel.a && i <= e.sel.b ? ' marcada' : ''}" type="button" data-i="${i}">${x.l}</button>`
-    : '<span class="vaga-escondida" aria-hidden="true"></span>')).join('');
-  e.pilha.forEach((x) => { x.nova = false; });
-  const cheia = e.pilha.length >= ESCONDIDA.VAGAS - 1;
-  $('escondida-grade').classList.toggle('quase-cheia', cheia);
+  $('escondida-contador').textContent = `✅ ${e.acertos} · ❌ ${e.perdidas} · faltam ${ESCONDIDA.PALAVRAS - e.acertos - e.perdidas}`;
+  $('escondida-tempo').textContent = `⏱ 1 linha / ${segundos(e.ritmo / 1000)}`;
+  const cheio = e.linhas.length >= ESCONDIDA.LINHAS;
+  const vagas = Array.from({ length: ESCONDIDA.LINHAS }, (_, n) => e.linhas[n]);
+  $('escondida-grade').innerHTML = vagas.map((x, n) => (x
+    ? `<div class="linha-escondida${x.nova ? ' entrou' : ''}${cheio && n === ESCONDIDA.LINHAS - 1 ? ' vai-cair' : ''}" data-l="${x.id}">
+        <span class="dica-linha" aria-label="Dica">${dicaLinha(x)}</span>${x.letras.map((l, i) =>
+          `<button class="letra-escondida${e.sel && e.sel.l === x.id && i >= e.sel.a && i <= e.sel.b ? ' marcada' : ''}" type="button" data-l="${x.id}" data-i="${i}">${l}</button>`).join('')}
+      </div>`
+    : '<div class="linha-escondida vazia" aria-hidden="true"></div>')).join('');
+  e.linhas.forEach((x) => { x.nova = false; });
 }
 
 function marcarEscondida() {
   const { sel } = escondida;
   $('escondida-grade').querySelectorAll('.letra-escondida').forEach((b) => {
     const i = Number(b.dataset.i);
-    b.classList.toggle('marcada', !!sel && i >= sel.a && i <= sel.b);
+    b.classList.toggle('marcada', !!sel && Number(b.dataset.l) === sel.l && i >= sel.a && i <= sel.b);
   });
 }
 
-// toque: começa a marcação ou aumenta (letra vizinha); arrasto: marca do início até o dedo
+// toque: começa a marcação ou aumenta (letra vizinha na mesma linha); arrasto: marca do início até o dedo
 let arrastoEscondida = null;
-$('escondida-grade').addEventListener('pointerdown', (e) => {
-  const b = e.target.closest('.letra-escondida');
+$('escondida-grade').addEventListener('pointerdown', (ev) => {
+  const b = ev.target.closest('.letra-escondida');
   if (!b || !escondida || !escondida.rodando) return;
-  e.preventDefault();
-  const i = Number(b.dataset.i), sel = escondida.sel;
-  if (sel && i === sel.b + 1) sel.b = i;
-  else if (sel && i === sel.a - 1) sel.a = i;
-  else escondida.sel = { a: i, b: i };
+  ev.preventDefault();
+  const l = Number(b.dataset.l), i = Number(b.dataset.i), sel = escondida.sel;
+  if (sel && sel.l === l && i === sel.b + 1) sel.b = i;
+  else if (sel && sel.l === l && i === sel.a - 1) sel.a = i;
+  else escondida.sel = { l, a: i, b: i };
   arrastoEscondida = { inicio: escondida.sel.a === i ? escondida.sel.b : escondida.sel.a, i };
   tocar([[523 + (escondida.sel.b - escondida.sel.a) * 40, 0.05]]);
   marcarEscondida();
 });
-document.addEventListener('pointermove', (e) => {
-  if (!arrastoEscondida || !escondida || !escondida.rodando) return;
-  const el = document.elementFromPoint(e.clientX, e.clientY);
+document.addEventListener('pointermove', (ev) => {
+  if (!arrastoEscondida || !escondida || !escondida.rodando || !escondida.sel) return;
+  const el = document.elementFromPoint(ev.clientX, ev.clientY);
   const b = el && el.closest('#escondida-grade .letra-escondida');
-  if (!b) return;
+  if (!b || Number(b.dataset.l) !== escondida.sel.l) return;
   const j = Number(b.dataset.i), ini = arrastoEscondida.inicio;
   if (j === arrastoEscondida.i) return;
   arrastoEscondida.i = j;
-  escondida.sel = { a: Math.min(ini, j), b: Math.max(ini, j) };
+  escondida.sel = { l: escondida.sel.l, a: Math.min(ini, j), b: Math.max(ini, j) };
   tocar([[523 + (escondida.sel.b - escondida.sel.a) * 40, 0.04]]);
   marcarEscondida();
 });
@@ -175,21 +183,23 @@ document.addEventListener('pointerup', () => {
   if (escondida && escondida.rodando) conferirEscondida();
 });
 
-// confere quando a marcação tem o tamanho da palavra da vez
+// confere quando a marcação tem o tamanho da palavra daquela linha; errou: entram 2 linhas
 function conferirEscondida() {
-  const e = escondida, w = palavraDaVez(), sel = e.sel;
-  if (!w || !sel || sel.b - sel.a + 1 < w.palavra.length) return;
-  const marcada = e.pilha.slice(sel.a, sel.b + 1).map((x) => x.l).join('');
-  if (marcada === w.palavra) { acharPalavra(w, sel); return; }
-  w.tentativas.push(marcada);
+  const e = escondida, sel = e.sel;
+  const x = sel && e.linhas.find((y) => y.id === sel.l);
+  if (!x || sel.b - sel.a + 1 < x.palavra.length) return;
+  const marcada = x.letras.slice(sel.a, sel.b + 1).join('');
+  if (marcada === x.palavra) { acharPalavra(x); return; }
+  x.tentativas.push(marcada);
+  e.erradas++;
   e.sel = null;
-  marcarEscondida();
   SOM.errado();
   const grade = $('escondida-grade');
   grade.classList.remove('tremer');
   void grade.offsetWidth;
   grade.classList.add('tremer');
-  msgEscondida(`<b>${marcada}</b> não é a palavra. Procure de novo! 👀`, 'erro');
+  msgEscondida(`<b>${marcada}</b> não é a palavra. Entraram 2 linhas! 👀`, 'erro');
+  entraLinha(2, true);
 }
 $('btn-escondida-limpar').onclick = () => {
   if (!escondida || !escondida.rodando) return;
@@ -197,56 +207,73 @@ $('btn-escondida-limpar').onclick = () => {
   marcarEscondida();
 };
 
-function acharPalavra(w, sel) {
+// o ritmo segue a rapidez da criança: vai, aos poucos, para um pouco mais que a média dos 3 últimos tempos para achar
+function ajustarRitmo() {
   const e = escondida;
-  const tempo = w.chegou ? (performance.now() - w.chegou) / 1000 : 0;
-  // as letras da palavra sobem verdes e saem da pilha; as outras andam para a esquerda
-  $('escondida-grade').querySelectorAll('.letra-escondida').forEach((b) => {
-    const i = Number(b.dataset.i);
-    if (i >= sel.a && i <= sel.b) b.classList.add('achada');
-  });
-  e.pilha.splice(sel.a, sel.b - sel.a + 1);
-  e.sel = null;
-  w.estado = 'achada';
-  // quanto menos tempo, mais pontos: base pelo nível + bônus de rapidez; cada marcação errada tira metade do bônus
-  const bonus = Math.max(0, Math.min(100, Math.round(100 - tempo * 10)));
-  const ganho = 20 * e.nivel + Math.round(bonus / 2 ** w.tentativas.length);
-  e.pontos += ganho;
-  e.acertos++;
-  resultados.push({ m: TIPOS_ESCONDIDA[e.nivel], certa: w.palavra, erros: w.tentativas.slice(), nivel: e.nivel, tempo });
-  SOM.certo();
-  msgEscondida(`✅ Achou <b>${w.palavra}</b>! +${ganho} pontos (${segundos(tempo)})`, 'ok');
-  if (!w.tentativas.length) e.nivel = Math.min(ESCONDIDA.NIVEL_MAX, e.nivel + 1);
-  e.nivelMax = Math.max(e.nivelMax, e.nivel);
-  setTimeout(() => { if (escondida === e && e.rodando) { desenharPilha(); verSeAcabou(); } }, 380);
+  const media = e.recentes.reduce((s, t) => s + t, 0) / e.recentes.length;
+  const alvo = (media * 1.2 + 1) * 1000;
+  e.ritmo = Math.round(Math.max(ESCONDIDA.RITMO_MIN, Math.min(ESCONDIDA.RITMO_MAX, e.ritmo * 0.6 + alvo * 0.4)));
 }
 
-function perderPalavra(w) {
+function acharPalavra(x) {
   const e = escondida;
-  w.estado = 'perdida';
+  const tempo = (performance.now() - x.entrou) / 1000;
+  // as letras da palavra ficam verdes e a linha some
+  const linha = $('escondida-grade').querySelector(`.linha-escondida[data-l="${x.id}"]`);
+  linha.querySelectorAll('.letra-escondida').forEach((b) => { const i = Number(b.dataset.i); if (i >= e.sel.a && i <= e.sel.b) b.classList.add('achada'); });
+  linha.classList.add('saindo');
+  e.linhas = e.linhas.filter((y) => y !== x);
+  e.sel = null;
+  // quanto menos tempo, mais pontos: base pelo nível + bônus de rapidez; cada marcação errada tira metade do bônus
+  const bonus = Math.max(0, Math.min(100, Math.round(100 - tempo * 8)));
+  const ganho = 20 * x.nivel + Math.round(bonus / 2 ** x.tentativas.length);
+  e.pontos += ganho;
+  e.acertos++;
+  e.recentes = [...e.recentes, tempo].slice(-3);
+  ajustarRitmo();
+  resultados.push({ m: TIPOS_ESCONDIDA[x.nivel], certa: x.palavra, erros: x.tentativas.slice(), nivel: x.nivel, tempo });
+  SOM.certo();
+  msgEscondida(`✅ Achou <b>${x.palavra}</b>! +${ganho} pontos (${segundos(tempo)})`, 'ok');
+  if (!x.tentativas.length) e.nivel = Math.min(ESCONDIDA.NIVEL_MAX, e.nivel + 1);
+  e.nivelMax = Math.max(e.nivelMax, e.nivel);
+  setTimeout(() => {
+    if (escondida !== e || !e.rodando) return;
+    desenharLinhas();
+    if (verSeAcabou()) return;
+    // achou e o quadro ficou vazio: a próxima linha não demora
+    if (!e.linhas.length && e.geradas < ESCONDIDA.PALAVRAS) { clearTimeout(e.proxima); e.proxima = setTimeout(() => entraLinha(), 600); }
+  }, 420);
+}
+
+function perderLinha(x) {
+  const e = escondida;
   e.perdidas++;
-  resultados.push({ m: TIPOS_ESCONDIDA[e.nivel], certa: w.palavra, erros: [...w.tentativas, 'saiu da pilha sem ser achada'], nivel: e.nivel, tempo: null });
+  resultados.push({ m: TIPOS_ESCONDIDA[x.nivel], certa: x.palavra, erros: [...x.tentativas, 'a linha caiu sem a palavra ser achada'], nivel: x.nivel, tempo: null });
+  if (e.sel && e.sel.l === x.id) e.sel = null;
   SOM.errado();
-  msgEscondida(`A palavra <b>${w.palavra}</b> saiu da pilha! Seja mais rápido na próxima. ⚡`, 'erro');
+  msgEscondida(`A linha com <b>${x.palavra}</b> caiu! Seja mais rápido na próxima. ⚡`, 'erro');
   e.nivel = Math.max(1, e.nivel - 1);
-  verSeAcabou();
+  e.ritmo = Math.min(ESCONDIDA.RITMO_MAX, Math.round(e.ritmo * 1.25));   // perdeu: as linhas vêm mais devagar
 }
 
 function verSeAcabou() {
   const e = escondida;
-  if (e && e.acertos + e.perdidas >= ESCONDIDA.PALAVRAS) setTimeout(() => { if (escondida === e) terminarEscondida(); }, 900);
+  if (!e || e.acertos + e.perdidas < ESCONDIDA.PALAVRAS) return false;
+  clearTimeout(e.proxima);
+  setTimeout(() => { if (escondida === e) terminarEscondida(); }, 900);
+  return true;
 }
 
 function terminarEscondida() {
   const e = escondida;
   pararEscondida();
   const tempos = resultados.filter((r) => !r.erros.length).map((r) => r.tempo);
-  const marcacoesErradas = resultados.reduce((s, r) => s + r.erros.filter((x) => x !== 'saiu da pilha sem ser achada').length, 0);
   missao.extra = '';
   missao.resumo = [
     `Pontos: ${e.pontos}. Chegou ao nível ${e.nivelMax} de ${ESCONDIDA.NIVEL_MAX}.`,
-    `Achou ${e.acertos} de ${ESCONDIDA.PALAVRAS} palavras; ${e.perdidas} ${e.perdidas === 1 ? 'saiu' : 'saíram'} da pilha sem ser achada${e.perdidas === 1 ? '' : 's'}; ${marcacoesErradas} ${marcacoesErradas === 1 ? 'marcação errada' : 'marcações erradas'} (iscas ou pedaços).`,
-    ...(tempos.length ? [`Tempo médio para achar depois que a palavra entrou inteira: ${segundos(tempos.reduce((s, x) => s + x, 0) / tempos.length)}; mais rápido: ${segundos(Math.min(...tempos))}.`] : []),
+    `Achou ${e.acertos} de ${ESCONDIDA.PALAVRAS} palavras; ${e.perdidas} ${e.perdidas === 1 ? 'linha caiu' : 'linhas caíram'} sem a palavra ser achada; ${e.erradas} ${e.erradas === 1 ? 'marcação errada' : 'marcações erradas'} (iscas ou pedaços), cada uma fez entrar 2 linhas.`,
+    `Ritmo no fim: uma linha a cada ${segundos(e.ritmo / 1000)} (o ritmo acompanha a rapidez do aluno).`,
+    ...(tempos.length ? [`Tempo médio para achar a palavra depois que a linha entrou: ${segundos(tempos.reduce((s, x) => s + x, 0) / tempos.length)}; mais rápido: ${segundos(Math.min(...tempos))}.`] : []),
   ];
   fimDaMissao();
   $('fim-titulo').textContent = e.perdidas === 0 ? 'Olhos de águia! 🦅' : 'Fim da busca!';

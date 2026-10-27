@@ -1,35 +1,35 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Ponto de entrada: importa todos os módulos, liga o botão de instalar o app e abre a primeira tela. */
 
-import { $ } from './util.js?v=99';
-import { mostrar, telaInicio } from './telas.js?v=99';
-import { carregarEmails } from './professor.js?v=99';
-import { enviarFila } from './relatorio.js?v=99';
+import { $ } from './util.js?v=100';
+import { mostrar, telaInicio } from './telas.js?v=100';
+import { carregarEmails } from './professor.js?v=100';
+import { enviarFila } from './relatorio.js?v=100';
 // cada jogo liga os próprios botões ao ser carregado
-import './ortografia.js?v=99';
-import './chuva.js?v=99';
-import './matematica.js?v=99';
-import './tiro.js?v=99';
-import './peso.js?v=99';
-import './quiz.js?v=99';
-import './luzes.js?v=99';
-import './rotina.js?v=99';
-import './fichas.js?v=99';
-import './cores.js?v=99';
-import './lados.js?v=99';
-import './setas.js?v=99';
-import './vistas.js?v=99';
-import './dinos.js?v=99';
-import './simbolos.js?v=99';
-import './tabuada.js?v=99';
-import './classes.js?v=99';
-import './graficos.js?v=99';
-import './escondida.js?v=99';
-import './copia.js?v=99';
-import './barcos.js?v=99';
-import './giro.js?v=99';
-import './hora.js?v=99';
-import './somando.js?v=99';
+import './ortografia.js?v=100';
+import './chuva.js?v=100';
+import './matematica.js?v=100';
+import './tiro.js?v=100';
+import './peso.js?v=100';
+import './quiz.js?v=100';
+import './luzes.js?v=100';
+import './rotina.js?v=100';
+import './fichas.js?v=100';
+import './cores.js?v=100';
+import './lados.js?v=100';
+import './setas.js?v=100';
+import './vistas.js?v=100';
+import './dinos.js?v=100';
+import './simbolos.js?v=100';
+import './tabuada.js?v=100';
+import './classes.js?v=100';
+import './graficos.js?v=100';
+import './escondida.js?v=100';
+import './copia.js?v=100';
+import './barcos.js?v=100';
+import './giro.js?v=100';
+import './hora.js?v=100';
+import './somando.js?v=100';
 
 // ---------- Instalar como app ----------
 let pedidoInstalacao = null;
