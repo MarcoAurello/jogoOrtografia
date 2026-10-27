@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=93">
+  <link rel="stylesheet" href="style.css?v=95">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -826,6 +826,42 @@
       </div>
     </section>
 
+    <!-- Giro Imaginário: instruções -->
+    <section class="tela" id="tela-giro-menu">
+      <h2 class="subtitulo">🔄 Giro Imaginário</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-giro"></div>
+        <div class="balao balao-esq">
+          Olhe bem a <b>figura colorida</b>. Ela vai <b>girar na sua imaginação</b>! Cada giro é <b>1/4 de volta</b>:
+          para a <b>direita ↻</b> (como os ponteiros do relógio) ou para a <b>esquerda ↺</b>.
+          Imagine como ela ficou e toque na resposta certa. Depois ela gira de verdade, para você conferir! 🌀
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-giro-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="giro-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Giro Imaginário: o jogo -->
+    <section class="tela tela-jogo" id="tela-giro">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="giro-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="giro-nivel"></span>
+        <span class="chuva-placar"><span id="giro-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="giro-contador"></span>
+        <span id="giro-tempo"></span>
+      </div>
+      <div class="giro-palco">
+        <div class="giro-modelo" id="giro-modelo" aria-label="Figura antes de girar"></div>
+        <p class="giro-comando" id="giro-comando"></p>
+      </div>
+      <p class="giro-msg" id="giro-msg" role="status"></p>
+      <div class="giro-opcoes" id="giro-opcoes" aria-label="Alternativas"></div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -1070,6 +1106,11 @@
           <span class="jogo-card-nome">Barquinhos</span>
           <span class="jogo-card-texto">Quantos vão para a direita e para a esquerda?</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-giro" type="button" data-tema="matematica psicopedagogia" style="--c:#43a047">
+          <img class="jogo-card-capa" src="assets/capa-giro.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Giro Imaginário</span>
+          <span class="jogo-card-texto">Imagine a figura girando e ache como ficou!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -1253,9 +1294,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=93"></script>
-  <script src="dados.js?v=93"></script>
-  <script type="module" src="js/main.js?v=93"></script>
+  <script src="plenix.js?v=95"></script>
+  <script src="dados.js?v=95"></script>
+  <script type="module" src="js/main.js?v=95"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

@@ -2302,3 +2302,24 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 @keyframes barco-vai-esquerda { 0%, 100% { transform: scaleX(-1) translateX(-6px); } 50% { transform: scaleX(-1) translateX(6px); } }
 @keyframes barco-vai-direita { 0%, 100% { transform: translateX(-6px); } 50% { transform: translateX(6px); } }
 .barcos-ajuda-dica { margin: 10px 0; padding: 8px 10px; border-radius: 12px; background: #fff8d6; font-size: 15px; text-align: left; }
+
+/* ---------- Giro Imaginário ---------- */
+.giro-palco { display: flex; align-items: center; gap: 14px; padding: 10px 12px; border-radius: 16px; background: var(--branco); box-shadow: var(--sombra); }
+.giro-modelo { flex: 0 0 auto; width: clamp(96px, min(30vw, 18dvh), 170px); }
+.giro-modelo .figura-giro { transform: rotate(var(--giro, 0deg)); transition: transform 0.45s cubic-bezier(0.3, 1.3, 0.5, 1); }
+.figura-giro { display: block; width: 100%; height: auto; }
+.giro-comando { flex: 1; margin: 0; font-size: clamp(15px, 2.4dvh, 19px); font-weight: 700; color: var(--texto); line-height: 1.35; }
+.giro-comando b { color: #1565c0; }
+.giro-setas { display: inline-block; font-size: 1.25em; color: #e65100; letter-spacing: 1px; }
+.giro-msg { min-height: 1.3em; margin: 8px 0 6px; text-align: center; font-weight: 700; font-size: clamp(14px, 2.2dvh, 17px); color: var(--primaria-escura); }
+.giro-msg.ok { color: #1d6b3d; }
+.giro-msg.erro { color: #b42318; }
+.giro-opcoes { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(8px, 2.5vw, 16px);
+  align-content: center; justify-items: center; }
+.giro-opcao { width: min(100%, 22dvh, 190px); aspect-ratio: 1; padding: 10px; border-radius: 16px; background: var(--branco);
+  border: 3px solid #d6e6ea; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.12); transition: transform 0.1s; }
+.giro-opcao:active { transform: scale(0.96); }
+.giro-opcao.certa { border-color: #2e9e5b; box-shadow: 0 0 0 4px #b7e4c7; }
+.giro-opcao.errada { border-color: #e53935; box-shadow: 0 0 0 4px #f8c4c2; }
+.giro-opcao:disabled { cursor: default; }
+@media (min-width: 720px) { .giro-opcoes { grid-template-columns: repeat(4, 1fr); } }
