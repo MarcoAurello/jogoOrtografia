@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=97">
+  <link rel="stylesheet" href="style.css?v=98">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -907,6 +907,54 @@
       </div>
     </section>
 
+    <!-- Somando Imagens: instruções -->
+    <section class="tela" id="tela-somando-menu">
+      <h2 class="subtitulo">🧮 Somando Imagens</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-somando"></div>
+        <div class="balao balao-esq">
+          Vamos fazer contas com <b>figuras</b>! No <b>+</b>, a figura final tem <b>todas</b> as casas pintadas, cada uma com a sua cor.
+          No <b>−</b>, você <b>apaga</b> da primeira figura as casas pintadas na segunda. Imagine a figura do <b>?</b>,
+          escolha a cor e pinte o quadro. Às vezes o <b>?</b> está no meio da conta! 🎨
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-somando-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="somando-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Somando Imagens: o jogo -->
+    <section class="tela tela-jogo" id="tela-somando">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="somando-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="somando-nivel"></span>
+        <span class="chuva-placar"><span id="somando-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="somando-contador"></span>
+        <span id="somando-tempo"></span>
+      </div>
+      <div class="somando-conta" id="somando-conta" aria-label="Conta com figuras"></div>
+      <p class="somando-msg" id="somando-msg" role="status"></p>
+      <div class="somando-area">
+        <div class="somando-quadro" id="somando-quadro" aria-label="Quadro para pintar a figura do ?"></div>
+      </div>
+      <div class="copia-cores" id="somando-cores" aria-label="Cores"></div>
+      <div class="copia-botoes">
+        <button class="btn-sec" id="btn-somando-apagar" type="button">↶ Apagar</button>
+        <button class="btn-grande" id="btn-somando-conferir" type="button">✔ Conferir</button>
+      </div>
+      <!-- errou 2 contas seguidas: janelinha que relembra como somar e subtrair figuras -->
+      <div class="barcos-ajuda" id="somando-ajuda" hidden>
+        <div class="cartao barcos-ajuda-cartao" role="dialog" aria-modal="true" aria-labelledby="somando-ajuda-titulo">
+          <h3 class="chuva-pergunta" id="somando-ajuda-titulo">🎨 Vamos lembrar: somar e subtrair figuras</h3>
+          <div id="somando-ajuda-exemplos"></div>
+          <button class="btn-grande" id="btn-somando-entendi" type="button">Entendi! ▶</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -1161,6 +1209,11 @@
           <span class="jogo-card-nome">Jogo da Hora</span>
           <span class="jogo-card-texto">Relógio de ponteiros e digital, com AM e PM!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-somando" type="button" data-tema="matematica psicopedagogia" style="--c:#3aa7a3">
+          <img class="jogo-card-capa" src="assets/capa-somando.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Somando Imagens</span>
+          <span class="jogo-card-texto">Some e subtraia figuras coloridas de cabeça!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -1344,9 +1397,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=97"></script>
-  <script src="dados.js?v=97"></script>
-  <script type="module" src="js/main.js?v=97"></script>
+  <script src="plenix.js?v=98"></script>
+  <script src="dados.js?v=98"></script>
+  <script type="module" src="js/main.js?v=98"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

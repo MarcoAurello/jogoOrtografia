@@ -1,34 +1,35 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Ponto de entrada: importa todos os módulos, liga o botão de instalar o app e abre a primeira tela. */
 
-import { $ } from './util.js?v=97';
-import { mostrar, telaInicio } from './telas.js?v=97';
-import { carregarEmails } from './professor.js?v=97';
-import { enviarFila } from './relatorio.js?v=97';
+import { $ } from './util.js?v=98';
+import { mostrar, telaInicio } from './telas.js?v=98';
+import { carregarEmails } from './professor.js?v=98';
+import { enviarFila } from './relatorio.js?v=98';
 // cada jogo liga os próprios botões ao ser carregado
-import './ortografia.js?v=97';
-import './chuva.js?v=97';
-import './matematica.js?v=97';
-import './tiro.js?v=97';
-import './peso.js?v=97';
-import './quiz.js?v=97';
-import './luzes.js?v=97';
-import './rotina.js?v=97';
-import './fichas.js?v=97';
-import './cores.js?v=97';
-import './lados.js?v=97';
-import './setas.js?v=97';
-import './vistas.js?v=97';
-import './dinos.js?v=97';
-import './simbolos.js?v=97';
-import './tabuada.js?v=97';
-import './classes.js?v=97';
-import './graficos.js?v=97';
-import './escondida.js?v=97';
-import './copia.js?v=97';
-import './barcos.js?v=97';
-import './giro.js?v=97';
-import './hora.js?v=97';
+import './ortografia.js?v=98';
+import './chuva.js?v=98';
+import './matematica.js?v=98';
+import './tiro.js?v=98';
+import './peso.js?v=98';
+import './quiz.js?v=98';
+import './luzes.js?v=98';
+import './rotina.js?v=98';
+import './fichas.js?v=98';
+import './cores.js?v=98';
+import './lados.js?v=98';
+import './setas.js?v=98';
+import './vistas.js?v=98';
+import './dinos.js?v=98';
+import './simbolos.js?v=98';
+import './tabuada.js?v=98';
+import './classes.js?v=98';
+import './graficos.js?v=98';
+import './escondida.js?v=98';
+import './copia.js?v=98';
+import './barcos.js?v=98';
+import './giro.js?v=98';
+import './hora.js?v=98';
+import './somando.js?v=98';
 
 // ---------- Instalar como app ----------
 let pedidoInstalacao = null;
