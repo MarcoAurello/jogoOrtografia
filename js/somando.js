@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Somando Imagens. */
 
-import { $, embaralhar, sortear } from './util.js?v=110';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=110';
-import { SOM, tocar } from './som.js?v=110';
-import { mascote, mostrar, telaJogos } from './telas.js?v=110';
-import { escolherProfessorE } from './professor.js?v=110';
-import { segundos } from './luzes.js?v=110';
-import { fimDaMissao } from './relatorio.js?v=110';
+import { $, embaralhar, sortear } from './util.js?v=111';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=111';
+import { SOM, tocar } from './som.js?v=111';
+import { mascote, mostrar, telaJogos } from './telas.js?v=111';
+import { escolherProfessorE } from './professor.js?v=111';
+import { segundos } from './luzes.js?v=111';
+import { fimDaMissao } from './relatorio.js?v=111';
 
 // ---------- Somando Imagens ----------
 // Visualização mental e raciocínio lógico. Aparece uma conta com quadrados 3 × 3 de casas coloridas:

@@ -1,7 +1,7 @@
 /* Jogos Educacionais — script do Google (Apps Script, gratuito), ligado a uma planilha do Google.
    A planilha guarda tudo, sem banco de dados:
    - aba "E-mails": a lista de professores que recebem relatórios (A nome, B e-mail); o aluno escolhe um antes de cada jogo.
-     O professor cadastra e-mails pela Área do professor; excluir ou corrigir, só direto na aba;
+     O professor cadastra e-mails e cria questionários pela Área do professor; excluir ou corrigir, só direto na planilha;
    - abas "Q: <nome>": um questionário da aula em cada aba (A pergunta, B resposta certa, C a E respostas erradas);
    - aba "Relatórios": uma linha para cada relatório enviado;
    - aba "Competições": as competições criadas pelo professor (código, jogo, hora de encerrar);
@@ -73,7 +73,6 @@ function doPost(e) {
       if (d.acao === 'entrar') return resposta({ ok: true });
       if (d.acao === 'adicionarEmail') { adicionarEmail(d.nome, d.email); return resposta({ ok: true, emails: lerEmails() }); }
       if (d.acao === 'salvarQuestionario') return resposta({ ok: true, id: salvarQuestionario(d.titulo, d.perguntas) });
-      if (d.acao === 'excluirQuestionario') { excluirQuestionario(d.id); return resposta({ ok: true }); }
       if (d.acao === 'criarCompeticao') return resposta({ ok: true, competicao: criarCompeticao(d) });
       if (d.acao === 'competicoesProfessor') return resposta({ ok: true, lista: listarCompeticoes(true) });
       if (d.acao === 'encerrarCompeticao') { encerrarCompeticao(d.id); return resposta({ ok: true, lista: listarCompeticoes(true) }); }
@@ -161,11 +160,6 @@ function salvarQuestionario(titulo, perguntas) {
   aba.getRange(1, 1, tabela.length, 5).setValues(tabela);
   aba.getRange(1, 1, 1, 5).setFontWeight('bold');
   return String(aba.getSheetId());
-}
-
-function excluirQuestionario(id) {
-  const aba = abasDeQuestionario().find((a) => String(a.getSheetId()) === String(id));
-  if (aba) planilha().deleteSheet(aba);
 }
 
 // ---------- competições ----------

@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=110">
+  <link rel="stylesheet" href="style.css?v=111">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1161,7 +1161,7 @@
         <button class="jogo-card" id="btn-prof-quiz" type="button" style="--c:#7b4fc9">
           <span class="jogo-card-icone">📝</span>
           <span class="jogo-card-nome">Questionários da aula</span>
-          <span class="jogo-card-texto">Criar, enviar planilha, copiar o link e excluir</span>
+          <span class="jogo-card-texto">Criar, enviar planilha e copiar o link</span>
         </button>
         <button class="jogo-card" id="btn-prof-comp" type="button" style="--c:#c2185b">
           <span class="jogo-card-icone">🏆</span>
@@ -1221,7 +1221,8 @@
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
         <h3 class="chuva-pergunta">📝 Questionários da aula</h3>
         <p class="professor-ajuda">Ficam guardados na planilha do Google: uma aba <b>"Q: nome"</b> para cada questionário.
-          Cada um tem um <b>link</b> que abre direto nele: é só copiar e mandar para a turma.</p>
+          Cada um tem um <b>link</b> que abre direto nele: é só copiar e mandar para a turma. Para excluir um questionário,
+          peça a quem cuida da planilha (é só apagar a aba dele).</p>
         <details class="emails-jogos" id="novo-questionario">
           <summary>➕ Novo questionário</summary>
           <label class="campo campo-jogo"><span>Nome do questionário</span>
@@ -1575,9 +1576,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=110"></script>
-  <script src="dados.js?v=110"></script>
-  <script type="module" src="js/main.js?v=110"></script>
+  <script src="plenix.js?v=111"></script>
+  <script src="dados.js?v=111"></script>
+  <script type="module" src="js/main.js?v=111"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

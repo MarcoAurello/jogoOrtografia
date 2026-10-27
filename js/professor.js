@@ -1,36 +1,36 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=110';
-import { SOM } from './som.js?v=110';
-import { mostrar, telaInicio } from './telas.js?v=110';
-import { telaMissoes } from './ortografia.js?v=110';
-import { telaChuvaMenu } from './chuva.js?v=110';
-import { telaMatMenu } from './matematica.js?v=110';
-import { telaTiroMenu } from './tiro.js?v=110';
-import { telaPesoMenu } from './peso.js?v=110';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=110';
-import { telaLuzesMenu } from './luzes.js?v=110';
-import { telaRotinaMenu } from './rotina.js?v=110';
-import { telaFichasMenu } from './fichas.js?v=110';
-import { telaEscondidaMenu } from './escondida.js?v=110';
-import { telaCopiaMenu } from './copia.js?v=110';
-import { telaBarcosMenu } from './barcos.js?v=110';
-import { telaGiroMenu } from './giro.js?v=110';
-import { telaHoraMenu } from './hora.js?v=110';
-import { telaSomandoMenu } from './somando.js?v=110';
-import { telaDescobrirMenu } from './descobrir.js?v=110';
-import { telaChavesMenu } from './chaves.js?v=110';
-import { telaCoresMenu } from './cores.js?v=110';
-import { telaLadosMenu } from './lados.js?v=110';
-import { telaSetasMenu } from './setas.js?v=110';
-import { telaVistasMenu } from './vistas.js?v=110';
-import { telaDinosMenu } from './dinos.js?v=110';
-import { telaSimbolosMenu } from './simbolos.js?v=110';
-import { telaTabuadaMenu } from './tabuada.js?v=110';
-import { telaClassesMenu } from './classes.js?v=110';
-import { telaGraficosMenu } from './graficos.js?v=110';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=110';
+import { $, seguro } from './util.js?v=111';
+import { SOM } from './som.js?v=111';
+import { mostrar, telaInicio } from './telas.js?v=111';
+import { telaMissoes } from './ortografia.js?v=111';
+import { telaChuvaMenu } from './chuva.js?v=111';
+import { telaMatMenu } from './matematica.js?v=111';
+import { telaTiroMenu } from './tiro.js?v=111';
+import { telaPesoMenu } from './peso.js?v=111';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=111';
+import { telaLuzesMenu } from './luzes.js?v=111';
+import { telaRotinaMenu } from './rotina.js?v=111';
+import { telaFichasMenu } from './fichas.js?v=111';
+import { telaEscondidaMenu } from './escondida.js?v=111';
+import { telaCopiaMenu } from './copia.js?v=111';
+import { telaBarcosMenu } from './barcos.js?v=111';
+import { telaGiroMenu } from './giro.js?v=111';
+import { telaHoraMenu } from './hora.js?v=111';
+import { telaSomandoMenu } from './somando.js?v=111';
+import { telaDescobrirMenu } from './descobrir.js?v=111';
+import { telaChavesMenu } from './chaves.js?v=111';
+import { telaCoresMenu } from './cores.js?v=111';
+import { telaLadosMenu } from './lados.js?v=111';
+import { telaSetasMenu } from './setas.js?v=111';
+import { telaVistasMenu } from './vistas.js?v=111';
+import { telaDinosMenu } from './dinos.js?v=111';
+import { telaSimbolosMenu } from './simbolos.js?v=111';
+import { telaTabuadaMenu } from './tabuada.js?v=111';
+import { telaClassesMenu } from './classes.js?v=111';
+import { telaGraficosMenu } from './graficos.js?v=111';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=111';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -223,17 +223,7 @@ async function listarQuestionariosProfessor() {
       copiar.className = 'quiz-link';
       copiar.textContent = '🔗 Copiar link';
       copiar.onclick = () => copiarLinkQuestionario(q);
-      item.append(copiar);
-      const apagar = document.createElement('button');
-      apagar.type = 'button';
-      apagar.className = 'quiz-excluir';
-      apagar.textContent = '🗑️ Excluir';
-      apagar.onclick = async () => {
-        if (!window.confirm(`Excluir o questionário "${q.titulo}"? A aba dele será apagada da planilha.`)) return;
-        try { await gravarNoScript({ acao: 'excluirQuestionario', id: q.id }); listarQuestionariosProfessor(); }
-        catch (e) { avisoQuiz('Não deu para excluir (sem internet?). Tente de novo.'); }
-      };
-      item.append(apagar);
+      item.append(copiar);   // excluir questionário, só direto na planilha (apagando a aba)
       caixa.append(item);
     }
   } catch (e) {
