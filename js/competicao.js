@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Competição: o professor cria (jogo + hora de encerrar), a turma entra com o código e o ranking fica na planilha. */
 
-import { $, seguro } from './util.js?v=113';
-import { aluno } from './estado.js?v=113';
-import { SOM } from './som.js?v=113';
-import { mostrar } from './telas.js?v=113';
-import { definirEmailCompeticao, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=113';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=113';
-import { comecarQuiz } from './quiz.js?v=113';
+import { $, seguro } from './util.js?v=114';
+import { aluno } from './estado.js?v=114';
+import { SOM } from './som.js?v=114';
+import { mostrar } from './telas.js?v=114';
+import { definirEmailCompeticao, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=114';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=114';
+import { comecarQuiz } from './quiz.js?v=114';
 
 // ---------- Competição ----------
 // A aba Competição lista as competições abertas (e as que encerraram há pouco, só com o ranking). Para entrar, o aluno
@@ -37,6 +37,7 @@ const ERROS = {
   hora: 'Escolha uma hora de encerrar que ainda não passou.',
   jogo: 'Escolha o jogo da competição.',
   senha: 'A planilha não aceitou a senha: confira a SENHA_PROFESSOR no script do Google.',
+  acesso: 'A planilha desta escola não está liberada para "Qualquer pessoa" no Apps Script. Avise o professor.',
 };
 const mensagem = (err, padrao) => ERROS[String(err && err.message)] || padrao;
 

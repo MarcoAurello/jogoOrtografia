@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Chaves de Sobreposição. */
 
-import { $, embaralhar, sortear } from './util.js?v=113';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=113';
-import { SOM, tocar } from './som.js?v=113';
-import { mascote, mostrar, telaJogos } from './telas.js?v=113';
-import { escolherProfessorE } from './professor.js?v=113';
-import { segundos } from './luzes.js?v=113';
-import { fimDaMissao } from './relatorio.js?v=113';
+import { $, embaralhar, sortear } from './util.js?v=114';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=114';
+import { SOM, tocar } from './som.js?v=114';
+import { mascote, mostrar, telaJogos } from './telas.js?v=114';
+import { escolherProfessorE } from './professor.js?v=114';
+import { segundos } from './luzes.js?v=114';
+import { fimDaMissao } from './relatorio.js?v=114';
 
 // ---------- Chaves de Sobreposição ----------
 // Percepção visual, atenção aos detalhes e raciocínio. Uma chave (como de campeonato) tem 4 figuras em cima; cada par

@@ -1,36 +1,36 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=113';
-import { SOM } from './som.js?v=113';
-import { mostrar, telaInicio } from './telas.js?v=113';
-import { telaMissoes } from './ortografia.js?v=113';
-import { telaChuvaMenu } from './chuva.js?v=113';
-import { telaMatMenu } from './matematica.js?v=113';
-import { telaTiroMenu } from './tiro.js?v=113';
-import { telaPesoMenu } from './peso.js?v=113';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=113';
-import { telaLuzesMenu } from './luzes.js?v=113';
-import { telaRotinaMenu } from './rotina.js?v=113';
-import { telaFichasMenu } from './fichas.js?v=113';
-import { telaEscondidaMenu } from './escondida.js?v=113';
-import { telaCopiaMenu } from './copia.js?v=113';
-import { telaBarcosMenu } from './barcos.js?v=113';
-import { telaGiroMenu } from './giro.js?v=113';
-import { telaHoraMenu } from './hora.js?v=113';
-import { telaSomandoMenu } from './somando.js?v=113';
-import { telaDescobrirMenu } from './descobrir.js?v=113';
-import { telaChavesMenu } from './chaves.js?v=113';
-import { telaCoresMenu } from './cores.js?v=113';
-import { telaLadosMenu } from './lados.js?v=113';
-import { telaSetasMenu } from './setas.js?v=113';
-import { telaVistasMenu } from './vistas.js?v=113';
-import { telaDinosMenu } from './dinos.js?v=113';
-import { telaSimbolosMenu } from './simbolos.js?v=113';
-import { telaTabuadaMenu } from './tabuada.js?v=113';
-import { telaClassesMenu } from './classes.js?v=113';
-import { telaGraficosMenu } from './graficos.js?v=113';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=113';
+import { $, seguro } from './util.js?v=114';
+import { SOM } from './som.js?v=114';
+import { mostrar, telaInicio } from './telas.js?v=114';
+import { telaMissoes } from './ortografia.js?v=114';
+import { telaChuvaMenu } from './chuva.js?v=114';
+import { telaMatMenu } from './matematica.js?v=114';
+import { telaTiroMenu } from './tiro.js?v=114';
+import { telaPesoMenu } from './peso.js?v=114';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=114';
+import { telaLuzesMenu } from './luzes.js?v=114';
+import { telaRotinaMenu } from './rotina.js?v=114';
+import { telaFichasMenu } from './fichas.js?v=114';
+import { telaEscondidaMenu } from './escondida.js?v=114';
+import { telaCopiaMenu } from './copia.js?v=114';
+import { telaBarcosMenu } from './barcos.js?v=114';
+import { telaGiroMenu } from './giro.js?v=114';
+import { telaHoraMenu } from './hora.js?v=114';
+import { telaSomandoMenu } from './somando.js?v=114';
+import { telaDescobrirMenu } from './descobrir.js?v=114';
+import { telaChavesMenu } from './chaves.js?v=114';
+import { telaCoresMenu } from './cores.js?v=114';
+import { telaLadosMenu } from './lados.js?v=114';
+import { telaSetasMenu } from './setas.js?v=114';
+import { telaVistasMenu } from './vistas.js?v=114';
+import { telaDinosMenu } from './dinos.js?v=114';
+import { telaSimbolosMenu } from './simbolos.js?v=114';
+import { telaTabuadaMenu } from './tabuada.js?v=114';
+import { telaClassesMenu } from './classes.js?v=114';
+import { telaGraficosMenu } from './graficos.js?v=114';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=114';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -54,16 +54,22 @@ const emailDoRelatorio = () => (emailCompeticao && listaEmails().some((x) => x.e
   : listaEmails().some((x) => x.email === emailEscolhido) ? emailEscolhido : '');
 
 // conversa com o script do Google: leituras por GET, gravações (com a senha) por POST
+// chama o script; com internet e sem resposta (o Google manda a página de login, que o navegador bloqueia),
+// o script não está liberado para "Qualquer pessoa"
+async function chamarScript(url, opcoes) {
+  let r;
+  try { r = await fetch(url, opcoes); } catch (e) { throw new Error(navigator.onLine ? 'acesso' : 'internet'); }
+  const texto = await r.text();
+  try { return JSON.parse(texto); } catch (e) { throw new Error('acesso'); }
+}
 async function lerDoScript(acao, extra = '') {
-  const r = await fetch(`${URL_RELATORIO}?acao=${acao}${extra}`);
-  const j = await r.json();
+  const j = await chamarScript(`${URL_RELATORIO}?acao=${acao}${extra}`);
   if (!j.ok) throw new Error(j.erro || 'erro');
   return j;
 }
 async function gravarNoScript(dados) {
-  const r = await fetch(URL_RELATORIO, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+  const j = await chamarScript(URL_RELATORIO, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ chave: CHAVE_RELATORIO, senha: senhaProfessor, ...dados }) });
-  const j = await r.json();
   if (!j.ok) throw new Error(j.erro || 'erro');
   return j;
 }
@@ -139,6 +145,8 @@ const mensagemDoErro = (err, padrao) => ({
   senha: 'A planilha não aceitou a senha: confira a SENHA_PROFESSOR no script do Google.',
   email: 'Digite um e-mail válido, como nome@escola.com.',
   repetido: 'Este e-mail já está na lista.',
+  internet: 'Sem internet agora. Tente de novo quando a conexão voltar.',
+  acesso: 'A planilha desta escola não respondeu: ela pode não estar liberada. No Apps Script dela: Implantar → Gerenciar implantações → ✏️ → "Quem pode acessar: Qualquer pessoa" → Nova versão → Implantar.',
 }[String(err && err.message)] || padrao);
 
 // lista de professores: só os nomes (o e-mail dos colegas não aparece); excluir, só direto na planilha
@@ -410,7 +418,7 @@ $('btn-quiz-salvar').onclick = async () => {
     $('quiz-editor').innerHTML = '';
     listarQuestionariosProfessor();
   } catch (err) {
-    avisoQuiz(String(err.message) === 'senha' ? 'A planilha não aceitou a senha: confira a SENHA_PROFESSOR no script.' : 'Não deu para salvar (sem internet ou script desatualizado). Tente de novo.');
+    avisoQuiz(mensagemDoErro(err, 'Não deu para salvar (sem internet ou script desatualizado). Tente de novo.'));
   }
 };
 
