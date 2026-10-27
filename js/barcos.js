@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Barquinhos. */
 
-import { $, embaralhar } from './util.js?v=92';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=92';
-import { SOM, tocar } from './som.js?v=92';
-import { mascote, mostrar, telaJogos } from './telas.js?v=92';
-import { escolherProfessorE } from './professor.js?v=92';
-import { segundos } from './luzes.js?v=92';
-import { fimDaMissao } from './relatorio.js?v=92';
+import { $, embaralhar } from './util.js?v=93';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=93';
+import { SOM, tocar } from './som.js?v=93';
+import { mascote, mostrar, telaJogos } from './telas.js?v=93';
+import { escolherProfessorE } from './professor.js?v=93';
+import { segundos } from './luzes.js?v=93';
+import { fimDaMissao } from './relatorio.js?v=93';
 
 // ---------- Barquinhos ----------
 // Lateralidade (esquerda e direita), atenção e contagem. Aparece uma fila de barcos, uns virados para a esquerda e
@@ -25,7 +25,7 @@ const NIVEIS_BARCOS = [
 ];
 const TIPOS_BARCOS = {
   poucos: { id: 'barcos-poucos', titulo: 'Até 5 barcos', icone: '⛵', cor: '#1e88e5',
-    regra: 'Olhar para onde aponta a frente de cada barco (o bico com a âncora) e contar os que vão para a direita e os que vão para a esquerda.' },
+    regra: 'Olhar para onde aponta a frente de cada barco (o lado oposto à âncora) e contar os que vão para a direita e os que vão para a esquerda.' },
   muitos: { id: 'barcos-muitos', titulo: '6 a 12 barcos', icone: '🚢', cor: '#1565c0',
     regra: 'Com mais barcos e várias fileiras, contar com calma, fileira por fileira, sem pular nenhum barco.' },
   memoria: { id: 'barcos-memoria', titulo: 'Barcos que somem (memória)', icone: '🌊', cor: '#0b3d91',
@@ -94,7 +94,8 @@ function novaRodadaBarcos() {
   mar.classList.remove('afundou');
   mar.style.setProperty('--por-fileira', porFileira);
   mar.innerHTML = fileiras.map((f) => `<div class="barcos-fileira">${f.map((lado) =>
-    `<img class="barco${lado === 'd' ? ' direita' : ''}" src="assets/barco.png" alt="barco virado para a ${lado === 'd' ? 'direita' : 'esquerda'}" style="--atraso:${(Math.random() * 1.6).toFixed(2)}s">`).join('')}</div>`).join('');
+    // a imagem do barco aponta para a direita (a frente é o lado oposto à âncora); para a esquerda, ela é espelhada
+    `<img class="barco${lado === 'e' ? ' espelho' : ''}" data-lado="${lado}" src="assets/barco.png" alt="barco virado para a ${lado === 'd' ? 'direita' : 'esquerda'}" style="--atraso:${(Math.random() * 1.6).toFixed(2)}s">`).join('')}</div>`).join('');
   // botões de resposta
   $('barcos-opcoes').innerHTML = opcoesBarcos(d, e).map((o) =>
     `<button class="mat-resposta barcos-opcao" type="button" data-d="${o.d}" data-e="${o.e}">${rotulo(o)}</button>`).join('');

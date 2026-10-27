@@ -2265,15 +2265,15 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 }
 .barcos-fileira { display: flex; justify-content: center; align-items: flex-end; gap: clamp(2px, 1vw, 8px); }
 .barco { width: min(calc((100% - 8px * var(--por-fileira, 5)) / var(--por-fileira, 5)), 92px); height: auto; transition: transform 0.6s, opacity 0.6s; }
-.barco.direita { transform: scaleX(-1); }
+.barco.espelho { transform: scaleX(-1); }   /* barco virado para a esquerda */
 /* a água balança os barcos (nos níveis mais difíceis) */
 .barcos-mar.balanca .barco { animation: barco-balanca 2.2s ease-in-out infinite; animation-delay: var(--atraso, 0s); }
-.barcos-mar.balanca .barco.direita { animation-name: barco-balanca-direita; }
+.barcos-mar.balanca .barco.espelho { animation-name: barco-balanca-espelho; }
 @keyframes barco-balanca { 0%, 100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(5deg) translateY(-4px); } }
-@keyframes barco-balanca-direita { 0%, 100% { transform: scaleX(-1) rotate(-5deg) translateY(0); } 50% { transform: scaleX(-1) rotate(5deg) translateY(-4px); } }
+@keyframes barco-balanca-espelho { 0%, 100% { transform: scaleX(-1) rotate(-5deg) translateY(0); } 50% { transform: scaleX(-1) rotate(5deg) translateY(-4px); } }
 /* memória: os barcos afundam */
 .barcos-mar.afundou .barco { opacity: 0; transform: translateY(60%); animation: none; }
-.barcos-mar.afundou .barco.direita { transform: scaleX(-1) translateY(60%); }
+.barcos-mar.afundou .barco.espelho { transform: scaleX(-1) translateY(60%); }
 .barcos-legenda { margin: 6px 0 0; text-align: center; font-size: 14px; font-weight: 700; color: var(--cinza-texto); }
 .barcos-msg { min-height: 1.3em; margin: 4px 0; text-align: center; font-weight: 700; font-size: clamp(14px, 2.3dvh, 18px); color: var(--primaria-escura); }
 .barcos-msg.ok { color: #1d6b3d; }
@@ -2299,6 +2299,6 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 /* os barcos da janelinha "andam" para o seu lado */
 .barcos-ajuda-linha.esquerda .barco { animation: barco-vai-esquerda 1.6s ease-in-out infinite; }
 .barcos-ajuda-linha.direita .barco { animation: barco-vai-direita 1.6s ease-in-out infinite; }
-@keyframes barco-vai-esquerda { 0%, 100% { transform: translateX(6px); } 50% { transform: translateX(-6px); } }
-@keyframes barco-vai-direita { 0%, 100% { transform: scaleX(-1) translateX(6px); } 50% { transform: scaleX(-1) translateX(-6px); } }
+@keyframes barco-vai-esquerda { 0%, 100% { transform: scaleX(-1) translateX(-6px); } 50% { transform: scaleX(-1) translateX(6px); } }
+@keyframes barco-vai-direita { 0%, 100% { transform: translateX(-6px); } 50% { transform: translateX(6px); } }
 .barcos-ajuda-dica { margin: 10px 0; padding: 8px 10px; border-radius: 12px; background: #fff8d6; font-size: 15px; text-align: left; }

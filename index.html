@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=92">
+  <link rel="stylesheet" href="style.css?v=93">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -783,7 +783,7 @@
         <div class="davi-area" id="davi-barcos"></div>
         <div class="balao balao-esq">
           Vão aparecer vários <b>barcos</b>: uns virados para a <b>direita ➡</b> e outros para a <b>esquerda ⬅</b>.
-          Olhe para onde aponta a <b>frente</b> de cada barco (o bico com a âncora), conte e toque no botão certo.
+          Olhe para onde aponta a <b>frente</b> de cada barco (o lado <b>oposto à âncora</b>), conte e toque no botão certo.
           <b>3D – 2E</b> quer dizer 3 para a direita e 2 para a esquerda. Quanto mais rápido, mais pontos! ⚓
         </div>
       </div>
@@ -813,11 +813,11 @@
         <div class="cartao barcos-ajuda-cartao" role="dialog" aria-modal="true" aria-labelledby="barcos-ajuda-titulo">
           <h3 class="chuva-pergunta" id="barcos-ajuda-titulo">🧭 Vamos lembrar: esquerda e direita!</h3>
           <div class="barcos-ajuda-linha esquerda">
-            <img class="barco" src="assets/barco.png" alt="barco virado para a esquerda">
-            <p><b>⬅ ESQUERDA</b><br>A frente do barco (o bico com a âncora) aponta para este lado.</p>
+            <img class="barco espelho" src="assets/barco.png" alt="barco virado para a esquerda">
+            <p><b>⬅ ESQUERDA</b><br>A frente do barco (o lado oposto à âncora) aponta para este lado.</p>
           </div>
           <div class="barcos-ajuda-linha direita">
-            <img class="barco direita" src="assets/barco.png" alt="barco virado para a direita">
+            <img class="barco" src="assets/barco.png" alt="barco virado para a direita">
             <p><b>DIREITA ➡</b><br>A frente do barco aponta para o outro lado.</p>
           </div>
           <p class="barcos-ajuda-dica">✋ <b>Dica:</b> estique o polegar e o dedo indicador das duas mãos. A mão que forma a letra <b>L</b> certinha é a <b>esquerda</b>!</p>
@@ -1253,9 +1253,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=92"></script>
-  <script src="dados.js?v=92"></script>
-  <script type="module" src="js/main.js?v=92"></script>
+  <script src="plenix.js?v=93"></script>
+  <script src="dados.js?v=93"></script>
+  <script type="module" src="js/main.js?v=93"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

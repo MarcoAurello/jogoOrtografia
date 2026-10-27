@@ -1,30 +1,30 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Telas e navegação: moldura, mascote, troca de telas, encaixe na tela, login, menu do topo, barra inferior e filtro dos jogos. */
 
-import { $ } from './util.js?v=92';
-import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=92';
-import { frase, pararVoz, SOM } from './som.js?v=92';
-import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=92';
-import { pararChuva } from './chuva.js?v=92';
-import { pararMat } from './matematica.js?v=92';
-import { desenharTiro, pararTiro, tiro } from './tiro.js?v=92';
-import { pararPeso } from './peso.js?v=92';
-import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=92';
-import { pararLuz } from './luzes.js?v=92';
-import { pararRotina } from './rotina.js?v=92';
-import { pararFichas } from './fichas.js?v=92';
-import { pararEscondida } from './escondida.js?v=92';
-import { pararCopia } from './copia.js?v=92';
-import { pararBarcos } from './barcos.js?v=92';
-import { pararCores } from './cores.js?v=92';
-import { pararLados } from './lados.js?v=92';
-import { pararSetas } from './setas.js?v=92';
-import { pararVistas } from './vistas.js?v=92';
-import { pararDinos } from './dinos.js?v=92';
-import { pararSimbolos } from './simbolos.js?v=92';
-import { pararTabuada } from './tabuada.js?v=92';
-import { pararClasses } from './classes.js?v=92';
-import { pararGraficos } from './graficos.js?v=92';
+import { $ } from './util.js?v=93';
+import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=93';
+import { frase, pararVoz, SOM } from './som.js?v=93';
+import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=93';
+import { pararChuva } from './chuva.js?v=93';
+import { pararMat } from './matematica.js?v=93';
+import { desenharTiro, pararTiro, tiro } from './tiro.js?v=93';
+import { pararPeso } from './peso.js?v=93';
+import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=93';
+import { pararLuz } from './luzes.js?v=93';
+import { pararRotina } from './rotina.js?v=93';
+import { pararFichas } from './fichas.js?v=93';
+import { pararEscondida } from './escondida.js?v=93';
+import { pararCopia } from './copia.js?v=93';
+import { pararBarcos } from './barcos.js?v=93';
+import { pararCores } from './cores.js?v=93';
+import { pararLados } from './lados.js?v=93';
+import { pararSetas } from './setas.js?v=93';
+import { pararVistas } from './vistas.js?v=93';
+import { pararDinos } from './dinos.js?v=93';
+import { pararSimbolos } from './simbolos.js?v=93';
+import { pararTabuada } from './tabuada.js?v=93';
+import { pararClasses } from './classes.js?v=93';
+import { pararGraficos } from './graficos.js?v=93';
 
 // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
 const ENFEITES = {
