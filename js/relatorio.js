@@ -1,35 +1,35 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Relatório do fim do jogo: textos, gráficos, envio por e-mail (com fila offline), confete e PDF. */
 
-import { $, seguro, semHTML, sortear } from './util.js?v=100';
-import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=100';
-import { frase, SOM } from './som.js?v=100';
-import { mascote, mostrar } from './telas.js?v=100';
-import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=100';
-import { comecarMissao, telaMissoes } from './ortografia.js?v=100';
-import { comecarChuva, telaChuvaMenu } from './chuva.js?v=100';
-import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=100';
-import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=100';
-import { comecarPeso, telaPesoMenu } from './peso.js?v=100';
-import { comecarQuiz, telaQuizMenu } from './quiz.js?v=100';
-import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=100';
-import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=100';
-import { comecarFichas, telaFichasMenu } from './fichas.js?v=100';
-import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=100';
-import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=100';
-import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=100';
-import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=100';
-import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=100';
-import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=100';
-import { comecarCores, telaCoresMenu } from './cores.js?v=100';
-import { comecarLados, telaLadosMenu } from './lados.js?v=100';
-import { comecarSetas, telaSetasMenu } from './setas.js?v=100';
-import { comecarVistas, telaVistasMenu } from './vistas.js?v=100';
-import { comecarDinos, telaDinosMenu } from './dinos.js?v=100';
-import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=100';
-import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=100';
-import { comecarClasses, telaClassesMenu } from './classes.js?v=100';
-import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=100';
+import { $, seguro, semHTML, sortear } from './util.js?v=101';
+import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=101';
+import { frase, SOM } from './som.js?v=101';
+import { mascote, mostrar } from './telas.js?v=101';
+import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=101';
+import { comecarMissao, telaMissoes } from './ortografia.js?v=101';
+import { comecarChuva, telaChuvaMenu } from './chuva.js?v=101';
+import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=101';
+import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=101';
+import { comecarPeso, telaPesoMenu } from './peso.js?v=101';
+import { comecarQuiz, telaQuizMenu } from './quiz.js?v=101';
+import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=101';
+import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=101';
+import { comecarFichas, telaFichasMenu } from './fichas.js?v=101';
+import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=101';
+import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=101';
+import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=101';
+import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=101';
+import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=101';
+import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=101';
+import { comecarCores, telaCoresMenu } from './cores.js?v=101';
+import { comecarLados, telaLadosMenu } from './lados.js?v=101';
+import { comecarSetas, telaSetasMenu } from './setas.js?v=101';
+import { comecarVistas, telaVistasMenu } from './vistas.js?v=101';
+import { comecarDinos, telaDinosMenu } from './dinos.js?v=101';
+import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=101';
+import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=101';
+import { comecarClasses, telaClassesMenu } from './classes.js?v=101';
+import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=101';
 
 // ---------- Relatório de dificuldades ----------
 function montarRelatorio() {
@@ -368,6 +368,8 @@ async function enviarRelatorioPorEmail({ rel, estrelas, missao: mis, data }) {
 }
 
 let ultimoRelatorio = null;
+// o que mais acontece no fim de cada partida (ex.: mandar a pontuação para a competição)
+const depoisDoFim = [];
 
 function fimDaMissao() {
   const rel = montarRelatorio();
@@ -383,6 +385,7 @@ function fimDaMissao() {
   $('btn-outras').textContent = textosRelatorio(missao).outras;
   ultimoRelatorio.graficos = desenharRelatorio(rel, n);
   enviarRelatorioPorEmail(ultimoRelatorio);
+  depoisDoFim.forEach((f) => f({ rel, missao }));   // antes de trocar de tela: o placar do jogo ainda está visível
   mostrar('tela-fim');
   soltarConfete();
   frase(n === 3 ? 'missao-perfeita' : 'missao-cumprida', n === 3 ? `Parabéns, ${aluno}! Missão perfeita!` : `Parabéns, ${aluno}! Missão cumprida!`);
@@ -534,4 +537,4 @@ $('btn-repetir').onclick = () => (missao.quiz ? comecarQuiz(missao.quizId) : mis
 $('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.somando ? telaSomandoMenu() : missao.hora ? telaHoraMenu() : missao.giro ? telaGiroMenu() : missao.barcos ? telaBarcosMenu() : missao.copia ? telaCopiaMenu() : missao.escondida ? telaEscondidaMenu() : missao.setas ? telaSetasMenu() : missao.vistas ? telaVistasMenu() : missao.dinos ? telaDinosMenu() : missao.simbolos ? telaSimbolosMenu() : missao.tabuada ? telaTabuadaMenu() : missao.classes ? telaClassesMenu() : missao.graficos ? telaGraficosMenu() : missao.cores ? telaCoresMenu() : missao.lados ? telaLadosMenu() : missao.fichas ? telaFichasMenu() : missao.rotina ? telaRotinaMenu() : missao.luzes ? telaLuzesMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
 $('btn-pdf').onclick = () => { baixarPDF().catch((e) => { console.error('PDF:', e); window.print(); }); };
 
-export { CHAVE_RELATORIO, enviarFila, fimDaMissao, ultimoRelatorio, URL_RELATORIO };
+export { CHAVE_RELATORIO, depoisDoFim, enviarFila, fimDaMissao, ultimoRelatorio, URL_RELATORIO };

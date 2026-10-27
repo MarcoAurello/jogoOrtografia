@@ -3,7 +3,9 @@
    - aba "E-mails": a lista de professores que recebem relatórios (A nome, B e-mail); o aluno escolhe um antes de cada jogo.
      O professor cadastra e remove e-mails pela Área do professor (ou direto na aba);
    - abas "Q: <nome>": um questionário da aula em cada aba (A pergunta, B resposta certa, C a E respostas erradas);
-   - aba "Relatórios": uma linha para cada relatório enviado.
+   - aba "Relatórios": uma linha para cada relatório enviado;
+   - aba "Competições": as competições criadas pelo professor (código, jogo, hora de encerrar);
+   - aba "Ranking": a melhor partida de cada aluno em cada competição (nada é apagado: depois da hora, só não entra mais ninguém).
    O jogo lê a lista de e-mails e os questionários (doGet) e manda relatórios e alterações do professor (doPost).
    Os relatórios só podem ir para e-mails que estão na aba "E-mails" (ninguém usa o script para mandar e-mail a outros).
    Os e-mails saem pelo Gmail da conta que publicou o script (até 100 por dia numa conta Gmail comum).
@@ -48,7 +50,9 @@ function doGet(e) {
     if (acao === 'emails') return resposta({ ok: true, emails: lerEmails() });
     if (acao === 'questionarios') return resposta({ ok: true, lista: listarQuestionarios() });
     if (acao === 'questionario') return resposta({ ok: true, questionario: lerQuestionario(e.parameter.id) });
-    return resposta({ ok: true, versao: 3 });
+    if (acao === 'competicoes') return resposta({ ok: true, lista: listarCompeticoes(false) });
+    if (acao === 'ranking') return resposta({ ok: true, ...rankingDaCompeticao(e.parameter.id) });
+    return resposta({ ok: true, versao: 4 });
   } catch (err) {
     return resposta({ ok: false, erro: String(err) });
   }
@@ -59,6 +63,9 @@ function doPost(e) {
   try {
     const d = JSON.parse(e.postData.contents);
     if (d.chave !== CHAVE) return resposta({ ok: false, erro: 'chave' });
+    // competição: o aluno entra com o código e manda a pontuação (sem a senha do professor)
+    if (d.acao === 'entrarCompeticao') return resposta({ ok: true, competicao: entrarCompeticao(d.id, d.codigo) });
+    if (d.acao === 'resultadoCompeticao') return resposta({ ok: true, ...guardarResultado(d) });
     if (d.acao) {
       if (d.senha !== SENHA_PROFESSOR) return resposta({ ok: false, erro: 'senha' });
       if (d.acao === 'entrar') return resposta({ ok: true });
@@ -66,6 +73,9 @@ function doPost(e) {
       if (d.acao === 'removerEmail') { removerEmail(d.email); return resposta({ ok: true, emails: lerEmails() }); }
       if (d.acao === 'salvarQuestionario') return resposta({ ok: true, id: salvarQuestionario(d.titulo, d.perguntas) });
       if (d.acao === 'excluirQuestionario') { excluirQuestionario(d.id); return resposta({ ok: true }); }
+      if (d.acao === 'criarCompeticao') return resposta({ ok: true, competicao: criarCompeticao(d) });
+      if (d.acao === 'competicoesProfessor') return resposta({ ok: true, lista: listarCompeticoes(true) });
+      if (d.acao === 'encerrarCompeticao') { encerrarCompeticao(d.id); return resposta({ ok: true, lista: listarCompeticoes(true) }); }
       return resposta({ ok: false, erro: 'acao' });
     }
     return enviarRelatorio(d);
@@ -164,6 +174,133 @@ function salvarQuestionario(titulo, perguntas) {
 function excluirQuestionario(id) {
   const aba = abasDeQuestionario().find((a) => String(a.getSheetId()) === String(id));
   if (aba) planilha().deleteSheet(aba);
+}
+
+// ---------- competições ----------
+// O professor cria (com a senha): nome, jogo, hora de encerrar e o e-mail que recebe os relatórios. O script gera um
+// código de 5 letras, que o professor passa à turma. O aluno vê a lista na aba Competição, mas só entra com o código.
+// Cada partida manda a pontuação; vale a MELHOR de cada aluno (pelo nome). Depois da hora, ninguém mais entra
+// (as partidas já começadas ainda contam por MINUTOS_DE_FOLGA). Nada é apagado: a planilha guarda tudo.
+const MINUTOS_DE_FOLGA = 15;
+const LETRAS_DO_CODIGO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   // sem 0/O e 1/I, que se confundem
+const COLUNAS_COMPETICAO = ['ID', 'Código', 'Nome', 'Jogo', 'Nome do jogo', 'E-mail do professor', 'Criada em', 'Encerra em'];
+const COLUNAS_RANKING = ['ID da competição', 'Aluno', 'Pontos', 'Acertos', 'Respondidas', 'Partidas', 'Última partida', 'Melhor partida em'];
+
+function abaCom(nome, colunas) {
+  const p = planilha();
+  let aba = p.getSheetByName(nome);
+  if (!aba) {
+    aba = p.insertSheet(nome);
+    aba.getRange(1, 1, 1, colunas.length).setValues([colunas]).setFontWeight('bold');
+    aba.setFrozenRows(1);
+  }
+  return aba;
+}
+const abaCompeticoes = () => abaCom('Competições', COLUNAS_COMPETICAO);
+const abaRanking = () => abaCom('Ranking', COLUNAS_RANKING);
+// as linhas de dados (sem o cabeçalho), cada uma com o número dela na planilha
+function linhasDe(aba, colunas) {
+  const n = aba.getLastRow() - 1;
+  if (n < 1) return [];
+  return aba.getRange(2, 1, n, colunas).getValues().map((v, i) => ({ v, linha: i + 2 }));
+}
+const quando = (v) => (v instanceof Date ? v : new Date(v));
+function competicaoDaLinha(v, comCodigo) {
+  const encerra = quando(v[7]);
+  const c = { id: String(v[0]), nome: String(v[2]), jogo: String(v[3]), jogoNome: String(v[4]), email: String(v[5]),
+    criada: quando(v[6]).toISOString(), encerra: encerra.toISOString(), aberta: new Date() < encerra };
+  if (comCodigo) c.codigo = String(v[1]);
+  return c;
+}
+function acharCompeticao(id) {
+  const achada = linhasDe(abaCompeticoes(), COLUNAS_COMPETICAO.length).find((x) => String(x.v[0]) === String(id));
+  if (!achada) throw new Error('competicao');
+  return achada;
+}
+// nome do aluno como chave: sem acentos, sem diferença de maiúsculas e de espaços
+const chaveDoNome = (n) => texto(n, 40).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+function criarCompeticao(d) {
+  const nome = texto(d.nome, 60), jogo = texto(d.jogo, 30), jogoNome = texto(d.jogoNome, 60);
+  const encerra = new Date(d.encerra);
+  if (!jogo) throw new Error('jogo');
+  if (isNaN(encerra.getTime()) || encerra <= new Date()) throw new Error('hora');
+  const email = texto(d.email, 120).toLowerCase();
+  const trava = LockService.getScriptLock();
+  trava.waitLock(10000);
+  try {
+    const aba = abaCompeticoes();
+    const usados = new Set(linhasDe(aba, 2).map((x) => String(x.v[1])));
+    let codigo;
+    do { codigo = Array.from({ length: 5 }, () => LETRAS_DO_CODIGO[Math.floor(Math.random() * LETRAS_DO_CODIGO.length)]).join(''); } while (usados.has(codigo));
+    const id = Utilities.getUuid().slice(0, 8);
+    aba.appendRow([id, codigo, nome || jogoNome, jogo, jogoNome, emailValido(email) ? email : '', new Date(), encerra]);
+    return competicaoDaLinha([id, codigo, nome || jogoNome, jogo, jogoNome, emailValido(email) ? email : '', new Date(), encerra], true);
+  } finally { trava.releaseLock(); }
+}
+
+// para os alunos: as abertas e as que encerraram há menos de 3 dias (sem o código); para o professor: as dos últimos 30 dias, com o código
+function listarCompeticoes(doProfessor) {
+  const limite = Date.now() - (doProfessor ? 30 : 3) * 24 * 3600 * 1000;
+  const participantes = {};
+  linhasDe(abaRanking(), 2).forEach((x) => { participantes[x.v[0]] = (participantes[x.v[0]] || 0) + 1; });
+  return linhasDe(abaCompeticoes(), COLUNAS_COMPETICAO.length)
+    .filter((x) => quando(x.v[7]).getTime() >= limite)
+    .map((x) => ({ ...competicaoDaLinha(x.v, doProfessor), participantes: participantes[x.v[0]] || 0 }))
+    .sort((a, b) => (a.aberta !== b.aberta ? (a.aberta ? -1 : 1) : b.criada.localeCompare(a.criada)));
+}
+
+function encerrarCompeticao(id) {
+  const { linha } = acharCompeticao(id);
+  abaCompeticoes().getRange(linha, 8).setValue(new Date());
+}
+
+function conferirCodigo(id, codigo) {
+  const { v } = acharCompeticao(id);
+  if (String(v[1]).toUpperCase() !== texto(codigo, 10).toUpperCase()) throw new Error('codigo');
+  return v;
+}
+
+function entrarCompeticao(id, codigo) {
+  const v = conferirCodigo(id, codigo);
+  const c = competicaoDaLinha(v, false);
+  if (!c.aberta) throw new Error('encerrada');
+  return c;
+}
+
+// guarda a partida: se for a melhor do aluno, troca a pontuação; sempre conta mais uma partida
+function guardarResultado(d) {
+  const v = conferirCodigo(d.id, d.codigo);
+  const c = competicaoDaLinha(v, false);
+  if (Date.now() > new Date(c.encerra).getTime() + MINUTOS_DE_FOLGA * 60 * 1000) throw new Error('encerrada');
+  const nome = texto(d.nome, 40);
+  if (!nome) throw new Error('nome');
+  const pontos = numero(d.pontos, 1000000), acertos = numero(d.acertos, 10000), total = numero(d.total, 10000);
+  const trava = LockService.getScriptLock();
+  trava.waitLock(10000);
+  try {
+    const aba = abaRanking();
+    const meu = linhasDe(aba, COLUNAS_RANKING.length).find((x) => String(x.v[0]) === c.id && chaveDoNome(x.v[1]) === chaveDoNome(nome));
+    if (!meu) aba.appendRow([c.id, nome, pontos, acertos, total, 1, new Date(), new Date()]);
+    else {
+      const melhor = pontos > Number(meu.v[2]) || (pontos === Number(meu.v[2]) && acertos > Number(meu.v[3]));
+      aba.getRange(meu.linha, 1, 1, COLUNAS_RANKING.length).setValues([[c.id, melhor ? nome : meu.v[1], melhor ? pontos : meu.v[2],
+        melhor ? acertos : meu.v[3], melhor ? total : meu.v[4], Number(meu.v[5] || 0) + 1, new Date(), melhor ? new Date() : (meu.v[7] || meu.v[6])]]);
+    }
+  } finally { trava.releaseLock(); }
+  return rankingDaCompeticao(c.id);
+}
+
+// ranking: mais pontos primeiro; no empate, mais acertos; depois, quem fez a melhor partida antes
+function rankingDaCompeticao(id) {
+  const { v } = acharCompeticao(id);
+  const ranking = linhasDe(abaRanking(), COLUNAS_RANKING.length)
+    .filter((x) => String(x.v[0]) === String(id))
+    .map((x) => ({ nome: String(x.v[1]), pontos: Number(x.v[2]) || 0, acertos: Number(x.v[3]) || 0, total: Number(x.v[4]) || 0,
+      partidas: Number(x.v[5]) || 1, em: quando(x.v[7] || x.v[6]).getTime() || 0 }))
+    .sort((a, b) => b.pontos - a.pontos || b.acertos - a.acertos || a.em - b.em)
+    .map(({ em, ...r }) => r);
+  return { competicao: competicaoDaLinha(v, false), ranking };
 }
 
 // ---------- relatório por e-mail ----------

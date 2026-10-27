@@ -1499,8 +1499,8 @@ body.girar .aviso-girar b { font-family: 'Fredoka', 'Nunito', sans-serif; font-s
 /* ---------- Barra de navegação inferior (fixa) ---------- */
 .barra-inferior {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
-  padding: 6px clamp(6px, 3vw, 24px) max(6px, env(safe-area-inset-bottom));
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px;
+  padding: 6px clamp(4px, 2vw, 24px) max(6px, env(safe-area-inset-bottom));
   background: var(--branco); border-top: 1px solid #ece6f5; box-shadow: 0 -4px 16px rgba(19, 41, 75, 0.08);
 }
 .barra-inferior[hidden] { display: none; }
@@ -2391,3 +2391,33 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   font-size: clamp(14px, min(4.4vw, 3dvh), 24px); line-height: 1; color: #5b3aa0; }
 .dica-letra small { font-size: 9px; font-weight: 600; }
 #tela-escondida #btn-escondida-limpar { margin: 4px auto auto; }
+
+/* ---------- Competição ---------- */
+@media (max-width: 400px) { .aba { font-size: 11px; padding: 6px 2px; } }
+.campo select { font: inherit; font-size: 16px; padding: 9px 10px; border: 2px solid #cfe3e7; border-radius: 12px; background: #fff; color: var(--texto); }
+.comp-ativa { border-left: 6px solid #c2185b; }
+.comp-ativa p { margin: 0 0 10px; font-weight: 700; line-height: 1.45; }
+.comp-item { flex-wrap: wrap; border-left-color: #c2185b; }
+.comp-item.encerrada { border-left-color: #b0bec5; opacity: 0.85; }
+.comp-item-texto { flex: 1 1 200px; display: flex; flex-direction: column; gap: 2px; }
+.comp-item-hora { font-size: 14px; font-weight: 800; color: #c2185b; }
+.comp-item.encerrada .comp-item-hora { color: var(--cinza-texto); }
+.comp-item-botoes { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.comp-item-botoes .btn-grande { margin: 0; }
+.comp-codigo { align-self: flex-start; padding: 2px 10px; border-radius: 8px; background: #fde7f0; color: #c2185b;
+  font-family: 'Fredoka', monospace; font-weight: 700; font-size: 22px; letter-spacing: 3px; }
+.comp-codigo-campo { text-transform: uppercase; letter-spacing: 6px; font-family: 'Fredoka', monospace; font-weight: 700; text-align: center; }
+.ranking { list-style: none; margin: 8px 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.ranking-linha { display: grid; grid-template-columns: 38px 1fr auto; grid-template-areas: "pos nome pontos" "pos info pontos"; align-items: center; column-gap: 8px;
+  padding: 8px 12px; border-radius: 12px; background: #f7f9fb; border: 2px solid #e3edf0; }
+.ranking-linha:nth-child(1) { background: #fff8d6; border-color: #f5cf12; }
+.ranking-linha:nth-child(2) { background: #f1f4f7; border-color: #c9d3dc; }
+.ranking-linha:nth-child(3) { background: #fbefe6; border-color: #e3b48f; }
+.ranking-linha.eu { box-shadow: 0 0 0 3px #c2185b; }
+.ranking-pos { grid-area: pos; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 22px; text-align: center; }
+.ranking-nome { grid-area: nome; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 18px; overflow-wrap: anywhere; }
+.ranking-info { grid-area: info; font-size: 13px; font-weight: 700; color: var(--cinza-texto); }
+.ranking-pontos { grid-area: pontos; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 20px; color: #c2185b; white-space: nowrap; }
+.fim-competicao { border-left: 6px solid #c2185b; margin-bottom: 14px; }
+.fim-comp-texto { margin: 4px 0 8px; font-weight: 700; line-height: 1.45; text-align: center; }
+#form-comp-entrar { display: flex; flex-direction: column; gap: 6px; }
