@@ -1,35 +1,35 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Relatório do fim do jogo: textos, gráficos, envio por e-mail (com fila offline), confete e PDF. */
 
-import { $, seguro, semHTML, sortear } from './util.js?v=101';
-import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=101';
-import { frase, SOM } from './som.js?v=101';
-import { mascote, mostrar } from './telas.js?v=101';
-import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=101';
-import { comecarMissao, telaMissoes } from './ortografia.js?v=101';
-import { comecarChuva, telaChuvaMenu } from './chuva.js?v=101';
-import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=101';
-import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=101';
-import { comecarPeso, telaPesoMenu } from './peso.js?v=101';
-import { comecarQuiz, telaQuizMenu } from './quiz.js?v=101';
-import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=101';
-import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=101';
-import { comecarFichas, telaFichasMenu } from './fichas.js?v=101';
-import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=101';
-import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=101';
-import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=101';
-import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=101';
-import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=101';
-import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=101';
-import { comecarCores, telaCoresMenu } from './cores.js?v=101';
-import { comecarLados, telaLadosMenu } from './lados.js?v=101';
-import { comecarSetas, telaSetasMenu } from './setas.js?v=101';
-import { comecarVistas, telaVistasMenu } from './vistas.js?v=101';
-import { comecarDinos, telaDinosMenu } from './dinos.js?v=101';
-import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=101';
-import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=101';
-import { comecarClasses, telaClassesMenu } from './classes.js?v=101';
-import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=101';
+import { $, seguro, semHTML, sortear } from './util.js?v=102';
+import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=102';
+import { frase, SOM } from './som.js?v=102';
+import { mascote, mostrar } from './telas.js?v=102';
+import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=102';
+import { comecarMissao, telaMissoes } from './ortografia.js?v=102';
+import { comecarChuva, telaChuvaMenu } from './chuva.js?v=102';
+import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=102';
+import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=102';
+import { comecarPeso, telaPesoMenu } from './peso.js?v=102';
+import { comecarQuiz, telaQuizMenu } from './quiz.js?v=102';
+import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=102';
+import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=102';
+import { comecarFichas, telaFichasMenu } from './fichas.js?v=102';
+import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=102';
+import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=102';
+import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=102';
+import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=102';
+import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=102';
+import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=102';
+import { comecarCores, telaCoresMenu } from './cores.js?v=102';
+import { comecarLados, telaLadosMenu } from './lados.js?v=102';
+import { comecarSetas, telaSetasMenu } from './setas.js?v=102';
+import { comecarVistas, telaVistasMenu } from './vistas.js?v=102';
+import { comecarDinos, telaDinosMenu } from './dinos.js?v=102';
+import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=102';
+import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=102';
+import { comecarClasses, telaClassesMenu } from './classes.js?v=102';
+import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=102';
 
 // ---------- Relatório de dificuldades ----------
 function montarRelatorio() {

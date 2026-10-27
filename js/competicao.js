@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Competição: o professor cria (jogo + hora de encerrar), a turma entra com o código e o ranking fica na planilha. */
 
-import { $, seguro } from './util.js?v=101';
-import { aluno } from './estado.js?v=101';
-import { SOM } from './som.js?v=101';
-import { mostrar } from './telas.js?v=101';
-import { definirEmailCompeticao, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=101';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=101';
-import { comecarQuiz } from './quiz.js?v=101';
+import { $, seguro } from './util.js?v=102';
+import { aluno } from './estado.js?v=102';
+import { SOM } from './som.js?v=102';
+import { mostrar } from './telas.js?v=102';
+import { definirEmailCompeticao, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=102';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=102';
+import { comecarQuiz } from './quiz.js?v=102';
 
 // ---------- Competição ----------
 // A aba Competição lista as competições abertas (e as que encerraram há pouco, só com o ranking). Para entrar, o aluno

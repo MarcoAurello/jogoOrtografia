@@ -1,34 +1,34 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Telas e navegação: moldura, mascote, troca de telas, encaixe na tela, login, menu do topo, barra inferior e filtro dos jogos. */
 
-import { $ } from './util.js?v=101';
-import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=101';
-import { frase, pararVoz, SOM } from './som.js?v=101';
-import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=101';
-import { pararChuva } from './chuva.js?v=101';
-import { pararMat } from './matematica.js?v=101';
-import { desenharTiro, pararTiro, tiro } from './tiro.js?v=101';
-import { pararPeso } from './peso.js?v=101';
-import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=101';
-import { pararLuz } from './luzes.js?v=101';
-import { pararRotina } from './rotina.js?v=101';
-import { pararFichas } from './fichas.js?v=101';
-import { pararEscondida } from './escondida.js?v=101';
-import { pararCopia } from './copia.js?v=101';
-import { pararBarcos } from './barcos.js?v=101';
-import { pararGiro } from './giro.js?v=101';
-import { pararHora } from './hora.js?v=101';
-import { pararSomando } from './somando.js?v=101';
-import { telaCompeticao } from './competicao.js?v=101';
-import { pararCores } from './cores.js?v=101';
-import { pararLados } from './lados.js?v=101';
-import { pararSetas } from './setas.js?v=101';
-import { pararVistas } from './vistas.js?v=101';
-import { pararDinos } from './dinos.js?v=101';
-import { pararSimbolos } from './simbolos.js?v=101';
-import { pararTabuada } from './tabuada.js?v=101';
-import { pararClasses } from './classes.js?v=101';
-import { pararGraficos } from './graficos.js?v=101';
+import { $ } from './util.js?v=102';
+import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=102';
+import { frase, pararVoz, SOM } from './som.js?v=102';
+import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=102';
+import { pararChuva } from './chuva.js?v=102';
+import { pararMat } from './matematica.js?v=102';
+import { desenharTiro, pararTiro, tiro } from './tiro.js?v=102';
+import { pararPeso } from './peso.js?v=102';
+import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=102';
+import { pararLuz } from './luzes.js?v=102';
+import { pararRotina } from './rotina.js?v=102';
+import { pararFichas } from './fichas.js?v=102';
+import { pararEscondida } from './escondida.js?v=102';
+import { pararCopia } from './copia.js?v=102';
+import { pararBarcos } from './barcos.js?v=102';
+import { pararGiro } from './giro.js?v=102';
+import { pararHora } from './hora.js?v=102';
+import { pararSomando } from './somando.js?v=102';
+import { telaCompeticao } from './competicao.js?v=102';
+import { pararCores } from './cores.js?v=102';
+import { pararLados } from './lados.js?v=102';
+import { pararSetas } from './setas.js?v=102';
+import { pararVistas } from './vistas.js?v=102';
+import { pararDinos } from './dinos.js?v=102';
+import { pararSimbolos } from './simbolos.js?v=102';
+import { pararTabuada } from './tabuada.js?v=102';
+import { pararClasses } from './classes.js?v=102';
+import { pararGraficos } from './graficos.js?v=102';
 
 // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
 const ENFEITES = {
@@ -163,6 +163,7 @@ $('form-login').onsubmit = (e) => {
   if (QUIZ_DO_LINK) { escolherProfessorE('Questionário da aula', telaQuizMenu); return; }   // veio pelo link de um questionário
   const doLink = Object.hasOwn(JOGOS_DO_LINK, JOGO_DO_LINK || '') ? JOGOS_DO_LINK[JOGO_DO_LINK] : null;
   if (doLink) { telaJogos(); escolherProfessorE(doLink.nome, doLink.abrir); return; }       // veio pelo link de um jogo
+  if (ABA_DO_LINK && ABA_DO_LINK !== 'inicio') { abrirAba(ABA_DO_LINK); return; }             // veio da barra de baixo do manual
   telaInicio();
   frase('ola');   // apresentação gravada pelo Davi (se existir)
 };
@@ -181,17 +182,23 @@ function pararJogos() { pararSomando(); pararHora(); pararGiro(); pararBarcos();
 const irParaInicio = () => { pararJogos(); $('escolha-prof').hidden = true; telaInicio(); };
 $('btn-logo-inicio').onclick = irParaInicio;
 $('btn-menu-inicio').onclick = irParaInicio;
+// ?aba=jogos (ou quiz, competicao, professor): a barra de baixo do manual abre o app direto naquela aba, depois do nome
+const ABA_DO_LINK = new URLSearchParams(location.search).get('aba');
+function abrirAba(aba) {
+  if (aba === 'inicio') telaInicio();
+  else if (aba === 'jogos') telaJogos();
+  else if (aba === 'quiz') escolherProfessorE('Questionário da aula', telaQuizMenu);
+  else if (aba === 'competicao') telaCompeticao();
+  else if (aba === 'professor') telaProfessor();
+  else telaInicio();
+}
 $('barra-inferior').onclick = (e) => {
   const aba = e.target.closest('.aba');
   if (!aba) return;
   SOM.clique();
   pararJogos();
   $('escolha-prof').hidden = true;
-  if (aba.dataset.aba === 'inicio') telaInicio();
-  else if (aba.dataset.aba === 'jogos') telaJogos();
-  else if (aba.dataset.aba === 'quiz') escolherProfessorE('Questionário da aula', telaQuizMenu);
-  else if (aba.dataset.aba === 'competicao') telaCompeticao();
-  else telaProfessor();
+  abrirAba(aba.dataset.aba);
 };
 
 $('btn-trocar').onclick = () => {

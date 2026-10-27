@@ -124,6 +124,24 @@
       .abas, .voltar { display: none; }
       .passo, .jogo { break-inside: avoid; box-shadow: none; border: 1px solid var(--borda); }
     }
+    /* barra de baixo, igual à do app */
+    .barra-inferior {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px;
+      padding: 6px clamp(4px, 2vw, 24px) max(6px, env(safe-area-inset-bottom));
+      background: var(--branco); border-top: 1px solid #ece6f5; box-shadow: 0 -4px 16px rgba(19, 41, 75, 0.08);
+    }
+    .barra-inferior .aba {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+      min-height: 52px; padding: 6px 4px; border-radius: 22px; text-decoration: none;
+      font-family: 'Nunito', system-ui, sans-serif; font-size: 13px; font-weight: 800; color: #3b3a4a;
+      transition: background 0.15s, color 0.15s;
+    }
+    .barra-inferior .aba svg { width: 24px; height: 24px; }
+    .barra-inferior .aba:focus-visible { outline: 3px solid #c2185b; outline-offset: 2px; }
+    @media (hover: hover) { .barra-inferior .aba:hover { background: #f6f2fc; color: #c2185b; } }
+    @media (max-width: 400px) { .barra-inferior .aba { font-size: 11px; padding: 6px 2px; } }
+    .rodape { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
   </style>
 </head>
 <body>
@@ -911,6 +929,29 @@
     <p>© <b>Davi e Marco</b> — Todos os direitos reservados<br>
       <a href="https://sitejodospedagogicos.vercel.app/" target="_blank" rel="noopener">Pedagogia Gamificada ↗</a></p>
   </footer>
+  <!-- a mesma barra de baixo do app: cada botão abre o app naquela aba -->
+  <nav class="barra-inferior" aria-label="Ir para o app">
+    <a class="aba" href="./">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></svg>
+      <span>Início</span>
+    </a>
+    <a class="aba" href="./?aba=jogos">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6.5" width="19" height="11" rx="5.5"/><path d="M7.5 10v4M5.5 12h4"/><circle cx="15.5" cy="11" r=".6" fill="currentColor"/><circle cx="17.5" cy="13" r=".6" fill="currentColor"/></svg>
+      <span>Jogos</span>
+    </a>
+    <a class="aba" href="./?aba=quiz">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="m8.5 10 1.5 1.5L12.5 9M8.5 15.5l1.5 1.5 2.5-2.5M14.5 10.5h2M14.5 16h2"/></svg>
+      <span>Questionário</span>
+    </a>
+    <a class="aba" href="./?aba=competicao">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 4h9v5a4.5 4.5 0 0 1-9 0z"/><path d="M7.5 6H5a2.5 2.5 0 0 0 2.6 4M16.5 6H19a2.5 2.5 0 0 1-2.6 4"/><path d="M12 13.5V17M8.5 20.5h7M9.5 20.5c0-1.9 1.1-3.5 2.5-3.5s2.5 1.6 2.5 3.5"/></svg>
+      <span>Competição</span>
+    </a>
+    <a class="aba" href="./?aba=professor">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20.5c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg>
+      <span>Professor</span>
+    </a>
+  </nav>
   <script>
     // tutoriais do YouTube: troca a capa pelo player só quando tocar (a página abre mais rápido)
     document.querySelectorAll('.yt-capa').forEach((b) => {
