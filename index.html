@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=88">
+  <link rel="stylesheet" href="style.css?v=92">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -776,6 +776,56 @@
       </div>
     </section>
 
+    <!-- Barquinhos: instruções -->
+    <section class="tela" id="tela-barcos-menu">
+      <h2 class="subtitulo">⛵ Barquinhos</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-barcos"></div>
+        <div class="balao balao-esq">
+          Vão aparecer vários <b>barcos</b>: uns virados para a <b>direita ➡</b> e outros para a <b>esquerda ⬅</b>.
+          Olhe para onde aponta a <b>frente</b> de cada barco (o bico com a âncora), conte e toque no botão certo.
+          <b>3D – 2E</b> quer dizer 3 para a direita e 2 para a esquerda. Quanto mais rápido, mais pontos! ⚓
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-barcos-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="barcos-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Barquinhos: o jogo -->
+    <section class="tela tela-jogo" id="tela-barcos">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="barcos-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="barcos-nivel"></span>
+        <span class="chuva-placar"><span id="barcos-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="barcos-contador"></span>
+        <span id="barcos-tempo"></span>
+      </div>
+      <div class="barcos-placa" aria-hidden="true"><span>⬅ <b>E</b>squerda</span><span><b>D</b>ireita ➡</span></div>
+      <div class="barcos-mar" id="barcos-mar" aria-label="Barcos na água"></div>
+      <p class="barcos-msg" id="barcos-msg" role="status"></p>
+      <div class="mat-respostas barcos-opcoes" id="barcos-opcoes"></div>
+      <!-- errou 2 vezes seguidas: janelinha que ensina esquerda e direita -->
+      <div class="barcos-ajuda" id="barcos-ajuda" hidden>
+        <div class="cartao barcos-ajuda-cartao" role="dialog" aria-modal="true" aria-labelledby="barcos-ajuda-titulo">
+          <h3 class="chuva-pergunta" id="barcos-ajuda-titulo">🧭 Vamos lembrar: esquerda e direita!</h3>
+          <div class="barcos-ajuda-linha esquerda">
+            <img class="barco" src="assets/barco.png" alt="barco virado para a esquerda">
+            <p><b>⬅ ESQUERDA</b><br>A frente do barco (o bico com a âncora) aponta para este lado.</p>
+          </div>
+          <div class="barcos-ajuda-linha direita">
+            <img class="barco direita" src="assets/barco.png" alt="barco virado para a direita">
+            <p><b>DIREITA ➡</b><br>A frente do barco aponta para o outro lado.</p>
+          </div>
+          <p class="barcos-ajuda-dica">✋ <b>Dica:</b> estique o polegar e o dedo indicador das duas mãos. A mão que forma a letra <b>L</b> certinha é a <b>esquerda</b>!</p>
+          <button class="btn-grande" id="btn-barcos-entendi" type="button">Entendi! ▶</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -1015,6 +1065,11 @@
           <span class="jogo-card-nome">Copie Certo</span>
           <span class="jogo-card-texto">Monte igualzinho ao modelo!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-barcos" type="button" data-tema="matematica psicopedagogia" style="--c:#1e88e5">
+          <img class="jogo-card-capa" src="assets/capa-barcos.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Barquinhos</span>
+          <span class="jogo-card-texto">Quantos vão para a direita e para a esquerda?</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -1198,9 +1253,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=88"></script>
-  <script src="dados.js?v=88"></script>
-  <script type="module" src="js/main.js?v=88"></script>
+  <script src="plenix.js?v=92"></script>
+  <script src="dados.js?v=92"></script>
+  <script type="module" src="js/main.js?v=92"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

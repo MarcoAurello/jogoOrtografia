@@ -2255,3 +2255,50 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 .copia-botoes { display: flex; justify-content: center; align-items: center; gap: 10px; }
 .copia-botoes .btn-grande, .copia-botoes .btn-sec { margin: 0; }
 #btn-copia-conferir:disabled { opacity: 0.5; }
+
+/* ---------- Barquinhos ---------- */
+.barcos-mar {
+  flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: space-evenly; gap: 6px;
+  padding: 10px 8px; border-radius: 18px; overflow: hidden;
+  background: linear-gradient(180deg, #d9f1ff 0%, #bfe6fb 40%, #5fb6e8 41%, #2f8fd0 100%);
+  box-shadow: var(--sombra);
+}
+.barcos-fileira { display: flex; justify-content: center; align-items: flex-end; gap: clamp(2px, 1vw, 8px); }
+.barco { width: min(calc((100% - 8px * var(--por-fileira, 5)) / var(--por-fileira, 5)), 92px); height: auto; transition: transform 0.6s, opacity 0.6s; }
+.barco.direita { transform: scaleX(-1); }
+/* a água balança os barcos (nos níveis mais difíceis) */
+.barcos-mar.balanca .barco { animation: barco-balanca 2.2s ease-in-out infinite; animation-delay: var(--atraso, 0s); }
+.barcos-mar.balanca .barco.direita { animation-name: barco-balanca-direita; }
+@keyframes barco-balanca { 0%, 100% { transform: rotate(-5deg) translateY(0); } 50% { transform: rotate(5deg) translateY(-4px); } }
+@keyframes barco-balanca-direita { 0%, 100% { transform: scaleX(-1) rotate(-5deg) translateY(0); } 50% { transform: scaleX(-1) rotate(5deg) translateY(-4px); } }
+/* memória: os barcos afundam */
+.barcos-mar.afundou .barco { opacity: 0; transform: translateY(60%); animation: none; }
+.barcos-mar.afundou .barco.direita { transform: scaleX(-1) translateY(60%); }
+.barcos-legenda { margin: 6px 0 0; text-align: center; font-size: 14px; font-weight: 700; color: var(--cinza-texto); }
+.barcos-msg { min-height: 1.3em; margin: 4px 0; text-align: center; font-weight: 700; font-size: clamp(14px, 2.3dvh, 18px); color: var(--primaria-escura); }
+.barcos-msg.ok { color: #1d6b3d; }
+.barcos-msg.erro { color: #b42318; }
+.barcos-opcoes { margin-top: 4px; }
+.barcos-opcao { font-family: 'Fredoka', sans-serif; font-size: clamp(20px, 3.4dvh, 28px); letter-spacing: 1px; }
+.barcos-opcao.certa { background: var(--verde); box-shadow: 0 6px 0 #1d6b3d; }
+.barcos-opcao.errada { background: var(--vermelho); box-shadow: 0 6px 0 #8e1b1b; }
+/* placa no alto: esquerda e direita, como no caderno */
+.barcos-placa { display: flex; justify-content: space-between; margin: 0 4px 6px; font-family: 'Fredoka', sans-serif; font-weight: 700;
+  font-size: clamp(17px, 2.8dvh, 22px); color: var(--texto); }
+.barcos-placa span { padding: 4px 12px; border-radius: 999px; background: #fff3e0; border: 2px solid #f57c00; }
+.barcos-placa b { color: #e65100; }
+/* janelinha que ensina esquerda e direita (aparece depois de 2 erros seguidos) */
+.barcos-ajuda { position: fixed; inset: 0; z-index: 35; display: flex; align-items: center; justify-content: center; padding: 16px;
+  background: rgba(19, 41, 75, 0.55); }
+.barcos-ajuda[hidden] { display: none; }
+.barcos-ajuda-cartao { width: min(100%, 440px); max-height: 100%; overflow: auto; animation: entrar 0.3s ease; }
+.barcos-ajuda-linha { display: flex; align-items: center; gap: 12px; margin: 8px 0; padding: 8px; border-radius: 14px; background: #eef7fd; }
+.barcos-ajuda-linha p { margin: 0; text-align: left; font-size: 15px; }
+.barcos-ajuda-linha b { font-family: 'Fredoka', sans-serif; font-size: 20px; color: #e65100; }
+.barcos-ajuda-linha .barco { flex: 0 0 auto; width: 88px; }
+/* os barcos da janelinha "andam" para o seu lado */
+.barcos-ajuda-linha.esquerda .barco { animation: barco-vai-esquerda 1.6s ease-in-out infinite; }
+.barcos-ajuda-linha.direita .barco { animation: barco-vai-direita 1.6s ease-in-out infinite; }
+@keyframes barco-vai-esquerda { 0%, 100% { transform: translateX(6px); } 50% { transform: translateX(-6px); } }
+@keyframes barco-vai-direita { 0%, 100% { transform: scaleX(-1) translateX(6px); } 50% { transform: scaleX(-1) translateX(-6px); } }
+.barcos-ajuda-dica { margin: 10px 0; padding: 8px 10px; border-radius: 12px; background: #fff8d6; font-size: 15px; text-align: left; }
