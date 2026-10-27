@@ -2459,3 +2459,22 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 #descobrir-tempo { white-space: nowrap; }
 #descobrir-ajuda { padding-top: 76px; }
 .descobrir-ajuda-exemplo .balanca-peso { display: block; width: 150px; height: auto; margin: 0 auto; }
+
+/* ---------- Chaves de Sobreposição ---------- */
+.chaves-chave { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.chave-svg { display: block; height: 100%; max-height: 42dvh; width: auto; max-width: 100%; }
+.vaga-atual { animation: vaga-pisca 1.2s ease-in-out infinite; }
+@keyframes vaga-pisca { 50% { opacity: 0.55; } }
+.chaves-msg { min-height: 1.3em; margin: 4px 0 6px; text-align: center; font-weight: 700; font-size: clamp(14px, 2.2dvh, 17px); color: var(--primaria-escura); }
+.chaves-msg.ok { color: #1d6b3d; }
+.chaves-msg.erro { color: #b42318; }
+.chaves-opcoes { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(6px, 2vw, 14px); margin-bottom: 8px; }
+.chaves-opcao { padding: 6px; border-radius: 14px; background: var(--branco); border: 3px solid #d6e6ea; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.12); }
+.chaves-opcao:active { transform: scale(0.96); }
+.chaves-opcao.certa { border-color: #2e9e5b; box-shadow: 0 0 0 4px #b7e4c7; }
+.chaves-opcao.errada { border-color: #e53935; box-shadow: 0 0 0 4px #f8c4c2; }
+.figura-chave { display: block; width: 100%; height: auto; }
+#chaves-tempo { white-space: nowrap; }
+#chaves-ajuda { padding-top: 76px; }
+.chaves-exemplo { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 6px 0; }
+.chaves-exemplo .figura-chave { width: 70px; }

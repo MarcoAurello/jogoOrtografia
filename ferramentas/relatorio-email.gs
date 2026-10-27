@@ -23,6 +23,7 @@ const TEXTOS = {
   medidas: { assunto: 'Medidas de massa', unidade: 'objeto', revisar: 'Objetos para revisar', certo: 'Objeto e peso', tentou: 'Passou do ponto com', porRegra: 'Acertos por unidade', niveis: 'Nível', nivelMax: 3 },
   angulos: { assunto: 'Ângulos', unidade: 'ângulo', revisar: 'Ângulos para revisar', certo: 'Ângulo certo', tentou: 'O aluno escolheu', porRegra: 'Acertos por tipo de ângulo', niveis: 'Nível em cada míssil', nivelMax: 5 },
   atencao: { assunto: 'Atenção e memória', unidade: 'sequência', revisar: 'Sequências para revisar', certo: 'Sequência que piscou', tentou: 'O que o aluno fez', porRegra: 'Acertos por tamanho da sequência', niveis: 'Nível em cada rodada', nivelMax: 8 },
+  chaves: { assunto: 'Sobreposição de figuras (percepção visual)', unidade: 'quadrado', revisar: 'Quadrados para revisar', certo: 'Quadrado da chave', tentou: 'O que escolheu', porRegra: 'Acertos por parte da chave', niveis: 'Nível em cada quadrado', nivelMax: 5 },
   descobrir: { assunto: 'Descobrir o peso que falta (balança e incógnita)', unidade: 'rodada', revisar: 'Balanças para revisar', certo: 'Balança e peso certo', tentou: 'O que escolheu', porRegra: 'Acertos por tipo de balança', niveis: 'Nível em cada rodada', nivelMax: 6 },
   somando: { assunto: 'Soma e subtração de figuras (visualização mental)', unidade: 'conta', revisar: 'Contas para revisar', certo: 'Conta', tentou: 'O que escolheu', porRegra: 'Acertos por tipo de conta', niveis: 'Nível em cada conta', nivelMax: 6 },
   hora: { assunto: 'Horas: relógio de ponteiros e digital', unidade: 'rodada', revisar: 'Horas para revisar', certo: 'Hora certa', tentou: 'O que escolheu', porRegra: 'Acertos por tipo de leitura', niveis: 'Nível em cada rodada', nivelMax: 6 },
@@ -324,6 +325,7 @@ function enviarRelatorio(d) {
     : d.tipo === 'hora' ? 'hora'
     : d.tipo === 'somando' ? 'somando'
     : d.tipo === 'descobrir' ? 'descobrir'
+    : d.tipo === 'chaves' ? 'chaves'
     : d.tipo === 'cores' ? 'cores'
     : d.tipo === 'lateralidade' ? 'lateralidade'
     : d.tipo === 'setas' ? 'setas'
@@ -372,7 +374,7 @@ function montarEmail(r) {
     ? r.grupos.map((g) => `<p style="margin:10px 0 2px"><b>${h(g.titulo)}</b>: ${g.qtd} ${r.tx.unidade}${g.qtd === 1 ? '' : 's'} com erro</p>`
       + `<p style="margin:0;color:#475569">${h(g.regra)}</p>`).join('')
     : '<p>Nenhuma dificuldade nesta atividade: todas as respostas certas de primeira! 🎉</p>';
-  const caixa = (t) => ([TEXTOS.questionario, TEXTOS.atencao, TEXTOS.sequencia, TEXTOS.fichas, TEXTOS.copia, TEXTOS.barcos, TEXTOS.giro, TEXTOS.hora, TEXTOS.somando, TEXTOS.descobrir, TEXTOS.cores, TEXTOS.lateralidade, TEXTOS.setas, TEXTOS.vistas, TEXTOS.dinos, TEXTOS.simbolos, TEXTOS.tabuada, TEXTOS.classes, TEXTOS.graficos].includes(r.tx) ? t : t.toUpperCase());   // frases e perguntas como estão
+  const caixa = (t) => ([TEXTOS.questionario, TEXTOS.atencao, TEXTOS.sequencia, TEXTOS.fichas, TEXTOS.copia, TEXTOS.barcos, TEXTOS.giro, TEXTOS.hora, TEXTOS.somando, TEXTOS.descobrir, TEXTOS.chaves, TEXTOS.cores, TEXTOS.lateralidade, TEXTOS.setas, TEXTOS.vistas, TEXTOS.dinos, TEXTOS.simbolos, TEXTOS.tabuada, TEXTOS.classes, TEXTOS.graficos].includes(r.tx) ? t : t.toUpperCase());   // frases e perguntas como estão
   const linhas = r.palavras.map((p) => `<tr><td style="padding:6px 10px;color:#1e7846;font-weight:bold">${h(caixa(p.certa))}</td>`
     + `<td style="padding:6px 10px;color:#c8323c;text-decoration:line-through">${h(caixa(p.tentou.join(', ')))}</td></tr>`).join('');
   const tabela = linhas
@@ -434,7 +436,7 @@ function graficosEmail(r) {
       + `<div style="font-size:9px;color:#64748b">${x.t == null ? '–' : String(x.t).replace('.', ',')}</div>`
       + `<div style="height:${Math.max(4, Math.round(((x.t == null ? maior : x.t) * 90) / maior))}px;background:${x.t == null ? '#b0bec5' : x.ok ? VERDE : VERMELHO};border-radius:3px 3px 0 0"></div>`
       + `<div style="font-size:10px;color:#64748b">${i + 1}</div></td>`).join('');
-    html += `<h3 style="color:#1fa2b0;margin:18px 0 6px">${r.tx === TEXTOS.sequencia ? 'Tempo para ordenar cada rotina' : r.tx === TEXTOS.fichas ? 'Tempo para fazer as trocas em cada jogada' : r.tx === TEXTOS.escondida ? 'Tempo para achar cada palavra' : r.tx === TEXTOS.copia ? 'Tempo para montar cada modelo' : r.tx === TEXTOS.barcos ? 'Tempo para responder cada rodada' : r.tx === TEXTOS.giro ? 'Tempo para responder cada giro' : r.tx === TEXTOS.hora ? 'Tempo para responder cada rodada' : r.tx === TEXTOS.somando ? 'Tempo para resolver cada conta' : r.tx === TEXTOS.descobrir ? 'Tempo para responder cada rodada' : r.tx === TEXTOS.cores ? 'Tempo para resolver cada conta' : r.tx === TEXTOS.lateralidade ? 'Tempo de resposta em cada comando' : r.tx === TEXTOS.setas ? 'Tempo para responder cada sequência' : r.tx === TEXTOS.vistas ? 'Tempo para responder cada pirâmide' : r.tx === TEXTOS.dinos ? 'Tempo para escolher cada sequência' : r.tx === TEXTOS.simbolos ? 'Tempo para completar cada carta' : r.tx === TEXTOS.tabuada ? 'Tempo para estourar cada quadrado' : 'Tempo de resposta em cada rodada'} (segundos)</h3>`
+    html += `<h3 style="color:#1fa2b0;margin:18px 0 6px">${r.tx === TEXTOS.sequencia ? 'Tempo para ordenar cada rotina' : r.tx === TEXTOS.fichas ? 'Tempo para fazer as trocas em cada jogada' : r.tx === TEXTOS.escondida ? 'Tempo para achar cada palavra' : r.tx === TEXTOS.copia ? 'Tempo para montar cada modelo' : r.tx === TEXTOS.barcos ? 'Tempo para responder cada rodada' : r.tx === TEXTOS.giro ? 'Tempo para responder cada giro' : r.tx === TEXTOS.hora ? 'Tempo para responder cada rodada' : r.tx === TEXTOS.somando ? 'Tempo para resolver cada conta' : r.tx === TEXTOS.descobrir ? 'Tempo para responder cada rodada' : r.tx === TEXTOS.chaves ? 'Tempo para responder cada quadrado' : r.tx === TEXTOS.cores ? 'Tempo para resolver cada conta' : r.tx === TEXTOS.lateralidade ? 'Tempo de resposta em cada comando' : r.tx === TEXTOS.setas ? 'Tempo para responder cada sequência' : r.tx === TEXTOS.vistas ? 'Tempo para responder cada pirâmide' : r.tx === TEXTOS.dinos ? 'Tempo para escolher cada sequência' : r.tx === TEXTOS.simbolos ? 'Tempo para completar cada carta' : r.tx === TEXTOS.tabuada ? 'Tempo para estourar cada quadrado' : 'Tempo de resposta em cada rodada'} (segundos)</h3>`
       + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="height:125px"><tr>${colunas}</tr></table>`
       + `<p style="font-size:12px;color:#64748b;margin:4px 0 0">Barra mais baixa = resposta mais rápida. <span style="color:${VERDE}">■</span> acertou &nbsp; <span style="color:${VERMELHO}">■</span> errou &nbsp; <span style="color:#b0bec5">■</span> não respondeu</p>`;
   }

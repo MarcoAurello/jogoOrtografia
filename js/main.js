@@ -1,37 +1,38 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Ponto de entrada: importa todos os módulos, liga o botão de instalar o app e abre a primeira tela. */
 
-import { $ } from './util.js?v=106';
-import { mostrar, telaInicio } from './telas.js?v=106';
-import { carregarEmails } from './professor.js?v=106';
-import { enviarFila } from './relatorio.js?v=106';
+import { $ } from './util.js?v=107';
+import { mostrar, telaInicio } from './telas.js?v=107';
+import { carregarEmails } from './professor.js?v=107';
+import { enviarFila } from './relatorio.js?v=107';
 // cada jogo liga os próprios botões ao ser carregado
-import './ortografia.js?v=106';
-import './chuva.js?v=106';
-import './matematica.js?v=106';
-import './tiro.js?v=106';
-import './peso.js?v=106';
-import './quiz.js?v=106';
-import './luzes.js?v=106';
-import './rotina.js?v=106';
-import './fichas.js?v=106';
-import './cores.js?v=106';
-import './lados.js?v=106';
-import './setas.js?v=106';
-import './vistas.js?v=106';
-import './dinos.js?v=106';
-import './simbolos.js?v=106';
-import './tabuada.js?v=106';
-import './classes.js?v=106';
-import './graficos.js?v=106';
-import './escondida.js?v=106';
-import './copia.js?v=106';
-import './barcos.js?v=106';
-import './giro.js?v=106';
-import './hora.js?v=106';
-import './somando.js?v=106';
-import './descobrir.js?v=106';
-import './competicao.js?v=106';
+import './ortografia.js?v=107';
+import './chuva.js?v=107';
+import './matematica.js?v=107';
+import './tiro.js?v=107';
+import './peso.js?v=107';
+import './quiz.js?v=107';
+import './luzes.js?v=107';
+import './rotina.js?v=107';
+import './fichas.js?v=107';
+import './cores.js?v=107';
+import './lados.js?v=107';
+import './setas.js?v=107';
+import './vistas.js?v=107';
+import './dinos.js?v=107';
+import './simbolos.js?v=107';
+import './tabuada.js?v=107';
+import './classes.js?v=107';
+import './graficos.js?v=107';
+import './escondida.js?v=107';
+import './copia.js?v=107';
+import './barcos.js?v=107';
+import './giro.js?v=107';
+import './hora.js?v=107';
+import './somando.js?v=107';
+import './descobrir.js?v=107';
+import './chaves.js?v=107';
+import './competicao.js?v=107';
 
 // ---------- Instalar como app ----------
 let pedidoInstalacao = null;

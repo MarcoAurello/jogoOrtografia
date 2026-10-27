@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=106">
+  <link rel="stylesheet" href="style.css?v=107">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1029,6 +1029,47 @@
       </div>
     </section>
 
+    <!-- Chaves de Sobreposição: instruções -->
+    <section class="tela" id="tela-chaves-menu">
+      <h2 class="subtitulo">🧩 Chaves de Sobreposição</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-chaves"></div>
+        <div class="balao balao-esq">
+          Cada par de figuras se <b>junta</b> no quadrado de baixo: é como pôr uma figura <b>em cima</b> da outra, e tudo o que tem
+          nas duas aparece junto! Complete os quadrados em branco da chave, um por vez, escolhendo a figura certa entre 4.
+          Acertou a chave toda, a próxima fica mais difícil. 🧩
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-chaves-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="chaves-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Chaves de Sobreposição: o jogo -->
+    <section class="tela tela-jogo" id="tela-chaves">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="chaves-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="chaves-nivel"></span>
+        <span class="chuva-placar"><span id="chaves-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="chaves-contador"></span>
+        <span id="chaves-tempo"></span>
+      </div>
+      <div class="chaves-chave" id="chaves-chave"></div>
+      <p class="chaves-msg" id="chaves-msg" role="status"></p>
+      <div class="chaves-opcoes" id="chaves-opcoes" aria-label="Alternativas"></div>
+      <!-- errou 2 vezes seguidas: janelinha que mostra um exemplo de sobreposição -->
+      <div class="barcos-ajuda" id="chaves-ajuda" hidden>
+        <div class="cartao barcos-ajuda-cartao" role="dialog" aria-modal="true" aria-labelledby="chaves-ajuda-titulo">
+          <h3 class="chuva-pergunta" id="chaves-ajuda-titulo">🧩 Vamos lembrar: o que é sobrepor</h3>
+          <div id="chaves-ajuda-exemplo"></div>
+          <button class="btn-grande" id="btn-chaves-entendi" type="button">Entendi! ▶</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -1318,6 +1359,11 @@
           <span class="jogo-card-nome">Descobrindo o Peso</span>
           <span class="jogo-card-texto">A balança mostra o total: quanto pesa a peça que falta?</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-chaves" type="button" data-tema="matematica psicopedagogia" style="--c:#2b3fbf">
+          <img class="jogo-card-capa" src="assets/capa-chaves.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Chaves de Sobreposição</span>
+          <span class="jogo-card-texto">Junte as figuras e complete a chave!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -1512,9 +1558,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=106"></script>
-  <script src="dados.js?v=106"></script>
-  <script type="module" src="js/main.js?v=106"></script>
+  <script src="plenix.js?v=107"></script>
+  <script src="dados.js?v=107"></script>
+  <script type="module" src="js/main.js?v=107"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
