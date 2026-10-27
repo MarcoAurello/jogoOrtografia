@@ -1,35 +1,35 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Ponto de entrada: importa todos os módulos, liga o botão de instalar o app e abre a primeira tela. */
 
-import { $ } from './util.js?v=98';
-import { mostrar, telaInicio } from './telas.js?v=98';
-import { carregarEmails } from './professor.js?v=98';
-import { enviarFila } from './relatorio.js?v=98';
+import { $ } from './util.js?v=99';
+import { mostrar, telaInicio } from './telas.js?v=99';
+import { carregarEmails } from './professor.js?v=99';
+import { enviarFila } from './relatorio.js?v=99';
 // cada jogo liga os próprios botões ao ser carregado
-import './ortografia.js?v=98';
-import './chuva.js?v=98';
-import './matematica.js?v=98';
-import './tiro.js?v=98';
-import './peso.js?v=98';
-import './quiz.js?v=98';
-import './luzes.js?v=98';
-import './rotina.js?v=98';
-import './fichas.js?v=98';
-import './cores.js?v=98';
-import './lados.js?v=98';
-import './setas.js?v=98';
-import './vistas.js?v=98';
-import './dinos.js?v=98';
-import './simbolos.js?v=98';
-import './tabuada.js?v=98';
-import './classes.js?v=98';
-import './graficos.js?v=98';
-import './escondida.js?v=98';
-import './copia.js?v=98';
-import './barcos.js?v=98';
-import './giro.js?v=98';
-import './hora.js?v=98';
-import './somando.js?v=98';
+import './ortografia.js?v=99';
+import './chuva.js?v=99';
+import './matematica.js?v=99';
+import './tiro.js?v=99';
+import './peso.js?v=99';
+import './quiz.js?v=99';
+import './luzes.js?v=99';
+import './rotina.js?v=99';
+import './fichas.js?v=99';
+import './cores.js?v=99';
+import './lados.js?v=99';
+import './setas.js?v=99';
+import './vistas.js?v=99';
+import './dinos.js?v=99';
+import './simbolos.js?v=99';
+import './tabuada.js?v=99';
+import './classes.js?v=99';
+import './graficos.js?v=99';
+import './escondida.js?v=99';
+import './copia.js?v=99';
+import './barcos.js?v=99';
+import './giro.js?v=99';
+import './hora.js?v=99';
+import './somando.js?v=99';
 
 // ---------- Instalar como app ----------
 let pedidoInstalacao = null;

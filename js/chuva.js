@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Chuva de Erros. */
 
-import { $, embaralhar } from './util.js?v=98';
-import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=98';
-import { SOM } from './som.js?v=98';
-import { mascote, mostrar, telaJogos } from './telas.js?v=98';
-import { escolherProfessorE } from './professor.js?v=98';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=98';
+import { $, embaralhar } from './util.js?v=99';
+import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=99';
+import { SOM } from './som.js?v=99';
+import { mascote, mostrar, telaJogos } from './telas.js?v=99';
+import { escolherProfessorE } from './professor.js?v=99';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=99';
 
 // ---------- Chuva de Erros ----------
 // As palavras caem na arena e o aluno toca só nas certas (ou só nas erradas, se escolher).

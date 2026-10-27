@@ -1,35 +1,35 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Relatório do fim do jogo: textos, gráficos, envio por e-mail (com fila offline), confete e PDF. */
 
-import { $, seguro, semHTML, sortear } from './util.js?v=98';
-import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=98';
-import { frase, SOM } from './som.js?v=98';
-import { mascote, mostrar } from './telas.js?v=98';
-import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=98';
-import { comecarMissao, telaMissoes } from './ortografia.js?v=98';
-import { comecarChuva, telaChuvaMenu } from './chuva.js?v=98';
-import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=98';
-import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=98';
-import { comecarPeso, telaPesoMenu } from './peso.js?v=98';
-import { comecarQuiz, telaQuizMenu } from './quiz.js?v=98';
-import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=98';
-import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=98';
-import { comecarFichas, telaFichasMenu } from './fichas.js?v=98';
-import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=98';
-import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=98';
-import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=98';
-import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=98';
-import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=98';
-import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=98';
-import { comecarCores, telaCoresMenu } from './cores.js?v=98';
-import { comecarLados, telaLadosMenu } from './lados.js?v=98';
-import { comecarSetas, telaSetasMenu } from './setas.js?v=98';
-import { comecarVistas, telaVistasMenu } from './vistas.js?v=98';
-import { comecarDinos, telaDinosMenu } from './dinos.js?v=98';
-import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=98';
-import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=98';
-import { comecarClasses, telaClassesMenu } from './classes.js?v=98';
-import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=98';
+import { $, seguro, semHTML, sortear } from './util.js?v=99';
+import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=99';
+import { frase, SOM } from './som.js?v=99';
+import { mascote, mostrar } from './telas.js?v=99';
+import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=99';
+import { comecarMissao, telaMissoes } from './ortografia.js?v=99';
+import { comecarChuva, telaChuvaMenu } from './chuva.js?v=99';
+import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=99';
+import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=99';
+import { comecarPeso, telaPesoMenu } from './peso.js?v=99';
+import { comecarQuiz, telaQuizMenu } from './quiz.js?v=99';
+import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=99';
+import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=99';
+import { comecarFichas, telaFichasMenu } from './fichas.js?v=99';
+import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=99';
+import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=99';
+import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=99';
+import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=99';
+import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=99';
+import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=99';
+import { comecarCores, telaCoresMenu } from './cores.js?v=99';
+import { comecarLados, telaLadosMenu } from './lados.js?v=99';
+import { comecarSetas, telaSetasMenu } from './setas.js?v=99';
+import { comecarVistas, telaVistasMenu } from './vistas.js?v=99';
+import { comecarDinos, telaDinosMenu } from './dinos.js?v=99';
+import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=99';
+import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=99';
+import { comecarClasses, telaClassesMenu } from './classes.js?v=99';
+import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=99';
 
 // ---------- Relatório de dificuldades ----------
 function montarRelatorio() {
@@ -92,7 +92,7 @@ function textosRelatorio(mis) {
     certo: 'Conta certa', tentou: 'Você respondeu', tentouPdf: 'O aluno respondeu', porRegra: 'Acertos por tipo de conta',
     niveis: 'Nível em cada conta', atividade: 'Atividade', outras: '🎨 Somando as Cores', tempos: 'Tempo para resolver cada conta' };
   if (mis.somando) return { tipo: 'somando', assunto: 'Soma e subtração de figuras (visualização mental)', unidade: 'conta', revisar: 'Contas para revisar',
-    certo: 'Conta', tentou: 'O que aconteceu', tentouPdf: 'O que aconteceu', porRegra: 'Acertos por tipo de conta',
+    certo: 'Conta', tentou: 'O que escolheu', tentouPdf: 'O que o aluno escolheu', porRegra: 'Acertos por tipo de conta',
     niveis: 'Nível em cada conta', atividade: 'Atividade', outras: '🧮 Somando Imagens', tempos: 'Tempo para resolver cada conta' };
   if (mis.hora) return { tipo: 'hora', assunto: 'Horas: relógio de ponteiros e digital', unidade: 'rodada', revisar: 'Horas para revisar',
     certo: 'Hora certa', tentou: 'O que escolheu', tentouPdf: 'O que o aluno escolheu', porRegra: 'Acertos por tipo de leitura',
