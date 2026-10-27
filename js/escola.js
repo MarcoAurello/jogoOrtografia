@@ -1,10 +1,10 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Escolas: o mesmo app com o logo, as cores e o nome de cada escola (pedagociagamificada.com.br/<escola>). */
 
-import { $, seguro } from './util.js?v=112';
-import { SOM } from './som.js?v=112';
-import { carregarEmails, parteProfessor, SENHA_ADMIN } from './professor.js?v=112';
-import { CHAVE_RELATORIO, definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=112';
+import { $, seguro } from './util.js?v=113';
+import { SOM } from './som.js?v=113';
+import { carregarEmails, parteProfessor, SENHA_ADMIN } from './professor.js?v=113';
+import { CHAVE_RELATORIO, definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=113';
 
 // ---------- Escolas ----------
 // O endereço diz a escola: pedagociagamificada.com.br/escolaExemplo (ou ?escola=escolaExemplo, para testar em outro
@@ -18,6 +18,8 @@ const ESCOLAS_PRONTAS = {
 };
 const CHAVE_ESCOLA = 'pleno-ortografia:escola';          // a escola do app instalado
 const CHAVE_CONFIGS = 'pleno-ortografia:escolas';        // cópia das configurações (para abrir sem internet)
+const CHAVE_PLANILHA = 'pleno-ortografia:planilha';      // de qual planilha são as cópias abaixo (e-mails e questionários)
+const COPIAS_DA_PLANILHA = ['pleno-ortografia:emails', 'pleno-ortografia:questionarios'];
 const RESERVADOS = new Set(['js', 'assets', 'icons', 'audio', 'vendor', 'docs', 'ferramentas', 'manual', 'privacidade', 'index', 'jogoortografia', 'api']);
 const DOMINIO = 'https://pedagociagamificada.com.br';
 
@@ -68,6 +70,7 @@ function aplicarEscola(cfg) {
   document.title = `${cfg.nome} — Jogos Psicopedagógicos`;
   document.body.classList.add('com-escola');
   // a planilha da escola: e-mails, questionários, competições e relatórios só dela
+  conferirPlanilha(cfg.script || URL_PRINCIPAL);
   if (definirUrlRelatorio(cfg.script || URL_PRINCIPAL)) carregarEmails();
   gravar(CHAVE_ESCOLA, cfg.id);
 }
@@ -87,8 +90,18 @@ async function carregarEscola(id) {
   } catch (e) { /* sem internet: fica com a cópia */ }
 }
 
+// trocou de planilha (outra escola, ou voltou para a principal): apaga as cópias da planilha anterior,
+// para os e-mails e questionários de uma escola nunca aparecerem em outra
+function conferirPlanilha(url) {
+  let antes = '';
+  try { antes = localStorage.getItem(CHAVE_PLANILHA) || ''; } catch (e) { return; }
+  if (antes === url) return;
+  try { COPIAS_DA_PLANILHA.forEach((k) => localStorage.removeItem(k)); localStorage.setItem(CHAVE_PLANILHA, url); } catch (e) { /* sem armazenamento */ }
+}
+
 const ESCOLA_DO_ENDERECO = escolaDoEndereco();
 if (ESCOLA_DO_ENDERECO) carregarEscola(ESCOLA_DO_ENDERECO);
+else conferirPlanilha(URL_PRINCIPAL);
 
 // ---------- Administrador: criar e editar escolas (Área do professor com a senha de administrador) ----------
 // link de uma escola: no domínio da plataforma, /<escola>; em outro endereço (teste), ?escola=<escola>
