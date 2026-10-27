@@ -179,12 +179,14 @@ function excluirQuestionario(id) {
 // ---------- competições ----------
 // O professor cria (com a senha): nome, jogo, hora de encerrar e o e-mail que recebe os relatórios. O script gera um
 // código de 5 letras, que o professor passa à turma. O aluno vê a lista na aba Competição, mas só entra com o código.
-// Cada partida manda a pontuação; vale a MELHOR de cada aluno (pelo nome). Depois da hora, ninguém mais entra
+// Cada partida manda a pontuação e a configuração escolhida no jogo (ex.: as operações da Chuva de Matemática, o nível
+// do Peso Certo); vale a MELHOR de cada aluno (pelo nome) em cada configuração, e cada configuração tem o seu ranking
+// (quem escolheu o fácil não disputa com quem escolheu o difícil). Depois da hora, ninguém mais entra
 // (as partidas já começadas ainda contam por MINUTOS_DE_FOLGA). Nada é apagado: a planilha guarda tudo.
 const MINUTOS_DE_FOLGA = 15;
 const LETRAS_DO_CODIGO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   // sem 0/O e 1/I, que se confundem
 const COLUNAS_COMPETICAO = ['ID', 'Código', 'Nome', 'Jogo', 'Nome do jogo', 'E-mail do professor', 'Criada em', 'Encerra em'];
-const COLUNAS_RANKING = ['ID da competição', 'Aluno', 'Pontos', 'Acertos', 'Respondidas', 'Partidas', 'Última partida', 'Melhor partida em'];
+const COLUNAS_RANKING = ['ID da competição', 'Aluno', 'Pontos', 'Acertos', 'Respondidas', 'Partidas', 'Última partida', 'Melhor partida em', 'Configuração do jogo'];
 
 function abaCom(nome, colunas) {
   const p = planilha();
@@ -242,8 +244,9 @@ function criarCompeticao(d) {
 // para os alunos: as abertas e as que encerraram há menos de 3 dias (sem o código); para o professor: as dos últimos 30 dias, com o código
 function listarCompeticoes(doProfessor) {
   const limite = Date.now() - (doProfessor ? 30 : 3) * 24 * 3600 * 1000;
-  const participantes = {};
-  linhasDe(abaRanking(), 2).forEach((x) => { participantes[x.v[0]] = (participantes[x.v[0]] || 0) + 1; });
+  const alunos = {};   // id da competição -> nomes diferentes (um aluno pode ter jogado mais de uma configuração)
+  linhasDe(abaRanking(), 2).forEach((x) => { (alunos[x.v[0]] = alunos[x.v[0]] || new Set()).add(chaveDoNome(x.v[1])); });
+  const participantes = Object.fromEntries(Object.entries(alunos).map(([id, s]) => [id, s.size]));
   return linhasDe(abaCompeticoes(), COLUNAS_COMPETICAO.length)
     .filter((x) => quando(x.v[7]).getTime() >= limite)
     .map((x) => ({ ...competicaoDaLinha(x.v, doProfessor), participantes: participantes[x.v[0]] || 0 }))
@@ -276,16 +279,18 @@ function guardarResultado(d) {
   const nome = texto(d.nome, 40);
   if (!nome) throw new Error('nome');
   const pontos = numero(d.pontos, 1000000), acertos = numero(d.acertos, 10000), total = numero(d.total, 10000);
+  const config = texto(d.config, 120);
   const trava = LockService.getScriptLock();
   trava.waitLock(10000);
   try {
     const aba = abaRanking();
-    const meu = linhasDe(aba, COLUNAS_RANKING.length).find((x) => String(x.v[0]) === c.id && chaveDoNome(x.v[1]) === chaveDoNome(nome));
-    if (!meu) aba.appendRow([c.id, nome, pontos, acertos, total, 1, new Date(), new Date()]);
+    const meu = linhasDe(aba, COLUNAS_RANKING.length).find((x) => String(x.v[0]) === c.id && chaveDoNome(x.v[1]) === chaveDoNome(nome)
+      && String(x.v[8] || '') === config);
+    if (!meu) aba.appendRow([c.id, nome, pontos, acertos, total, 1, new Date(), new Date(), config]);
     else {
       const melhor = pontos > Number(meu.v[2]) || (pontos === Number(meu.v[2]) && acertos > Number(meu.v[3]));
       aba.getRange(meu.linha, 1, 1, COLUNAS_RANKING.length).setValues([[c.id, melhor ? nome : meu.v[1], melhor ? pontos : meu.v[2],
-        melhor ? acertos : meu.v[3], melhor ? total : meu.v[4], Number(meu.v[5] || 0) + 1, new Date(), melhor ? new Date() : (meu.v[7] || meu.v[6])]]);
+        melhor ? acertos : meu.v[3], melhor ? total : meu.v[4], Number(meu.v[5] || 0) + 1, new Date(), melhor ? new Date() : (meu.v[7] || meu.v[6]), config]]);
     }
   } finally { trava.releaseLock(); }
   return rankingDaCompeticao(c.id);
@@ -297,7 +302,7 @@ function rankingDaCompeticao(id) {
   const ranking = linhasDe(abaRanking(), COLUNAS_RANKING.length)
     .filter((x) => String(x.v[0]) === String(id))
     .map((x) => ({ nome: String(x.v[1]), pontos: Number(x.v[2]) || 0, acertos: Number(x.v[3]) || 0, total: Number(x.v[4]) || 0,
-      partidas: Number(x.v[5]) || 1, em: quando(x.v[7] || x.v[6]).getTime() || 0 }))
+      partidas: Number(x.v[5]) || 1, config: String(x.v[8] || ''), em: quando(x.v[7] || x.v[6]).getTime() || 0 }))
     .sort((a, b) => b.pontos - a.pontos || b.acertos - a.acertos || a.em - b.em)
     .map(({ em, ...r }) => r);
   return { competicao: competicaoDaLinha(v, false), ranking };

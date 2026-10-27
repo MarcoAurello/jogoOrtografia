@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=102">
+  <link rel="stylesheet" href="style.css?v=103">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -78,12 +78,17 @@
           Escolha um jogo e vamos aprender juntos!
         </div>
       </div>
-      <!-- dois caminhos: os jogos ou o questionário da aula -->
+      <!-- três caminhos: os jogos, as competições e o questionário da aula -->
       <div class="menu-professor menu-inicio">
         <button class="jogo-card" id="btn-area-jogos" type="button" style="--c:#1fa2b0">
           <span class="jogo-card-icone">🎮</span>
           <span class="jogo-card-nome">Jogos</span>
           <span class="jogo-card-texto">Português e Matemática: ortografia, chuvas, ângulos e balança</span>
+        </button>
+        <button class="jogo-card" id="btn-inicio-comp" type="button" style="--c:#c2185b">
+          <span class="jogo-card-icone">🏆</span>
+          <span class="jogo-card-nome">Competições</span>
+          <span class="jogo-card-texto">Entre com o código do professor e dispute o ranking</span>
         </button>
         <button class="jogo-card" id="btn-quiz" type="button" style="--c:#7b4fc9">
           <span class="jogo-card-icone">📝</span>
@@ -1460,9 +1465,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=102"></script>
-  <script src="dados.js?v=102"></script>
-  <script type="module" src="js/main.js?v=102"></script>
+  <script src="plenix.js?v=103"></script>
+  <script src="dados.js?v=103"></script>
+  <script type="module" src="js/main.js?v=103"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

@@ -2410,9 +2410,9 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 .ranking { list-style: none; margin: 8px 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .ranking-linha { display: grid; grid-template-columns: 38px 1fr auto; grid-template-areas: "pos nome pontos" "pos info pontos"; align-items: center; column-gap: 8px;
   padding: 8px 12px; border-radius: 12px; background: #f7f9fb; border: 2px solid #e3edf0; }
-.ranking-linha:nth-child(1) { background: #fff8d6; border-color: #f5cf12; }
-.ranking-linha:nth-child(2) { background: #f1f4f7; border-color: #c9d3dc; }
-.ranking-linha:nth-child(3) { background: #fbefe6; border-color: #e3b48f; }
+.ranking-linha.top1 { background: #fff8d6; border-color: #f5cf12; }
+.ranking-linha.top2 { background: #f1f4f7; border-color: #c9d3dc; }
+.ranking-linha.top3 { background: #fbefe6; border-color: #e3b48f; }
 .ranking-linha.eu { box-shadow: 0 0 0 3px #c2185b; }
 .ranking-pos { grid-area: pos; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 22px; text-align: center; }
 .ranking-nome { grid-area: nome; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 18px; overflow-wrap: anywhere; }
@@ -2421,3 +2421,15 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 .fim-competicao { border-left: 6px solid #c2185b; margin-bottom: 14px; }
 .fim-comp-texto { margin: 4px 0 8px; font-weight: 700; line-height: 1.45; text-align: center; }
 #form-comp-entrar { display: flex; flex-direction: column; gap: 6px; }
+.ranking-config { margin-top: 6px; padding: 4px 10px; border-radius: 8px; background: #efe7fb; color: #5b3aa0; font-weight: 800; font-size: 14px; }
+.ranking-config:first-child { margin-top: 0; }
+/* tela inicial: Jogos, Competições e Questionário lado a lado nas telas largas */
+.menu-inicio { max-width: 920px; }
+.menu-inicio { grid-template-columns: repeat(3, 1fr); }
+/* celular: os três cabem numa linha só, com a Competição no meio */
+@media (max-width: 600px) {
+  .menu-inicio { gap: 8px; }
+  .menu-inicio .jogo-card { padding-left: 6px; padding-right: 6px; }
+  .menu-inicio .jogo-card-nome { font-size: clamp(15px, 4.4vw, 20px); line-height: 1.15; overflow-wrap: anywhere; }
+  .menu-inicio .jogo-card-texto { font-size: 12px; }
+}

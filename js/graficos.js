@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Jogo dos Gráficos. */
 
-import { $, embaralhar, sortear } from './util.js?v=102';
-import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=102';
-import { SOM } from './som.js?v=102';
-import { mascote, mostrar, telaJogos } from './telas.js?v=102';
-import { escolherProfessorE } from './professor.js?v=102';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=102';
-import { PERGUNTAS_GRAFICOS } from './dados-graficos.js?v=102';
+import { $, embaralhar, sortear } from './util.js?v=103';
+import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=103';
+import { SOM } from './som.js?v=103';
+import { mascote, mostrar, telaJogos } from './telas.js?v=103';
+import { escolherProfessorE } from './professor.js?v=103';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=103';
+import { PERGUNTAS_GRAFICOS } from './dados-graficos.js?v=103';
 
 // ---------- Jogo dos Gráficos ----------
 // Leitura de gráficos (tratamento da informação). Aparece uma frase curta com dados e três gráficos: só um mostra os

@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Competição: o professor cria (jogo + hora de encerrar), a turma entra com o código e o ranking fica na planilha. */
 
-import { $, seguro } from './util.js?v=102';
-import { aluno } from './estado.js?v=102';
-import { SOM } from './som.js?v=102';
-import { mostrar } from './telas.js?v=102';
-import { definirEmailCompeticao, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=102';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=102';
-import { comecarQuiz } from './quiz.js?v=102';
+import { $, seguro } from './util.js?v=103';
+import { aluno } from './estado.js?v=103';
+import { SOM } from './som.js?v=103';
+import { mostrar } from './telas.js?v=103';
+import { definirEmailCompeticao, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=103';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=103';
+import { comecarQuiz } from './quiz.js?v=103';
 
 // ---------- Competição ----------
 // A aba Competição lista as competições abertas (e as que encerraram há pouco, só com o ranking). Para entrar, o aluno
@@ -161,6 +161,7 @@ function jogarCompeticao() {
   if (!jogo) { $('comp-erro').textContent = 'Este jogo não existe nesta versão do app. Atualize o app.'; return; }
   jogo.abrir();
 }
+$('btn-inicio-comp').onclick = () => { SOM.clique(); telaCompeticao(); };
 $('btn-comp-jogar').onclick = () => { SOM.clique(); jogarCompeticao(); };
 $('btn-comp-sair').onclick = () => {
   if (!window.confirm('Sair da competição? Suas partidas já enviadas continuam no ranking.')) return;
@@ -168,15 +169,24 @@ $('btn-comp-sair').onclick = () => {
   desenharAtiva();
 };
 
-// ranking: posição, nome e pontos (a melhor partida de cada um); atualiza sozinho enquanto está na tela
-function desenharRanking(lista, alvo, meuNome) {
-  const meu = (meuNome || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-  alvo.innerHTML = lista.length ? lista.map((r, i) => {
-    const eu = meu && r.nome.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase() === meu;
+// ranking: posição, nome e pontos (a melhor partida de cada um), separado por configuração do jogo
+// (as operações da Chuva de Matemática, o nível do Peso Certo...): o fácil não disputa com o difícil
+const chaveNome = (n) => (n || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+function porConfig(lista) {
+  const grupos = new Map();
+  lista.forEach((r) => { if (!grupos.has(r.config)) grupos.set(r.config, []); grupos.get(r.config).push(r); });
+  return [...grupos.entries()];
+}
+function desenharRanking(lista, alvo, meuNome, meuConfig) {
+  if (!lista.length) { alvo.innerHTML = '<li class="quiz-status">Ninguém jogou ainda. Seja o primeiro! 🚀</li>'; return; }
+  const meu = chaveNome(meuNome);
+  const grupos = porConfig(lista);
+  alvo.innerHTML = grupos.map(([config, rs]) => `${config ? `<li class="ranking-config">⚙️ ${seguro(config)}</li>` : ''}${rs.map((r, i) => {
+    const eu = meu && chaveNome(r.nome) === meu && (meuConfig === undefined || r.config === meuConfig);
     const medalha = ['🥇', '🥈', '🥉'][i] || `${i + 1}º`;
-    return `<li class="ranking-linha${eu ? ' eu' : ''}"><span class="ranking-pos">${medalha}</span><span class="ranking-nome">${seguro(r.nome)}</span>`
+    return `<li class="ranking-linha${i < 3 ? ` top${i + 1}` : ''}${eu ? ' eu' : ''}"><span class="ranking-pos">${medalha}</span><span class="ranking-nome">${seguro(r.nome)}</span>`
       + `<span class="ranking-info">${r.acertos}/${r.total} · ${r.partidas} ${r.partidas === 1 ? 'partida' : 'partidas'}</span><span class="ranking-pontos">${r.pontos} pts</span></li>`;
-  }).join('') : '<li class="quiz-status">Ninguém jogou ainda. Seja o primeiro! 🚀</li>';
+  }).join('')}`).join('');
 }
 
 async function abrirRanking(id) {
@@ -200,7 +210,7 @@ async function atualizarRanking() {
     if (rankingAberto !== id) return;
     conferirAtiva(c);
     $('comp-ranking-titulo').textContent = `🏆 ${c.nome}`;
-    $('comp-ranking-info').textContent = `🎮 ${c.jogoNome} · ${pessoas(ranking.length)} · `
+    $('comp-ranking-info').textContent = `🎮 ${c.jogoNome} · ${pessoas(new Set(ranking.map((r) => chaveNome(r.nome))).size)} · `
       + (c.aberta ? `aberta até ${horaTexto(c.encerra)} (atualiza sozinho)` : `encerrou ${diaTexto(c.encerra)} às ${horaTexto(c.encerra)}`);
     desenharRanking(ranking, $('comp-ranking-lista'), ativa && ativa.id === id ? ativa.aluno : '');
   } catch (e) {
@@ -232,14 +242,16 @@ depoisDoFim.push(async ({ rel, missao: mis }) => {
   $('fim-comp-texto').textContent = `Enviando seus ${pontos} pontos para o ranking…`;
   $('fim-comp-lista').innerHTML = '';
   try {
+    // a configuração escolhida no jogo vai junto (o título da partida já diz: operações, nível, modo...)
+    const config = mis.titulo;
     const { ranking } = await gravarNoScript({ acao: 'resultadoCompeticao', id: c.id, codigo: c.codigo, nome: c.aluno,
-      pontos, acertos: rel.dePrimeiraN, total: rel.respondidas });
-    const meu = c.aluno.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-    const pos = ranking.findIndex((r) => r.nome.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase() === meu);
-    const melhor = pos >= 0 ? ranking[pos].pontos : pontos;
+      pontos, acertos: rel.dePrimeiraN, total: rel.respondidas, config });
+    const doMeuJeito = ranking.filter((r) => r.config === config);   // só quem jogou com a mesma configuração
+    const pos = doMeuJeito.findIndex((r) => chaveNome(r.nome) === chaveNome(c.aluno));
+    const melhor = pos >= 0 ? doMeuJeito[pos].pontos : pontos;
     $('fim-comp-texto').innerHTML = `Esta partida: <b>${pontos} pontos</b>. Sua melhor: <b>${melhor}</b>. `
-      + (pos >= 0 ? `Você está em <b>${pos + 1}º lugar</b> de ${ranking.length}! ${pos === 0 ? '🥇' : ''}` : '');
-    desenharRanking(ranking.slice(0, 10), $('fim-comp-lista'), c.aluno);
+      + (pos >= 0 ? `Você está em <b>${pos + 1}º lugar</b> de ${doMeuJeito.length} ${doMeuJeito.length === 1 ? 'aluno' : 'alunos'} que jogaram assim! ${pos === 0 ? '🥇' : ''}` : '');
+    desenharRanking(doMeuJeito.slice(0, 10), $('fim-comp-lista'), c.aluno, config);
   } catch (err) {
     $('fim-comp-texto').textContent = String(err && err.message) === 'encerrada'
       ? 'A competição já encerrou: esta partida não entrou no ranking. ⏰'
