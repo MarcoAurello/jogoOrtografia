@@ -1,36 +1,36 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Telas e navegação: moldura, mascote, troca de telas, encaixe na tela, login, menu do topo, barra inferior e filtro dos jogos. */
 
-import { $ } from './util.js?v=108';
-import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=108';
-import { frase, pararVoz, SOM } from './som.js?v=108';
-import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=108';
-import { pararChuva } from './chuva.js?v=108';
-import { pararMat } from './matematica.js?v=108';
-import { desenharTiro, pararTiro, tiro } from './tiro.js?v=108';
-import { pararPeso } from './peso.js?v=108';
-import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=108';
-import { pararLuz } from './luzes.js?v=108';
-import { pararRotina } from './rotina.js?v=108';
-import { pararFichas } from './fichas.js?v=108';
-import { pararEscondida } from './escondida.js?v=108';
-import { pararCopia } from './copia.js?v=108';
-import { pararBarcos } from './barcos.js?v=108';
-import { pararGiro } from './giro.js?v=108';
-import { pararHora } from './hora.js?v=108';
-import { pararSomando } from './somando.js?v=108';
-import { pararDescobrir } from './descobrir.js?v=108';
-import { pararChaves } from './chaves.js?v=108';
-import { telaCompeticao } from './competicao.js?v=108';
-import { pararCores } from './cores.js?v=108';
-import { pararLados } from './lados.js?v=108';
-import { pararSetas } from './setas.js?v=108';
-import { pararVistas } from './vistas.js?v=108';
-import { pararDinos } from './dinos.js?v=108';
-import { pararSimbolos } from './simbolos.js?v=108';
-import { pararTabuada } from './tabuada.js?v=108';
-import { pararClasses } from './classes.js?v=108';
-import { pararGraficos } from './graficos.js?v=108';
+import { $ } from './util.js?v=109';
+import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=109';
+import { frase, pararVoz, SOM } from './som.js?v=109';
+import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=109';
+import { pararChuva } from './chuva.js?v=109';
+import { pararMat } from './matematica.js?v=109';
+import { desenharTiro, pararTiro, tiro } from './tiro.js?v=109';
+import { pararPeso } from './peso.js?v=109';
+import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=109';
+import { pararLuz } from './luzes.js?v=109';
+import { pararRotina } from './rotina.js?v=109';
+import { pararFichas } from './fichas.js?v=109';
+import { pararEscondida } from './escondida.js?v=109';
+import { pararCopia } from './copia.js?v=109';
+import { pararBarcos } from './barcos.js?v=109';
+import { pararGiro } from './giro.js?v=109';
+import { pararHora } from './hora.js?v=109';
+import { pararSomando } from './somando.js?v=109';
+import { pararDescobrir } from './descobrir.js?v=109';
+import { pararChaves } from './chaves.js?v=109';
+import { telaCompeticao } from './competicao.js?v=109';
+import { pararCores } from './cores.js?v=109';
+import { pararLados } from './lados.js?v=109';
+import { pararSetas } from './setas.js?v=109';
+import { pararVistas } from './vistas.js?v=109';
+import { pararDinos } from './dinos.js?v=109';
+import { pararSimbolos } from './simbolos.js?v=109';
+import { pararTabuada } from './tabuada.js?v=109';
+import { pararClasses } from './classes.js?v=109';
+import { pararGraficos } from './graficos.js?v=109';
 
 // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
 const ENFEITES = {
@@ -226,6 +226,52 @@ for (const op of $('filtro-tema').options) {
 }
 filtrarTema('todos');
 $('btn-area-jogos').onclick = () => { SOM.clique(); telaJogos(); };
+
+// "Saiba mais" da tela inicial: explica cada ferramenta (Jogos, Competições, Questionário) numa janelinha
+const SAIBA_MAIS = {
+  jogos: { titulo: '🎮 Jogos', texto: `
+    <p>São <b>mais de 25 jogos</b> de <b>Português</b>, <b>Matemática</b>, <b>Inglês</b> e <b>Psicopedagogia</b> (atenção, memória,
+      raciocínio, percepção visual). No alto da lista, o menu <b>Categoria</b> mostra só os jogos de um tema.</p>
+    <ul>
+      <li><b>A dificuldade se ajusta ao aluno:</b> acertou, o próximo fica mais difícil; errou, fica mais fácil.</li>
+      <li>Antes de jogar, o aluno escolhe o <b>professor</b> que vai receber o relatório.</li>
+      <li>No fim, aparece o <b>relatório</b>: acertos de primeira, estrelas, gráficos de nível e de tempo e o que precisa revisar.
+        Ele vai por <b>e-mail</b> para o professor e pode ser baixado em <b>PDF</b>.</li>
+      <li>Muitos jogos mostram uma <b>janelinha de ajuda</b> quando o aluno erra duas vezes seguidas.</li>
+      <li>Na Área do professor, cada jogo tem um <b>link</b> que abre direto nele, para mandar à turma.</li>
+    </ul>` },
+  competicao: { titulo: '🏆 Competições', texto: `
+    <p>O professor cria uma competição de <b>um jogo</b> ou de <b>um questionário</b> e a turma disputa um <b>ranking</b>.</p>
+    <ul>
+      <li>Na Área do professor → <b>Competições</b>: escolhe o jogo, a <b>hora de encerrar</b> e para quem vão os relatórios.
+        A planilha cria um <b>código de 5 letras</b> para passar à turma.</li>
+      <li>O aluno abre a aba 🏆 <b>Competição</b>, toca em Entrar e digita o <b>nome</b> e o <b>código</b>. Sem o código, não entra.</li>
+      <li>No fim de cada partida, os pontos vão para o ranking. Pode jogar de novo: vale a <b>melhor partida</b>.</li>
+      <li>Quem escolhe o fácil não disputa com quem escolhe o difícil: cada <b>configuração do jogo</b> tem o seu pódio.</li>
+      <li>Depois da hora, ninguém mais entra, mas o ranking fica <b>guardado na planilha</b>.</li>
+    </ul>` },
+  quiz: { titulo: '📝 Questionário da aula', texto: `
+    <p>Perguntas que o <b>professor prepara</b> sobre a aula, com uma resposta certa e até três erradas.</p>
+    <ul>
+      <li>O professor cria na Área do professor → <b>Questionários</b> (ou numa aba da planilha) e copia o <b>link</b> para a turma.</li>
+      <li>O aluno escolhe o questionário e toca na resposta certa. As respostas aparecem <b>embaralhadas</b> a cada vez.</li>
+      <li>No fim, o <b>relatório</b> mostra os acertos e as perguntas para revisar, e vai por e-mail para o professor.</li>
+      <li>Um questionário também pode virar uma <b>competição</b>, com ranking.</li>
+    </ul>` },
+};
+document.querySelectorAll('.btn-saiba').forEach((b) => {
+  b.onclick = () => {
+    const s = SAIBA_MAIS[b.dataset.saiba];
+    SOM.clique();
+    $('saiba-titulo').textContent = s.titulo;
+    $('saiba-texto').innerHTML = s.texto;
+    $('saiba-mais').hidden = false;
+    document.querySelector('.saiba-cartao').scrollTop = 0;   // abre do começo (com o título)
+    $('btn-saiba-fechar').focus({ preventScroll: true });
+  };
+});
+$('btn-saiba-fechar').onclick = () => { SOM.clique(); $('saiba-mais').hidden = true; };
+$('saiba-mais').onclick = (e) => { if (e.target === $('saiba-mais')) $('saiba-mais').hidden = true; };   // tocar fora fecha
 $('jogos-voltar').onclick = telaInicio;
 
 export { mascote, mostrar, telaInicio, telaJogos };

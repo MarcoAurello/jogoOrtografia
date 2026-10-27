@@ -2478,3 +2478,14 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 #chaves-ajuda { padding-top: 76px; }
 .chaves-exemplo { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 6px 0; }
 .chaves-exemplo .figura-chave { width: 70px; }
+/* tela inicial: cada card com o seu "Saiba mais" embaixo */
+.inicio-item { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.inicio-item .jogo-card { flex: 1; }
+.btn-saiba { align-self: center; padding: 5px 12px; border-radius: 999px; background: var(--branco); border: 2px solid #d6e6ea;
+  font-weight: 800; font-size: 14px; color: var(--primaria-escura); }
+@media (max-width: 600px) { .btn-saiba { font-size: 12px; padding: 4px 8px; } }
+#saiba-mais { padding-top: 76px; padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+.saiba-cartao { text-align: left; }
+.saiba-texto p { margin: 6px 0; line-height: 1.5; }
+.saiba-texto ul { margin: 6px 0 10px; padding-left: 20px; line-height: 1.5; }
+.saiba-texto li { margin: 4px 0; }

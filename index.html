@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#1fa2b0">
   <meta name="author" content="Marco Nunes">
-  <meta name="description" content="Jogos Psicopedagógicos: o aluno joga, o pedagogo analisa os relatórios. Jogos educativos de ortografia para crianças, com o Plenix, o amigo robô.">
+  <meta name="description" content="Jogos Psicopedagógicos: jogos com relatórios de desempenho. Jogos educativos de ortografia para crianças, com o Plenix, o amigo robô.">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Jogos Psicopedagógicos">
@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=108">
+  <link rel="stylesheet" href="style.css?v=109">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -46,7 +46,7 @@
         <span class="cor-amarelo">JOGOS</span>
         <span class="cor-azul">PSICOPEDAGÓGICOS</span>
       </h1>
-      <p class="slogan">O aluno joga, o pedagogo analisa os relatórios</p>
+      <p class="slogan">Jogos com relatórios de desempenho</p>
       <form class="cartao cartao-login" id="form-login" autocomplete="off">
         <div class="davi-area" id="davi-login"></div>
         <label class="campo">
@@ -69,7 +69,7 @@
         <span class="cor-amarelo">JOGOS</span>
         <span class="cor-azul">PSICOPEDAGÓGICOS</span>
       </h1>
-      <p class="slogan">O aluno joga, o pedagogo analisa os relatórios</p>
+      <p class="slogan">Jogos com relatórios de desempenho</p>
       <div class="cena">
         <div class="davi-area grande" id="davi-inicio"></div>
         <div class="balao balao-esq">
@@ -80,21 +80,38 @@
       </div>
       <!-- três caminhos: os jogos, as competições e o questionário da aula -->
       <div class="menu-professor menu-inicio">
-        <button class="jogo-card" id="btn-area-jogos" type="button" style="--c:#1fa2b0">
-          <span class="jogo-card-icone">🎮</span>
-          <span class="jogo-card-nome">Jogos</span>
-          <span class="jogo-card-texto">Português e Matemática: ortografia, chuvas, ângulos e balança</span>
-        </button>
-        <button class="jogo-card" id="btn-inicio-comp" type="button" style="--c:#c2185b">
-          <span class="jogo-card-icone">🏆</span>
-          <span class="jogo-card-nome">Competições</span>
-          <span class="jogo-card-texto">Entre com o código do professor e dispute o ranking</span>
-        </button>
-        <button class="jogo-card" id="btn-quiz" type="button" style="--c:#7b4fc9">
-          <span class="jogo-card-icone">📝</span>
-          <span class="jogo-card-nome">Questionário da aula</span>
-          <span class="jogo-card-texto">Responda as perguntas que o professor preparou</span>
-        </button>
+        <div class="inicio-item">
+          <button class="jogo-card" id="btn-area-jogos" type="button" style="--c:#1fa2b0">
+            <span class="jogo-card-icone">🎮</span>
+            <span class="jogo-card-nome">Jogos</span>
+            <span class="jogo-card-texto">Português, Matemática, Inglês e Psicopedagogia</span>
+          </button>
+          <button class="btn-saiba" type="button" data-saiba="jogos">ℹ️ Saiba mais</button>
+        </div>
+        <div class="inicio-item">
+          <button class="jogo-card" id="btn-inicio-comp" type="button" style="--c:#c2185b">
+            <span class="jogo-card-icone">🏆</span>
+            <span class="jogo-card-nome">Competições</span>
+            <span class="jogo-card-texto">Entre com o código do professor e dispute o ranking</span>
+          </button>
+          <button class="btn-saiba" type="button" data-saiba="competicao">ℹ️ Saiba mais</button>
+        </div>
+        <div class="inicio-item">
+          <button class="jogo-card" id="btn-quiz" type="button" style="--c:#7b4fc9">
+            <span class="jogo-card-icone">📝</span>
+            <span class="jogo-card-nome">Questionário da aula</span>
+            <span class="jogo-card-texto">Responda as perguntas que o professor preparou</span>
+          </button>
+          <button class="btn-saiba" type="button" data-saiba="quiz">ℹ️ Saiba mais</button>
+        </div>
+      </div>
+      <!-- "Saiba mais" de cada ferramenta: a janelinha com os detalhes -->
+      <div class="barcos-ajuda" id="saiba-mais" hidden>
+        <div class="cartao barcos-ajuda-cartao saiba-cartao" role="dialog" aria-modal="true" aria-labelledby="saiba-titulo">
+          <h3 class="chuva-pergunta" id="saiba-titulo"></h3>
+          <div class="saiba-texto" id="saiba-texto"></div>
+          <button class="btn-grande" id="btn-saiba-fechar" type="button">Entendi ✔</button>
+        </div>
       </div>
       <a class="btn-sec btn-manual btn-video" href="manual.html#video">▶️ Assista o vídeo da plataforma</a>
       <a class="btn-whats" href="https://wa.me/5581985503305?text=Ol%C3%A1!%20Vim%20pelos%20Jogos%20Educacionais." target="_blank" rel="noopener" aria-label="Fale conosco pelo WhatsApp">
@@ -1558,9 +1575,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=108"></script>
-  <script src="dados.js?v=108"></script>
-  <script type="module" src="js/main.js?v=108"></script>
+  <script src="plenix.js?v=109"></script>
+  <script src="dados.js?v=109"></script>
+  <script type="module" src="js/main.js?v=109"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

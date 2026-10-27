@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Jogos Psicopedagógicos",
   "short_name": "Jogos Psico",
-  "description": "O aluno joga, o pedagogo analisa os relatórios. Jogos psicopedagógicos para crianças: português, matemática, inglês, atenção, memória e raciocínio, com relatórios para o professor e competições.",
+  "description": "Jogos com relatórios de desempenho. Jogos psicopedagógicos para crianças: português, matemática, inglês, atenção, memória e raciocínio, com relatórios para o professor e competições.",
   "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",
