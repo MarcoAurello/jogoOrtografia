@@ -1,7 +1,7 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Sons (sem arquivos, pelo AudioContext) e voz: gravações do Davi em audio/ ou a voz do aparelho. */
 
-import { $ } from './util.js?v=87';
+import { $ } from './util.js?v=88';
 
 // ---------- Sons (sem arquivos) ----------
 let somLigado = true, audio = null;

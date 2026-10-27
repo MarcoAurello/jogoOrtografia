@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Copie Certo. */
 
-import { $, sortear } from './util.js?v=87';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=87';
-import { SOM, tocar } from './som.js?v=87';
-import { mascote, mostrar, telaJogos } from './telas.js?v=87';
-import { escolherProfessorE } from './professor.js?v=87';
-import { segundos } from './luzes.js?v=87';
-import { fimDaMissao } from './relatorio.js?v=87';
+import { $, sortear } from './util.js?v=88';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=88';
+import { SOM, tocar } from './som.js?v=88';
+import { mascote, mostrar, telaJogos } from './telas.js?v=88';
+import { escolherProfessorE } from './professor.js?v=88';
+import { segundos } from './luzes.js?v=88';
+import { fimDaMissao } from './relatorio.js?v=88';
 
 // ---------- Copie Certo ----------
 // Percepção visual, orientação espacial e atenção aos detalhes. Ao lado do quadro grande (4 × 4) aparece um modelo
@@ -101,7 +101,7 @@ function novoModelo() {
   // no nível 3 aparece uma cor a mais nos potes, para exigir mais atenção
   const extra = c.nivel >= 3 ? Object.keys(CORES_COPIA).filter((k) => !coresDoModelo.includes(k)).slice(0, 1) : [];
   Object.assign(c, { modelo, alvo, grade: Array(16).fill(null), presos: new Set(), cores: [...coresDoModelo, ...extra],
-    cor: coresDoModelo[0], ferramenta: null, tentativas: 0, primeiroErro: '', respondendo: true, t0: performance.now() });
+    cor: coresDoModelo[0], ferramenta: null, historico: [], tentativas: 0, primeiroErro: '', respondendo: true, t0: performance.now() });
   $('copia-nivel').textContent = `🧱 Nível ${c.nivel} de ${COPIA.NIVEL_MAX}`;
   $('copia-pontos').textContent = c.pontos;
   $('copia-contador').textContent = `Modelo ${c.feitas} de ${COPIA.MODELOS}: ${modelo.nome}`;
@@ -142,6 +142,7 @@ function colocarPeca(i, forma) {
   const c = copia;
   if (c.presos.has(i)) return;
   c.grade[i] = { forma, cor: c.cor };
+  c.historico.push(i);   // para o "Apagar" tirar uma peça por vez, da última para a primeira
   tocar([[523, 0.05], [659, 0.07]]);
   desenharQuadro();
   const casa = $('copia-quadro').querySelector(`[data-i="${i}"]`);
@@ -206,10 +207,20 @@ $('copia-quadro').onclick = (e) => {
   if (copia.grade[i]) { copia.grade[i] = null; tocar([[330, 0.06]]); desenharQuadro(); }
 };
 
+// apaga uma peça por vez: a última colocada que ainda está no quadro (as presas, já conferidas, ficam)
 $('btn-copia-limpar').onclick = () => {
-  if (!copia || !copia.respondendo) return;
-  copia.grade = copia.grade.map((p, i) => (copia.presos.has(i) ? p : null));
-  desenharQuadro();
+  const c = copia;
+  if (!c || !c.respondendo) return;
+  while (c.historico.length) {
+    const i = c.historico.pop();
+    if (c.grade[i] && !c.presos.has(i)) {
+      c.grade[i] = null;
+      tocar([[330, 0.06]]);
+      desenharQuadro();
+      return;
+    }
+  }
+  msgCopia('Não há peça para apagar.');
 };
 
 // tipo do erro em cada casa errada, para o relatório
