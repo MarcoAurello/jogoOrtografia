@@ -213,8 +213,8 @@ function enviarRelatorio(d) {
 
   MailApp.sendEmail({
     to: para,
-    name: 'Jogos Educacionais',
-    subject: `Relatório de ${assunto}: ${aluno} (${missao})`,
+    name: 'Pedagogia Gamificada',
+    subject: `Relatório Pedagogia Gamificada: ${aluno} (${missao})`,
     htmlBody: montarEmail({ tx, extra, assunto, aluno, missao, data, acertos, total, estrelas, grupos, palavras, porRegra, niveis, resumo, tempos }),
   });
   guardarNaPlanilha([new Date(), para, aluno, missao, acertos, total, estrelas,
