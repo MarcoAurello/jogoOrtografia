@@ -1,33 +1,33 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=96';
-import { SOM } from './som.js?v=96';
-import { mostrar, telaInicio } from './telas.js?v=96';
-import { telaMissoes } from './ortografia.js?v=96';
-import { telaChuvaMenu } from './chuva.js?v=96';
-import { telaMatMenu } from './matematica.js?v=96';
-import { telaTiroMenu } from './tiro.js?v=96';
-import { telaPesoMenu } from './peso.js?v=96';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=96';
-import { telaLuzesMenu } from './luzes.js?v=96';
-import { telaRotinaMenu } from './rotina.js?v=96';
-import { telaFichasMenu } from './fichas.js?v=96';
-import { telaEscondidaMenu } from './escondida.js?v=96';
-import { telaCopiaMenu } from './copia.js?v=96';
-import { telaBarcosMenu } from './barcos.js?v=96';
-import { telaGiroMenu } from './giro.js?v=96';
-import { telaHoraMenu } from './hora.js?v=96';
-import { telaCoresMenu } from './cores.js?v=96';
-import { telaLadosMenu } from './lados.js?v=96';
-import { telaSetasMenu } from './setas.js?v=96';
-import { telaVistasMenu } from './vistas.js?v=96';
-import { telaDinosMenu } from './dinos.js?v=96';
-import { telaSimbolosMenu } from './simbolos.js?v=96';
-import { telaTabuadaMenu } from './tabuada.js?v=96';
-import { telaClassesMenu } from './classes.js?v=96';
-import { telaGraficosMenu } from './graficos.js?v=96';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=96';
+import { $, seguro } from './util.js?v=97';
+import { SOM } from './som.js?v=97';
+import { mostrar, telaInicio } from './telas.js?v=97';
+import { telaMissoes } from './ortografia.js?v=97';
+import { telaChuvaMenu } from './chuva.js?v=97';
+import { telaMatMenu } from './matematica.js?v=97';
+import { telaTiroMenu } from './tiro.js?v=97';
+import { telaPesoMenu } from './peso.js?v=97';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=97';
+import { telaLuzesMenu } from './luzes.js?v=97';
+import { telaRotinaMenu } from './rotina.js?v=97';
+import { telaFichasMenu } from './fichas.js?v=97';
+import { telaEscondidaMenu } from './escondida.js?v=97';
+import { telaCopiaMenu } from './copia.js?v=97';
+import { telaBarcosMenu } from './barcos.js?v=97';
+import { telaGiroMenu } from './giro.js?v=97';
+import { telaHoraMenu } from './hora.js?v=97';
+import { telaCoresMenu } from './cores.js?v=97';
+import { telaLadosMenu } from './lados.js?v=97';
+import { telaSetasMenu } from './setas.js?v=97';
+import { telaVistasMenu } from './vistas.js?v=97';
+import { telaDinosMenu } from './dinos.js?v=97';
+import { telaSimbolosMenu } from './simbolos.js?v=97';
+import { telaTabuadaMenu } from './tabuada.js?v=97';
+import { telaClassesMenu } from './classes.js?v=97';
+import { telaGraficosMenu } from './graficos.js?v=97';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=97';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)

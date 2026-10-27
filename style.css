@@ -2347,3 +2347,4 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 .hora-ajuda-exemplos { display: flex; justify-content: center; gap: 16px; margin: 6px 0; }
 #hora-ajuda { padding-top: 76px; }
 .hora-ajuda-exemplos div { display: flex; flex-direction: column; align-items: center; width: min(90px, 13dvh); font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 20px; }
+#hora-tempo { white-space: nowrap; }

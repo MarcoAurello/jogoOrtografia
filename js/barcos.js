@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Barquinhos. */
 
-import { $, embaralhar } from './util.js?v=96';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=96';
-import { SOM, tocar } from './som.js?v=96';
-import { mascote, mostrar, telaJogos } from './telas.js?v=96';
-import { escolherProfessorE } from './professor.js?v=96';
-import { segundos } from './luzes.js?v=96';
-import { fimDaMissao } from './relatorio.js?v=96';
+import { $, embaralhar } from './util.js?v=97';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=97';
+import { SOM, tocar } from './som.js?v=97';
+import { mascote, mostrar, telaJogos } from './telas.js?v=97';
+import { escolherProfessorE } from './professor.js?v=97';
+import { segundos } from './luzes.js?v=97';
+import { fimDaMissao } from './relatorio.js?v=97';
 
 // ---------- Barquinhos ----------
 // Lateralidade (esquerda e direita), atenção e contagem. Aparece uma fila de barcos, uns virados para a esquerda e

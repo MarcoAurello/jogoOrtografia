@@ -1,34 +1,34 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Relatório do fim do jogo: textos, gráficos, envio por e-mail (com fila offline), confete e PDF. */
 
-import { $, seguro, semHTML, sortear } from './util.js?v=96';
-import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=96';
-import { frase, SOM } from './som.js?v=96';
-import { mascote, mostrar } from './telas.js?v=96';
-import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=96';
-import { comecarMissao, telaMissoes } from './ortografia.js?v=96';
-import { comecarChuva, telaChuvaMenu } from './chuva.js?v=96';
-import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=96';
-import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=96';
-import { comecarPeso, telaPesoMenu } from './peso.js?v=96';
-import { comecarQuiz, telaQuizMenu } from './quiz.js?v=96';
-import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=96';
-import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=96';
-import { comecarFichas, telaFichasMenu } from './fichas.js?v=96';
-import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=96';
-import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=96';
-import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=96';
-import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=96';
-import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=96';
-import { comecarCores, telaCoresMenu } from './cores.js?v=96';
-import { comecarLados, telaLadosMenu } from './lados.js?v=96';
-import { comecarSetas, telaSetasMenu } from './setas.js?v=96';
-import { comecarVistas, telaVistasMenu } from './vistas.js?v=96';
-import { comecarDinos, telaDinosMenu } from './dinos.js?v=96';
-import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=96';
-import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=96';
-import { comecarClasses, telaClassesMenu } from './classes.js?v=96';
-import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=96';
+import { $, seguro, semHTML, sortear } from './util.js?v=97';
+import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=97';
+import { frase, SOM } from './som.js?v=97';
+import { mascote, mostrar } from './telas.js?v=97';
+import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=97';
+import { comecarMissao, telaMissoes } from './ortografia.js?v=97';
+import { comecarChuva, telaChuvaMenu } from './chuva.js?v=97';
+import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=97';
+import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=97';
+import { comecarPeso, telaPesoMenu } from './peso.js?v=97';
+import { comecarQuiz, telaQuizMenu } from './quiz.js?v=97';
+import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=97';
+import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=97';
+import { comecarFichas, telaFichasMenu } from './fichas.js?v=97';
+import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=97';
+import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=97';
+import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=97';
+import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=97';
+import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=97';
+import { comecarCores, telaCoresMenu } from './cores.js?v=97';
+import { comecarLados, telaLadosMenu } from './lados.js?v=97';
+import { comecarSetas, telaSetasMenu } from './setas.js?v=97';
+import { comecarVistas, telaVistasMenu } from './vistas.js?v=97';
+import { comecarDinos, telaDinosMenu } from './dinos.js?v=97';
+import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=97';
+import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=97';
+import { comecarClasses, telaClassesMenu } from './classes.js?v=97';
+import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=97';
 
 // ---------- Relatório de dificuldades ----------
 function montarRelatorio() {

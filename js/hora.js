@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Jogo da Hora. */
 
-import { $, embaralhar, sortear } from './util.js?v=96';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=96';
-import { SOM, tocar } from './som.js?v=96';
-import { mascote, mostrar, telaJogos } from './telas.js?v=96';
-import { escolherProfessorE } from './professor.js?v=96';
-import { segundos } from './luzes.js?v=96';
-import { fimDaMissao } from './relatorio.js?v=96';
+import { $, embaralhar, sortear } from './util.js?v=97';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=97';
+import { SOM, tocar } from './som.js?v=97';
+import { mascote, mostrar, telaJogos } from './telas.js?v=97';
+import { escolherProfessorE } from './professor.js?v=97';
+import { segundos } from './luzes.js?v=97';
+import { fimDaMissao } from './relatorio.js?v=97';
 
 // ---------- Jogo da Hora ----------
 // Ler as horas no relógio de ponteiros e no digital (orientação temporal). As rodadas alternam: aparece a hora
@@ -23,8 +23,8 @@ const NIVEIS_HORA = [
   { minutos: [0, 30], dia: false, titulo: 'Horas e meia' },
   { minutos: [0, 15, 30, 45], dia: false, titulo: 'Quartos de hora' },
   { minutos: Array.from({ length: 12 }, (_, i) => i * 5), dia: false, titulo: 'De 5 em 5 minutos' },
-  { minutos: [0, 30], dia: true, titulo: 'AM e PM' },
-  { minutos: Array.from({ length: 12 }, (_, i) => i * 5), dia: true, titulo: 'AM e PM, de 5 em 5' },
+  { minutos: [0, 30], dia: true, dica: true, titulo: 'AM e PM' },
+  { minutos: Array.from({ length: 12 }, (_, i) => i * 5), dia: true, titulo: 'AM/PM de 5 em 5' },
 ];
 const TIPOS_HORA = {
   paraAnalogico: { id: 'hora-analogico', titulo: 'Da hora digital para o relógio de ponteiros', icone: '🕒', cor: '#1e88e5',
@@ -39,9 +39,10 @@ const diurno = (h) => h >= 6 && h < 18;
 // AM: da meia-noite ao meio-dia (madrugada e manhã); PM: do meio-dia à meia-noite (tarde e noite)
 const amPm = (h) => (h < 12 ? 'AM' : 'PM');
 const parteDoDia = (h) => (h < 6 ? 'madrugada' : h < 12 ? 'manhã' : h < 18 ? 'tarde' : 'noite');
-// hora digital: de 1 a 12 (com AM ou PM nos níveis de dia e noite)
-const digital = (t, dia) => `${t.h % 12 || 12}:${doisDig(t.m)}${dia ? ` ${amPm(t.h)}` : ''}`;
+// hora digital: de 1 a 12 nos primeiros níveis; nos de AM e PM, a hora cheia de 24 h (16:00, 20:30)
 const hora24 = (t) => `${doisDig(t.h)}:${doisDig(t.m)}`;
+const hora12 = (t) => `${t.h % 12 || 12}:${doisDig(t.m)} ${amPm(t.h)}`;
+const digital = (t, dia) => (dia ? hora24(t) : `${t.h % 12 || 12}:${doisDig(t.m)}`);
 const chave = (t, dia) => (dia ? `${t.h}:${t.m}` : `${t.h % 12}:${t.m}`);
 
 // relógio de ponteiros em SVG (com ☀️ ou 🌙 nos níveis de dia e noite)
@@ -64,8 +65,9 @@ function relogioSVG(t, dia) {
     <line x1="50" y1="50" x2="${(50 + Math.sin(am * Math.PI / 180) * 34).toFixed(1)}" y2="${(50 - Math.cos(am * Math.PI / 180) * 34).toFixed(1)}" stroke="#e53935" stroke-width="2.6" stroke-linecap="round"/>
     <circle cx="50" cy="50" r="3" fill="#13294b"/>${icone}</svg>`;
 }
-// no digital de dia e noite aparece também a hora de 24 h e a parte do dia, para ensinar (3:00 PM = 15:00 · tarde)
-const digitalHTML = (t, dia) => `<span class="relogio-digital">${digital(t, dia)}</span>${dia ? `<span class="hora-periodo">= ${hora24(t)} · ${diurno(t.h) ? '☀️' : '🌙'} ${parteDoDia(t.h)}</span>` : ''}`;
+// nos níveis de AM e PM, embaixo da hora de 24 h aparece a parte do dia e, no primeiro deles, a conta pronta (16:00 = 4:00 PM)
+const digitalHTML = (t, nv) => `<span class="relogio-digital">${digital(t, nv.dia)}</span>${nv.dia
+  ? `<span class="hora-periodo">${nv.dica ? `= ${hora12(t)} · ` : ''}${diurno(t.h) ? '☀️' : '🌙'} ${parteDoDia(t.h)}</span>` : ''}`;
 
 // alternativas erradas: ponteiros trocados, uma hora a mais ou a menos, minutos errados e o período trocado
 function erradasHora(t, nv) {
@@ -121,19 +123,19 @@ function novaRodadaHora() {
   r.feitas++;
   const nv = NIVEIS_HORA[r.nivel - 1];
   const paraAnalogico = r.feitas % 2 === 1;   // as rodadas alternam os dois sentidos
-  // hora sorteada: de 1 a 12 (sem dia e noite) ou de 0 a 23 (com AM e PM)
-  const t = { h: nv.dia ? Math.floor(Math.random() * 24) : 1 + Math.floor(Math.random() * 12), m: sortear(nv.minutos) };
+  // hora sorteada: de 1 a 12 (sem dia e noite) ou de 0 a 23 (com AM e PM; as da tarde e da noite, de 13 a 23, saem mais)
+  const t = { h: !nv.dia ? 1 + Math.floor(Math.random() * 12) : Math.random() < 0.7 ? 13 + Math.floor(Math.random() * 11) : Math.floor(Math.random() * 13), m: sortear(nv.minutos) };
   const opcoes = embaralhar([{ ...t, certa: true }, ...erradasHora(t, nv)]);
   Object.assign(r, { nv, t, paraAnalogico, opcoes, respondendo: true, t0: performance.now() });
   $('hora-nivel').textContent = `🕒 Nível ${r.nivel} de ${HORA.NIVEL_MAX}`;
   $('hora-pontos').textContent = r.pontos;
   $('hora-contador').textContent = `Rodada ${r.feitas} de ${HORA.RODADAS} · ${nv.titulo}`;
   $('hora-pergunta').innerHTML = paraAnalogico
-    ? `<div class="hora-alvo digital">${digitalHTML(t, nv.dia)}</div><p>Qual relógio marca esta hora?</p>`
+    ? `<div class="hora-alvo digital">${digitalHTML(t, nv)}</div><p>Qual relógio marca esta hora?</p>`
     : `<div class="hora-alvo analogico">${relogioSVG(t, nv.dia)}</div><p>Que horas o relógio está marcando?</p>`;
   $('hora-opcoes').className = `hora-opcoes ${paraAnalogico ? 'de-relogios' : 'de-digitais'}`;
   $('hora-opcoes').innerHTML = opcoes.map((o, i) =>
-    `<button class="hora-opcao" type="button" data-i="${i}" aria-label="Alternativa ${i + 1}${paraAnalogico ? '' : ': ' + digital(o, nv.dia)}">${paraAnalogico ? relogioSVG(o, nv.dia) : digitalHTML(o, nv.dia)}</button>`).join('');
+    `<button class="hora-opcao" type="button" data-i="${i}" aria-label="Alternativa ${i + 1}${paraAnalogico ? '' : ': ' + digital(o, nv.dia)}">${paraAnalogico ? relogioSVG(o, nv.dia) : digitalHTML(o, nv)}</button>`).join('');
   msgHora(paraAnalogico ? 'Ponteiro <b>pequeno</b> = hora · ponteiro <b style="color:#e53935">grande</b> = minutos.' : 'Leia primeiro o ponteiro pequeno, depois o grande.');
   clearInterval(r.relogio);
   r.relogio = setInterval(() => { if (hora && hora.respondendo) $('hora-tempo').textContent = `⏱ ${segundos((performance.now() - hora.t0) / 1000)}`; }, 200);
@@ -148,10 +150,10 @@ $('hora-opcoes').onclick = (ev) => {
   const o = r.opcoes[Number(btn.dataset.i)];
   const tempo = (performance.now() - r.t0) / 1000;
   const tipo = r.paraAnalogico ? TIPOS_HORA.paraAnalogico : TIPOS_HORA.paraDigital;
-  const certaTxt = `${digital(r.t, r.nv.dia)}${r.nv.dia ? ` (${hora24(r.t)}, ${parteDoDia(r.t.h)})` : ''}`;
+  const certaTxt = `${digital(r.t, r.nv.dia)}${r.nv.dia ? ` (${hora12(r.t)}, ${parteDoDia(r.t.h)})` : ''}`;
   document.querySelectorAll('.hora-opcao').forEach((b) => { b.disabled = true; if (r.opcoes[Number(b.dataset.i)].certa) b.classList.add('certa'); });
   const explica = `O ponteiro pequeno aponta para a hora e o grande ${r.t.m ? `está no ${r.t.m / 5}, que vale ${r.t.m} minutos` : 'está no 12 (hora certinha)'}: <b>${certaTxt}</b>.`
-    + (r.nv.dia ? ` ${amPm(r.t.h)} porque é ${r.t.h < 12 ? 'antes' : 'depois'} do meio-dia.` : '');
+    + (r.nv.dia ? ` ${r.t.h > 12 ? `Depois do meio-dia, tire 12: ${r.t.h} − 12 = ${r.t.h - 12}, então o ponteiro pequeno fica no ${r.t.h - 12}. ` : ''}${amPm(r.t.h)} porque é ${r.t.h < 12 ? 'antes' : 'depois'} do meio-dia.` : '');
   if (o.certa) {
     const bom = 3 + (r.nivel >= 4 ? 2 : 0);
     const bonus = Math.max(0, Math.min(100, Math.round(100 * (1 - (tempo - bom) / (bom * 2)))));
