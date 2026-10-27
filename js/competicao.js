@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Competição: o professor cria (jogo + hora de encerrar), a turma entra com o código e o ranking fica na planilha. */
 
-import { $, seguro } from './util.js?v=107';
-import { aluno } from './estado.js?v=107';
-import { SOM } from './som.js?v=107';
-import { mostrar } from './telas.js?v=107';
-import { definirEmailCompeticao, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=107';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=107';
-import { comecarQuiz } from './quiz.js?v=107';
+import { $, seguro } from './util.js?v=108';
+import { aluno } from './estado.js?v=108';
+import { SOM } from './som.js?v=108';
+import { mostrar } from './telas.js?v=108';
+import { definirEmailCompeticao, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=108';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=108';
+import { comecarQuiz } from './quiz.js?v=108';
 
 // ---------- Competição ----------
 // A aba Competição lista as competições abertas (e as que encerraram há pouco, só com o ranking). Para entrar, o aluno
@@ -329,7 +329,7 @@ async function listarCompeticoesProfessor(dados) {
       botoes.className = 'comp-item-botoes';
       const botao = (txt, classe, acao) => { const b = document.createElement('button'); b.type = 'button'; b.className = classe; b.textContent = txt; b.onclick = acao; botoes.append(b); };
       botao('📋 Copiar código', 'quiz-link', async () => {
-        const texto = `Competição "${c.nome}" (${c.jogoNome}) no app Jogos Educacionais: abra a aba 🏆 Competição e use o código ${c.codigo}.`;
+        const texto = `Competição "${c.nome}" (${c.jogoNome}) no app Jogos Psicopedagógicos: abra a aba 🏆 Competição e use o código ${c.codigo}.`;
         try { await navigator.clipboard.writeText(texto); avisoComp(`Código ${c.codigo} copiado! Cole no WhatsApp ou mural da turma.`, true); }
         catch (e) { window.prompt('Copie o código:', c.codigo); }
       });
