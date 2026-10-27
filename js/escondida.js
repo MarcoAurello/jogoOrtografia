@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Palavra Escondida. */
 
-import { $, sortear } from './util.js?v=104';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=104';
-import { SOM, tocar } from './som.js?v=104';
-import { mascote, mostrar, telaJogos } from './telas.js?v=104';
-import { escolherProfessorE } from './professor.js?v=104';
-import { segundos } from './luzes.js?v=104';
-import { fimDaMissao } from './relatorio.js?v=104';
+import { $, sortear } from './util.js?v=105';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=105';
+import { SOM, tocar } from './som.js?v=105';
+import { mascote, mostrar, telaJogos } from './telas.js?v=105';
+import { escolherProfessorE } from './professor.js?v=105';
+import { segundos } from './luzes.js?v=105';
+import { fimDaMissao } from './relatorio.js?v=105';
 
 // ---------- Palavra Escondida ----------
 // Atenção seletiva, leitura e rapidez. As letras chegam em LINHAS: cada linha nova entra em cima e empurra as outras
@@ -16,7 +16,8 @@ import { fimDaMissao } from './relatorio.js?v=104';
 // dedo); acertou, a linha some. Com o quadro cheio, a linha de baixo (a mais antiga) cai e a palavra é perdida.
 // O ritmo se ajusta: quanto mais rápido a criança acha as palavras, mais rápido entram as linhas. Marcou errado:
 // entram 2 linhas de uma vez. Quanto menos tempo depois que a linha entrou, mais pontos.
-// Nível 1: dica com figura; nível 2: só a primeira letra; nível 3: só o número de letras e palavras maiores.
+// A figura da palavra fica no começo de cada linha, em todos os níveis. Nível 1: palavras de 5 e 6 letras; nível 2: de 6 e 7;
+// nível 3: de 7 a 9 letras.
 const ESCONDIDA = { PALAVRAS: 10, NIVEL_MAX: 3, LINHAS: 6, COLUNAS: 10, RITMO_INICIAL: 7000, RITMO_MIN: 2500, RITMO_MAX: 9000 };
 // [palavra, figura, categoria] (sem acentos, para as letras ficarem iguais às do teclado)
 const PALAVRAS_ESCONDIDAS = {
@@ -32,12 +33,12 @@ const PALAVRAS_ESCONDIDAS = {
     ['BRINQUEDO', '🧸', 'um objeto'], ['CACHORRO', '🐶', 'um animal'], ['PANQUECA', '🥞', 'um alimento'], ['MOCHILA', '🎒', 'um objeto']],
 };
 const TIPOS_ESCONDIDA = {
-  1: { id: 'esc1', titulo: 'Com a figura de dica', icone: '🖼️', cor: '#7b4fc9',
+  1: { id: 'esc1', titulo: 'Palavras curtas (5 e 6 letras)', icone: '🖼️', cor: '#7b4fc9',
     regra: 'Olhar a figura, pensar no nome e procurar as letras dele em sequência no meio das letras da linha.' },
-  2: { id: 'esc2', titulo: 'Só com a primeira letra', icone: '🔤', cor: '#7b4fc9',
-    regra: 'Sem a figura, só com a primeira letra e o tamanho: ler a linha e reconhecer uma palavra inteira que começa com ela.' },
-  3: { id: 'esc3', titulo: 'Só com o número de letras', icone: '🔢', cor: '#7b4fc9',
-    regra: 'Sem dica de figura nem de letra: ler a linha com atenção, ignorando as iscas (pedaços parecidos) até achar uma palavra inteira.' },
+  2: { id: 'esc2', titulo: 'Palavras médias (6 e 7 letras)', icone: '🔤', cor: '#7b4fc9',
+    regra: 'Pensar no nome da figura letra por letra e conferir a palavra inteira, sem parar no começo dela.' },
+  3: { id: 'esc3', titulo: 'Palavras longas (7 a 9 letras)', icone: '🔢', cor: '#7b4fc9',
+    regra: 'Palavras longas: ler a linha com atenção, ignorando as iscas (pedaços parecidos com o começo) até achar a palavra inteira.' },
 };
 let escondida = null;   // a partida em andamento
 const ABC_ESCONDIDA = 'ABCDEFGHIJLMNOPRSTUVZ';
@@ -121,10 +122,8 @@ function agendarLinha(vezes = 1) {
   ritmo.classList.add('andando');
 }
 
-// dica no começo da linha, conforme o nível em que a palavra foi sorteada
-const dicaLinha = (x) => (x.nivel === 1 ? `<span class="dica-figura">${x.figura}</span>`
-  : x.nivel === 2 ? `<span class="dica-letra">${x.palavra[0]}…<small>${x.palavra.length}</small></span>`
-    : `<span class="dica-letra">${x.palavra.length}<small>letras</small></span>`);
+// dica no começo da linha: a figura da palavra
+const dicaLinha = (x) => `<span class="dica-figura" title="${x.palavra.length} letras">${x.figura}</span>`;
 
 function desenharLinhas() {
   const e = escondida;
