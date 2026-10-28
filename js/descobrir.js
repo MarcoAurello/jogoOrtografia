@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Descobrindo o Peso. */
 
-import { $, embaralhar, sortear } from './util.js?v=126';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=126';
-import { SOM, tocar } from './som.js?v=126';
-import { mascote, mostrar, telaJogos } from './telas.js?v=126';
-import { escolherProfessorE } from './professor.js?v=126';
-import { segundos } from './luzes.js?v=126';
-import { fimDaMissao } from './relatorio.js?v=126';
+import { $, embaralhar, sortear } from './util.js?v=127';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=127';
+import { SOM, tocar } from './som.js?v=127';
+import { mascote, mostrar, telaJogos } from './telas.js?v=127';
+import { escolherProfessorE } from './professor.js?v=127';
+import { segundos } from './luzes.js?v=127';
+import { fimDaMissao } from './relatorio.js?v=127';
 
 // ---------- Descobrindo o Peso ----------
 // Raciocínio algébrico (a ideia de incógnita) com uma balança de cozinha. Na balança há peças coloridas e o visor mostra

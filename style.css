@@ -2641,7 +2641,12 @@ body:has(#escolha-prof:not([hidden])) .whats-flutuante { display: none; }
 #pixels-tempo { white-space: nowrap; }
 
 /* ---------- Tela de jogos: tags de habilidades e cartões em lista ---------- */
-.hab-titulo { margin: 14px 0 4px; text-align: center; }
+.hab-sanfona { max-width: 640px; margin: 12px auto 0; background: var(--branco); border: 2px solid #cfe6ea; border-radius: 14px; }
+.hab-sanfona summary { display: flex; align-items: center; justify-content: space-between; gap: 6px; min-height: 44px; padding: 6px 14px; cursor: pointer; list-style: none; }
+.hab-sanfona summary::-webkit-details-marker { display: none; }
+.hab-sanfona summary::after { content: '▾'; margin-left: auto; transition: transform 0.2s; }
+.hab-sanfona[open] summary::after { transform: rotate(180deg); }
+.hab-sanfona .filtro-habilidades { padding: 0 12px 12px; }
 .filtro-habilidades { display: flex; flex-direction: column; gap: 8px; max-width: 640px; margin: 0 auto; }
 .hab-grupo-nome { display: block; margin-bottom: 3px; font-size: 11px; font-weight: 800; color: var(--cinza-texto); text-transform: uppercase; letter-spacing: 0.03em; }
 .hab-tags { display: flex; flex-wrap: wrap; gap: 5px; }

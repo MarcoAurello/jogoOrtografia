@@ -1,40 +1,40 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=126';
-import { SOM } from './som.js?v=126';
-import { mostrar, telaInicio } from './telas.js?v=126';
-import { telaMissoes } from './ortografia.js?v=126';
-import { telaChuvaMenu } from './chuva.js?v=126';
-import { telaMatMenu } from './matematica.js?v=126';
-import { telaTiroMenu } from './tiro.js?v=126';
-import { telaPesoMenu } from './peso.js?v=126';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=126';
-import { telaLuzesMenu } from './luzes.js?v=126';
-import { telaRotinaMenu } from './rotina.js?v=126';
-import { telaFichasMenu } from './fichas.js?v=126';
-import { telaEscondidaMenu } from './escondida.js?v=126';
-import { telaCopiaMenu } from './copia.js?v=126';
-import { telaBarcosMenu } from './barcos.js?v=126';
-import { telaGiroMenu } from './giro.js?v=126';
-import { telaHoraMenu } from './hora.js?v=126';
-import { telaSomandoMenu } from './somando.js?v=126';
-import { telaDescobrirMenu } from './descobrir.js?v=126';
-import { telaChavesMenu } from './chaves.js?v=126';
-import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=126';
-import { telaPoliciaMenu } from './policia.js?v=126';
-import { telaPontosMenu } from './pontos.js?v=126';
-import { telaPixelsMenu } from './pixels.js?v=126';
-import { telaCoresMenu } from './cores.js?v=126';
-import { telaLadosMenu } from './lados.js?v=126';
-import { telaSetasMenu } from './setas.js?v=126';
-import { telaVistasMenu } from './vistas.js?v=126';
-import { telaDinosMenu } from './dinos.js?v=126';
-import { telaSimbolosMenu } from './simbolos.js?v=126';
-import { telaTabuadaMenu } from './tabuada.js?v=126';
-import { telaClassesMenu } from './classes.js?v=126';
-import { telaGraficosMenu } from './graficos.js?v=126';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=126';
+import { $, seguro } from './util.js?v=127';
+import { SOM } from './som.js?v=127';
+import { mostrar, telaInicio } from './telas.js?v=127';
+import { telaMissoes } from './ortografia.js?v=127';
+import { telaChuvaMenu } from './chuva.js?v=127';
+import { telaMatMenu } from './matematica.js?v=127';
+import { telaTiroMenu } from './tiro.js?v=127';
+import { telaPesoMenu } from './peso.js?v=127';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=127';
+import { telaLuzesMenu } from './luzes.js?v=127';
+import { telaRotinaMenu } from './rotina.js?v=127';
+import { telaFichasMenu } from './fichas.js?v=127';
+import { telaEscondidaMenu } from './escondida.js?v=127';
+import { telaCopiaMenu } from './copia.js?v=127';
+import { telaBarcosMenu } from './barcos.js?v=127';
+import { telaGiroMenu } from './giro.js?v=127';
+import { telaHoraMenu } from './hora.js?v=127';
+import { telaSomandoMenu } from './somando.js?v=127';
+import { telaDescobrirMenu } from './descobrir.js?v=127';
+import { telaChavesMenu } from './chaves.js?v=127';
+import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=127';
+import { telaPoliciaMenu } from './policia.js?v=127';
+import { telaPontosMenu } from './pontos.js?v=127';
+import { telaPixelsMenu } from './pixels.js?v=127';
+import { telaCoresMenu } from './cores.js?v=127';
+import { telaLadosMenu } from './lados.js?v=127';
+import { telaSetasMenu } from './setas.js?v=127';
+import { telaVistasMenu } from './vistas.js?v=127';
+import { telaDinosMenu } from './dinos.js?v=127';
+import { telaSimbolosMenu } from './simbolos.js?v=127';
+import { telaTabuadaMenu } from './tabuada.js?v=127';
+import { telaClassesMenu } from './classes.js?v=127';
+import { telaGraficosMenu } from './graficos.js?v=127';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=127';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
