@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=115">
+  <link rel="stylesheet" href="style.css?v=116">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1089,6 +1089,59 @@
       </div>
     </section>
 
+    <!-- 🛣️ Caminho da Memória: instruções -->
+    <section class="tela" id="tela-caminho-menu">
+      <h2 class="subtitulo">🛣️ Caminho da Memória</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-caminho"></div>
+        <div class="balao balao-esq">
+          Vai aparecer a <b>sequência de formas</b> do caminho, como 🟩 ➜ 🔺 ➜ 🔴. Memorize! Depois ela some e aparece o
+          <b>mapa</b>: leve o <b>carro</b> até a <b>casa</b> tocando nos cruzamentos, na ordem certa. Só dá para ir por uma
+          estrada ligada ao carro. Acertou, o caminho fica maior! 🚗
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-caminho-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="caminho-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- 🚕 Siga o Táxi: instruções -->
+    <section class="tela" id="tela-taxi-menu">
+      <h2 class="subtitulo">🚕 Siga o Táxi</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-taxi"></div>
+        <div class="balao balao-esq">
+          O <b>táxi</b> vai fazer um caminho pelos cruzamentos até a <b>casa</b>. Olhe bem! Se precisar, peça para
+          <b>ver de novo</b>. Depois é a sua vez: faça o <b>mesmo caminho</b> com o carro, tocando nos cruzamentos. 🚕
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-taxi-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="taxi-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Caminho da Memória e Siga o Táxi: o jogo -->
+    <section class="tela tela-jogo" id="tela-caminho">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="caminho-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="caminho-nivel"></span>
+        <span class="chuva-placar"><span id="caminho-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="caminho-contador"></span>
+        <span id="caminho-tempo"></span>
+      </div>
+      <div class="caminho-seq" id="caminho-seq" hidden>
+        <div class="caminho-seq-figuras" id="caminho-seq-figuras"></div>
+        <div class="caminho-seq-tempo"><span id="caminho-seq-barra"></span></div>
+      </div>
+      <div class="caminho-mapa" id="caminho-mapa" hidden></div>
+      <p class="caminho-msg" id="caminho-msg" role="status"></p>
+      <div class="caminho-botoes" id="caminho-botoes"></div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -1138,8 +1191,8 @@
           <button class="btn-grande btn-pequeno" id="btn-prof-ultimo" type="button">Usar ▶</button>
         </div>
         <label class="campo">
-          <span>Digite parte do nome do professor</span>
-          <input type="search" id="busca-prof" maxlength="40" placeholder="Ex.: mar" autocomplete="off" enterkeyhint="search">
+          <span>Quem recebe o relatório?</span>
+          <input type="search" id="busca-prof" maxlength="40" placeholder="Caso não saiba, digite mar" autocomplete="off" enterkeyhint="search">
         </label>
         <button class="btn-grande" type="submit">🔍 Buscar</button>
         <div class="lista-prof" id="lista-prof" aria-live="polite"></div>
@@ -1428,6 +1481,16 @@
           <span class="jogo-card-nome">Chaves de Sobreposição</span>
           <span class="jogo-card-texto">Junte as figuras e complete a chave!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-caminho" type="button" data-tema="psicopedagogia matematica" style="--c:#43a047">
+          <img class="jogo-card-capa" src="assets/capa-caminho.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Caminho da Memória</span>
+          <span class="jogo-card-texto">Memorize as formas e leve o carro até a casa!</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-taxi" type="button" data-tema="psicopedagogia matematica" style="--c:#f9a825">
+          <img class="jogo-card-capa" src="assets/capa-taxi.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Siga o Táxi</span>
+          <span class="jogo-card-texto">Veja o caminho do táxi e faça igual!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -1622,9 +1685,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=115"></script>
-  <script src="dados.js?v=115"></script>
-  <script type="module" src="js/main.js?v=115"></script>
+  <script src="plenix.js?v=116"></script>
+  <script src="dados.js?v=116"></script>
+  <script type="module" src="js/main.js?v=116"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

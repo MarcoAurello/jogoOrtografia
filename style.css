@@ -2516,3 +2516,27 @@ body.com-escola .topo .logo { border-radius: 50%; background: #fff; object-fit: 
 #form-escolha-prof { display: flex; flex-direction: column; gap: 8px; }
 #escolha-prof { padding-top: 76px; padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
 #escolha-prof .escolha-prof-cartao { max-height: 100%; overflow-y: auto; }
+
+/* ---------- Caminho da Memória e Siga o Táxi ---------- */
+.caminho-seq { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 14px; padding: 12px;
+  border-radius: 16px; background: var(--branco); box-shadow: var(--sombra); }
+.caminho-seq[hidden], .caminho-mapa[hidden] { display: none; }
+.caminho-seq-figuras { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
+.forma-caminho { width: clamp(46px, 14vw, 76px); height: clamp(46px, 14vw, 76px); }
+.seta-caminho { font-size: clamp(18px, 4vw, 26px); color: #8d6e63; font-weight: 800; }
+.caminho-seq-tempo { height: 10px; border-radius: 999px; background: #e3edf0; overflow: hidden; }
+.caminho-seq-tempo span { display: block; height: 100%; width: 100%; background: var(--primaria); transform-origin: left; }
+@keyframes caminho-tempo { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+.caminho-mapa { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.mapa-caminho { display: block; width: 100%; height: 100%; max-height: 52dvh; }
+.no-caminho { cursor: pointer; }
+.no-caminho.errado circle, .no-caminho.errado rect, .no-caminho.errado polygon { stroke: #e53935; stroke-width: 4; }
+.veiculo { transition: transform 0.6s ease-in-out; pointer-events: none; }
+.rastro line { stroke: #1e88e5; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 2 8; opacity: 0.8; }
+.rastro.certo line { stroke: #2e9e5b; stroke-width: 7; stroke-dasharray: none; opacity: 0.75; }
+.caminho-msg { min-height: 2.6em; margin: 8px 0 4px; text-align: center; font-weight: 700; font-size: clamp(14px, 2.2dvh, 17px); color: var(--primaria-escura); }
+.caminho-msg.ok { color: #1d6b3d; }
+.caminho-msg.erro { color: #b42318; }
+.caminho-botoes { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; min-height: 8px; }
+.caminho-botoes .btn-grande, .caminho-botoes .btn-sec { margin: 0; }
+#caminho-tempo { white-space: nowrap; }
