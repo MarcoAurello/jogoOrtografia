@@ -1,38 +1,38 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=120';
-import { SOM } from './som.js?v=120';
-import { mostrar, telaInicio } from './telas.js?v=120';
-import { telaMissoes } from './ortografia.js?v=120';
-import { telaChuvaMenu } from './chuva.js?v=120';
-import { telaMatMenu } from './matematica.js?v=120';
-import { telaTiroMenu } from './tiro.js?v=120';
-import { telaPesoMenu } from './peso.js?v=120';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=120';
-import { telaLuzesMenu } from './luzes.js?v=120';
-import { telaRotinaMenu } from './rotina.js?v=120';
-import { telaFichasMenu } from './fichas.js?v=120';
-import { telaEscondidaMenu } from './escondida.js?v=120';
-import { telaCopiaMenu } from './copia.js?v=120';
-import { telaBarcosMenu } from './barcos.js?v=120';
-import { telaGiroMenu } from './giro.js?v=120';
-import { telaHoraMenu } from './hora.js?v=120';
-import { telaSomandoMenu } from './somando.js?v=120';
-import { telaDescobrirMenu } from './descobrir.js?v=120';
-import { telaChavesMenu } from './chaves.js?v=120';
-import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=120';
-import { telaPoliciaMenu } from './policia.js?v=120';
-import { telaCoresMenu } from './cores.js?v=120';
-import { telaLadosMenu } from './lados.js?v=120';
-import { telaSetasMenu } from './setas.js?v=120';
-import { telaVistasMenu } from './vistas.js?v=120';
-import { telaDinosMenu } from './dinos.js?v=120';
-import { telaSimbolosMenu } from './simbolos.js?v=120';
-import { telaTabuadaMenu } from './tabuada.js?v=120';
-import { telaClassesMenu } from './classes.js?v=120';
-import { telaGraficosMenu } from './graficos.js?v=120';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=120';
+import { $, seguro } from './util.js?v=122';
+import { SOM } from './som.js?v=122';
+import { mostrar, telaInicio } from './telas.js?v=122';
+import { telaMissoes } from './ortografia.js?v=122';
+import { telaChuvaMenu } from './chuva.js?v=122';
+import { telaMatMenu } from './matematica.js?v=122';
+import { telaTiroMenu } from './tiro.js?v=122';
+import { telaPesoMenu } from './peso.js?v=122';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=122';
+import { telaLuzesMenu } from './luzes.js?v=122';
+import { telaRotinaMenu } from './rotina.js?v=122';
+import { telaFichasMenu } from './fichas.js?v=122';
+import { telaEscondidaMenu } from './escondida.js?v=122';
+import { telaCopiaMenu } from './copia.js?v=122';
+import { telaBarcosMenu } from './barcos.js?v=122';
+import { telaGiroMenu } from './giro.js?v=122';
+import { telaHoraMenu } from './hora.js?v=122';
+import { telaSomandoMenu } from './somando.js?v=122';
+import { telaDescobrirMenu } from './descobrir.js?v=122';
+import { telaChavesMenu } from './chaves.js?v=122';
+import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=122';
+import { telaPoliciaMenu } from './policia.js?v=122';
+import { telaCoresMenu } from './cores.js?v=122';
+import { telaLadosMenu } from './lados.js?v=122';
+import { telaSetasMenu } from './setas.js?v=122';
+import { telaVistasMenu } from './vistas.js?v=122';
+import { telaDinosMenu } from './dinos.js?v=122';
+import { telaSimbolosMenu } from './simbolos.js?v=122';
+import { telaTabuadaMenu } from './tabuada.js?v=122';
+import { telaClassesMenu } from './classes.js?v=122';
+import { telaGraficosMenu } from './graficos.js?v=122';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=122';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -87,10 +87,14 @@ function desenharEscolhaEmail() {
   $('busca-prof').value = '';
   $('lista-prof').innerHTML = '';
 }
-function buscarProfessor() {
+// busca na lista da planilha: enquanto a lista atualiza, mostra o carregando (sem internet, usa a cópia do aparelho)
+async function buscarProfessor() {
   const pedaco = semAcento($('busca-prof').value.trim());
   $('erro-escolha-prof').textContent = '';
   if (pedaco.length < 2) { $('lista-prof').innerHTML = ''; $('erro-escolha-prof').textContent = 'Digite pelo menos 2 letras do nome do professor. 🔍'; SOM.errado(); return; }
+  $('lista-prof').innerHTML = '<p class="quiz-status carregando">Buscando os professores…</p>';
+  await carregarEmails();
+  if ($('escolha-prof').hidden) return;
   const achados = listaEmails().filter((x) => semAcento(x.nome).includes(pedaco));
   $('lista-prof').innerHTML = achados.length
     ? `<p class="lista-prof-titulo">Toque no professor:</p>${achados.map((x) => `<button class="quiz-item prof-achado" type="button" data-email="${seguro(x.email)}">📧 ${seguro(x.nome)}</button>`).join('')}`
@@ -99,9 +103,17 @@ function buscarProfessor() {
 }
 
 // traz a aba "E-mails" da planilha (ao abrir o jogo)
-async function carregarEmails() {
-  if (!URL_RELATORIO) return;
-  try { const { emails } = await lerDoScript('emails'); gravarJSON(CHAVE_EMAILS, emails || []); } catch (e) { /* sem internet: usa a cópia */ }
+// (se já está buscando, espera a mesma busca em vez de começar outra)
+let buscandoEmails = null;
+function carregarEmails() {
+  if (!URL_RELATORIO) return Promise.resolve();
+  if (!buscandoEmails) {
+    buscandoEmails = lerDoScript('emails')
+      .then(({ emails }) => gravarJSON(CHAVE_EMAILS, emails || []))
+      .catch(() => { /* sem internet: usa a cópia */ })
+      .finally(() => { buscandoEmails = null; });
+  }
+  return buscandoEmails;
 }
 
 // antes de abrir o jogo escolhido, o aluno escolhe para quem vai o relatório (a última escolha já vem marcada)

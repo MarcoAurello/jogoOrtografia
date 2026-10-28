@@ -2509,7 +2509,7 @@ body.com-escola .topo .logo { border-radius: 50%; background: #fff; object-fit: 
 /* janela "para quem vai o relatório": busca por parte do nome */
 .prof-ultimo { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; border-radius: 12px; background: #eef7f8; font-weight: 700; }
 .prof-ultimo .btn-grande { margin: 0; }
-.lista-prof { display: flex; flex-direction: column; gap: 8px; max-height: 34dvh; overflow-y: auto; }
+.lista-prof { display: flex; flex-direction: column; gap: 8px; }   /* sem rolagem própria: todos os encontrados aparecem */
 .lista-prof:empty { display: none; }
 .lista-prof-titulo { margin: 4px 0 0; font-weight: 800; color: var(--primaria-escura); }
 .prof-achado { width: 100%; cursor: pointer; font-family: 'Fredoka', sans-serif; font-size: 18px; font-weight: 600; }
@@ -2573,3 +2573,7 @@ body.com-escola .topo .logo { border-radius: 50%; background: #fff; object-fit: 
 .whats-flutuante:active { transform: scale(0.95); }
 body.com-barra .whats-flutuante { bottom: calc(80px + env(safe-area-inset-bottom)); }
 body.em-jogo .whats-flutuante { display: none; }
+.lista-prof .prof-achado { padding: 8px 12px; font-size: 17px; }
+.lista-prof { gap: 6px; }
+/* janela de escolha do professor aberta: o WhatsApp não cobre os nomes */
+body:has(#escolha-prof:not([hidden])) .whats-flutuante { display: none; }
