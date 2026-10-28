@@ -2577,3 +2577,29 @@ body.em-jogo .whats-flutuante { display: none; }
 .lista-prof { gap: 6px; }
 /* janela de escolha do professor aberta: o WhatsApp não cobre os nomes */
 body:has(#escolha-prof:not([hidden])) .whats-flutuante { display: none; }
+
+/* ---------- Ponto a Ponto ---------- */
+.pontos-quadro { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.pontos-svg { display: block; height: 100%; max-height: 52dvh; width: auto; max-width: 100%; aspect-ratio: 1; }
+.pontos-quadro.modelo .pontos-svg rect { stroke: #fb8c00; stroke-width: 2.4; }
+.pontos-quadro.certo .pontos-svg rect { stroke: #2e9e5b; stroke-width: 2.4; }
+.linha-pp { stroke: #3949ab; stroke-width: 1.7; stroke-linecap: round; }
+.linha-pp.escolhida { stroke: #fb8c00; stroke-width: 3; stroke-dasharray: 4 3; }
+.linha-pp.sobrou { stroke: #e53935; stroke-width: 2.4; }
+.linha-faltou { stroke: #2e9e5b; stroke-width: 2.6; stroke-dasharray: 3 3; stroke-linecap: round; }
+.linha-alvo { stroke: transparent; stroke-width: 8; cursor: pointer; }
+.ponto-pp { cursor: pointer; }
+.ponto-pp circle:not(.alvo-pp) { fill: #13294b; }
+.ponto-pp .alvo-pp { fill: transparent; }
+.ponto-pp.marcado circle:not(.alvo-pp) { fill: #fb8c00; r: 3.6; }
+.ponto-pp.marcado .alvo-pp { fill: rgba(251, 140, 0, 0.25); }
+.pontos-barra { margin: 6px 4px 0; }
+.pontos-barra[hidden] { display: none; }
+.pontos-msg { min-height: 2.6em; margin: 8px 0 4px; text-align: center; font-weight: 700; font-size: clamp(14px, 2.2dvh, 17px); color: var(--primaria-escura); }
+.pontos-msg.ok { color: #1d6b3d; }
+.pontos-msg.erro { color: #b42318; }
+.pontos-botoes { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; min-height: 8px; }
+.pontos-botoes .btn-grande, .pontos-botoes .btn-sec { margin: 0; }
+.pontos-botoes [hidden] { display: none; }
+#btn-pontos-apagar:disabled { opacity: 0.45; }
+#pontos-tempo { white-space: nowrap; }

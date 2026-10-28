@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=123">
+  <link rel="stylesheet" href="style.css?v=124">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1153,6 +1153,44 @@
       </div>
     </section>
 
+    <!-- Ponto a Ponto: instruções -->
+    <section class="tela" id="tela-pontos-menu">
+      <h2 class="subtitulo">✏️ Ponto a Ponto</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-pontos"></div>
+        <div class="balao balao-esq">
+          Vai aparecer um <b>desenho</b> feito com linhas ligando os pontos da moldura. <b>Memorize!</b> Depois ele some e
+          você refaz o desenho: toque em <b>dois pontos</b> para ligar. Errou uma linha? Toque nela e em <b>Apagar</b>.
+          No fim, toque em <b>Checar</b>. Acertou, o próximo tem mais linhas! ✏️
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-pontos-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="pontos-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Ponto a Ponto: o jogo -->
+    <section class="tela tela-jogo" id="tela-pontos">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="pontos-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="pontos-nivel"></span>
+        <span class="chuva-placar"><span id="pontos-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="pontos-contador"></span>
+        <span id="pontos-tempo"></span>
+      </div>
+      <div class="pontos-quadro" id="pontos-quadro"></div>
+      <div class="caminho-seq-tempo pontos-barra" id="pontos-barra" hidden><span></span></div>
+      <p class="pontos-msg" id="pontos-msg" role="status"></p>
+      <div class="pontos-botoes">
+        <button class="btn-grande" id="btn-pontos-pronto" type="button" hidden>Já memorizei ▶</button>
+        <button class="btn-sec" id="btn-pontos-apagar" type="button" hidden disabled>🗑️ Apagar</button>
+        <button class="btn-grande" id="btn-pontos-checar" type="button" hidden>✔ Checar</button>
+      </div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -1507,6 +1545,11 @@
           <span class="jogo-card-nome">Polícia e Ladrão</span>
           <span class="jogo-card-texto">Pegue o ladrão com as setas trocadas!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-pontos" type="button" data-tema="psicopedagogia matematica" style="--c:#1e88e5">
+          <img class="jogo-card-capa" src="assets/capa-pontos.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Ponto a Ponto</span>
+          <span class="jogo-card-texto">Memorize o desenho e ligue os pontos igualzinho!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -1705,9 +1748,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=123"></script>
-  <script src="dados.js?v=123"></script>
-  <script type="module" src="js/main.js?v=123"></script>
+  <script src="plenix.js?v=124"></script>
+  <script src="dados.js?v=124"></script>
+  <script type="module" src="js/main.js?v=124"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
