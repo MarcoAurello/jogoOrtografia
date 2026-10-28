@@ -2639,3 +2639,36 @@ body:has(#escolha-prof:not([hidden])) .whats-flutuante { display: none; }
 .pixels-botoes .btn-grande { margin: 0; }
 #btn-pixels-conferir:disabled { opacity: 0.45; }
 #pixels-tempo { white-space: nowrap; }
+
+/* ---------- Tela de jogos: tags de habilidades e cartões em lista ---------- */
+.hab-titulo { margin: 14px 0 4px; text-align: center; }
+.filtro-habilidades { display: flex; flex-direction: column; gap: 8px; max-width: 640px; margin: 0 auto; }
+.hab-grupo-nome { display: block; margin-bottom: 3px; font-size: 11px; font-weight: 800; color: var(--cinza-texto); text-transform: uppercase; letter-spacing: 0.03em; }
+.hab-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag-hab { min-height: 26px; padding: 2px 8px; font-size: 12px; font-weight: 700; color: var(--primaria-escura); background: var(--branco); border: 2px solid #cfe6ea; border-radius: 999px; }
+.tag-hab small { font-size: 11px; opacity: 0.7; }
+.tag-hab.ativa { color: var(--branco); background: var(--primaria); border-color: var(--primaria); }
+.tag-hab:disabled { opacity: 0.35; }
+#hab-limpar { align-self: center; margin: 2px 0 0; }
+#hab-limpar[hidden] { display: none; }
+.jogos-nenhum { margin: 14px 0 0; text-align: center; font-weight: 700; color: var(--cinza-texto); }
+.jogos-nenhum[hidden] { display: none; }
+#tela-jogos .escolha-jogos { grid-template-columns: 1fr; gap: 12px; }
+#tela-jogos .jogo-card {
+  display: grid; grid-template-columns: minmax(0, 42%) minmax(0, 1fr); grid-template-areas: "nome info" "capa info";
+  grid-template-rows: auto 1fr; align-items: start; column-gap: 12px; row-gap: 6px;
+  padding: 10px 12px 12px; text-align: left;
+}
+#tela-jogos .jogo-card[hidden] { display: none; }
+#tela-jogos .jogo-card:hover { transform: translateY(-2px); }
+#tela-jogos .jogo-card-nome { grid-area: nome; font-size: clamp(16px, 4.4vw, 20px); line-height: 1.15; }
+#tela-jogos .jogo-card-capa { grid-area: capa; width: 100%; margin: 0; border-radius: 10px; aspect-ratio: 4 / 3; }
+#tela-jogos .jogo-card-info { grid-area: info; display: flex; flex-direction: column; gap: 8px; }
+#tela-jogos .jogo-card-texto { font-size: 13px; line-height: 1.35; }
+.jogo-card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.jogo-card-tags i { padding: 2px 7px; font-size: 11px; font-style: normal; font-weight: 700; color: var(--primaria-escura); background: color-mix(in srgb, var(--c) 14%, white); border-radius: 999px; }
+.jogo-card-tags i.escolhida { color: var(--branco); background: var(--primaria); }
+#tela-jogos span.jogo-card-capa { overflow: hidden; min-height: 0; }
+#tela-jogos .classes-capa { gap: 2px; padding: 6px; }
+#tela-jogos .classes-capa span { font-size: 15px; }
+#tela-jogos .classes-capa small { font-size: 9px; }
