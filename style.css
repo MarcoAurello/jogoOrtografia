@@ -2730,3 +2730,11 @@ body:has(#escolha-prof:not([hidden])) .whats-flutuante { display: none; }
 .fracoes-opcao:disabled { cursor: default; }
 #btn-fracoes-pronto:disabled { opacity: 0.45; }
 #fracoes-tempo { white-space: nowrap; }
+
+/* escola no endereço: enquanto a marca dela não entra, a tela fica com um carregando (nada da marca original) */
+html.escola-pendente .app, html.escola-pendente .moldura, html.escola-pendente .credito, html.escola-pendente .whats-flutuante { visibility: hidden; }
+html.escola-pendente body::after {
+  content: ''; position: fixed; left: 50%; top: 45%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%;
+  border: 5px solid color-mix(in srgb, var(--primaria) 25%, transparent); border-top-color: var(--primaria); animation: girar-escola 0.8s linear infinite;
+}
+@keyframes girar-escola { to { transform: rotate(360deg); } }

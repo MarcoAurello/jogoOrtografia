@@ -1,10 +1,10 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Escolas: o mesmo app com o logo, as cores e o nome de cada escola (pedagociagamificada.com.br/<escola>). */
 
-import { $, seguro } from './util.js?v=128';
-import { SOM } from './som.js?v=128';
-import { carregarEmails, parteProfessor, SENHA_ADMIN } from './professor.js?v=128';
-import { CHAVE_RELATORIO, definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=128';
+import { $, seguro } from './util.js?v=129';
+import { SOM } from './som.js?v=129';
+import { carregarEmails, parteProfessor, SENHA_ADMIN } from './professor.js?v=129';
+import { CHAVE_RELATORIO, definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=129';
 
 // ---------- Escolas ----------
 // O endereço diz a escola: pedagociagamificada.com.br/escolaExemplo (ou ?escola=escolaExemplo, para testar em outro
@@ -18,6 +18,7 @@ const ESCOLAS_PRONTAS = {
 };
 const CHAVE_ESCOLA = 'pleno-ortografia:escola';          // a escola do app instalado
 const CHAVE_CONFIGS = 'pleno-ortografia:escolas';        // cópia das configurações (para abrir sem internet)
+const CHAVE_VISUAL = 'pleno-ortografia:visual';         // cores e nome de cada escola, lidos no <head> antes de desenhar a página
 const CHAVE_PLANILHA = 'pleno-ortografia:planilha';      // de qual planilha são as cópias abaixo (e-mails e questionários)
 const COPIAS_DA_PLANILHA = ['pleno-ortografia:emails', 'pleno-ortografia:questionarios'];
 const RESERVADOS = new Set(['js', 'assets', 'icons', 'audio', 'vendor', 'docs', 'ferramentas', 'manual', 'privacidade', 'index', 'jogoortografia', 'ortografia', 'api']);
@@ -52,18 +53,19 @@ function clarear(hex, f = 0.45) {
 const corValida = (c) => /^#[0-9a-f]{6}$/i.test(c || '');
 
 let escolaAtual = null;
+// a marca original fica escondida (classe posta no <head>) até a da escola entrar
+const liberarTela = () => document.documentElement.classList.remove('escola-pendente');
 function aplicarEscola(cfg) {
   if (!cfg) return;
   escolaAtual = cfg;
-  const raiz = document.documentElement.style;
+  const vars = {};
   if (corValida(cfg.cor)) {
-    raiz.setProperty('--primaria', cfg.cor);
-    raiz.setProperty('--primaria-escura', escurecer(cfg.cor));
-    raiz.setProperty('--azul', cfg.cor);
-    raiz.setProperty('--azul-claro', clarear(cfg.cor));
+    Object.assign(vars, { '--primaria': cfg.cor, '--primaria-escura': escurecer(cfg.cor), '--azul': cfg.cor, '--azul-claro': clarear(cfg.cor) });
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', cfg.cor);
   }
-  if (corValida(cfg.destaque)) raiz.setProperty('--amarelo', cfg.destaque);
+  if (corValida(cfg.destaque)) vars['--amarelo'] = cfg.destaque;
+  Object.entries(vars).forEach(([v, valor]) => document.documentElement.style.setProperty(v, valor));
+  gravar(CHAVE_VISUAL, { ...lerJSON(CHAVE_VISUAL, {}), [cfg.id.toLowerCase()]: { vars, cor: corValida(cfg.cor) ? cfg.cor : '#1fa2b0', nome: cfg.nome } });
   if (cfg.logo) document.querySelectorAll('.topo .logo').forEach((img) => { img.src = cfg.logo; img.alt = cfg.nome; });
   document.querySelectorAll('.escola-nome').forEach((el) => { el.textContent = cfg.nome; el.hidden = false; });
   if (cfg.slogan) document.querySelectorAll('.slogan').forEach((el) => { el.textContent = cfg.slogan; });
@@ -73,6 +75,43 @@ function aplicarEscola(cfg) {
   conferirPlanilha(cfg.script || URL_PRINCIPAL);
   if (definirUrlRelatorio(cfg.script || URL_PRINCIPAL)) carregarEmails();
   gravar(CHAVE_ESCOLA, cfg.id);
+  instalacaoDaEscola(cfg);
+  liberarTela();
+}
+
+// app instalado com a cara da escola: nome, ícone (o logo) e cor no Android (manifest) e no iPhone (ícone e título),
+// abrindo direto no endereço da escola
+async function instalacaoDaEscola(cfg) {
+  const icone = async (lado) => {
+    if (!cfg.logo) return '';
+    const img = new Image();
+    img.src = cfg.logo;
+    await img.decode();
+    const tela = document.createElement('canvas');
+    tela.width = tela.height = lado;
+    const ctx = tela.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, lado, lado);
+    const caixa = lado * 0.78, escala = Math.min(caixa / img.width, caixa / img.height);
+    const w = img.width * escala, h = img.height * escala;
+    ctx.drawImage(img, (lado - w) / 2, (lado - h) / 2, w, h);
+    return tela.toDataURL('image/png');
+  };
+  try {
+    const [i180, i192, i512] = await Promise.all([icone(180), icone(192), icone(512)]);
+    const inicio = location.href.split('#')[0];
+    const manifesto = {
+      id: inicio, name: cfg.nome, short_name: cfg.nome.length > 14 ? cfg.nome.split(' ')[0] : cfg.nome, lang: 'pt-BR',
+      start_url: inicio, scope: `${location.origin}/`, display: 'standalone', orientation: 'any',
+      background_color: '#eef4f6', theme_color: corValida(cfg.cor) ? cfg.cor : '#1fa2b0', categories: ['education', 'kids', 'games'],
+      icons: i192 ? [{ src: i192, sizes: '192x192', type: 'image/png', purpose: 'any' }, { src: i512, sizes: '512x512', type: 'image/png', purpose: 'any' },
+        { src: i512, sizes: '512x512', type: 'image/png', purpose: 'maskable' }]
+        : [{ src: `${location.origin}/icons/icon-192.png`, sizes: '192x192', type: 'image/png' }, { src: `${location.origin}/icons/icon-512.png`, sizes: '512x512', type: 'image/png' }],
+    };
+    document.querySelector('link[rel="manifest"]').href = URL.createObjectURL(new Blob([JSON.stringify(manifesto)], { type: 'application/manifest+json' }));
+    if (i180) document.querySelector('link[rel="apple-touch-icon"]').href = i180;
+    document.querySelector('meta[name="apple-mobile-web-app-title"]').content = cfg.nome;
+  } catch (e) { /* logo que não carrega: fica o ícone da plataforma */ }
 }
 
 // configuração da escola: a cópia do aparelho na hora; depois confere com a planilha principal
@@ -80,7 +119,7 @@ async function carregarEscola(id) {
   const pronta = ESCOLAS_PRONTAS[id.toLowerCase()];
   const copias = lerJSON(CHAVE_CONFIGS, {});
   aplicarEscola(pronta || copias[id.toLowerCase()]);
-  if (pronta || !URL_PRINCIPAL) return;
+  if (pronta || !URL_PRINCIPAL) { liberarTela(); return; }
   try {
     const r = await fetch(`${URL_PRINCIPAL}?acao=escola&id=${encodeURIComponent(id)}`);
     const j = await r.json();
@@ -88,6 +127,7 @@ async function carregarEscola(id) {
     gravar(CHAVE_CONFIGS, { ...lerJSON(CHAVE_CONFIGS, {}), [id.toLowerCase()]: j.escola });
     aplicarEscola(j.escola);
   } catch (e) { /* sem internet: fica com a cópia */ }
+  finally { liberarTela(); }   // escola que não existe (ou sem internet na 1ª vez): abre com a marca da plataforma
 }
 
 // trocou de planilha (outra escola, ou voltou para a principal): apaga as cópias da planilha anterior,
@@ -101,7 +141,7 @@ function conferirPlanilha(url) {
 
 const ESCOLA_DO_ENDERECO = escolaDoEndereco();
 if (ESCOLA_DO_ENDERECO) carregarEscola(ESCOLA_DO_ENDERECO);
-else conferirPlanilha(URL_PRINCIPAL);
+else { conferirPlanilha(URL_PRINCIPAL); liberarTela(); }
 
 // ---------- Administrador: criar e editar escolas (Área do professor com a senha de administrador) ----------
 // link de uma escola: no domínio da plataforma, /<escola>; em outro endereço (teste), ?escola=<escola>

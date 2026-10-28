@@ -9,14 +9,38 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Jogos Psicopedagógicos">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Jogos Psicopedagógicos</title>
+  <!-- escola no endereço (/escolaExemplo): aplica já as cores guardadas da escola e esconde a marca original
+       até o app carregar a da escola (sem isso, aparece a marca original e depois troca) -->
+  <script>
+    (function () {
+      try {
+        var reservados = ['js', 'assets', 'icons', 'audio', 'vendor', 'docs', 'ferramentas', 'manual', 'privacidade', 'index', 'jogoortografia', 'ortografia', 'api'];
+        var valido = function (id) { return /^[A-Za-z0-9_-]{3,40}$/.test(id || '') && reservados.indexOf(id.toLowerCase()) < 0; };
+        var id = new URLSearchParams(location.search).get('escola');
+        if (!valido(id)) id = location.pathname.split('/').filter(Boolean).pop() || '';
+        if (!valido(id)) id = window.matchMedia && matchMedia('(display-mode: standalone)').matches ? localStorage.getItem('pleno-ortografia:escola') || '' : '';
+        if (!valido(id)) return;
+        var raiz = document.documentElement;
+        raiz.classList.add('escola-pendente');
+        var visual = (JSON.parse(localStorage.getItem('pleno-ortografia:visual')) || {})[id.toLowerCase()];
+        if (visual) {
+          for (var v in visual.vars) raiz.style.setProperty(v, visual.vars[v]);
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', visual.cor);
+          document.title = visual.nome + ' — Jogos Psicopedagógicos';
+        }
+        setTimeout(function () { raiz.classList.remove('escola-pendente'); }, 6000);   // se algo falhar, mostra o app assim mesmo
+      } catch (e) { /* sem armazenamento: abre normal */ }
+    })();
+  </script>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=128">
+  <link rel="stylesheet" href="style.css?v=129">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1835,9 +1859,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=128"></script>
-  <script src="dados.js?v=128"></script>
-  <script type="module" src="js/main.js?v=128"></script>
+  <script src="plenix.js?v=129"></script>
+  <script src="dados.js?v=129"></script>
+  <script type="module" src="js/main.js?v=129"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
