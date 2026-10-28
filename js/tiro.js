@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Tiro Certo (ângulos). */
 
-import { $, embaralhar, sortear } from './util.js?v=117';
-import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=117';
-import { SOM, tocar } from './som.js?v=117';
-import { mascote, mostrar, telaJogos } from './telas.js?v=117';
-import { escolherProfessorE } from './professor.js?v=117';
-import { fimDaMissao } from './relatorio.js?v=117';
+import { $, embaralhar, sortear } from './util.js?v=118';
+import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=118';
+import { SOM, tocar } from './som.js?v=118';
+import { mascote, mostrar, telaJogos } from './telas.js?v=118';
+import { escolherProfessorE } from './professor.js?v=118';
+import { fimDaMissao } from './relatorio.js?v=118';
 
 // ---------- Tiro Certo ----------
 // O círculo é um transferidor: 0° à esquerda (onde fica o canhão), 90° em cima, 180° à direita e 270° embaixo.

@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=117">
+  <link rel="stylesheet" href="style.css?v=118">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -77,49 +77,16 @@
         <div class="balao balao-esq">
           Oi, <b id="nome-saudacao"></b>! 👋<br>
           Eu sou o <b>Plenix</b>, o seu amigo robô! 🤖<br>
-          Escolha um jogo e vamos aprender juntos!
+          Toque em <b>Teste grátis</b> e escolha um jogo!
         </div>
       </div>
-      <!-- três caminhos: os jogos, as competições e o questionário da aula -->
-      <div class="menu-professor menu-inicio">
-        <div class="inicio-item">
-          <button class="jogo-card" id="btn-area-jogos" type="button" style="--c:#1fa2b0">
-            <span class="jogo-card-icone">🎮</span>
-            <span class="jogo-card-nome">Jogos</span>
-            <span class="jogo-card-texto">Português, Matemática, Inglês e Psicopedagogia</span>
-          </button>
-          <button class="btn-saiba" type="button" data-saiba="jogos">ℹ️ Saiba mais</button>
-        </div>
-        <div class="inicio-item">
-          <button class="jogo-card" id="btn-inicio-comp" type="button" style="--c:#c2185b">
-            <span class="jogo-card-icone">🏆</span>
-            <span class="jogo-card-nome">Competições</span>
-            <span class="jogo-card-texto">Entre com o código do professor e dispute o ranking</span>
-          </button>
-          <button class="btn-saiba" type="button" data-saiba="competicao">ℹ️ Saiba mais</button>
-        </div>
-        <div class="inicio-item">
-          <button class="jogo-card" id="btn-quiz" type="button" style="--c:#7b4fc9">
-            <span class="jogo-card-icone">📝</span>
-            <span class="jogo-card-nome">Questionário da aula</span>
-            <span class="jogo-card-texto">Responda as perguntas que o professor preparou</span>
-          </button>
-          <button class="btn-saiba" type="button" data-saiba="quiz">ℹ️ Saiba mais</button>
-        </div>
+      <!-- o vídeo de apresentação e o teste grátis (Jogos, Competições e Questionário ficam na barra de baixo) -->
+      <div class="inicio-video">
+        <video controls preload="none" playsinline poster="assets/video/capa-video.jpg" width="1920" height="1080">
+          <source src="assets/video/jogos-educacionais.mp4" type="video/mp4">
+        </video>
       </div>
-      <!-- "Saiba mais" de cada ferramenta: a janelinha com os detalhes -->
-      <div class="barcos-ajuda" id="saiba-mais" hidden>
-        <div class="cartao barcos-ajuda-cartao saiba-cartao" role="dialog" aria-modal="true" aria-labelledby="saiba-titulo">
-          <h3 class="chuva-pergunta" id="saiba-titulo"></h3>
-          <div class="saiba-texto" id="saiba-texto"></div>
-          <button class="btn-grande" id="btn-saiba-fechar" type="button">Entendi ✔</button>
-        </div>
-      </div>
-      <a class="btn-sec btn-manual btn-video" href="manual.html#video">▶️ Assista o vídeo da plataforma</a>
-      <a class="btn-whats" href="https://wa.me/5581985503305?text=Ol%C3%A1!%20Vim%20pelos%20Jogos%20Educacionais." target="_blank" rel="noopener" aria-label="Fale conosco pelo WhatsApp">
-        <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path fill="#fff" d="M16 3C9 3 3.3 8.6 3.3 15.6c0 2.4.7 4.7 1.9 6.7L3 29l6.9-2.1c1.9 1 4 1.6 6.1 1.6 7 0 12.7-5.7 12.7-12.7C28.7 8.6 23 3 16 3zm0 23.2c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-4.1 1.2 1.2-4-.3-.4c-1.1-1.7-1.7-3.6-1.7-5.7C5.3 9.7 10.1 5 16 5s10.6 4.7 10.6 10.6S21.9 26.2 16 26.2zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.7 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>
-        Fale conosco
-      </a>
+      <button class="btn-grande btn-teste" id="btn-area-jogos" type="button">🎮 Teste grátis</button>
       <p class="link-privacidade"><a href="privacidade.html">Política de privacidade</a></p>
     </section>
 
@@ -1727,15 +1694,19 @@
     </button>
   </nav>
 
+  <!-- WhatsApp: botão redondo flutuante (some durante o jogo) -->
+  <a class="whats-flutuante" href="https://wa.me/5581985503305?text=Ol%C3%A1!%20Vim%20pelos%20Jogos%20Psicopedag%C3%B3gicos." target="_blank" rel="noopener" aria-label="Fale conosco pelo WhatsApp">
+    <svg viewBox="0 0 32 32" width="34" height="34" aria-hidden="true"><path fill="#fff" d="M16 3C9 3 3.3 8.6 3.3 15.6c0 2.4.7 4.7 1.9 6.7L3 29l6.9-2.1c1.9 1 4 1.6 6.1 1.6 7 0 12.7-5.7 12.7-12.7C28.7 8.6 23 3 16 3zm0 23.2c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-4.1 1.2 1.2-4-.3-.4c-1.1-1.7-1.7-3.6-1.7-5.7C5.3 9.7 10.1 5 16 5s10.6 4.7 10.6 10.6S21.9 26.2 16 26.2zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.7 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>
+  </a>
+
   <footer class="credito">
-    <span>© <b>Davi e Marco</b> — Todos os direitos reservados</span>
-    <a class="credito-link" href="https://sitejodospedagogicos.vercel.app/" target="_blank" rel="noopener">Pedagogia Gamificada ↗</a>
+    <span>© <a class="credito-link" href="https://sitejodospedagogicos.vercel.app/" target="_blank" rel="noopener"><b>Pedagogia Gamificada</b></a> — Todos os direitos reservados</span>
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=117"></script>
-  <script src="dados.js?v=117"></script>
-  <script type="module" src="js/main.js?v=117"></script>
+  <script src="plenix.js?v=118"></script>
+  <script src="dados.js?v=118"></script>
+  <script type="module" src="js/main.js?v=118"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

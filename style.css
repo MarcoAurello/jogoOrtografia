@@ -2557,3 +2557,15 @@ body.com-escola .topo .logo { border-radius: 50%; background: #fff; object-fit: 
 .policia-tiro span { font-size: 13px; font-weight: 800; }
 .policia-tiro:active { transform: translateY(3px); box-shadow: 0 2px 0 #8e1c1a, 0 0 0 3px #e53935; }
 #policia-tempo { white-space: nowrap; }
+/* ---------- tela inicial: vídeo de apresentação e Teste grátis ---------- */
+.inicio-video { max-width: 640px; margin: 14px auto 0; border-radius: 16px; overflow: hidden; box-shadow: var(--sombra); background: #000; }
+.inicio-video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.btn-teste { display: block; margin: 16px auto 0; padding-left: 34px; padding-right: 34px; font-size: clamp(20px, 3vw, 26px); }
+/* WhatsApp flutuante: em todas as telas, acima da barra de baixo; some durante o jogo */
+.whats-flutuante { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 45;
+  width: 60px; height: 60px; border-radius: 50%; background: #25d366; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); transition: transform 0.15s; }
+.whats-flutuante:hover { transform: scale(1.06); }
+.whats-flutuante:active { transform: scale(0.95); }
+body.com-barra .whats-flutuante { bottom: calc(80px + env(safe-area-inset-bottom)); }
+body.em-jogo .whats-flutuante { display: none; }

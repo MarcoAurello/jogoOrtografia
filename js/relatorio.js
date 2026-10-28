@@ -1,39 +1,39 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Relatório do fim do jogo: textos, gráficos, envio por e-mail (com fila offline), confete e PDF. */
 
-import { $, seguro, semHTML, sortear } from './util.js?v=117';
-import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=117';
-import { frase, SOM } from './som.js?v=117';
-import { mascote, mostrar } from './telas.js?v=117';
-import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=117';
-import { comecarMissao, telaMissoes } from './ortografia.js?v=117';
-import { comecarChuva, telaChuvaMenu } from './chuva.js?v=117';
-import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=117';
-import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=117';
-import { comecarPeso, telaPesoMenu } from './peso.js?v=117';
-import { comecarQuiz, telaQuizMenu } from './quiz.js?v=117';
-import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=117';
-import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=117';
-import { comecarFichas, telaFichasMenu } from './fichas.js?v=117';
-import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=117';
-import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=117';
-import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=117';
-import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=117';
-import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=117';
-import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=117';
-import { comecarDescobrir, DESCOBRIR, telaDescobrirMenu } from './descobrir.js?v=117';
-import { CHAVES, comecarChaves, telaChavesMenu } from './chaves.js?v=117';
-import { CAMINHO, comecarCaminho, comecarTaxi, telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=117';
-import { comecarPolicia, POLICIA, telaPoliciaMenu } from './policia.js?v=117';
-import { comecarCores, telaCoresMenu } from './cores.js?v=117';
-import { comecarLados, telaLadosMenu } from './lados.js?v=117';
-import { comecarSetas, telaSetasMenu } from './setas.js?v=117';
-import { comecarVistas, telaVistasMenu } from './vistas.js?v=117';
-import { comecarDinos, telaDinosMenu } from './dinos.js?v=117';
-import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=117';
-import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=117';
-import { comecarClasses, telaClassesMenu } from './classes.js?v=117';
-import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=117';
+import { $, seguro, semHTML, sortear } from './util.js?v=118';
+import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=118';
+import { frase, SOM } from './som.js?v=118';
+import { mascote, mostrar } from './telas.js?v=118';
+import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=118';
+import { comecarMissao, telaMissoes } from './ortografia.js?v=118';
+import { comecarChuva, telaChuvaMenu } from './chuva.js?v=118';
+import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=118';
+import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=118';
+import { comecarPeso, telaPesoMenu } from './peso.js?v=118';
+import { comecarQuiz, telaQuizMenu } from './quiz.js?v=118';
+import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=118';
+import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=118';
+import { comecarFichas, telaFichasMenu } from './fichas.js?v=118';
+import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=118';
+import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=118';
+import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=118';
+import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=118';
+import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=118';
+import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=118';
+import { comecarDescobrir, DESCOBRIR, telaDescobrirMenu } from './descobrir.js?v=118';
+import { CHAVES, comecarChaves, telaChavesMenu } from './chaves.js?v=118';
+import { CAMINHO, comecarCaminho, comecarTaxi, telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=118';
+import { comecarPolicia, POLICIA, telaPoliciaMenu } from './policia.js?v=118';
+import { comecarCores, telaCoresMenu } from './cores.js?v=118';
+import { comecarLados, telaLadosMenu } from './lados.js?v=118';
+import { comecarSetas, telaSetasMenu } from './setas.js?v=118';
+import { comecarVistas, telaVistasMenu } from './vistas.js?v=118';
+import { comecarDinos, telaDinosMenu } from './dinos.js?v=118';
+import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=118';
+import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=118';
+import { comecarClasses, telaClassesMenu } from './classes.js?v=118';
+import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=118';
 
 // ---------- Relatório de dificuldades ----------
 function montarRelatorio() {
@@ -554,7 +554,7 @@ async function baixarPDF() {
   for (let i = 1; i <= paginas; i++) {
     doc.setPage(i);
     doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...CINZA);
-    doc.text('© Davi e Marco - Todos os direitos reservados', L, 290);
+    doc.text('© Pedagogia Gamificada - Todos os direitos reservados', L, 290);
     doc.text(`${i}/${paginas}`, L + LARG, 290, { align: 'right' });
   }
   doc.save(`relatorio-${nomeArquivo(aluno)}-${nomeArquivo(mis.titulo)}.pdf`);
