@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Classes de Palavras. */
 
-import { $, embaralhar } from './util.js?v=118';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=118';
-import { SOM, tocar } from './som.js?v=118';
-import { mascote, mostrar, telaJogos } from './telas.js?v=118';
-import { escolherProfessorE } from './professor.js?v=118';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=118';
-import { FRASES_CLASSES } from './dados-classes.js?v=118';
+import { $, embaralhar } from './util.js?v=119';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=119';
+import { SOM, tocar } from './som.js?v=119';
+import { mascote, mostrar, telaJogos } from './telas.js?v=119';
+import { escolherProfessorE } from './professor.js?v=119';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=119';
+import { FRASES_CLASSES } from './dados-classes.js?v=119';
 
 // ---------- Classes de Palavras ----------
 // Morfologia, como o Jogo de Ortografia, mas para as classes de palavras. Aparece uma frase; o aluno toca numa palavra

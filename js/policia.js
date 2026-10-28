@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Polícia e Ladrão. */
 
-import { $, embaralhar, sortear } from './util.js?v=118';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=118';
-import { SOM, tocar } from './som.js?v=118';
-import { mascote, mostrar, telaJogos } from './telas.js?v=118';
-import { escolherProfessorE } from './professor.js?v=118';
-import { segundos } from './luzes.js?v=118';
-import { fimDaMissao } from './relatorio.js?v=118';
+import { $, embaralhar, sortear } from './util.js?v=119';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=119';
+import { SOM, tocar } from './som.js?v=119';
+import { mascote, mostrar, telaJogos } from './telas.js?v=119';
+import { escolherProfessorE } from './professor.js?v=119';
+import { segundos } from './luzes.js?v=119';
+import { fimDaMissao } from './relatorio.js?v=119';
 
 // ---------- Polícia e Ladrão ----------
 // Controle inibitório e orientação espacial. Uma cidade pequena vista de cima (a tela acompanha a viatura). A criança
@@ -16,7 +16,8 @@ import { fimDaMissao } from './relatorio.js?v=118';
 // Cada toque numa seta vira o carro para aquela direção e anda um pouco (segurando, ele repete os passinhos).
 // O tiro sai do lado do motorista, para a frente; cada tiro que acerta deixa o ladrão mais lento. Prende com 3 tiros
 // ou encostando nele. Calçadas, casas e árvores bloqueiam o caminho.
-// Setas: 1º e 2º ladrão, só ↑ e ↓ trocados; 3º e 4º, todas trocadas; 5º, mudam de lugar a cada ladrão.
+// Setas: estão sempre fora do lugar e, a cada 20 segundos, mudam de lugar de novo (reflexo e atenção). O ladrão fica
+// mais rápido a cada nível: 1º e 2º ladrão devagar, 3º e 4º médio, 5º rápido.
 // São 5 ladrões, 60 segundos cada; se o tempo acabar, o ladrão foge.
 const POLICIA = { LADROES: 5, SEGUNDOS: 60, NIVEL_MAX: 3 };
 const TILE = 56, N = 15;                                     // a cidade: 15 × 15 quadradinhos de 56 px
@@ -26,19 +27,20 @@ const GIRO = 9;                                              // quanto a viatura
 const PASSO = 40, REPETE = 230;                              // cada toque anda 40 px; segurando, repete a cada 230 ms
 const TIROS_PARA_PRENDER = 3;
 const DIRS = { cima: [0, -1], baixo: [0, 1], esq: [-1, 0], dir: [1, 0] };
-const SETA = { cima: '⬆', baixo: '⬇', esq: '⬅', dir: '➡' };
+const TROCA_SETAS = 20000;   // a cada 20 s as setas mudam de lugar
+// a seta desenhada na tecla (um "V" branco apontando para a direção)
+const GIRA = { cima: 0, dir: 90, baixo: 180, esq: 270 };
+const setaSVG = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true" style="transform: rotate(${GIRA[d]}deg)"><path d="M5 15.5 12 8.5l7 7" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const NIVEIS_POLICIA = [
-  { titulo: 'Só ⬆ e ⬇ trocados' },
-  { titulo: 'Todas as setas trocadas' },
-  { titulo: 'As setas mudam de lugar' },
+  { titulo: 'Ladrão devagar' },
+  { titulo: 'Ladrão mais rápido' },
+  { titulo: 'Ladrão muito rápido' },
 ];
+const REGRA_SETAS = 'As setas estão fora do lugar e mudam a cada 20 segundos: olhar a seta, não a posição da tecla (controle inibitório e reflexo).';
 const TIPOS_POLICIA = [
-  { id: 'pol1', titulo: 'Setas ⬆ e ⬇ trocadas', icone: '🚓', cor: '#1e88e5',
-    regra: 'Ler a seta antes de tocar: o botão de cima leva para baixo e o de baixo leva para cima.' },
-  { id: 'pol2', titulo: 'Todas as setas trocadas', icone: '🔀', cor: '#e53935',
-    regra: 'Todas as setas estão no lado contrário: olhar a seta, não a posição do botão (controle inibitório).' },
-  { id: 'pol3', titulo: 'Setas que mudam de lugar', icone: '🎲', cor: '#8e24aa',
-    regra: 'A cada ladrão os botões trocam de lugar: conferir as setas antes de começar a perseguição.' },
+  { id: 'pol1', titulo: 'Ladrão devagar', icone: '🚓', cor: '#1e88e5', regra: REGRA_SETAS },
+  { id: 'pol2', titulo: 'Ladrão mais rápido', icone: '🔀', cor: '#e53935', regra: REGRA_SETAS },
+  { id: 'pol3', titulo: 'Ladrão muito rápido', icone: '🎲', cor: '#8e24aa', regra: REGRA_SETAS },
 ];
 let pol = null;   // a partida em andamento
 
@@ -100,21 +102,18 @@ function pararPolicia() {
 }
 const msgPolicia = (texto, tipo = '') => { $('policia-msg').innerHTML = texto; $('policia-msg').className = `policia-msg ${tipo}`; };
 
-// os botões nos lugares trocados: no nível 1 só ⬆/⬇; no 2, todos; no 3, sorteados (nunca no lugar certo)
-function arrumarBotoes(nivel) {
+// as teclas em lugares trocados: nenhuma seta no seu lugar e todas num lugar diferente da arrumação anterior
+let arrumacaoAnterior = [];
+function arrumarBotoes() {
   const lugares = ['cima', 'esq', 'dir', 'baixo'];
-  let em;   // em[lugar] = direção do botão que fica nesse lugar
-  if (nivel === 1) em = { cima: 'baixo', baixo: 'cima', esq: 'esq', dir: 'dir' };
-  else if (nivel === 2) em = { cima: 'baixo', baixo: 'cima', esq: 'dir', dir: 'esq' };
-  else {
-    let s;
-    do { s = embaralhar(lugares); } while (s.some((d, i) => d === lugares[i]));
-    em = Object.fromEntries(lugares.map((l, i) => [l, s[i]]));
-  }
+  let s;
+  do { s = embaralhar(lugares); } while (s.some((d, i) => d === lugares[i] || d === arrumacaoAnterior[i]));
+  arrumacaoAnterior = s;
+  const em = Object.fromEntries(lugares.map((l, i) => [l, s[i]]));   // em[lugar] = direção da tecla nesse lugar
   lugares.forEach((l) => {
     const b = $(`policia-${l}`);
     b.dataset.dir = em[l];
-    b.textContent = SETA[em[l]];
+    b.innerHTML = setaSVG(em[l]);
     b.setAttribute('aria-label', `Ir para ${{ cima: 'cima', baixo: 'baixo', esq: 'a esquerda', dir: 'a direita' }[em[l]]}`);
   });
 }
@@ -137,13 +136,13 @@ function novaPerseguicao() {
     viatura: { x: centro(vx), y: centro(vy), ang: -Math.PI / 2 },
     ladrao: { x: centro(lx), y: centro(ly), alvo: null, ang: 0, preso: false, acertos: 0 },
     balas: [], dir: null, falta: 0, t0: performance.now(), ultimo: performance.now(), ativo: true, batendo: false,
-    tirosRodada: 0, batidasRodada: 0,
+    tirosRodada: 0, batidasRodada: 0, proximaTroca: performance.now() + TROCA_SETAS,
   });
-  arrumarBotoes(p.nivel);
+  arrumarBotoes();
   $('policia-nivel').textContent = `🚓 Nível ${p.nivel} de ${POLICIA.NIVEL_MAX}`;
   $('policia-pontos').textContent = p.pontos;
   $('policia-contador').textContent = `Ladrão ${p.feitas} de ${POLICIA.LADROES} · ${NIVEIS_POLICIA[p.nivel - 1].titulo}`;
-  msgPolicia(p.nivel === 3 ? 'Os botões mudaram de lugar! Leia as setas. 👀' : 'Pegue o ladrão! 🚨 Atenção: os botões estão trocados.');
+  msgPolicia('Pegue o ladrão! 🚨 As setas estão fora do lugar e mudam a cada 20 segundos.');
   cancelAnimationFrame(p.quadro);
   p.quadro = requestAnimationFrame(passo);
 }
@@ -158,6 +157,18 @@ function passo(agora) {
     moverViatura(p, dt);
     moverLadrao(p, dt);
     moverBalas(p, dt);
+    // a cada 20 s as setas mudam de lugar (as teclas piscam para avisar)
+    if (agora >= p.proximaTroca) {
+      p.proximaTroca = agora + TROCA_SETAS;
+      p.trocas = (p.trocas || 0) + 1;
+      arrumarBotoes();
+      const cruz = document.querySelector('.policia-cruz');
+      cruz.classList.remove('trocou');
+      void cruz.offsetWidth;
+      cruz.classList.add('trocou');
+      tocar([[660, 0.06], [880, 0.08]]);
+      msgPolicia('🔀 As setas mudaram de lugar! Olhe bem antes de tocar.');
+    }
     const resta = POLICIA.SEGUNDOS - (agora - p.t0) / 1000;
     $('policia-tempo').textContent = `⏱ ${Math.max(0, Math.ceil(resta))} s`;
     if (Math.hypot(p.viatura.x - p.ladrao.x, p.viatura.y - p.ladrao.y) < 28) prender('encostou');
