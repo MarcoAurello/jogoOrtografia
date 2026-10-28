@@ -2506,3 +2506,13 @@ body.com-escola .topo .logo { border-radius: 50%; background: #fff; object-fit: 
 .escola-previa-slogan { display: inline-block; margin: 0 0 10px; padding: 3px 10px; border-radius: 8px; background: var(--destaque); font-weight: 800; font-size: 14px; }
 .escola-item { flex-wrap: wrap; border-left-width: 8px; }
 .escola-logo-mini { width: 44px; height: 44px; border-radius: 50%; object-fit: contain; background: #f3f6f9; }
+/* janela "para quem vai o relatório": busca por parte do nome */
+.prof-ultimo { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; border-radius: 12px; background: #eef7f8; font-weight: 700; }
+.prof-ultimo .btn-grande { margin: 0; }
+.lista-prof { display: flex; flex-direction: column; gap: 8px; max-height: 34dvh; overflow-y: auto; }
+.lista-prof:empty { display: none; }
+.lista-prof-titulo { margin: 4px 0 0; font-weight: 800; color: var(--primaria-escura); }
+.prof-achado { width: 100%; cursor: pointer; font-family: 'Fredoka', sans-serif; font-size: 18px; font-weight: 600; }
+#form-escolha-prof { display: flex; flex-direction: column; gap: 8px; }
+#escolha-prof { padding-top: 76px; padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+#escolha-prof .escolha-prof-cartao { max-height: 100%; overflow-y: auto; }

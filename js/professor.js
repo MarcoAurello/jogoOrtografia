@@ -1,36 +1,36 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=114';
-import { SOM } from './som.js?v=114';
-import { mostrar, telaInicio } from './telas.js?v=114';
-import { telaMissoes } from './ortografia.js?v=114';
-import { telaChuvaMenu } from './chuva.js?v=114';
-import { telaMatMenu } from './matematica.js?v=114';
-import { telaTiroMenu } from './tiro.js?v=114';
-import { telaPesoMenu } from './peso.js?v=114';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=114';
-import { telaLuzesMenu } from './luzes.js?v=114';
-import { telaRotinaMenu } from './rotina.js?v=114';
-import { telaFichasMenu } from './fichas.js?v=114';
-import { telaEscondidaMenu } from './escondida.js?v=114';
-import { telaCopiaMenu } from './copia.js?v=114';
-import { telaBarcosMenu } from './barcos.js?v=114';
-import { telaGiroMenu } from './giro.js?v=114';
-import { telaHoraMenu } from './hora.js?v=114';
-import { telaSomandoMenu } from './somando.js?v=114';
-import { telaDescobrirMenu } from './descobrir.js?v=114';
-import { telaChavesMenu } from './chaves.js?v=114';
-import { telaCoresMenu } from './cores.js?v=114';
-import { telaLadosMenu } from './lados.js?v=114';
-import { telaSetasMenu } from './setas.js?v=114';
-import { telaVistasMenu } from './vistas.js?v=114';
-import { telaDinosMenu } from './dinos.js?v=114';
-import { telaSimbolosMenu } from './simbolos.js?v=114';
-import { telaTabuadaMenu } from './tabuada.js?v=114';
-import { telaClassesMenu } from './classes.js?v=114';
-import { telaGraficosMenu } from './graficos.js?v=114';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=114';
+import { $, seguro } from './util.js?v=115';
+import { SOM } from './som.js?v=115';
+import { mostrar, telaInicio } from './telas.js?v=115';
+import { telaMissoes } from './ortografia.js?v=115';
+import { telaChuvaMenu } from './chuva.js?v=115';
+import { telaMatMenu } from './matematica.js?v=115';
+import { telaTiroMenu } from './tiro.js?v=115';
+import { telaPesoMenu } from './peso.js?v=115';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=115';
+import { telaLuzesMenu } from './luzes.js?v=115';
+import { telaRotinaMenu } from './rotina.js?v=115';
+import { telaFichasMenu } from './fichas.js?v=115';
+import { telaEscondidaMenu } from './escondida.js?v=115';
+import { telaCopiaMenu } from './copia.js?v=115';
+import { telaBarcosMenu } from './barcos.js?v=115';
+import { telaGiroMenu } from './giro.js?v=115';
+import { telaHoraMenu } from './hora.js?v=115';
+import { telaSomandoMenu } from './somando.js?v=115';
+import { telaDescobrirMenu } from './descobrir.js?v=115';
+import { telaChavesMenu } from './chaves.js?v=115';
+import { telaCoresMenu } from './cores.js?v=115';
+import { telaLadosMenu } from './lados.js?v=115';
+import { telaSetasMenu } from './setas.js?v=115';
+import { telaVistasMenu } from './vistas.js?v=115';
+import { telaDinosMenu } from './dinos.js?v=115';
+import { telaSimbolosMenu } from './simbolos.js?v=115';
+import { telaTabuadaMenu } from './tabuada.js?v=115';
+import { telaClassesMenu } from './classes.js?v=115';
+import { telaGraficosMenu } from './graficos.js?v=115';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=115';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -74,14 +74,26 @@ async function gravarNoScript(dados) {
   return j;
 }
 
-// lista de professores da janela que aparece antes de cada jogo
+// janela que aparece antes de cada jogo: o aluno digita parte do nome do professor e escolhe na lista que aparece
+const semAcento = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 function desenharEscolhaEmail() {
   const lista = listaEmails();
   if (lista.length === 1 && !emailEscolhido) emailEscolhido = lista[0].email;   // só um professor: já vem escolhido
-  $('login-professor').innerHTML = '<option value="">Escolha o professor…</option>'
-    + lista.map((x) => `<option value="${seguro(x.email)}">${seguro(x.nome)}</option>`).join('')
-    + '<option value="nenhum">Não enviar relatório</option>';
-  $('login-professor').value = emailEscolhido === 'nenhum' || lista.some((x) => x.email === emailEscolhido) ? emailEscolhido : '';
+  const ultimo = lista.find((x) => x.email === emailEscolhido);
+  $('escolha-prof-ultimo').hidden = !ultimo;
+  $('escolha-prof-ultimo-nome').textContent = ultimo ? ultimo.nome : '';
+  $('busca-prof').value = '';
+  $('lista-prof').innerHTML = '';
+}
+function buscarProfessor() {
+  const pedaco = semAcento($('busca-prof').value.trim());
+  $('erro-escolha-prof').textContent = '';
+  if (pedaco.length < 2) { $('lista-prof').innerHTML = ''; $('erro-escolha-prof').textContent = 'Digite pelo menos 2 letras do nome do professor. 🔍'; SOM.errado(); return; }
+  const achados = listaEmails().filter((x) => semAcento(x.nome).includes(pedaco));
+  $('lista-prof').innerHTML = achados.length
+    ? `<p class="lista-prof-titulo">Toque no professor:</p>${achados.map((x) => `<button class="quiz-item prof-achado" type="button" data-email="${seguro(x.email)}">📧 ${seguro(x.nome)}</button>`).join('')}`
+    : `<p class="quiz-status">Nenhum professor com "${seguro($('busca-prof').value.trim())}". Confira o nome com o professor.</p>`;
+  if (achados.length) SOM.clique(); else SOM.errado();
 }
 
 // traz a aba "E-mails" da planilha (ao abrir o jogo)
@@ -100,19 +112,22 @@ function escolherProfessorE(nomeDoJogo, abrirJogo) {
   $('escolha-prof-cancelar').hidden = !!QUIZ_DO_LINK;
   $('erro-escolha-prof').textContent = '';
   $('escolha-prof').hidden = false;
-  $('login-professor').focus();
+  setTimeout(() => $('busca-prof').focus(), 100);
 }
-$('form-escolha-prof').onsubmit = (e) => {
-  e.preventDefault();
-  if (!$('login-professor').value) { $('erro-escolha-prof').textContent = 'Escolha um professor. 📧'; SOM.errado(); return; }
-  emailEscolhido = $('login-professor').value;
+// escolheu (um professor ou "nenhum"): guarda a escolha e abre o jogo
+function escolherEmail(email) {
+  emailEscolhido = email;
   try { localStorage.setItem(CHAVE_EMAIL_ESCOLHIDO, emailEscolhido); } catch (err) { /* sem armazenamento */ }
   $('escolha-prof').hidden = true;
   SOM.clique();
   const abrir = depoisDaEscolha;
   depoisDaEscolha = null;
   if (abrir) abrir();
-};
+}
+$('form-escolha-prof').onsubmit = (e) => { e.preventDefault(); buscarProfessor(); };
+$('lista-prof').onclick = (e) => { const b = e.target.closest('.prof-achado'); if (b) escolherEmail(b.dataset.email); };
+$('btn-prof-ultimo').onclick = () => escolherEmail(emailEscolhido);
+$('escolha-prof-sem').onclick = () => escolherEmail('nenhum');
 $('escolha-prof-cancelar').onclick = () => { $('escolha-prof').hidden = true; depoisDaEscolha = null; };
 
 // Área do professor: senha → menu com dois botões → a parte escolhida (e-mails ou questionários)

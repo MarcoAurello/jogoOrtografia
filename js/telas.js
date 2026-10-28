@@ -1,36 +1,36 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Telas e navegação: moldura, mascote, troca de telas, encaixe na tela, login, menu do topo, barra inferior e filtro dos jogos. */
 
-import { $ } from './util.js?v=114';
-import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=114';
-import { frase, pararVoz, SOM } from './som.js?v=114';
-import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=114';
-import { pararChuva } from './chuva.js?v=114';
-import { pararMat } from './matematica.js?v=114';
-import { desenharTiro, pararTiro, tiro } from './tiro.js?v=114';
-import { pararPeso } from './peso.js?v=114';
-import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=114';
-import { pararLuz } from './luzes.js?v=114';
-import { pararRotina } from './rotina.js?v=114';
-import { pararFichas } from './fichas.js?v=114';
-import { pararEscondida } from './escondida.js?v=114';
-import { pararCopia } from './copia.js?v=114';
-import { pararBarcos } from './barcos.js?v=114';
-import { pararGiro } from './giro.js?v=114';
-import { pararHora } from './hora.js?v=114';
-import { pararSomando } from './somando.js?v=114';
-import { pararDescobrir } from './descobrir.js?v=114';
-import { pararChaves } from './chaves.js?v=114';
-import { telaCompeticao } from './competicao.js?v=114';
-import { pararCores } from './cores.js?v=114';
-import { pararLados } from './lados.js?v=114';
-import { pararSetas } from './setas.js?v=114';
-import { pararVistas } from './vistas.js?v=114';
-import { pararDinos } from './dinos.js?v=114';
-import { pararSimbolos } from './simbolos.js?v=114';
-import { pararTabuada } from './tabuada.js?v=114';
-import { pararClasses } from './classes.js?v=114';
-import { pararGraficos } from './graficos.js?v=114';
+import { $ } from './util.js?v=115';
+import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=115';
+import { frase, pararVoz, SOM } from './som.js?v=115';
+import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=115';
+import { pararChuva } from './chuva.js?v=115';
+import { pararMat } from './matematica.js?v=115';
+import { desenharTiro, pararTiro, tiro } from './tiro.js?v=115';
+import { pararPeso } from './peso.js?v=115';
+import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=115';
+import { pararLuz } from './luzes.js?v=115';
+import { pararRotina } from './rotina.js?v=115';
+import { pararFichas } from './fichas.js?v=115';
+import { pararEscondida } from './escondida.js?v=115';
+import { pararCopia } from './copia.js?v=115';
+import { pararBarcos } from './barcos.js?v=115';
+import { pararGiro } from './giro.js?v=115';
+import { pararHora } from './hora.js?v=115';
+import { pararSomando } from './somando.js?v=115';
+import { pararDescobrir } from './descobrir.js?v=115';
+import { pararChaves } from './chaves.js?v=115';
+import { telaCompeticao } from './competicao.js?v=115';
+import { pararCores } from './cores.js?v=115';
+import { pararLados } from './lados.js?v=115';
+import { pararSetas } from './setas.js?v=115';
+import { pararVistas } from './vistas.js?v=115';
+import { pararDinos } from './dinos.js?v=115';
+import { pararSimbolos } from './simbolos.js?v=115';
+import { pararTabuada } from './tabuada.js?v=115';
+import { pararClasses } from './classes.js?v=115';
+import { pararGraficos } from './graficos.js?v=115';
 
 // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
 const ENFEITES = {
