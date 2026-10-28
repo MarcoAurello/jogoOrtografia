@@ -1,38 +1,38 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=119';
-import { SOM } from './som.js?v=119';
-import { mostrar, telaInicio } from './telas.js?v=119';
-import { telaMissoes } from './ortografia.js?v=119';
-import { telaChuvaMenu } from './chuva.js?v=119';
-import { telaMatMenu } from './matematica.js?v=119';
-import { telaTiroMenu } from './tiro.js?v=119';
-import { telaPesoMenu } from './peso.js?v=119';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=119';
-import { telaLuzesMenu } from './luzes.js?v=119';
-import { telaRotinaMenu } from './rotina.js?v=119';
-import { telaFichasMenu } from './fichas.js?v=119';
-import { telaEscondidaMenu } from './escondida.js?v=119';
-import { telaCopiaMenu } from './copia.js?v=119';
-import { telaBarcosMenu } from './barcos.js?v=119';
-import { telaGiroMenu } from './giro.js?v=119';
-import { telaHoraMenu } from './hora.js?v=119';
-import { telaSomandoMenu } from './somando.js?v=119';
-import { telaDescobrirMenu } from './descobrir.js?v=119';
-import { telaChavesMenu } from './chaves.js?v=119';
-import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=119';
-import { telaPoliciaMenu } from './policia.js?v=119';
-import { telaCoresMenu } from './cores.js?v=119';
-import { telaLadosMenu } from './lados.js?v=119';
-import { telaSetasMenu } from './setas.js?v=119';
-import { telaVistasMenu } from './vistas.js?v=119';
-import { telaDinosMenu } from './dinos.js?v=119';
-import { telaSimbolosMenu } from './simbolos.js?v=119';
-import { telaTabuadaMenu } from './tabuada.js?v=119';
-import { telaClassesMenu } from './classes.js?v=119';
-import { telaGraficosMenu } from './graficos.js?v=119';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=119';
+import { $, seguro } from './util.js?v=120';
+import { SOM } from './som.js?v=120';
+import { mostrar, telaInicio } from './telas.js?v=120';
+import { telaMissoes } from './ortografia.js?v=120';
+import { telaChuvaMenu } from './chuva.js?v=120';
+import { telaMatMenu } from './matematica.js?v=120';
+import { telaTiroMenu } from './tiro.js?v=120';
+import { telaPesoMenu } from './peso.js?v=120';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=120';
+import { telaLuzesMenu } from './luzes.js?v=120';
+import { telaRotinaMenu } from './rotina.js?v=120';
+import { telaFichasMenu } from './fichas.js?v=120';
+import { telaEscondidaMenu } from './escondida.js?v=120';
+import { telaCopiaMenu } from './copia.js?v=120';
+import { telaBarcosMenu } from './barcos.js?v=120';
+import { telaGiroMenu } from './giro.js?v=120';
+import { telaHoraMenu } from './hora.js?v=120';
+import { telaSomandoMenu } from './somando.js?v=120';
+import { telaDescobrirMenu } from './descobrir.js?v=120';
+import { telaChavesMenu } from './chaves.js?v=120';
+import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=120';
+import { telaPoliciaMenu } from './policia.js?v=120';
+import { telaCoresMenu } from './cores.js?v=120';
+import { telaLadosMenu } from './lados.js?v=120';
+import { telaSetasMenu } from './setas.js?v=120';
+import { telaVistasMenu } from './vistas.js?v=120';
+import { telaDinosMenu } from './dinos.js?v=120';
+import { telaSimbolosMenu } from './simbolos.js?v=120';
+import { telaTabuadaMenu } from './tabuada.js?v=120';
+import { telaClassesMenu } from './classes.js?v=120';
+import { telaGraficosMenu } from './graficos.js?v=120';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=120';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -110,7 +110,8 @@ function escolherProfessorE(nomeDoJogo, abrirJogo) {
   if (!listaEmails().length) { abrirJogo(); return; }   // planilha sem e-mails: abre direto
   desenharEscolhaEmail();
   depoisDaEscolha = abrirJogo;
-  $('escolha-prof-titulo').textContent = `📧 ${nomeDoJogo}: para quem vai o relatório?`;
+  $('escolha-prof-titulo').textContent = `📧 ${nomeDoJogo}`;
+  $('busca-prof-rotulo').textContent = `Para quem vai o relatório do ${nomeDoJogo === 'Questionário da aula' ? 'questionário' : 'jogo'}?`;
   $('escolha-prof-cancelar').hidden = !!QUIZ_DO_LINK;
   $('erro-escolha-prof').textContent = '';
   $('escolha-prof').hidden = false;

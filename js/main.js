@@ -1,41 +1,41 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Ponto de entrada: importa todos os módulos, liga o botão de instalar o app e abre a primeira tela. */
 
-import { $ } from './util.js?v=119';
-import { mostrar, telaInicio } from './telas.js?v=119';
-import { carregarEmails } from './professor.js?v=119';
-import { enviarFila } from './relatorio.js?v=119';
+import { $ } from './util.js?v=120';
+import { mostrar, telaInicio } from './telas.js?v=120';
+import { carregarEmails } from './professor.js?v=120';
+import { enviarFila } from './relatorio.js?v=120';
 // cada jogo liga os próprios botões ao ser carregado
-import './ortografia.js?v=119';
-import './chuva.js?v=119';
-import './matematica.js?v=119';
-import './tiro.js?v=119';
-import './peso.js?v=119';
-import './quiz.js?v=119';
-import './luzes.js?v=119';
-import './rotina.js?v=119';
-import './fichas.js?v=119';
-import './cores.js?v=119';
-import './lados.js?v=119';
-import './setas.js?v=119';
-import './vistas.js?v=119';
-import './dinos.js?v=119';
-import './simbolos.js?v=119';
-import './tabuada.js?v=119';
-import './classes.js?v=119';
-import './graficos.js?v=119';
-import './escondida.js?v=119';
-import './copia.js?v=119';
-import './barcos.js?v=119';
-import './giro.js?v=119';
-import './hora.js?v=119';
-import './somando.js?v=119';
-import './descobrir.js?v=119';
-import './chaves.js?v=119';
-import './caminho.js?v=119';
-import './policia.js?v=119';
-import './escola.js?v=119';
-import './competicao.js?v=119';
+import './ortografia.js?v=120';
+import './chuva.js?v=120';
+import './matematica.js?v=120';
+import './tiro.js?v=120';
+import './peso.js?v=120';
+import './quiz.js?v=120';
+import './luzes.js?v=120';
+import './rotina.js?v=120';
+import './fichas.js?v=120';
+import './cores.js?v=120';
+import './lados.js?v=120';
+import './setas.js?v=120';
+import './vistas.js?v=120';
+import './dinos.js?v=120';
+import './simbolos.js?v=120';
+import './tabuada.js?v=120';
+import './classes.js?v=120';
+import './graficos.js?v=120';
+import './escondida.js?v=120';
+import './copia.js?v=120';
+import './barcos.js?v=120';
+import './giro.js?v=120';
+import './hora.js?v=120';
+import './somando.js?v=120';
+import './descobrir.js?v=120';
+import './chaves.js?v=120';
+import './caminho.js?v=120';
+import './policia.js?v=120';
+import './escola.js?v=120';
+import './competicao.js?v=120';
 
 // ---------- Instalar como app ----------
 let pedidoInstalacao = null;
