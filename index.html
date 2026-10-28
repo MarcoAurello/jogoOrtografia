@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=124">
+  <link rel="stylesheet" href="style.css?v=125">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1191,6 +1191,43 @@
       </div>
     </section>
 
+    <!-- Quebra-Cabeça de Pixels: instruções -->
+    <section class="tela" id="tela-pixels-menu">
+      <h2 class="subtitulo">🧩 Quebra-Cabeça de Pixels</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-pixels"></div>
+        <div class="balao balao-esq">
+          Em cima está o <b>modelo</b> e embaixo o <b>contorno</b> para montar, os dois com as <b>linhas e colunas numeradas</b>.
+          As peças ficam na faixa de baixo: <b>deslize para os lados</b> para ver todas e <b>puxe uma peça para cima</b> para
+          colocá-la no desenho. Errou o lugar? Arraste a peça de volta para a faixa. No fim, toque em <b>Conferir</b>! 🧩
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-pixels-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="pixels-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Quebra-Cabeça de Pixels: o jogo -->
+    <section class="tela tela-jogo" id="tela-pixels">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="pixels-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="pixels-nivel"></span>
+        <span class="chuva-placar"><span id="pixels-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="pixels-contador"></span>
+        <span id="pixels-tempo"></span>
+      </div>
+      <div class="pixels-modelo" id="pixels-modelo" aria-label="Modelo"></div>
+      <div class="pixels-area" id="pixels-area">
+        <div class="pixels-tabuleiro" id="pixels-tabuleiro" aria-label="Contorno para montar"></div>
+      </div>
+      <p class="pixels-msg" id="pixels-msg" role="status"></p>
+      <div class="pixels-faixa" id="pixels-faixa" aria-label="Peças (deslize para os lados)"></div>
+      <div class="pixels-botoes"><button class="btn-grande" id="btn-pixels-conferir" type="button" disabled>✔ Conferir</button></div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -1550,6 +1587,11 @@
           <span class="jogo-card-nome">Ponto a Ponto</span>
           <span class="jogo-card-texto">Memorize o desenho e ligue os pontos igualzinho!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-pixels" type="button" data-tema="psicopedagogia matematica" style="--c:#5cb85c">
+          <img class="jogo-card-capa" src="assets/capa-pixels.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Quebra-Cabeça de Pixels</span>
+          <span class="jogo-card-texto">Encaixe as peças e monte o desenho igual ao modelo!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -1748,9 +1790,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=124"></script>
-  <script src="dados.js?v=124"></script>
-  <script type="module" src="js/main.js?v=124"></script>
+  <script src="plenix.js?v=125"></script>
+  <script src="dados.js?v=125"></script>
+  <script type="module" src="js/main.js?v=125"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

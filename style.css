@@ -2603,3 +2603,39 @@ body:has(#escolha-prof:not([hidden])) .whats-flutuante { display: none; }
 .pontos-botoes [hidden] { display: none; }
 #btn-pontos-apagar:disabled { opacity: 0.45; }
 #pontos-tempo { white-space: nowrap; }
+
+/* ---------- Quebra-Cabeça de Pixels ---------- */
+:root { --px-cel: 24px; }
+.pixels-modelo { display: flex; justify-content: center; margin: 2px 0 4px; }
+.px-grade { display: grid; gap: 0; }
+.px-modelo-grade { --c: clamp(8px, 2.3vw, 12px); }
+.px-tabuleiro-grade { --c: var(--px-cel); }
+.px-num { display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--cinza-texto); font-size: calc(var(--c) * 0.5); line-height: 1; }
+.px-modelo-grade .px-num { font-size: calc(var(--c) * 0.62); }
+.px-cel { background: var(--cor); box-shadow: inset 0 0 0 0.5px rgba(19, 41, 75, 0.35); }
+.px-tabuleiro-grade .px-cel { box-shadow: inset 0 0 0 1px #9aa7b4; }
+.px-vazio { background: transparent; }
+.pixels-area { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.pixels-tabuleiro { position: relative; touch-action: none; }
+.pixels-tabuleiro.px-pronto .px-tabuleiro-grade { outline: 4px solid #2e9e5b; outline-offset: 2px; border-radius: 4px; }
+.px-colocadas { position: absolute; inset: 0; pointer-events: none; }
+.px-no-lugar { position: absolute; pointer-events: auto; }
+.px-peca { display: grid; gap: 0; cursor: grab; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25)); }
+.px-peca .px-cel { box-shadow: inset 0 0 0 1px rgba(19, 41, 75, 0.45); }
+.px-no-lugar .px-peca { filter: none; }
+.px-peca.px-pegando { opacity: 0.25; }
+.px-peca.px-errada .px-cel { box-shadow: inset 0 0 0 3px #e53935; }
+.px-fantasma { position: fixed; left: 0; top: 0; z-index: 200; pointer-events: none; }
+.px-fantasma .px-peca { filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.35)); }
+.pixels-msg { min-height: 1.3em; margin: 4px 0; text-align: center; font-weight: 700; font-size: clamp(13px, 2dvh, 16px); color: var(--primaria-escura); }
+.pixels-msg.ok { color: #1d6b3d; }
+.pixels-msg.erro { color: #b42318; }
+/* a faixa das peças: rola para os lados; puxar uma peça para cima tira ela da faixa */
+.pixels-faixa { display: flex; align-items: flex-end; gap: 14px; overflow-x: auto; overflow-y: hidden; padding: 8px 10px 10px; min-height: calc(var(--px-cel) * 2 + 20px);
+  border-radius: 14px; background: #eaf2f5; box-shadow: inset 0 2px 6px rgba(19, 41, 75, 0.12); touch-action: pan-x; scrollbar-width: thin; }
+.pixels-faixa .px-peca { flex: 0 0 auto; }
+.px-faixa-vazia { margin: auto; font-weight: 700; color: var(--primaria-escura); text-align: center; }
+.pixels-botoes { display: flex; justify-content: center; margin-top: 6px; }
+.pixels-botoes .btn-grande { margin: 0; }
+#btn-pixels-conferir:disabled { opacity: 0.45; }
+#pixels-tempo { white-space: nowrap; }
