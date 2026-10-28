@@ -1,10 +1,10 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Escolas: o mesmo app com o logo, as cores e o nome de cada escola (pedagociagamificada.com.br/<escola>). */
 
-import { $, seguro } from './util.js?v=122';
-import { SOM } from './som.js?v=122';
-import { carregarEmails, parteProfessor, SENHA_ADMIN } from './professor.js?v=122';
-import { CHAVE_RELATORIO, definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=122';
+import { $, seguro } from './util.js?v=123';
+import { SOM } from './som.js?v=123';
+import { carregarEmails, parteProfessor, SENHA_ADMIN } from './professor.js?v=123';
+import { CHAVE_RELATORIO, definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=123';
 
 // ---------- Escolas ----------
 // O endereço diz a escola: pedagociagamificada.com.br/escolaExemplo (ou ?escola=escolaExemplo, para testar em outro
@@ -20,7 +20,7 @@ const CHAVE_ESCOLA = 'pleno-ortografia:escola';          // a escola do app inst
 const CHAVE_CONFIGS = 'pleno-ortografia:escolas';        // cópia das configurações (para abrir sem internet)
 const CHAVE_PLANILHA = 'pleno-ortografia:planilha';      // de qual planilha são as cópias abaixo (e-mails e questionários)
 const COPIAS_DA_PLANILHA = ['pleno-ortografia:emails', 'pleno-ortografia:questionarios'];
-const RESERVADOS = new Set(['js', 'assets', 'icons', 'audio', 'vendor', 'docs', 'ferramentas', 'manual', 'privacidade', 'index', 'jogoortografia', 'api']);
+const RESERVADOS = new Set(['js', 'assets', 'icons', 'audio', 'vendor', 'docs', 'ferramentas', 'manual', 'privacidade', 'index', 'jogoortografia', 'ortografia', 'api']);
 const DOMINIO = 'https://pedagociagamificada.com.br';
 
 const lerJSON = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) || padrao; } catch (e) { return padrao; } };

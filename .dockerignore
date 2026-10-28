@@ -1,13 +1,10 @@
-# só os arquivos do jogo entram no servidor; originais e ferramentas ficam de fora
+# o que não vai para o servidor (só os arquivos do app)
 .git
-.gitignore
-Dockerfile
-.dockerignore
-README.md
-GRAVAR.md
+.claude
+docs
 ferramentas
-assets/cartaz-original.png
-assets/logo-original.png
-assets/plenix-original
-assets/plenix.png
-**/LEIA-ME.txt
+Dockerfile
+docker-compose.yml
+.dockerignore
+vercel.json
+*.md
