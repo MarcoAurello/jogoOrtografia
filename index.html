@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=127">
+  <link rel="stylesheet" href="style.css?v=128">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1228,6 +1228,40 @@
       <div class="pixels-botoes"><button class="btn-grande" id="btn-pixels-conferir" type="button" disabled>✔ Conferir</button></div>
     </section>
 
+    <!-- Pizzaria das Frações: instruções -->
+    <section class="tela" id="tela-fracoes-menu">
+      <h2 class="subtitulo">🍕 Pizzaria das Frações</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-fracoes"></div>
+        <div class="balao balao-esq">
+          Na pizzaria, cada pedido é uma <b>fração</b>: a parte de <b>cima</b> diz quantas partes você pegou e a de
+          <b>baixo</b>, em quantas partes o todo foi dividido. Conte as maçãs que saem da cesta, ache a pizza certa,
+          <b>pinte as fatias</b> e faça contas de <b>somar e subtrair</b> frações! 🍕
+        </div>
+      </div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-fracoes-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="fracoes-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Pizzaria das Frações: o jogo -->
+    <section class="tela tela-jogo" id="tela-fracoes">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="fracoes-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="fracoes-nivel"></span>
+        <span class="chuva-placar"><span id="fracoes-pontos">0</span> pts</span>
+      </div>
+      <div class="tiro-hud">
+        <span id="fracoes-contador"></span>
+        <span id="fracoes-tempo"></span>
+      </div>
+      <div class="fracoes-cena" id="fracoes-cena"></div>
+      <p class="fracoes-pergunta" id="fracoes-pergunta"></p>
+      <p class="fracoes-msg" id="fracoes-msg" role="status"></p>
+      <div class="fracoes-opcoes" id="fracoes-opcoes" aria-label="Alternativas"></div>
+    </section>
+
     <!-- Questionário da aula: lista dos questionários do professor -->
     <section class="tela" id="tela-quiz-menu">
       <h2 class="subtitulo">📝 Questionário da aula</h2>
@@ -1598,6 +1632,11 @@
           <span class="jogo-card-nome">Quebra-Cabeça de Pixels</span>
           <span class="jogo-card-texto">Encaixe as peças e monte o desenho igual ao modelo!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-fracoes" type="button" data-tema="matematica" style="--c:#f5a000">
+          <img class="jogo-card-capa" src="assets/capa-fracoes.jpg" alt="" width="368" height="300" style="object-position: center">
+          <span class="jogo-card-nome">Pizzaria das Frações</span>
+          <span class="jogo-card-texto">Maçãs, pizzas e fatias: aprenda frações!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -1796,9 +1835,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=127"></script>
-  <script src="dados.js?v=127"></script>
-  <script type="module" src="js/main.js?v=127"></script>
+  <script src="plenix.js?v=128"></script>
+  <script src="dados.js?v=128"></script>
+  <script type="module" src="js/main.js?v=128"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

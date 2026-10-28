@@ -89,6 +89,8 @@ export const JOGOS_HAB = {
     r: 'Memorize o desenho feito de linhas e ligue os pontos da moldura igualzinho.' },
   'btn-pixels': { h: ['percepcao', 'espacial', 'planejamento', 'motoraFina', 'logico'],
     r: 'Arraste as peças da faixa e monte o desenho em pixels, comparando linhas e colunas numeradas.' },
+  'btn-fracoes': { h: ['matematica', 'percepcao', 'logico', 'motoraFina'],
+    r: 'Frações com maçãs e pizzas: o que saiu e o que sobrou, fração e desenho, pintar fatias, somar e subtrair.' },
   'btn-fichas': { h: ['matematica', 'planejamento', 'decisao', 'sustentada'],
     r: 'Junte 3 fichas de uma cor e troque pela próxima: a ideia de agrupar do valor posicional.' },
   'btn-cores': { h: ['alternada', 'matematica', 'espacial', 'memoria'],

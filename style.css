@@ -2677,3 +2677,56 @@ body:has(#escolha-prof:not([hidden])) .whats-flutuante { display: none; }
 #tela-jogos .classes-capa { gap: 2px; padding: 6px; }
 #tela-jogos .classes-capa span { font-size: 15px; }
 #tela-jogos .classes-capa small { font-size: 9px; }
+
+/* ---------- Pizzaria das Frações ---------- */
+.fracoes-cena { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 8px; border-radius: 16px; background: var(--branco); box-shadow: var(--sombra); }
+.fr-num { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; font-family: 'Fredoka', sans-serif; font-weight: 700; line-height: 1.05; margin: 0 2px; }
+.fr-num i { display: block; align-self: stretch; height: 0.12em; min-height: 2px; margin: 0.08em 0; background: currentColor; border-radius: 2px; }
+.fr-grande .fr-num { font-size: clamp(54px, 11dvh, 84px); color: var(--primaria-escura); }
+.pizza { display: block; width: 100%; height: auto; }
+.pizza .borda { fill: #d99a4e; }
+.pizza .fatia > path, .pizza .fatia > circle:first-child { fill: #f7e3b5; stroke: #c98a3f; stroke-width: 1.2; }
+.pizza .fatia.recheio > path, .pizza .fatia.recheio > circle:first-child { fill: #f6c443; }
+.pizza .calabresa { fill: #d84a3a; stroke: #a8322a; stroke-width: 0.8; }
+.pizza .folha { fill: #3a9a4b; }
+.pizza-cena { width: min(100%, 26dvh, 220px); }
+.pizza-pintar .fatia { cursor: pointer; }
+.pizza-pintar.certa { filter: drop-shadow(0 0 6px #2e9e5b); }
+.pizza-pintar.errada { filter: drop-shadow(0 0 6px #e53935); }
+.fr-pintar { display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; }
+.fr-pintar > .fr-num { font-size: clamp(40px, 8dvh, 60px); color: var(--primaria-escura); }
+.fr-pintar-pizza { width: min(60%, 30dvh, 240px); }
+.fr-conta { display: flex; align-items: center; justify-content: center; gap: clamp(2px, 1.4vw, 8px); width: 100%; }
+.fr-termo { flex: 1 1 0; max-width: 110px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.fr-termo .fr-num { font-size: clamp(20px, 4dvh, 28px); color: var(--primaria-escura); }
+.fr-op { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(22px, 4dvh, 32px); color: var(--primaria-escura); }
+.fr-interroga { display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 1; border: 3px dashed #f5a000; border-radius: 50%; font-family: 'Fredoka', sans-serif; font-size: 36px; font-weight: 700; color: #f5a000; }
+.fr-cesta { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(4px, 1.5vw, 10px); width: min(100%, 340px); padding: 12px; border: 4px solid #b0763b; border-radius: 10px 10px 26px 26px;
+  background: repeating-linear-gradient(45deg, #f3d9a8 0 8px, #ecc98c 8px 16px); }
+.fr-maca { display: block; transition: transform 0.5s, opacity 0.5s; }
+.fr-maca svg { display: block; width: 100%; height: auto; }
+.fr-maca .fruta { fill: #e53935; stroke: #a52421; stroke-width: 1.5; }
+.fr-maca .cabo { fill: none; stroke: #6d4c41; stroke-width: 2.5; stroke-linecap: round; }
+.fr-maca .folha-m { fill: #43a047; }
+.fr-cesta.tirando .fr-maca.sai { transform: translateY(-10px) scale(0.85); opacity: 0.22; }
+.fr-cesta.contar.tirou .fr-maca.sai, .fr-cesta.contar.sobrou .fr-maca:not(.sai) { opacity: 1; transform: none; filter: drop-shadow(0 0 4px #f5a000); }
+.fr-cesta.contar.tirou .fr-maca:not(.sai) { opacity: 0.3; }
+.fracoes-pergunta { margin: 8px 0 0; text-align: center; font-weight: 700; font-size: clamp(14px, 2.3dvh, 17px); color: var(--texto); }
+.fracoes-msg { min-height: 1.3em; margin: 4px 0; text-align: center; font-weight: 700; font-size: clamp(13px, 2.1dvh, 16px); color: var(--primaria-escura); }
+.fracoes-msg .fr-num { font-size: 1.1em; }
+.fracoes-msg.ok { color: #1d6b3d; }
+.fracoes-msg.erro { color: #b42318; }
+.fracoes-opcoes { flex: 0 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; min-height: 72px; }
+.fracoes-opcoes:has(.com-pizza) { grid-template-columns: repeat(2, 1fr); }
+.fracoes-opcoes.so-botao { display: flex; justify-content: center; align-items: center; }
+.fracoes-opcoes .btn-grande { margin: 0; }
+.fracoes-opcao { display: flex; align-items: center; justify-content: center; min-height: 72px; padding: 6px; border: 3px solid #cfe6ea; border-radius: 14px; background: var(--branco); color: var(--primaria-escura); }
+.fracoes-opcao .fr-num { font-size: 26px; }
+.fracoes-opcao.com-pizza { padding: 6px; }
+.fracoes-opcao.com-pizza .pizza { width: min(100%, 13dvh, 120px); }
+.fracoes-opcao:active { transform: scale(0.96); }
+.fracoes-opcao.certa { border-color: #2e9e5b; box-shadow: 0 0 0 4px #b7e4c7; }
+.fracoes-opcao.errada { border-color: #e53935; box-shadow: 0 0 0 4px #f8c4c2; }
+.fracoes-opcao:disabled { cursor: default; }
+#btn-fracoes-pronto:disabled { opacity: 0.45; }
+#fracoes-tempo { white-space: nowrap; }

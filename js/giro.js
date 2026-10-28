@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Giro Imaginário. */
 
-import { $, embaralhar, sortear } from './util.js?v=127';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=127';
-import { SOM, tocar } from './som.js?v=127';
-import { mascote, mostrar, telaJogos } from './telas.js?v=127';
-import { escolherProfessorE } from './professor.js?v=127';
-import { segundos } from './luzes.js?v=127';
-import { fimDaMissao } from './relatorio.js?v=127';
+import { $, embaralhar, sortear } from './util.js?v=128';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=128';
+import { SOM, tocar } from './som.js?v=128';
+import { mascote, mostrar, telaJogos } from './telas.js?v=128';
+import { escolherProfessorE } from './professor.js?v=128';
+import { segundos } from './luzes.js?v=128';
+import { fimDaMissao } from './relatorio.js?v=128';
 
 // ---------- Giro Imaginário ----------
 // Rotação mental e orientação espacial. Aparece uma figura colorida e um comando de giro (cada giro é 1/4 de volta,

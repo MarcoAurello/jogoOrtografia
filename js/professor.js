@@ -1,40 +1,41 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=127';
-import { SOM } from './som.js?v=127';
-import { mostrar, telaInicio } from './telas.js?v=127';
-import { telaMissoes } from './ortografia.js?v=127';
-import { telaChuvaMenu } from './chuva.js?v=127';
-import { telaMatMenu } from './matematica.js?v=127';
-import { telaTiroMenu } from './tiro.js?v=127';
-import { telaPesoMenu } from './peso.js?v=127';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=127';
-import { telaLuzesMenu } from './luzes.js?v=127';
-import { telaRotinaMenu } from './rotina.js?v=127';
-import { telaFichasMenu } from './fichas.js?v=127';
-import { telaEscondidaMenu } from './escondida.js?v=127';
-import { telaCopiaMenu } from './copia.js?v=127';
-import { telaBarcosMenu } from './barcos.js?v=127';
-import { telaGiroMenu } from './giro.js?v=127';
-import { telaHoraMenu } from './hora.js?v=127';
-import { telaSomandoMenu } from './somando.js?v=127';
-import { telaDescobrirMenu } from './descobrir.js?v=127';
-import { telaChavesMenu } from './chaves.js?v=127';
-import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=127';
-import { telaPoliciaMenu } from './policia.js?v=127';
-import { telaPontosMenu } from './pontos.js?v=127';
-import { telaPixelsMenu } from './pixels.js?v=127';
-import { telaCoresMenu } from './cores.js?v=127';
-import { telaLadosMenu } from './lados.js?v=127';
-import { telaSetasMenu } from './setas.js?v=127';
-import { telaVistasMenu } from './vistas.js?v=127';
-import { telaDinosMenu } from './dinos.js?v=127';
-import { telaSimbolosMenu } from './simbolos.js?v=127';
-import { telaTabuadaMenu } from './tabuada.js?v=127';
-import { telaClassesMenu } from './classes.js?v=127';
-import { telaGraficosMenu } from './graficos.js?v=127';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=127';
+import { $, seguro } from './util.js?v=128';
+import { SOM } from './som.js?v=128';
+import { mostrar, telaInicio } from './telas.js?v=128';
+import { telaMissoes } from './ortografia.js?v=128';
+import { telaChuvaMenu } from './chuva.js?v=128';
+import { telaMatMenu } from './matematica.js?v=128';
+import { telaTiroMenu } from './tiro.js?v=128';
+import { telaPesoMenu } from './peso.js?v=128';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=128';
+import { telaLuzesMenu } from './luzes.js?v=128';
+import { telaRotinaMenu } from './rotina.js?v=128';
+import { telaFichasMenu } from './fichas.js?v=128';
+import { telaEscondidaMenu } from './escondida.js?v=128';
+import { telaCopiaMenu } from './copia.js?v=128';
+import { telaBarcosMenu } from './barcos.js?v=128';
+import { telaGiroMenu } from './giro.js?v=128';
+import { telaHoraMenu } from './hora.js?v=128';
+import { telaSomandoMenu } from './somando.js?v=128';
+import { telaDescobrirMenu } from './descobrir.js?v=128';
+import { telaChavesMenu } from './chaves.js?v=128';
+import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=128';
+import { telaPoliciaMenu } from './policia.js?v=128';
+import { telaPontosMenu } from './pontos.js?v=128';
+import { telaPixelsMenu } from './pixels.js?v=128';
+import { telaFracoesMenu } from './fracoes.js?v=128';
+import { telaCoresMenu } from './cores.js?v=128';
+import { telaLadosMenu } from './lados.js?v=128';
+import { telaSetasMenu } from './setas.js?v=128';
+import { telaVistasMenu } from './vistas.js?v=128';
+import { telaDinosMenu } from './dinos.js?v=128';
+import { telaSimbolosMenu } from './simbolos.js?v=128';
+import { telaTabuadaMenu } from './tabuada.js?v=128';
+import { telaClassesMenu } from './classes.js?v=128';
+import { telaGraficosMenu } from './graficos.js?v=128';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=128';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -47,7 +48,7 @@ const CHAVE_EMAIL_ESCOLHIDO = 'pleno-ortografia:email-escolhido';  // e-mail esc
 let senhaProfessor = '';   // a senha digitada, mandada ao script para gravar questionários
 const lerJSON = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) || padrao; } catch (e) { return padrao; } };
 const gravarJSON = (chave, valor) => { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) { /* sem armazenamento */ } };
-const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.pixels ? 'pixels' : mis.pontoAPonto ? 'pontos' : mis.policia ? 'policia' : mis.caminho ? 'caminho' : mis.taxi ? 'taxi' : mis.chaves ? 'chaves' : mis.descobrir ? 'descobrir' : mis.somando ? 'somando' : mis.hora ? 'hora' : mis.giro ? 'giro' : mis.barcos ? 'barcos' : mis.copia ? 'copia' : mis.escondida ? 'escondida' : mis.setas ? 'setas' : mis.vistas ? 'vistas' : mis.dinos ? 'dinos' : mis.simbolos ? 'simbolos' : mis.tabuada ? 'tabuada' : mis.classes ? 'classes' : mis.graficos ? 'graficos' : mis.cores ? 'cores' : mis.lados ? 'lados' : mis.fichas ? 'fichas' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
+const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.fracoes ? 'fracoes' : mis.pixels ? 'pixels' : mis.pontoAPonto ? 'pontos' : mis.policia ? 'policia' : mis.caminho ? 'caminho' : mis.taxi ? 'taxi' : mis.chaves ? 'chaves' : mis.descobrir ? 'descobrir' : mis.somando ? 'somando' : mis.hora ? 'hora' : mis.giro ? 'giro' : mis.barcos ? 'barcos' : mis.copia ? 'copia' : mis.escondida ? 'escondida' : mis.setas ? 'setas' : mis.vistas ? 'vistas' : mis.dinos ? 'dinos' : mis.simbolos ? 'simbolos' : mis.tabuada ? 'tabuada' : mis.classes ? 'classes' : mis.graficos ? 'graficos' : mis.cores ? 'cores' : mis.lados ? 'lados' : mis.fichas ? 'fichas' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
 let emailEscolhido = (() => { try { return localStorage.getItem(CHAVE_EMAIL_ESCOLHIDO) || ''; } catch (e) { return ''; } })();
 const listaEmails = () => lerJSON(CHAVE_EMAILS, []);
 // o e-mail para onde vai o relatório (só se estiver na lista da planilha)
@@ -302,6 +303,7 @@ const JOGOS_DO_LINK = {
   policia: { nome: 'Polícia e Ladrão', abrir: () => telaPoliciaMenu() },
   pontos: { nome: 'Ponto a Ponto', abrir: () => telaPontosMenu() },
   pixels: { nome: 'Quebra-Cabeça de Pixels', abrir: () => telaPixelsMenu() },
+  fracoes: { nome: 'Pizzaria das Frações', abrir: () => telaFracoesMenu() },
   cores: { nome: 'Somando as Cores', abrir: () => telaCoresMenu() },
   lados: { nome: 'Esquerda e Direita', abrir: () => telaLadosMenu() },
   setas: { nome: 'Setas e Cores', abrir: () => telaSetasMenu() },

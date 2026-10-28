@@ -1,41 +1,42 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Telas e navegação: moldura, mascote, troca de telas, encaixe na tela, login, menu do topo, barra inferior e filtro dos jogos. */
 
-import { $ } from './util.js?v=127';
-import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=127';
-import { frase, pararVoz, SOM } from './som.js?v=127';
-import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=127';
-import { pararChuva } from './chuva.js?v=127';
-import { pararMat } from './matematica.js?v=127';
-import { desenharTiro, pararTiro, tiro } from './tiro.js?v=127';
-import { pararPeso } from './peso.js?v=127';
-import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=127';
-import { pararLuz } from './luzes.js?v=127';
-import { pararRotina } from './rotina.js?v=127';
-import { pararFichas } from './fichas.js?v=127';
-import { pararEscondida } from './escondida.js?v=127';
-import { pararCopia } from './copia.js?v=127';
-import { pararBarcos } from './barcos.js?v=127';
-import { pararGiro } from './giro.js?v=127';
-import { pararHora } from './hora.js?v=127';
-import { pararSomando } from './somando.js?v=127';
-import { pararDescobrir } from './descobrir.js?v=127';
-import { pararChaves } from './chaves.js?v=127';
-import { pararCaminho } from './caminho.js?v=127';
-import { pararPolicia } from './policia.js?v=127';
-import { pararPontos } from './pontos.js?v=127';
-import { pararPixels } from './pixels.js?v=127';
-import { telaCompeticao } from './competicao.js?v=127';
-import { pararCores } from './cores.js?v=127';
-import { pararLados } from './lados.js?v=127';
-import { pararSetas } from './setas.js?v=127';
-import { pararVistas } from './vistas.js?v=127';
-import { pararDinos } from './dinos.js?v=127';
-import { pararSimbolos } from './simbolos.js?v=127';
-import { pararTabuada } from './tabuada.js?v=127';
-import { pararClasses } from './classes.js?v=127';
-import { pararGraficos } from './graficos.js?v=127';
-import { GRUPOS_HAB, JOGOS_HAB, NOME_HAB } from './habilidades.js?v=127';
+import { $ } from './util.js?v=128';
+import { aluno, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=128';
+import { frase, pararVoz, SOM } from './som.js?v=128';
+import { escolherProfessorE, JOGOS_DO_LINK, telaProfessor } from './professor.js?v=128';
+import { pararChuva } from './chuva.js?v=128';
+import { pararMat } from './matematica.js?v=128';
+import { desenharTiro, pararTiro, tiro } from './tiro.js?v=128';
+import { pararPeso } from './peso.js?v=128';
+import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=128';
+import { pararLuz } from './luzes.js?v=128';
+import { pararRotina } from './rotina.js?v=128';
+import { pararFichas } from './fichas.js?v=128';
+import { pararEscondida } from './escondida.js?v=128';
+import { pararCopia } from './copia.js?v=128';
+import { pararBarcos } from './barcos.js?v=128';
+import { pararGiro } from './giro.js?v=128';
+import { pararHora } from './hora.js?v=128';
+import { pararSomando } from './somando.js?v=128';
+import { pararDescobrir } from './descobrir.js?v=128';
+import { pararChaves } from './chaves.js?v=128';
+import { pararCaminho } from './caminho.js?v=128';
+import { pararPolicia } from './policia.js?v=128';
+import { pararPontos } from './pontos.js?v=128';
+import { pararPixels } from './pixels.js?v=128';
+import { pararFracoes } from './fracoes.js?v=128';
+import { telaCompeticao } from './competicao.js?v=128';
+import { pararCores } from './cores.js?v=128';
+import { pararLados } from './lados.js?v=128';
+import { pararSetas } from './setas.js?v=128';
+import { pararVistas } from './vistas.js?v=128';
+import { pararDinos } from './dinos.js?v=128';
+import { pararSimbolos } from './simbolos.js?v=128';
+import { pararTabuada } from './tabuada.js?v=128';
+import { pararClasses } from './classes.js?v=128';
+import { pararGraficos } from './graficos.js?v=128';
+import { GRUPOS_HAB, JOGOS_HAB, NOME_HAB } from './habilidades.js?v=128';
 
 // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
 const ENFEITES = {
@@ -78,7 +79,7 @@ function mostrar(id) {
 const ABA_DA_TELA = {
   'tela-inicio': 'inicio', 'tela-jogos': 'jogos', 'tela-missoes': 'jogos', 'tela-regra': 'jogos', 'tela-chuva-menu': 'jogos',
   'tela-mat-menu': 'jogos', 'tela-tiro-menu': 'jogos', 'tela-peso-menu': 'jogos', 'tela-luzes-menu': 'jogos', 'tela-fim': 'jogos',
-  'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-escondida-menu': 'jogos', 'tela-copia-menu': 'jogos', 'tela-barcos-menu': 'jogos', 'tela-giro-menu': 'jogos', 'tela-hora-menu': 'jogos', 'tela-somando-menu': 'jogos', 'tela-descobrir-menu': 'jogos', 'tela-chaves-menu': 'jogos', 'tela-caminho-menu': 'jogos', 'tela-policia-menu': 'jogos', 'tela-pontos-menu': 'jogos', 'tela-pixels-menu': 'jogos', 'tela-taxi-menu': 'jogos', 'tela-cores-menu': 'jogos', 'tela-lados-menu': 'jogos', 'tela-setas-menu': 'jogos', 'tela-vistas-menu': 'jogos', 'tela-dinos-menu': 'jogos', 'tela-simbolos-menu': 'jogos', 'tela-tabuada-menu': 'jogos', 'tela-classes-menu': 'jogos', 'tela-graficos-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-competicao': 'competicao', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
+  'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-escondida-menu': 'jogos', 'tela-copia-menu': 'jogos', 'tela-barcos-menu': 'jogos', 'tela-giro-menu': 'jogos', 'tela-hora-menu': 'jogos', 'tela-somando-menu': 'jogos', 'tela-descobrir-menu': 'jogos', 'tela-chaves-menu': 'jogos', 'tela-caminho-menu': 'jogos', 'tela-policia-menu': 'jogos', 'tela-pontos-menu': 'jogos', 'tela-pixels-menu': 'jogos', 'tela-fracoes-menu': 'jogos', 'tela-taxi-menu': 'jogos', 'tela-cores-menu': 'jogos', 'tela-lados-menu': 'jogos', 'tela-setas-menu': 'jogos', 'tela-vistas-menu': 'jogos', 'tela-dinos-menu': 'jogos', 'tela-simbolos-menu': 'jogos', 'tela-tabuada-menu': 'jogos', 'tela-classes-menu': 'jogos', 'tela-graficos-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-competicao': 'competicao', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
 };
 function encaixarTela() {
   const tela = document.querySelector('.tela.ativa');
@@ -185,7 +186,7 @@ $('menu-app-lista').addEventListener('click', (e) => { if (e.target.closest('.me
 document.addEventListener('click', (e) => { if (!e.target.closest('#menu-app')) abrirMenu(false); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirMenu(false); });
 
-function pararJogos() { pararPixels(); pararPontos(); pararPolicia(); pararCaminho(); pararChaves(); pararDescobrir(); pararSomando(); pararHora(); pararGiro(); pararBarcos(); pararCopia(); pararEscondida(); pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararSetas(); pararVistas(); pararDinos(); pararSimbolos(); pararTabuada(); pararClasses(); pararGraficos(); pararVoz(); }
+function pararJogos() { pararFracoes(); pararPixels(); pararPontos(); pararPolicia(); pararCaminho(); pararChaves(); pararDescobrir(); pararSomando(); pararHora(); pararGiro(); pararBarcos(); pararCopia(); pararEscondida(); pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararSetas(); pararVistas(); pararDinos(); pararSimbolos(); pararTabuada(); pararClasses(); pararGraficos(); pararVoz(); }
 const irParaInicio = () => { pararJogos(); $('escolha-prof').hidden = true; telaInicio(); };
 $('btn-logo-inicio').onclick = irParaInicio;
 $('btn-menu-inicio').onclick = irParaInicio;
@@ -219,7 +220,10 @@ $('btn-trocar').onclick = () => {
 // filtro dos jogos por categoria e por habilidades (ao abrir o app, todos os jogos aparecem)
 const cartoesDeJogo = [...document.querySelectorAll('.escolha-jogos .jogo-card')];
 const habDoCartao = (c) => JOGOS_HAB[c.id]?.h || [];
-const habEscolhidas = new Set();
+// a categoria e as habilidades escolhidas ficam guardadas no aparelho: voltar à lista não perde o filtro
+const CHAVE_FILTRO = 'filtro-jogos';
+const filtroSalvo = (() => { try { return JSON.parse(localStorage.getItem(CHAVE_FILTRO)) || {}; } catch (e) { return {}; } })();
+const habEscolhidas = new Set((filtroSalvo.habs || []).filter((h) => Object.values(JOGOS_HAB).some((j) => j.h.includes(h))));
 // cada cartão ganha, à direita, o resumo e as tags das habilidades que o jogo trabalha
 for (const c of cartoesDeJogo) {
   const info = document.createElement('span');
@@ -264,6 +268,7 @@ function filtrarJogos() {
   $('hab-limpar').hidden = !habEscolhidas.size;
   $('hab-qtd').textContent = habEscolhidas.size ? `(${habEscolhidas.size})` : '';
   $('jogos-nenhum').hidden = n > 0;
+  try { localStorage.setItem(CHAVE_FILTRO, JSON.stringify({ tema, habs })); } catch (e) { /* sem armazenamento */ }
 }
 function filtrarTema(tema) {
   $('filtro-tema').value = tema;
@@ -284,7 +289,8 @@ for (const op of $('filtro-tema').options) {
   const n = op.value === 'todos' ? cartoesDeJogo.length : cartoesDeJogo.filter((c) => c.dataset.tema.split(' ').includes(op.value)).length;
   op.textContent = `${op.textContent} (${n})`;
 }
-filtrarTema('todos');
+filtrarTema([...$('filtro-tema').options].some((op) => op.value === filtroSalvo.tema) ? filtroSalvo.tema : 'todos');
+if (habEscolhidas.size) $('hab-sanfona').open = true;   // com filtro guardado, as tags já aparecem abertas
 $('btn-area-jogos').onclick = () => { SOM.clique(); telaJogos(); };
 
 $('jogos-voltar').onclick = telaInicio;
