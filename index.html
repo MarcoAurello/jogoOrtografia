@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=130">
+  <link rel="stylesheet" href="style.css?v=131">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -73,7 +73,33 @@
       </h1>
       <p class="escola-nome" hidden></p>
       <p class="slogan">Jogos com relatórios de desempenho</p>
-      <form class="cartao cartao-login" id="form-login" autocomplete="off">
+      <!-- entrada pela turma: código → nome → 3 figuras (js/entrada.js) -->
+      <form class="cartao cartao-login entrada-turma" id="entrada-turma" autocomplete="off">
+        <div id="turma-passo-codigo">
+          <label class="campo">
+            <span>Código da turma</span>
+            <input type="text" id="turma-codigo" class="comp-codigo-campo" maxlength="8" placeholder="Ex.: K7PM2" autocapitalize="characters" spellcheck="false">
+          </label>
+          <button class="btn-grande" type="submit">Continuar ▶</button>
+        </div>
+        <div id="turma-passo-nome" hidden>
+          <p class="turma-titulo" id="turma-nome-titulo"></p>
+          <div class="turma-alunos" id="turma-alunos"></div>
+          <button class="btn-sec btn-pequeno" id="btn-turma-trocar" type="button">Outra turma</button>
+        </div>
+        <div id="turma-passo-figuras" hidden>
+          <p class="turma-titulo">Oi, <b id="turma-aluno-nome"></b>! Toque nas suas <b>3 figuras</b>, na ordem:</p>
+          <div class="figuras-escolhidas" id="figuras-escolhidas"></div>
+          <div class="figuras-grade" id="figuras-grade"></div>
+          <div class="linha-botoes">
+            <button class="btn-sec btn-pequeno" id="btn-figuras-apagar" type="button">⌫ Apagar</button>
+            <button class="btn-sec btn-pequeno" id="btn-figuras-voltar" type="button">← Não sou eu</button>
+          </div>
+        </div>
+        <p class="erro-login" id="erro-turma" role="alert"></p>
+      </form>
+      <button class="btn-sec entrada-troca" id="btn-sem-turma" type="button">Não tenho turma: jogar só com o nome</button>
+      <form class="cartao cartao-login" id="form-login" autocomplete="off" hidden>
         <div class="davi-area" id="davi-login"></div>
         <label class="campo">
           <span>Seu primeiro nome</span>
@@ -87,6 +113,7 @@
         <p class="erro-login" id="erro-login" role="alert"></p>
         <button class="btn-grande" type="submit">Entrar ▶</button>
       </form>
+      <button class="btn-sec entrada-troca" id="btn-com-turma" type="button" hidden>🏫 Entrar com o código da turma</button>
     </section>
 
     <!-- Início -->
@@ -1385,6 +1412,11 @@
       </form>
       <!-- depois da senha: um botão para cada assunto -->
       <div class="menu-professor" id="menu-professor" hidden>
+        <button class="jogo-card" id="btn-prof-turmas" type="button" style="--c:#f5a000" hidden>
+          <span class="jogo-card-icone">🏫</span>
+          <span class="jogo-card-nome">Turmas e alunos</span>
+          <span class="jogo-card-texto">Criar turmas, cadastrar alunos, ver as figuras e as partidas</span>
+        </button>
         <button class="jogo-card" id="btn-prof-emails" type="button" style="--c:#1fa2b0">
           <span class="jogo-card-icone">📧</span>
           <span class="jogo-card-nome">E-mails dos relatórios</span>
@@ -1468,6 +1500,40 @@
           <button class="btn-sec" id="btn-escola-limpar" type="button">Limpar</button>
         </form>
         <div class="lista-quiz" id="lista-escolas"></div>
+      </div>
+      <div class="cartao cartao-login" id="painel-turmas" hidden>
+        <div id="turmas-lista-parte">
+          <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
+          <h3 class="chuva-pergunta">🏫 Turmas e alunos</h3>
+          <p class="professor-ajuda">Cada turma ganha um <b>código</b>: os alunos digitam na entrada do app, tocam no nome e nas
+            <b>3 figuras</b> deles. Quem entra assim tem <b>todas as partidas guardadas</b> para você acompanhar.</p>
+          <form class="cadastro-email" id="form-turma" autocomplete="off">
+            <label class="campo campo-jogo"><span>Nome da turma</span>
+              <input type="text" id="turma-nome" maxlength="80" placeholder="Ex.: 3º ano B"></label>
+            <div class="campo campo-jogo" id="campo-turma-professores" hidden><span>Professores da turma</span>
+              <div class="turma-professores" id="turma-professores"></div></div>
+            <p class="erro-login" id="aviso-turma" role="status"></p>
+            <button class="btn-grande" type="submit">🏫 Criar turma</button>
+          </form>
+          <div class="lista-quiz" id="lista-turmas"></div>
+        </div>
+        <div id="turma-detalhe" hidden>
+          <button class="btn-sec btn-pequeno" id="btn-turmas-voltar" type="button">← Turmas</button>
+          <h3 class="chuva-pergunta" id="turma-det-nome"></h3>
+          <p class="turma-codigo-linha">Código da turma: <b class="turma-codigo-grande" id="turma-det-codigo"></b>
+            <button class="quiz-link" id="btn-turma-copiar" type="button">📋 Copiar</button></p>
+          <form class="cadastro-email" id="form-alunos" autocomplete="off">
+            <label class="campo campo-jogo"><span>Novos alunos (um por linha: primeiro nome e inicial)</span>
+              <textarea id="alunos-nomes" rows="4" placeholder="Ana S.&#10;Bruno L.&#10;Carla M."></textarea></label>
+            <button class="btn-grande" type="submit">👧 Cadastrar alunos</button>
+          </form>
+          <p class="erro-login" id="aviso-alunos" role="status"></p>
+          <div class="lista-quiz" id="lista-alunos-turma"></div>
+          <h4 class="turma-subtitulo">🎮 Últimas partidas
+            <button class="quiz-link" id="btn-turma-atualizar" type="button">↻ Atualizar</button></h4>
+          <div class="partidas-turma" id="partidas-turma"></div>
+          <button class="btn-sec btn-pequeno" id="btn-turma-encerrar" type="button"></button>
+        </div>
       </div>
       <div class="cartao cartao-login" id="painel-usuarios" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
@@ -1915,9 +1981,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=130"></script>
-  <script src="dados.js?v=130"></script>
-  <script type="module" src="js/main.js?v=130"></script>
+  <script src="plenix.js?v=131"></script>
+  <script src="dados.js?v=131"></script>
+  <script type="module" src="js/main.js?v=131"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

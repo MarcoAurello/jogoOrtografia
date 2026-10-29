@@ -20,7 +20,7 @@ const origensPermitidas = (process.env.FRONTEND_URL || 'http://localhost:8080')
 // sem a política de conteúdo do helmet: a página das escolas (/pagina) usa scripts e estilos no próprio HTML
 app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 app.use(cors({ origin: origensPermitidas }));
-app.use(express.json({ limit: '200kb' }));   // o logo da escola vem junto (até ~60 KB)
+app.use(express.json({ limit: '500kb' }));   // o logo da escola (até ~60 KB) e as rodadas de uma partida
 
 // Login é o alvo óbvio de força bruta: bloqueia só quem passar de 10 tentativas ERRADAS em 1 minuto
 // (bloqueio também de 1 min). Login certo não consome o limite.
@@ -30,8 +30,20 @@ const limitadorLogin = rateLimit({
   skipSuccessfulRequests: true,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.path.startsWith('/aluno'),
   message: { message: 'Muitas tentativas de login. Aguarde 1 minuto e tente novamente.' },
 });
+// Os alunos de uma escola saem pelo mesmo IP: o limite por IP é folgado, e a trava de verdade é por aluno
+// (5 erros seguidos travam aquele aluno por 1 minuto, no SessionController).
+const limitadorAluno = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 120,
+  skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Muitas tentativas. Espere 1 minuto e tente de novo.' },
+});
+app.use('/sessions/aluno', limitadorAluno);
 app.use('/sessions', limitadorLogin);
 app.use('/usuarios/eu/senha', limitadorLogin);
 

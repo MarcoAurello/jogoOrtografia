@@ -10,7 +10,7 @@ export default async function carregarUsuarioLogado(
   next: NextFunction
 ) {
   try {
-    if (!request.userId) {
+    if (!request.userId || request.tokenTipo !== "usuario") {
       return response.status(401).json({ message: "Não autenticado." });
     }
 

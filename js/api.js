@@ -1,19 +1,26 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
-/* Conversa com a API (pasta api/): login, usuários, escolas e as gravações do professor na planilha. */
+/* Conversa com a API (pasta api/): login, usuários, escolas, turmas, partidas e as gravações do professor na planilha. */
 
 // A API fica no mesmo endereço do app, em /api (o nginx repassa). O login guarda um token no aparelho,
-// mandado em cada pedido (Authorization: Bearer, como no E-CGU).
+// mandado em cada pedido (Authorization: Bearer, como no E-CGU). O aluno (login por figuras) tem um token próprio:
+// no mesmo tablet, o professor pode entrar na Área do professor sem tirar o aluno.
 const BASE = '/api';
 const CHAVE_TOKEN = 'pleno-ortografia:token';
+const CHAVE_TOKEN_ALUNO = 'pleno-ortografia:token-aluno';
 
-const lerToken = () => { try { return localStorage.getItem(CHAVE_TOKEN) || ''; } catch (e) { return ''; } };
-function guardarToken(token) {
-  try { if (token) localStorage.setItem(CHAVE_TOKEN, token); else localStorage.removeItem(CHAVE_TOKEN); } catch (e) { /* sem armazenamento */ }
+const ler = (chave) => { try { return localStorage.getItem(chave) || ''; } catch (e) { return ''; } };
+function guardar(chave, token) {
+  try { if (token) localStorage.setItem(chave, token); else localStorage.removeItem(chave); } catch (e) { /* sem armazenamento */ }
 }
+const lerToken = () => ler(CHAVE_TOKEN);
+const guardarToken = (token) => guardar(CHAVE_TOKEN, token);
+const lerTokenAluno = () => ler(CHAVE_TOKEN_ALUNO);
+const guardarTokenAluno = (token) => guardar(CHAVE_TOKEN_ALUNO, token);
 
 // faz o pedido e devolve o JSON; erro vira Error com a mensagem da API (e .status / .codigo)
-async function api(caminho, { metodo = 'GET', corpo } = {}) {
-  const token = lerToken();
+async function api(caminho, { metodo = 'GET', corpo, comoAluno = false } = {}) {
+  const chave = comoAluno ? CHAVE_TOKEN_ALUNO : CHAVE_TOKEN;
+  const token = ler(chave);
   let r;
   try {
     r = await fetch(`${BASE}${caminho}`, {
@@ -29,7 +36,7 @@ async function api(caminho, { metodo = 'GET', corpo } = {}) {
   let dados = {};
   try { dados = await r.json(); } catch (e) { /* resposta sem JSON */ }
   if (!r.ok) {
-    if (r.status === 401 && token) guardarToken('');   // token vencido ou usuário desativado: pede o login de novo
+    if (r.status === 401 && token) guardar(chave, '');   // token vencido ou desativado: pede o login de novo
     const erro = new Error(dados.message || 'Não deu certo. Tente de novo.');
     erro.status = r.status;
     erro.codigo = dados.codigo || dados.erro || '';
@@ -38,4 +45,4 @@ async function api(caminho, { metodo = 'GET', corpo } = {}) {
   return dados;
 }
 
-export { api, guardarToken, lerToken };
+export { api, guardarToken, guardarTokenAluno, lerToken, lerTokenAluno };

@@ -2752,3 +2752,40 @@ html.escola-pendente body::after {
 .escola-bloqueio .cartao { max-width: 420px; text-align: center; }
 .escola-bloqueio-icone { margin: 0; font-size: 54px; }
 .escola-bloqueio .btn-grande { display: inline-block; margin-top: 10px; text-decoration: none; }
+
+/* ---------- Entrada do aluno pela turma (código → nome → figuras) ---------- */
+.entrada-turma[hidden], #form-login[hidden], .entrada-troca[hidden] { display: none; }
+.entrada-troca { display: block; margin: 10px auto 0; }
+.turma-titulo { margin: 0 0 10px; text-align: center; font-weight: 700; color: var(--primaria-escura); }
+.turma-alunos { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-bottom: 10px; }
+.turma-aluno { min-height: 52px; padding: 8px; border: 3px solid #cfe6ea; border-radius: 14px; background: var(--branco);
+  font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 19px; color: var(--texto); }
+.turma-aluno:active { transform: scale(0.96); border-color: var(--primaria); }
+.figuras-escolhidas { display: flex; justify-content: center; gap: 10px; margin-bottom: 12px; }
+.figuras-escolhidas span { display: flex; align-items: center; justify-content: center; width: 58px; height: 58px; font-size: 38px;
+  border: 3px dashed var(--primaria); border-radius: 14px; background: var(--branco); }
+.figuras-grade { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 300px; margin: 0 auto 10px; }
+.figura { aspect-ratio: 1; font-size: clamp(38px, 11vw, 52px); border: 3px solid #cfe6ea; border-radius: 18px; background: var(--branco); line-height: 1; }
+.figura:active { transform: scale(0.92); border-color: var(--primaria); }
+#turma-passo-figuras .linha-botoes { justify-content: center; gap: 8px; }
+
+/* ---------- Turmas e alunos (Área do professor) ---------- */
+.turma-item { width: 100%; text-align: left; cursor: pointer; }
+.turma-item.inativo, .aluno-item.inativo { opacity: 0.55; }
+.turma-abrir { margin-left: auto; font-size: 26px; color: var(--primaria); }
+.turma-professores { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.turma-prof { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
+.turma-codigo-linha { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin: 4px 0 10px; font-weight: 700; }
+.turma-codigo-grande { padding: 4px 14px; border-radius: 10px; background: var(--amarelo); color: var(--texto); font-family: 'Fredoka', sans-serif; font-size: 30px; letter-spacing: 0.12em; }
+#alunos-nomes { width: 100%; padding: 10px; border: 2px solid #cfe6ea; border-radius: 12px; font: inherit; resize: vertical; }
+.aluno-figuras { display: block; margin: 2px 0; font-size: 24px; letter-spacing: 0.08em; }
+.turma-subtitulo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; margin: 16px 0 6px; color: var(--primaria-escura); }
+.partidas-turma { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.partida-item { display: flex; flex-direction: column; gap: 1px; padding: 8px 10px; border-radius: 10px; background: #f6fbfc; border: 1px solid #dbeef1; font-size: 14px; overflow-wrap: anywhere; }
+.partida-quem { font-weight: 800; color: var(--texto); }
+.partida-jogo { color: var(--primaria-escura); font-weight: 700; }
+.partida-nota { color: var(--cinza-texto); font-weight: 700; }
+/* no celular, os botões do aluno descem para baixo do nome em vez de passar da borda */
+.aluno-item { flex-wrap: wrap; }
+.aluno-item .comp-item-texto { flex: 1 1 150px; min-width: 0; }
+.aluno-item .comp-item-botoes { flex-wrap: wrap; }

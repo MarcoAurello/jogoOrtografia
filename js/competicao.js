@@ -1,13 +1,15 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Competição: o professor cria (jogo + hora de encerrar), a turma entra com o código e o ranking fica na planilha. */
 
-import { $, seguro } from './util.js?v=130';
-import { aluno } from './estado.js?v=130';
-import { SOM } from './som.js?v=130';
-import { mostrar } from './telas.js?v=130';
-import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=130';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=130';
-import { comecarQuiz } from './quiz.js?v=130';
+import { $, seguro } from './util.js?v=131';
+import { aluno } from './estado.js?v=131';
+import { lerTokenAluno } from './api.js?v=131';
+import { definirCompeticaoDaPartida } from './partidas.js?v=131';
+import { SOM } from './som.js?v=131';
+import { mostrar } from './telas.js?v=131';
+import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=131';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=131';
+import { comecarQuiz } from './quiz.js?v=131';
 
 // ---------- Competição ----------
 // A aba Competição lista as competições abertas (e as que encerraram há pouco, só com o ranking). Para entrar, o aluno
@@ -131,6 +133,9 @@ function pedirCodigo(c) {
   $('comp-entrar-titulo').textContent = `🏆 ${c.nome}`;
   $('comp-entrar-jogo').textContent = `Jogo: ${c.jogoNome} · aberta até ${horaTexto(c.encerra)}`;
   $('comp-nome').value = ativa && ativa.id === c.id ? ativa.aluno : (aluno || '');
+  // aluno que entrou pela turma: o nome é o da turma (não dá para jogar com outro nome)
+  if (lerTokenAluno() && aluno) $('comp-nome').value = aluno;
+  $('comp-nome').readOnly = !!(lerTokenAluno() && aluno);
   $('comp-codigo').value = '';
   $('comp-erro').textContent = '';
   parteCompeticao('entrar');
@@ -349,5 +354,9 @@ async function listarCompeticoesProfessor(dados) {
     caixa.innerHTML = `<p class="quiz-status">${seguro(mensagem(err, 'Não deu para buscar as competições (sem internet ou script desatualizado).'))}</p>`;
   }
 }
+
+
+// a partida guardada no banco leva a competição em que o aluno estava (js/partidas.js)
+definirCompeticaoDaPartida((mis) => (ehDaCompeticao(mis) && ativa ? `${ativa.codigo} · ${ativa.nome}` : ''));
 
 export { telaCompeticao };
