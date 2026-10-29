@@ -8,3 +8,6 @@ api/.env
 
 # ajuste local do Docker (porta do MySQL aberta só no computador)
 docker-compose.override.yml
+
+# roteiro de testes com as senhas locais
+TESTE-LOCAL.md
