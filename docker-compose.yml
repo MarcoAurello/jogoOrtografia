@@ -38,7 +38,8 @@ services:
       URL_PLANILHA: ${URL_PLANILHA}
       SENHA_PLANILHA: ${SENHA_PLANILHA}
       FRONTEND_URL: ${FRONTEND_URL:-https://pedagociagamificada.com.br}
-      # e-mail (relatório em PDF do teste grátis): o SMTP do e-mail da Hostinger, Gmail, Resend...
+      # e-mail do PDF do teste grátis: "planilha" (Apps Script, padrão: funciona em qualquer rede) ou "smtp"
+      EMAIL_VIA: ${EMAIL_VIA:-planilha}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_SEGURO: ${SMTP_SEGURO:-false}

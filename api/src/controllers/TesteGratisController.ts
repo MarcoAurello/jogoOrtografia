@@ -54,6 +54,8 @@ class TesteGratisController {
     } catch (error) {
       const codigo = (error as { codigo?: string }).codigo;
       if (codigo === "email_nao_configurado") return res.status(503).json({ message: "O envio de e-mail ainda não foi ligado no servidor.", codigo });
+      if (codigo === "script_antigo") return res.status(503).json({ message: "A planilha ainda não manda o PDF: implante a nova versão do script do Google.", codigo });
+      if (codigo === "cota") return res.status(429).json({ message: "O limite de e-mails do dia acabou. Toque em Baixar PDF.", codigo });
       console.error("Erro ao enviar o relatório do teste grátis:", error);
       return res.status(502).json({ message: "Não deu para enviar o e-mail agora. Tente de novo mais tarde.", codigo: "envio" });
     }

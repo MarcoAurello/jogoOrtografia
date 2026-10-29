@@ -9,6 +9,8 @@
    - aba "Ranking": a melhor partida de cada aluno em cada competição (nada é apagado: depois da hora, só não entra mais ninguém).
    O jogo lê a lista de e-mails e os questionários (doGet) e manda relatórios e alterações do professor (doPost).
    Os relatórios só podem ir para e-mails que estão na aba "E-mails" (ninguém usa o script para mandar e-mail a outros).
+   A exceção é o PDF do "Testar grátis" (acao relatorioPdf), que só a API do servidor manda, com a SENHA_PROFESSOR,
+   para o e-mail que a pessoa cadastrou ao aceitar receber os relatórios.
    Os e-mails saem pelo Gmail da conta que publicou o script (até 100 por dia numa conta Gmail comum).
    Como publicar: veja "Relatório por e-mail" no README.md. */
 
@@ -63,7 +65,7 @@ function doGet(e) {
     if (acao === 'competicoes') return resposta({ ok: true, lista: listarCompeticoes(false) });
     if (acao === 'ranking') return resposta({ ok: true, ...rankingDaCompeticao(e.parameter.id) });
     if (acao === 'escola') return resposta({ ok: true, escola: lerEscola(e.parameter.id) });
-    return resposta({ ok: true, versao: 4 });
+    return resposta({ ok: true, versao: 5 });
   } catch (err) {
     return resposta({ ok: false, erro: String(err) });
   }
@@ -86,6 +88,7 @@ function doPost(e) {
     if (d.acao) {
       if (d.senha !== SENHA_PROFESSOR) return resposta({ ok: false, erro: 'senha' });
       if (d.acao === 'entrar') return resposta({ ok: true });
+      if (d.acao === 'relatorioPdf') return resposta(enviarRelatorioPdf(d));
       if (d.acao === 'adicionarEmail') { adicionarEmail(d.nome, d.email); return resposta({ ok: true, emails: lerEmails() }); }
       if (d.acao === 'salvarQuestionario') return resposta({ ok: true, id: salvarQuestionario(d.titulo, d.perguntas) });
       if (d.acao === 'criarCompeticao') return resposta({ ok: true, competicao: criarCompeticao(d) });
@@ -347,6 +350,32 @@ function salvarEscola(e) {
 }
 
 // ---------- relatório por e-mail ----------
+// ---------- Testar grátis: o PDF do relatório de um jogo, mandado pela API do servidor (com a SENHA_PROFESSOR) ----------
+// O e-mail sai pelo Gmail da conta que publicou o script, como os relatórios de sempre (funciona em qualquer rede).
+function enviarRelatorioPdf(d) {
+  const para = texto(d.para, 120).toLowerCase();
+  if (!emailValido(para)) return { ok: false, erro: 'email' };
+  if (MailApp.getRemainingDailyQuota() < 1) return { ok: false, erro: 'cota' };
+  const pdf = Utilities.base64Decode(String(d.pdf || '').replace(/^data:application\/pdf;[^,]*,/, ''));
+  if (pdf.length < 100 || pdf.length > 3 * 1024 * 1024) return { ok: false, erro: 'pdf' };
+  const nome = texto(d.nome, 120), aluno = texto(d.aluno, 60) || 'aluno', titulo = texto(d.titulo, 160) || 'Jogo';
+  const arquivo = (texto(d.arquivo, 120).replace(/[^a-zA-Z0-9._-]/g, '-') || 'relatorio') + '.pdf';
+  MailApp.sendEmail({
+    to: para,
+    name: 'Pedagogia Gamificada',
+    subject: 'Relatório de ' + aluno + ': ' + titulo,
+    htmlBody: '<div style="font-family:Arial,sans-serif;color:#13294b;max-width:560px">'
+      + '<h2 style="color:#137784;margin:0 0 8px">Relatório de ' + esc(aluno) + '</h2>'
+      + '<p>Olá, ' + esc(nome) + '! O relatório da partida de <b>' + esc(aluno) + '</b> em <b>' + esc(titulo) + '</b> está em anexo (PDF).</p>'
+      + '<p>Na versão completa, cada aluno entra com o código da turma e você acompanha a evolução de cada um no '
+      + '<b>painel do professor</b>, com gráficos por habilidade.</p>'
+      + '<p style="color:#64748b;font-size:13px">Pedagogia Gamificada — jogos psicopedagógicos com relatórios de desempenho · Instagram @pedagogiagamificada</p></div>',
+    attachments: [Utilities.newBlob(pdf, 'application/pdf', arquivo)],
+  });
+  guardarNaPlanilha([new Date(), para, aluno, titulo + ' (Testar grátis, PDF)', '', '', '', '']);
+  return { ok: true };
+}
+
 function enviarRelatorio(d) {
   const missao = texto(d.missao, 80);
   // tipo do relatório: pelo campo "tipo" ou, nas versões antigas do jogo, pelo nome da atividade
