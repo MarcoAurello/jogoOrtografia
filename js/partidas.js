@@ -1,9 +1,9 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Partidas no banco: o fim de cada jogo do aluno logado pela turma vai para a API (com fila sem internet). */
 
-import { resultados } from './estado.js?v=136';
-import { api, lerTokenAluno } from './api.js?v=136';
-import { JOGOS_HAB } from './habilidades.js?v=136';
+import { resultados } from './estado.js?v=138';
+import { api, lerTokenAluno } from './api.js?v=138';
+import { JOGOS_HAB } from './habilidades.js?v=138';
 
 // ---------- Partidas ----------
 // Cada partida ganha um id no aparelho e entra numa fila; a fila vai para a API agora (ou quando a internet voltar,

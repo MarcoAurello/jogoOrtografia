@@ -1,10 +1,10 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Usuários: o administrador e a coordenação cadastram quem entra na Área do professor (pela API). */
 
-import { $, seguro } from './util.js?v=136';
-import { SOM } from './som.js?v=136';
-import { api } from './api.js?v=136';
-import { parteProfessor, usuarioAtual } from './professor.js?v=136';
+import { $, seguro } from './util.js?v=138';
+import { SOM } from './som.js?v=138';
+import { api } from './api.js?v=138';
+import { parteProfessor, usuarioAtual } from './professor.js?v=138';
 
 // ---------- Usuários ----------
 // O administrador escolhe a escola e cadastra coordenação, professores (ou outro administrador);
@@ -24,7 +24,7 @@ async function abrirUsuarios() {
     try {
       const escolas = await api('/escolas');
       $('usuario-escola').innerHTML = escolas.map((e) => `<option value="${seguro(e.id)}">${seguro(e.nome)} (/${seguro(e.slug)})</option>`).join('')
-        + '<option value="">Sem escola (plataforma principal)</option>';
+        + '<option value="">Sem escola (professor avulso)</option>';
     } catch (err) { avisoUsuario(err.message); }
   }
   await listarUsuarios();

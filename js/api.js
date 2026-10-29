@@ -18,17 +18,26 @@ const guardarToken = (token) => guardar(CHAVE_TOKEN, token);
 const lerTokenAluno = () => ler(CHAVE_TOKEN_ALUNO);
 const guardarTokenAluno = (token) => guardar(CHAVE_TOKEN_ALUNO, token);
 const lerTokenTeste = () => ler(CHAVE_TOKEN_TESTE);
+// o administrador "dentro" de uma escola (id da escola): os pedidos dele vão com X-Escola e a API o trata como a
+// coordenação daquela escola. Fica só nesta aba (sessionStorage): ao fechar, ele volta a ser só administrador.
+const CHAVE_ESCOLA_DO_ADMIN = 'pleno-ortografia:admin-na-escola';
+const lerEscolaDoAdmin = () => { try { return sessionStorage.getItem(CHAVE_ESCOLA_DO_ADMIN) || ''; } catch (e) { return ''; } };
+function definirEscolaDoAdmin(id) {
+  try { if (id) sessionStorage.setItem(CHAVE_ESCOLA_DO_ADMIN, id); else sessionStorage.removeItem(CHAVE_ESCOLA_DO_ADMIN); } catch (e) { /* sem armazenamento */ }
+}
 const guardarTokenTeste = (token) => guardar(CHAVE_TOKEN_TESTE, token);
 
 // faz o pedido e devolve o JSON; erro vira Error com a mensagem da API (e .status / .codigo)
 async function api(caminho, { metodo = 'GET', corpo, comoAluno = false, comoTeste = false } = {}) {
   const chave = comoAluno ? CHAVE_TOKEN_ALUNO : comoTeste ? CHAVE_TOKEN_TESTE : CHAVE_TOKEN;
   const token = ler(chave);
+  const naEscola = chave === CHAVE_TOKEN ? lerEscolaDoAdmin() : '';
   let r;
   try {
     r = await fetch(`${BASE}${caminho}`, {
       method: metodo,
-      headers: { ...(corpo ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      headers: { ...(corpo ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(token && naEscola ? { 'X-Escola': naEscola } : {}) },
       body: corpo ? JSON.stringify(corpo) : undefined,
     });
   } catch (e) {
@@ -51,4 +60,4 @@ async function api(caminho, { metodo = 'GET', corpo, comoAluno = false, comoTest
 // a escola do endereço (/escolaExemplo ou ?escola=): os dados (e-mails, questionários, competições) são os dela
 const escolaDoEndereco = () => window.ESCOLA_ATUAL_ID || window.ESCOLA_INICIAL?.id || '';
 
-export { api, escolaDoEndereco, guardarToken, guardarTokenAluno, guardarTokenTeste, lerToken, lerTokenAluno, lerTokenTeste };
+export { api, definirEscolaDoAdmin, escolaDoEndereco, guardarToken, lerEscolaDoAdmin, guardarTokenAluno, guardarTokenTeste, lerToken, lerTokenAluno, lerTokenTeste };

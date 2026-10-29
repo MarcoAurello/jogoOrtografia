@@ -1,32 +1,28 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
-/* Entrar na turma (depois do nome): código da turma → toca no nome → 3 figuras (a senha de criança). */
+/* Entrar na turma: código da turma → toca no nome (ou digita) → as competições da turma. Sem senha. */
 
-import { $, seguro } from './util.js?v=136';
-import { SOM } from './som.js?v=136';
-import { api, guardarTokenAluno, lerTokenAluno } from './api.js?v=136';
-import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio } from './telas.js?v=136';
-import { enviarPartidas } from './partidas.js?v=136';
+import { $, seguro } from './util.js?v=138';
+import { SOM } from './som.js?v=138';
+import { api, guardarTokenAluno, lerTokenAluno } from './api.js?v=138';
+import { aoVoltarAoInicio } from './estado.js?v=138';
+import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio } from './telas.js?v=138';
+import { enviarPartidas } from './partidas.js?v=138';
+import { telaCompeticao } from './competicao.js?v=138';
 
 // ---------- Entrada pela turma ----------
-// A entrada do app pede só o nome, como sempre. Quem tem turma toca em "Entrar com o código da turma" (no início ou no
-// menu ☰): digita o código (o professor passa), toca no nome e nas 3 figuras, e as partidas passam a ficar guardadas.
-// O aparelho lembra a turma: das outras vezes é só tocar no nome e nas figuras. As figuras seguem a ordem da API
-// (api/src/models/Aluno.ts). Quem não entra na turma joga só com o nome (as partidas não ficam guardadas).
-const FIGURAS = ['🐶', '🐱', '🐸', '🍎', '⭐', '🚗', '🌻', '⚽', '🎈'];
-const NOMES_FIGURAS = ['cachorro', 'gato', 'sapo', 'maçã', 'estrela', 'carro', 'girassol', 'bola', 'balão'];
-const CHAVE_TURMA = 'pleno-ortografia:turma';   // { codigo, nome } da turma deste aparelho
-const lerTurma = () => { try { return JSON.parse(localStorage.getItem(CHAVE_TURMA)) || null; } catch (e) { return null; } };
-const guardarTurma = (t) => { try { if (t) localStorage.setItem(CHAVE_TURMA, JSON.stringify(t)); else localStorage.removeItem(CHAVE_TURMA); } catch (e) { /* sem armazenamento */ } };
+// A entrada do app pede só o nome, como sempre (e com o link, o aluno abre qualquer jogo). Para as competições, o aluno
+// toca em "Entrar com o código da turma" (no início, no menu ☰ ou na aba Competição): digita o código que o professor
+// passou e toca no nome dele (se o professor cadastrou a turma) ou digita o nome. Um nome novo entra na turma na hora
+// (api/src/controllers/SessionController.ts), e as partidas passam a ficar no relatório do professor.
+// O login vale até o aluno voltar à tela inicial: daí é o código da turma de novo.
 
 let turma = null;        // { codigo, nome, alunos: [{ id, nome }] }
-let escolhido = null;    // o aluno que tocou no nome
-let figuras = [];        // as figuras tocadas até agora
+let escolaAntes = null;  // a escola do endereço, para voltar a ela quando o aluno sai (o aluno usa a escola da turma)
 
 const erroTurma = (texto) => { $('erro-turma').textContent = texto; };
 function passo(qual) {
   $('turma-passo-codigo').hidden = qual !== 'codigo';
   $('turma-passo-nome').hidden = qual !== 'nome';
-  $('turma-passo-figuras').hidden = qual !== 'figuras';
   erroTurma('');
 }
 
@@ -35,49 +31,34 @@ async function abrirTurma(codigo) {
   try {
     const r = await api(`/turmas/codigo/${encodeURIComponent(codigo)}/alunos`);
     turma = { ...r.turma, alunos: r.alunos };
-    guardarTurma({ codigo: turma.codigo, nome: turma.nome });
-    $('turma-nome-titulo').textContent = `${turma.nome} · toque no seu nome`;
-    $('turma-alunos').innerHTML = turma.alunos.length
-      ? turma.alunos.map((a) => `<button class="turma-aluno" type="button" data-id="${seguro(a.id)}">${seguro(a.nome)}</button>`).join('')
-      : '<p class="quiz-status">A turma ainda não tem alunos. Peça ao professor para cadastrar.</p>';
+    const temNomes = turma.alunos.length > 0;
+    $('turma-nome-titulo').textContent = temNomes ? `${turma.nome} · toque no seu nome` : `${turma.nome} · digite o seu nome`;
+    $('turma-alunos').innerHTML = turma.alunos
+      .map((a) => `<button class="turma-aluno" type="button" data-id="${seguro(a.id)}">${seguro(a.nome)}</button>`).join('');
+    $('turma-nome-rotulo').textContent = temNomes ? 'Não achou o seu nome? Digite aqui' : 'Digite o seu nome';
+    $('turma-nome-digitado').value = '';
     passo('nome');
+    if (!temNomes) setTimeout(() => $('turma-nome-digitado').focus(), 300);
   } catch (err) {
-    if (err.status === 404) guardarTurma(null);
     passo('codigo');
     erroTurma(err.status === 404 ? 'Não achei essa turma. Confira o código com o professor. 🔎' : err.message);
     SOM.errado();
   }
 }
 
-function escolherAluno(id) {
-  escolhido = turma.alunos.find((a) => a.id === id);
-  if (!escolhido) return;
-  figuras = [];
-  $('turma-aluno-nome').textContent = escolhido.nome;
-  desenharFiguras();
-  passo('figuras');
-  mascote('davi-login', 'oi');
-}
-function desenharFiguras() {
-  $('figuras-escolhidas').innerHTML = [0, 1, 2].map((i) => `<span>${figuras[i] != null ? FIGURAS[figuras[i]] : ''}</span>`).join('');
-}
-
-async function tocarFigura(i) {
-  if (figuras.length >= 3) return;
-  figuras.push(i);
-  SOM.clique();
-  desenharFiguras();
-  if (figuras.length < 3) return;
-  erroTurma('Conferindo…');
+// entra: pelo aluno que tocou na lista (aluno_id) ou pelo nome digitado
+async function entrar(corpo) {
+  erroTurma('Entrando…');
   try {
-    const { token, aluno } = await api('/sessions/aluno', { metodo: 'POST', corpo: { codigo: turma.codigo, aluno_id: escolhido.id, figuras } });
+    const { token, aluno } = await api('/sessions/aluno', { metodo: 'POST', corpo: { codigo: turma.codigo, ...corpo } });
     guardarTokenAluno(token);
+    // os dados da competição (ranking, e-mails dos relatórios) são os da escola da turma
+    if (escolaAntes === null) escolaAntes = window.ESCOLA_ATUAL_ID || '';
+    window.ESCOLA_ATUAL_ID = aluno.escola ? aluno.escola.id : '';
     erroTurma('');
-    entrarComoAluno(aluno.nome);
+    entrarComoAluno(aluno.nome, telaCompeticao);
     enviarPartidas();   // se ficou alguma partida na fila esperando o login
   } catch (err) {
-    figuras = [];
-    desenharFiguras();
     erroTurma(err.message);
     mascote('davi-login', 'triste');
     SOM.errado();
@@ -87,38 +68,35 @@ async function tocarFigura(i) {
 // ---------- telas ----------
 $('entrada-turma').addEventListener('submit', (e) => {
   e.preventDefault();
+  if (!$('turma-passo-nome').hidden) { $('btn-turma-nome').click(); return; }
   const codigo = $('turma-codigo').value.trim().toUpperCase();
   if (codigo.length < 4) { erroTurma('Digite o código da turma (o professor passa). 🔑'); SOM.errado(); return; }
   SOM.clique();
   abrirTurma(codigo);
 });
-$('turma-alunos').onclick = (e) => { const b = e.target.closest('.turma-aluno'); if (b) { SOM.clique(); escolherAluno(b.dataset.id); } };
-$('figuras-grade').innerHTML = FIGURAS.map((f, i) => `<button class="figura" type="button" data-i="${i}" aria-label="${NOMES_FIGURAS[i]}">${f}</button>`).join('');
-$('figuras-grade').onclick = (e) => { const b = e.target.closest('.figura'); if (b) tocarFigura(Number(b.dataset.i)); };
-$('btn-figuras-apagar').onclick = () => { SOM.clique(); figuras = figuras.slice(0, -1); desenharFiguras(); erroTurma(''); };
-$('btn-figuras-voltar').onclick = () => { SOM.clique(); passo('nome'); };
-$('btn-turma-trocar').onclick = () => { SOM.clique(); guardarTurma(null); turma = null; $('turma-codigo').value = ''; passo('codigo'); };
-// a tela "Entrar na turma": o aparelho já tem turma → a lista de nomes; senão, o código
+$('turma-alunos').onclick = (e) => { const b = e.target.closest('.turma-aluno'); if (b) { SOM.clique(); entrar({ aluno_id: b.dataset.id }); } };
+$('btn-turma-nome').onclick = () => {
+  const nome = $('turma-nome-digitado').value.trim().replace(/\s+/g, ' ');
+  if (nome.length < 2) { erroTurma('Digite o seu nome. ✏️'); SOM.errado(); return; }
+  SOM.clique();
+  entrar({ nome });
+};
+$('btn-turma-trocar').onclick = () => { SOM.clique(); turma = null; $('turma-codigo').value = ''; passo('codigo'); };
 function telaTurma() {
   mostrar('tela-turma');
-  const salva = lerTurma();
-  if (salva) { $('turma-codigo').value = salva.codigo; abrirTurma(salva.codigo); }
-  else { passo('codigo'); setTimeout(() => $('turma-codigo').focus(), 300); }
+  passo('codigo');
+  setTimeout(() => $('turma-codigo').focus(), 300);
 }
 $('btn-entrar-turma').onclick = () => { SOM.clique(); telaTurma(); };
 $('btn-menu-turma').onclick = () => { SOM.clique(); telaTurma(); };
+$('btn-comp-turma').onclick = () => { SOM.clique(); telaTurma(); };
 $('btn-turma-voltar').onclick = () => { SOM.clique(); telaInicio(); };
 
-// no início, o botão mostra a turma de quem já entrou
-function botaoDaTurma() {
-  const salva = lerTurma();
-  $('btn-entrar-turma').textContent = lerTokenAluno() && salva ? `🏫 Turma ${salva.nome} ✔` : '🏫 Entrar com o código da turma';
+// sair da turma: apaga o login do aluno e volta para a escola do endereço
+function sairDaTurma() {
+  if (lerTokenAluno()) guardarTokenAluno('');
+  if (escolaAntes !== null) { window.ESCOLA_ATUAL_ID = escolaAntes; escolaAntes = null; }
 }
-botaoDaTurma();
-new MutationObserver(botaoDaTurma).observe($('tela-inicio'), { attributes: true, attributeFilter: ['class', 'hidden', 'style'] });
-
-// "Trocar aluno": o aluno da turma sai (o token dele), mas a turma fica no aparelho para o próximo
-aoTrocarAluno.push(() => { guardarTokenAluno(''); botaoDaTurma(); });
-
-// ao abrir o app com o aluno já logado: confere se o login ainda vale (aluno desativado, turma encerrada...)
-if (lerTokenAluno()) api('/sessions/aluno', { comoAluno: true }).catch(() => { /* 401: api.js já apagou o token */ });
+// voltar à tela inicial (ou abrir o app) tira o login da turma; "Trocar aluno" também
+aoVoltarAoInicio.push(sairDaTurma);
+aoTrocarAluno.push(sairDaTurma);

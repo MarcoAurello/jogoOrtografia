@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=136">
+  <link rel="stylesheet" href="style.css?v=138">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -94,7 +94,8 @@
     <!-- Entrar na turma (depois do nome): código → toca no nome → 3 figuras; as partidas ficam guardadas (js/entrada.js) -->
     <section class="tela" id="tela-turma">
       <h2 class="subtitulo">🏫 Entrar na turma</h2>
-      <p class="turma-explica">Tem o <b>código da turma</b>? Entre com ele e o professor acompanha todas as suas partidas.</p>
+      <p class="turma-explica">Digite o <b>código da turma</b> (o professor passa) e o seu nome: você vê as <b>competições</b> da turma
+        e o professor acompanha todas as suas partidas.</p>
       <form class="cartao cartao-login entrada-turma" id="entrada-turma" autocomplete="off">
         <div id="turma-passo-codigo">
           <label class="campo">
@@ -106,16 +107,12 @@
         <div id="turma-passo-nome" hidden>
           <p class="turma-titulo" id="turma-nome-titulo"></p>
           <div class="turma-alunos" id="turma-alunos"></div>
+          <label class="campo">
+            <span id="turma-nome-rotulo">Digite o seu nome</span>
+            <input type="text" id="turma-nome-digitado" maxlength="40" placeholder="Nome e sobrenome" autocomplete="off">
+          </label>
+          <button class="btn-grande" id="btn-turma-nome" type="button">Entrar ▶</button>
           <button class="btn-sec btn-pequeno" id="btn-turma-trocar" type="button">Outra turma</button>
-        </div>
-        <div id="turma-passo-figuras" hidden>
-          <p class="turma-titulo">Oi, <b id="turma-aluno-nome"></b>! Toque nas suas <b>3 figuras</b>, na ordem:</p>
-          <div class="figuras-escolhidas" id="figuras-escolhidas"></div>
-          <div class="figuras-grade" id="figuras-grade"></div>
-          <div class="linha-botoes">
-            <button class="btn-sec btn-pequeno" id="btn-figuras-apagar" type="button">⌫ Apagar</button>
-            <button class="btn-sec btn-pequeno" id="btn-figuras-voltar" type="button">← Não sou eu</button>
-          </div>
         </div>
         <p class="erro-login" id="erro-turma" role="alert"></p>
       </form>
@@ -1038,20 +1035,9 @@
       </div>
       <div class="cartao cartao-chuva" id="comp-lista">
         <p class="quiz-status" id="comp-status"></p>
+        <button class="btn-grande" id="btn-comp-turma" type="button" hidden>🏫 Entrar com o código da turma</button>
         <div class="lista-quiz" id="lista-comp"></div>
-      </div>
-      <div class="cartao cartao-login" id="comp-entrar" hidden>
-        <h3 class="chuva-pergunta" id="comp-entrar-titulo"></h3>
-        <p class="professor-ajuda" id="comp-entrar-jogo"></p>
-        <form id="form-comp-entrar" autocomplete="off">
-          <label class="campo campo-jogo"><span>Seu nome</span>
-            <input type="text" id="comp-nome" maxlength="40" placeholder="Nome e sobrenome"></label>
-          <label class="campo campo-jogo"><span>Código da competição</span>
-            <input type="text" id="comp-codigo" class="comp-codigo-campo" maxlength="5" placeholder="ABC12" autocapitalize="characters" spellcheck="false"></label>
-          <p class="erro-login" id="comp-erro" role="status"></p>
-          <button class="btn-grande" type="submit">Entrar ▶</button>
-          <button class="btn-sec" id="comp-entrar-voltar" type="button">← Voltar</button>
-        </form>
+        <p class="erro-login" id="comp-erro" role="status"></p>
       </div>
       <div class="cartao cartao-chuva" id="comp-ranking" hidden>
         <h3 class="chuva-pergunta" id="comp-ranking-titulo">🏆 Ranking</h3>
@@ -1430,6 +1416,7 @@
       <div class="prof-sessao" id="prof-sessao" hidden>
         <span id="prof-sessao-nome"></span>
         <span class="prof-sessao-botoes">
+          <button class="btn-sec btn-pequeno" id="btn-prof-sair-escola" type="button" hidden>⬅ Sair da escola</button>
           <button class="btn-sec btn-pequeno" id="btn-prof-senha" type="button">🔑 Trocar senha</button>
           <button class="btn-sec btn-pequeno" id="btn-prof-sair" type="button">Sair</button>
         </span>
@@ -1496,6 +1483,8 @@
           passe para a turma. Os alunos entram pela aba 🏆 Competição com o nome e o código. Vale a <b>melhor partida</b> de cada aluno.
           Depois da hora, ninguém mais entra; o ranking fica guardado na planilha (abas "Competições" e "Ranking").</p>
         <form class="cadastro-email" id="form-nova-comp" autocomplete="off">
+          <label class="campo campo-jogo"><span>Turma</span>
+            <select id="comp-novo-turma"></select></label>
           <label class="campo campo-jogo"><span>Nome da competição</span>
             <input type="text" id="comp-novo-nome" maxlength="60" placeholder="Ex.: 5º A – Tabuada"></label>
           <label class="campo campo-jogo"><span>Jogo ou questionário</span>
@@ -2046,9 +2035,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=136"></script>
-  <script src="dados.js?v=136"></script>
-  <script type="module" src="js/main.js?v=136"></script>
+  <script src="plenix.js?v=138"></script>
+  <script src="dados.js?v=138"></script>
+  <script type="module" src="js/main.js?v=138"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

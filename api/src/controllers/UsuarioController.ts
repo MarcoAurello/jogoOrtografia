@@ -76,7 +76,8 @@ class UsuarioController {
 
   // a própria pessoa troca a senha (obrigatório no primeiro acesso)
   async trocarSenha(req: Request, res: Response): Promise<Response> {
-    const eu = req.usuarioLogado!;
+    // relido do banco: o administrador dentro de uma escola está com o perfil trocado só na memória
+    const eu = (await Usuario.findByPk(req.usuarioLogado!.id))!;
     const atual = String(req.body.senhaAtual || "");
     const nova = String(req.body.novaSenha || "");
     if (!(await bcrypt.compare(atual, eu.senha))) return res.status(400).json({ message: "A senha atual não confere." });

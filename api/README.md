@@ -40,9 +40,10 @@ npm run dev               # http://localhost:3333
 | `POST /planilha` | logado | gravações do professor na planilha do Google (até a fase 4), com a senha só no servidor |
 | `GET /pagina/:slug` | público | o app já com a marca da escola (o nginx manda `/<escola>` para cá) |
 | `GET/POST /turmas`, `PUT /turmas/:id` | professor, coordenação, admin | turmas (com código); o professor vê só as dele |
-| `GET/POST /turmas/:id/alunos`, `PUT /alunos/:id` | quem vê a turma | alunos (um nome por linha), figuras novas, desativar |
+| `GET/POST /turmas/:id/alunos`, `PUT /alunos/:id` | quem vê a turma | alunos (um nome por linha, opcional), desativar |
 | `GET /turmas/codigo/:codigo/alunos` | público | os nomes da turma para a tela de entrada do aluno |
-| `POST /sessions/aluno`, `GET /sessions/aluno` | aluno | login por figuras (código + aluno + 3 figuras) e conferência |
+| `POST /sessions/aluno`, `GET /sessions/aluno` | aluno | login sem senha: código da turma + aluno da lista (`aluno_id`) ou nome digitado (nome novo entra na turma) |
+| `GET /sessions/aluno/competicoes` | aluno | as competições da turma do aluno logado |
 | `POST /partidas` | aluno | o fim de cada jogo (id do aparelho: reenviar não duplica) |
 | `GET /turmas/:id/partidas` | quem vê a turma | as últimas partidas da turma |
 | `GET /turmas/:id/painel?dias=30` | quem vê a turma | painel: quem jogou, acerto, semanas, habilidades e as 3 maiores dificuldades |
@@ -64,8 +65,13 @@ npm run dev               # http://localhost:3333
   (login, API e a página da escola), menos para o administrador, que pode ativar o plano ou estender o teste.
 - **Senhas:** guardadas com bcrypt; a senha provisória precisa ser trocada no primeiro acesso; 10 tentativas erradas
   por minuto bloqueiam o login por 1 minuto.
-- **Alunos:** só o nome de exibição (primeiro nome + inicial) e a turma. A senha é uma sequência de 3 figuras (de 9),
-  legível para o professor (que mostra ao aluno); 5 erros seguidos travam aquele aluno por 1 minuto.
+- **Alunos:** só o nome e a turma, sem senha: o aluno entra com o código da turma e o nome (o mesmo nome, sem diferença
+  de acentos e maiúsculas, é sempre o mesmo aluno). O app apaga o login quando o aluno volta à tela inicial.
+- **Competições:** cada uma é de uma turma (`competicoes.turma_id`); o aluno vê só as da turma dele. No ranking vale a
+  maior nota de cada aluno; todas as partidas ficam no relatório do professor.
+- **Administrador dentro de uma escola:** com o cabeçalho `X-Escola: <id da escola>`, o administrador é tratado como a
+  coordenação daquela escola (só naquela requisição; nada é gravado no usuário). O app manda o cabeçalho depois de
+  "🚪 Entrar na escola". Professor avulso = professor sem escola.
 - **Partidas:** só de quem entrou pela turma. Sem internet, ficam numa fila no aparelho e vão quando a conexão volta.
   Cada partida guarda as rodadas (`detalhes`), o resumo, a competição (se for de uma) e as habilidades do jogo.
 - **E-mail (relatórios das partidas e PDF do teste grátis):** com `EMAIL_VIA=smtp`, a API envia por SMTP (`SMTP_HOST`, `SMTP_PORT`, `SMTP_SEGURO`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_REMETENTE`)

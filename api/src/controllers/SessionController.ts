@@ -3,9 +3,13 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Usuario from "../models/Usuario";
 import Escola from "../models/Escola";
-import Aluno from "../models/Aluno";
+import Aluno, { senhaAleatoria } from "../models/Aluno";
 import Turma from "../models/Turma";
 import authConfig from "../config/auth";
+import { listarCompeticoes } from "../services/dados";
+
+const limparNome = (nome: unknown) => String(nome || "").replace(/\s+/g, " ").trim().slice(0, 40);
+const chaveDoNome = (n: string) => n.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
 // Hash fictício (não corresponde a nenhuma senha real) usado quando o e-mail não existe, para o bcrypt.compare
 // sempre rodar e gastar o mesmo tempo do caminho "senha errada" (sem isso, dá para descobrir por tempo quais
@@ -74,43 +78,55 @@ class SessionController {
 
   // quem está logado (o app confere ao abrir a Área do professor)
   async show(req: Request, res: Response): Promise<Response> {
-    return res.json({ usuario: usuarioParaApp(req.usuarioLogado!) });
+    return res.json({ usuario: { ...usuarioParaApp(req.usuarioLogado!), adminNaEscola: !!req.adminNaEscola } });
   }
 
-  // login do aluno: código da turma, o aluno que ele tocou na lista e as 3 figuras.
-  // 5 erros seguidos travam aquele aluno por 1 minuto (a senha de figuras tem só 729 combinações).
+  // login do aluno: só o código da turma e o nome (sem senha). O aluno toca no nome dele (se o professor cadastrou a
+  // turma) ou digita o nome: um nome novo entra na turma na hora, para as partidas dele ficarem no relatório do professor.
+  // O mesmo nome (sem diferença de acentos e maiúsculas) é sempre o mesmo aluno.
   async aluno(req: Request, res: Response): Promise<Response> {
     try {
       const codigo = String(req.body.codigo || "").trim().toUpperCase();
-      const figuras = Array.isArray(req.body.figuras) ? req.body.figuras.map((f: unknown) => Math.round(Number(f))) : [];
-      const aluno = await Aluno.findOne({
-        where: { id: String(req.body.aluno_id || ""), ativo: true },
-        include: [{ model: Turma, as: "turma", where: { codigo, ativa: true } }, { model: Escola, as: "escola" }]
-      });
+      const turma = await Turma.findOne({ where: { codigo, ativa: true }, include: [{ model: Escola, as: "escola" }] });
+      if (!turma) return res.status(404).json({ message: "Não achei essa turma. Confira o código com o professor." });
+      if (turma.escola?.bloqueada) return res.status(403).json({ message: "O acesso desta escola está bloqueado.", codigo: "escola_bloqueada" });
+
+      let aluno: Aluno | null = null;
+      if (req.body.aluno_id) aluno = await Aluno.findOne({ where: { id: String(req.body.aluno_id), turma_id: turma.id, ativo: true } });
+      else {
+        const nome = limparNome(req.body.nome);
+        if (nome.length < 2) return res.status(400).json({ message: "Digite o seu nome." });
+        const daTurma = await Aluno.findAll({ where: { turma_id: turma.id, ativo: true } });
+        aluno = daTurma.find((a) => chaveDoNome(a.nome) === chaveDoNome(nome)) || null;
+        if (!aluno) {
+          aluno = await Aluno.create({ nome, turma_id: turma.id, escola_id: turma.escola_id, senha_figuras: senhaAleatoria(),
+            bloqueado_ate: null, ultimo_acesso: null });
+        }
+      }
       if (!aluno) return res.status(404).json({ message: "Não achei você nesta turma. Confira o código com o professor." });
-      if (aluno.escola?.bloqueada) return res.status(403).json({ message: "O acesso desta escola está bloqueado.", codigo: "escola_bloqueada" });
 
-      if (aluno.bloqueado_ate && aluno.bloqueado_ate.getTime() > Date.now()) {
-        const segundos = Math.ceil((aluno.bloqueado_ate.getTime() - Date.now()) / 1000);
-        return res.status(429).json({ message: `Muitas tentativas. Espere ${segundos} segundos e tente de novo.`, codigo: "aluno_travado", segundos });
-      }
-
-      if (figuras.join(",") !== aluno.senha_figuras) {
-        aluno.tentativas += 1;
-        if (aluno.tentativas >= 5) { aluno.tentativas = 0; aluno.bloqueado_ate = new Date(Date.now() + 60 * 1000); }
-        await aluno.save();
-        return res.status(401).json({ message: "Figuras erradas. Tente de novo! Se esqueceu, peça ao professor.", codigo: "figuras" });
-      }
-
-      aluno.tentativas = 0;
-      aluno.bloqueado_ate = null;
       aluno.ultimo_acesso = new Date();
       await aluno.save();
-      const token = jwt.sign({ tipo: "aluno" }, authConfig.secret, { subject: aluno.id, expiresIn: "60d" } as jwt.SignOptions);
+      aluno.turma = turma;
+      aluno.escola = turma.escola || null;
+      // o login do aluno vale até ele voltar à tela inicial (o app apaga); o prazo é só uma garantia
+      const token = jwt.sign({ tipo: "aluno" }, authConfig.secret, { subject: aluno.id, expiresIn: "12h" } as jwt.SignOptions);
       return res.json({ token, aluno: alunoParaApp(aluno) });
     } catch (error) {
       console.error("Erro no login do aluno:", error);
       return res.status(500).json({ message: "Erro ao entrar. Tente de novo." });
+    }
+  }
+
+  // as competições da turma do aluno logado (as abertas e as que encerraram há pouco, com o ranking)
+  async alunoCompeticoes(req: Request, res: Response): Promise<Response> {
+    try {
+      const aluno = req.alunoLogado!;
+      const lista = await listarCompeticoes(aluno.escola_id, false, [aluno.turma_id], true);
+      return res.status(200).json({ ok: true, lista });
+    } catch (error) {
+      console.error("Erro ao listar as competições da turma:", error);
+      return res.status(500).json({ message: "Erro ao buscar as competições." });
     }
   }
 

@@ -14,7 +14,8 @@ class DadosController {
     if (acao === "emails") return resposta(res, async () => ({ emails: await dados.lerEmails(escopo) }));
     if (acao === "questionarios") return resposta(res, async () => ({ lista: await dados.listarQuestionarios(escopo) }));
     if (acao === "questionario") return resposta(res, async () => ({ questionario: await dados.lerQuestionario(escopo, req.query.id) }));
-    if (acao === "competicoes") return resposta(res, async () => ({ lista: await dados.listarCompeticoes(escopo, false) }));
+    // as competições agora são de cada turma: o aluno vê as da turma dele depois de entrar com o código (/sessions/aluno/competicoes)
+    if (acao === "competicoes") return resposta(res, async () => ({ lista: await dados.listarCompeticoes(escopo, false, []) }));
     if (acao === "ranking") return resposta(res, async () => ({ ...(await dados.rankingDaCompeticao(escopo, req.query.id)) }));
     return res.json({ ok: true, versao: "api" });
   }

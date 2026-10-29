@@ -31,4 +31,8 @@ function definirUltimoNome(valor) { ultimoNome = valor; return valor; }
 function definirMissao(valor) { missao = valor; return valor; }
 function definirResultados(valor) { resultados = valor; return valor; }
 
-export { aluno, CHAVE_ALUNO, definirAluno, definirMissao, definirResultados, definirUltimoNome, estrelasTexto, lerEstrelas, missao, PEDIR_SENHA, resultados, salvarEstrelas, SENHA_TURMA, ultimoNome };
+// quem precisa saber que o aluno voltou à tela inicial (o login da turma e a competição saem): fica aqui, sem
+// dependências, porque telas.js e competicao.js se importam um ao outro
+const aoVoltarAoInicio = [];
+
+export { aluno, aoVoltarAoInicio, CHAVE_ALUNO, definirAluno, definirMissao, definirResultados, definirUltimoNome, estrelasTexto, lerEstrelas, missao, PEDIR_SENHA, resultados, salvarEstrelas, SENHA_TURMA, ultimoNome };

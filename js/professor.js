@@ -1,42 +1,42 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=136';
-import { SOM } from './som.js?v=136';
-import { mostrar, telaInicio } from './telas.js?v=136';
-import { telaMissoes } from './ortografia.js?v=136';
-import { telaChuvaMenu } from './chuva.js?v=136';
-import { telaMatMenu } from './matematica.js?v=136';
-import { telaTiroMenu } from './tiro.js?v=136';
-import { telaPesoMenu } from './peso.js?v=136';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=136';
-import { telaLuzesMenu } from './luzes.js?v=136';
-import { telaRotinaMenu } from './rotina.js?v=136';
-import { telaFichasMenu } from './fichas.js?v=136';
-import { telaEscondidaMenu } from './escondida.js?v=136';
-import { telaCopiaMenu } from './copia.js?v=136';
-import { telaBarcosMenu } from './barcos.js?v=136';
-import { telaGiroMenu } from './giro.js?v=136';
-import { telaHoraMenu } from './hora.js?v=136';
-import { telaSomandoMenu } from './somando.js?v=136';
-import { telaDescobrirMenu } from './descobrir.js?v=136';
-import { telaChavesMenu } from './chaves.js?v=136';
-import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=136';
-import { telaPoliciaMenu } from './policia.js?v=136';
-import { telaPontosMenu } from './pontos.js?v=136';
-import { telaPixelsMenu } from './pixels.js?v=136';
-import { telaFracoesMenu } from './fracoes.js?v=136';
-import { telaCoresMenu } from './cores.js?v=136';
-import { telaLadosMenu } from './lados.js?v=136';
-import { telaSetasMenu } from './setas.js?v=136';
-import { telaVistasMenu } from './vistas.js?v=136';
-import { telaDinosMenu } from './dinos.js?v=136';
-import { telaSimbolosMenu } from './simbolos.js?v=136';
-import { telaTabuadaMenu } from './tabuada.js?v=136';
-import { telaClassesMenu } from './classes.js?v=136';
-import { telaGraficosMenu } from './graficos.js?v=136';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=136';
-import { api, escolaDoEndereco, guardarToken, lerToken, lerTokenTeste } from './api.js?v=136';
+import { $, seguro } from './util.js?v=138';
+import { SOM } from './som.js?v=138';
+import { mostrar, telaInicio } from './telas.js?v=138';
+import { telaMissoes } from './ortografia.js?v=138';
+import { telaChuvaMenu } from './chuva.js?v=138';
+import { telaMatMenu } from './matematica.js?v=138';
+import { telaTiroMenu } from './tiro.js?v=138';
+import { telaPesoMenu } from './peso.js?v=138';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=138';
+import { telaLuzesMenu } from './luzes.js?v=138';
+import { telaRotinaMenu } from './rotina.js?v=138';
+import { telaFichasMenu } from './fichas.js?v=138';
+import { telaEscondidaMenu } from './escondida.js?v=138';
+import { telaCopiaMenu } from './copia.js?v=138';
+import { telaBarcosMenu } from './barcos.js?v=138';
+import { telaGiroMenu } from './giro.js?v=138';
+import { telaHoraMenu } from './hora.js?v=138';
+import { telaSomandoMenu } from './somando.js?v=138';
+import { telaDescobrirMenu } from './descobrir.js?v=138';
+import { telaChavesMenu } from './chaves.js?v=138';
+import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=138';
+import { telaPoliciaMenu } from './policia.js?v=138';
+import { telaPontosMenu } from './pontos.js?v=138';
+import { telaPixelsMenu } from './pixels.js?v=138';
+import { telaFracoesMenu } from './fracoes.js?v=138';
+import { telaCoresMenu } from './cores.js?v=138';
+import { telaLadosMenu } from './lados.js?v=138';
+import { telaSetasMenu } from './setas.js?v=138';
+import { telaVistasMenu } from './vistas.js?v=138';
+import { telaDinosMenu } from './dinos.js?v=138';
+import { telaSimbolosMenu } from './simbolos.js?v=138';
+import { telaTabuadaMenu } from './tabuada.js?v=138';
+import { telaClassesMenu } from './classes.js?v=138';
+import { telaGraficosMenu } from './graficos.js?v=138';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=138';
+import { api, definirEscolaDoAdmin, escolaDoEndereco, guardarToken, lerToken, lerTokenTeste } from './api.js?v=138';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -199,7 +199,10 @@ const NOME_DO_PERFIL = { admin: 'Administrador', coordenacao: 'Coordenação', p
 function entrarComo(usuario) {
   usuarioLogado = usuario;
   $('form-senha-professor').hidden = true;
-  $('prof-sessao-nome').textContent = `👋 ${usuario.nome} · ${NOME_DO_PERFIL[usuario.perfil]}${usuario.escola ? ` · ${usuario.escola.nome}` : ''}`;
+  $('prof-sessao-nome').textContent = usuario.adminNaEscola
+    ? `👋 ${usuario.nome} · Administrador dentro da escola ${usuario.escola ? usuario.escola.nome : ''}`
+    : `👋 ${usuario.nome} · ${NOME_DO_PERFIL[usuario.perfil]}${usuario.escola ? ` · ${usuario.escola.nome}` : ''}`;
+  $('btn-prof-sair-escola').hidden = !usuario.adminNaEscola;
   document.querySelectorAll('#menu-professor .jogo-card').forEach((c) => { c.hidden = !CARTOES_DO_PERFIL[usuario.perfil].includes(c.id); });
   if (usuario.primeiro_login) { abrirTrocaDeSenha(true); return; }
   parteProfessor('menu');
@@ -228,7 +231,9 @@ $('form-trocar-senha').onsubmit = async (e) => {
 };
 $('btn-trocar-senha-voltar').onclick = () => { SOM.clique(); parteProfessor('menu'); };
 $('btn-prof-senha').onclick = () => { SOM.clique(); abrirTrocaDeSenha(false); };
-$('btn-prof-sair').onclick = () => { SOM.clique(); guardarToken(''); usuarioLogado = null; telaProfessor(); };
+$('btn-prof-sair').onclick = () => { SOM.clique(); guardarToken(''); definirEscolaDoAdmin(''); usuarioLogado = null; telaProfessor(); };
+// o administrador sai da escola em que entrou e volta ao menu de administrador
+$('btn-prof-sair-escola').onclick = () => { SOM.clique(); definirEscolaDoAdmin(''); telaProfessor(); };
 
 // carregando: mostra o reloginho animado enquanto espera a planilha
 function avisoEmail(texto, ok, carregando = false) {
@@ -382,10 +387,21 @@ const JOGOS_DE_FORA = [
   { nome: 'Desafio das Peças', link: 'https://nagila.vercel.app/' },
   { nome: 'Hive', link: 'https://hive-alpha-smoky.vercel.app/' },
 ];
+// os links dos jogos e dos questionários abrem com a marca da escola de quem está logado (mesmo que ele tenha aberto o
+// app pela plataforma): /<escola>?jogo=...; sem escola (administrador, professor avulso), o endereço da plataforma.
+// No GitHub Pages não há o nginx que entende /<escola>: lá vai ?escola=<escola>.
+function linkDoApp(parametro) {
+  const escola = usuarioLogado?.escola?.id || '';
+  if (location.hostname.endsWith('github.io')) {
+    const pasta = location.pathname.replace(/[^/]*$/, '');
+    return `${location.origin}${pasta}?${escola ? `escola=${encodeURIComponent(escola)}&` : ''}${parametro}`;
+  }
+  return `${location.origin}/${escola ? encodeURIComponent(escola) : ''}?${parametro}`;
+}
 function listarLinksJogos() {
   $('aviso-link-jogo').textContent = '';
   const jogos = [
-    ...Object.entries(JOGOS_DO_LINK).map(([id, j]) => ({ nome: j.nome, link: `${location.origin}${location.pathname}?jogo=${id}` })),
+    ...Object.entries(JOGOS_DO_LINK).map(([id, j]) => ({ nome: j.nome, link: linkDoApp(`jogo=${id}`) })),
     ...JOGOS_DE_FORA.map((j) => ({ ...j, nome: `${j.nome} ↗` })),
   ];
   $('lista-links-jogos').innerHTML = '';
@@ -410,7 +426,7 @@ function listarLinksJogos() {
 }
 $('btn-prof-links').onclick = () => { SOM.clique(); parteProfessor('links'); listarLinksJogos(); };
 
-const linkDoQuestionario = (id) => `${location.origin}${location.pathname}?q=${encodeURIComponent(id)}`;
+const linkDoQuestionario = (id) => linkDoApp(`q=${encodeURIComponent(id)}`);
 async function copiarLinkQuestionario(q) {
   const link = linkDoQuestionario(q.id);
   try {

@@ -1,11 +1,11 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Escolas: o mesmo app com o logo, as cores e o nome de cada escola (pedagociagamificada.com.br/<escola>). */
 
-import { $, seguro } from './util.js?v=136';
-import { SOM } from './som.js?v=136';
-import { carregarEmails, parteProfessor } from './professor.js?v=136';
-import { definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=136';
-import { api } from './api.js?v=136';
+import { $, seguro } from './util.js?v=138';
+import { SOM } from './som.js?v=138';
+import { carregarEmails, parteProfessor, telaProfessor } from './professor.js?v=138';
+import { definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=138';
+import { api, definirEscolaDoAdmin } from './api.js?v=138';
 
 // ---------- Escolas ----------
 // O endereço diz a escola: pedagociagamificada.com.br/escolaExemplo (ou ?escola=escolaExemplo, para testar em outro
@@ -198,6 +198,8 @@ async function listarEscolas() {
     const botoes = document.createElement('span');
     botoes.className = 'comp-item-botoes';
     const botao = (txt, acao) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'quiz-link'; b.textContent = txt; b.onclick = acao; botoes.append(b); };
+    // o administrador entra na escola e faz tudo como a coordenação dela (turmas, professores, competições...)
+    botao('🚪 Entrar na escola', () => { SOM.clique(); definirEscolaDoAdmin(e.id); telaProfessor(); });
     botao('📋 Copiar link', async () => {
       const link = linkDaEscola(e.slug);
       try { await navigator.clipboard.writeText(link); avisoEscola(`Link copiado: ${link}`, true); } catch (err) { window.prompt('Copie o link:', link); }

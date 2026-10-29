@@ -37,11 +37,11 @@ except Exception:
     pass
 
 
-def chamar(caminho, metodo="GET", corpo=None, token=None):
+def chamar(caminho, metodo="GET", corpo=None, token=None, extra=None):
     pedido = urllib.request.Request(
         API + caminho, method=metodo, data=json.dumps(corpo).encode() if corpo is not None else None,
         headers={**({"Content-Type": "application/json"} if corpo is not None else {}),
-                 **({"Authorization": f"Bearer {token}"} if token else {})})
+                 **({"Authorization": f"Bearer {token}"} if token else {}), **(extra or {})})
     try:
         with urllib.request.urlopen(pedido, timeout=120) as r:
             return r.status, json.loads(r.read() or b"{}")
@@ -61,10 +61,6 @@ def confere(nome, certo, detalhe=""):
 def entrar(email, senha):
     s, r = chamar("/sessions", "POST", {"email": email, "senha": senha})
     return r.get("token"), r
-
-
-def figuras(aluno):
-    return [int(x) for x in aluno["senha_figuras"].split(",")]
 
 
 sufixo = uuid.uuid4().hex[:6]
@@ -125,7 +121,7 @@ confere("professora NÃO vê a lista de usuários", s == 403)
 s, r = chamar("/sessions", "POST", {"email": email_prof, "senha": "errada"})
 confere("senha errada é recusada", s == 401)
 
-# ---------- 3. turma e alunos com figuras (fase 2) ----------
+# ---------- 3. turma e alunos: só o código da turma e o nome, sem senha ----------
 print("3. Turma e alunos")
 s, turma = chamar("/turmas", "POST", {"nome": "3º ano Teste"}, prof)
 confere("professora cria turma com código", s == 201 and len(turma.get("codigo", "")) == 5, turma.get("codigo", ""))
@@ -133,13 +129,17 @@ s, r = chamar(f"/turmas/{turma['id']}/alunos", "POST", {"nomes": ["Ana T.", "Bru
 confere("cadastra alunos (nome repetido é avisado)", s == 201 and len(r["criados"]) == 2 and r["repetidos"] == ["ana t."])
 ana = next(a for a in r["criados"] if a["nome"] == "Ana T.")
 s, r = chamar(f"/turmas/codigo/{turma['codigo'].lower()}/alunos")
-confere("entrada do aluno: nomes pelo código (sem as figuras)", s == 200 and len(r["alunos"]) == 2 and "senha_figuras" not in r["alunos"][0])
-erradas = [(figuras(ana)[0] + 1) % 9] + figuras(ana)[1:]
-s, r = chamar("/sessions/aluno", "POST", {"codigo": turma["codigo"], "aluno_id": ana["id"], "figuras": erradas})
-confere("figuras erradas são recusadas", s == 401)
-s, r = chamar("/sessions/aluno", "POST", {"codigo": turma["codigo"], "aluno_id": ana["id"], "figuras": figuras(ana)})
+confere("entrada do aluno: nomes pelo código", s == 200 and len(r["alunos"]) == 2)
+s, r = chamar("/sessions/aluno", "POST", {"codigo": turma["codigo"], "aluno_id": ana["id"]})
 aluna = r.get("token")
-confere("aluna entra com as 3 figuras", s == 200 and bool(aluna))
+confere("aluna entra tocando no nome (sem senha)", s == 200 and bool(aluna))
+s, r = chamar("/sessions/aluno", "POST", {"codigo": turma["codigo"], "nome": "ANA  T."})
+confere("digitar o mesmo nome (outra caixa) é a mesma aluna", s == 200 and r["aluno"]["id"] == ana["id"])
+s, r = chamar("/sessions/aluno", "POST", {"codigo": turma["codigo"], "nome": "Caio Novo"})
+caio = r.get("token")
+confere("nome novo entra na turma sozinho", s == 200 and bool(caio))
+s, r = chamar("/sessions/aluno", "POST", {"codigo": "ZZZZZ", "nome": "Ana T."})
+confere("código de turma errado é recusado", s == 404)
 s, r = chamar("/turmas", token=aluna)
 confere("token de aluno NÃO abre rotas do professor", s == 401)
 
@@ -163,18 +163,11 @@ confere("a mesma partida (fila sem internet) não duplica", s == 200 and r.get("
 s, r = chamar(f"/turmas/{turma['id']}/partidas", token=prof)
 confere("professora vê as partidas da turma", s == 200 and len(r) == 10 and r[0]["aluno"]["nome"] == "Ana T.")
 s, p = chamar(f"/turmas/{turma['id']}/painel?dias=90", token=prof)
-confere("painel da turma", s == 200 and p["resumo"]["partidas"] == 10 and p["semJogar"] == ["Bruno T."], f"{p.get('resumo')}")
+confere("painel da turma", s == 200 and p["resumo"]["partidas"] == 10 and sorted(p["semJogar"]) == ["Bruno T.", "Caio Novo"], f"{p.get('resumo')}")
 s, f = chamar(f"/alunos/{ana['id']}/ficha?dias=90", token=prof)
 confere("ficha da aluna: 4+ semanas de evolução e habilidades", s == 200 and len(f["semanas"]) >= 4 and len(f["habilidades"]) >= 3,
         f"{len(f.get('semanas', []))} semanas")
 confere("ficha: antes × depois e o que revisar", any(h["antes"] is not None and h["depois"] is not None for h in f["habilidades"]) and len(f["revisar"]) > 0)
-for _ in range(5):
-    chamar("/sessions/aluno", "POST", {"codigo": turma["codigo"], "aluno_id": ana["id"], "figuras": erradas})
-s, r = chamar("/sessions/aluno", "POST", {"codigo": turma["codigo"], "aluno_id": ana["id"], "figuras": figuras(ana)})
-confere("5 erros seguidos travam a aluna por 1 minuto", s == 429)
-s, r = chamar(f"/alunos/{ana['id']}", "PUT", {"novaSenha": True}, prof)
-s, r = chamar("/sessions/aluno", "POST", {"codigo": turma["codigo"], "aluno_id": ana["id"], "figuras": figuras(r)})
-confere("figuras novas destravam a aluna", s == 200)
 
 # ---------- 5. questionário e competição no banco (fase 4) ----------
 print("5. Questionário e competição")
@@ -187,26 +180,40 @@ confere("questionário aparece na escola", bool(quiz))
 s, r = chamar(f"/dados?acao=questionario&id={quiz['id'] if quiz else ''}&escola={slug}")
 confere("abre o questionário com a pergunta", r.get("ok") and r["questionario"]["perguntas"][0]["certa"] == "4")
 encerra = (agora + timedelta(hours=1)).isoformat()
-s, r = chamar("/planilha", "POST", {"acao": "criarCompeticao", "nome": "Competição teste", "jogo": "fracoes",
-                                    "jogoNome": "Pizzaria das Frações", "encerra": encerra}, prof)
+nova = {"acao": "criarCompeticao", "nome": "Competição teste", "jogo": "fracoes", "jogoNome": "Pizzaria das Frações", "encerra": encerra}
+s, r = chamar("/planilha", "POST", nova, prof)
+confere("competição sem turma é recusada", r.get("erro") == "turma")
+s, r = chamar("/planilha", "POST", {**nova, "turma": turma["id"]}, prof)
 comp = r.get("competicao", {})
-confere("professora cria competição (código de 5 letras)", r.get("ok") and len(comp.get("codigo", "")) == 5, comp.get("codigo", ""))
+confere("professora cria competição da turma", r.get("ok") and comp.get("turmaId") == turma["id"])
+s, r = chamar("/planilha", "POST", {"acao": "competicoesProfessor"}, prof)
+confere("na lista da professora, com o código da turma", any(x["id"] == comp["id"] and x["turmaCodigo"] == turma["codigo"] for x in r.get("lista", [])))
 s, r = chamar(f"/dados?acao=competicoes&escola={slug}")
-confere("aparece para os alunos da escola, sem o código", any(x["id"] == comp["id"] and "codigo" not in x for x in r.get("lista", [])))
-s, r = chamar("/dados?acao=competicoes")
-confere("NÃO aparece na plataforma (outra escola)", not any(x["id"] == comp["id"] for x in r.get("lista", [])))
-s, r = chamar("/dados", "POST", {"acao": "entrarCompeticao", "escola": slug, "id": comp["id"], "codigo": "ZZZZZ"})
-confere("código errado é recusado", r.get("erro") == "codigo")
-s, r = chamar("/dados", "POST", {"acao": "entrarCompeticao", "escola": slug, "id": comp["id"], "codigo": comp["codigo"]})
-confere("aluno entra com o código", r.get("ok"))
-for nome, pontos, acertos in [("Ana T.", 900, 8), ("Bruno T.", 700, 6), ("ana  t.", 1200, 10)]:
-    s, r = chamar("/dados", "POST", {"acao": "resultadoCompeticao", "escola": slug, "id": comp["id"], "codigo": comp["codigo"],
+confere("NÃO aparece na lista pública (só com o código da turma)", not any(x["id"] == comp["id"] for x in r.get("lista", [])))
+s, r = chamar("/sessions/aluno/competicoes", token=aluna)
+daTurma = next((x for x in r.get("lista", []) if x["id"] == comp["id"]), {})
+confere("aluna logada vê a competição da turma dela", bool(daTurma.get("codigo")))
+for nome, pontos, acertos in [("Ana T.", 900, 8), ("Bruno T.", 700, 6), ("ana  t.", 1200, 10), ("Ana T.", 300, 3)]:
+    s, r = chamar("/dados", "POST", {"acao": "resultadoCompeticao", "escola": slug, "id": comp["id"], "codigo": daTurma.get("codigo"),
                                      "nome": nome, "pontos": pontos, "acertos": acertos, "total": 10, "config": "Pizzaria"})
 ranking = [(x["pontos"], x["partidas"]) for x in r.get("ranking", [])]
-confere("ranking: melhor partida de cada aluno (mesmo nome = mesmo aluno)", ranking == [(1200, 2), (700, 1)], str(ranking))
+confere("ranking: vale a maior nota de cada aluno (mesmo nome = mesmo aluno)", ranking == [(1200, 3), (700, 1)], str(ranking))
 chamar("/planilha", "POST", {"acao": "encerrarCompeticao", "id": comp["id"]}, prof)
-s, r = chamar("/dados", "POST", {"acao": "entrarCompeticao", "escola": slug, "id": comp["id"], "codigo": comp["codigo"]})
+s, r = chamar("/dados", "POST", {"acao": "entrarCompeticao", "escola": slug, "id": comp["id"], "codigo": daTurma.get("codigo")})
 confere("competição encerrada: ninguém mais entra", r.get("erro") == "encerrada")
+
+# administrador dentro da escola: faz tudo como a coordenação dela
+s, r = chamar("/sessions/eu", token=adm, extra={"X-Escola": escola["id"]})
+confere("administrador entra na escola (vira a coordenação dela)", s == 200 and r["usuario"]["perfil"] == "coordenacao" and r["usuario"]["adminNaEscola"])
+s, r = chamar("/usuarios", "POST", {"nome": "Prof Pelo Admin", "email": f"prof2.{sufixo}@exemplo.test", "senha": "provisoria4", "perfil": "professor"},
+              adm, extra={"X-Escola": escola["id"]})
+confere("administrador cadastra professor na escola em que entrou", s == 201 and r.get("escola_id") == escola["id"])
+s, r = chamar("/sessions/eu", token=adm)
+confere("sem entrar na escola, continua administrador", r["usuario"]["perfil"] == "admin")
+s, r = chamar("/usuarios", "POST", {"nome": "Prof Avulso", "email": f"avulso.{sufixo}@exemplo.test", "senha": "provisoria5", "perfil": "professor"}, adm)
+avulso_id = r.get("id")
+confere("administrador cadastra professor avulso (sem escola)", s == 201 and r.get("escola_id") is None)
+chamar(f"/usuarios/{avulso_id}", "PUT", {"ativo": False}, adm)
 s, r = chamar("/relatorios", "POST", {"escola": slug, "para": "nao.cadastrado@exemplo.test", "aluno": "Ana", "missao": "x"})
 confere("relatório para e-mail fora da lista é recusado", r.get("erro") == "email")
 

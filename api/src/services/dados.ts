@@ -1,6 +1,7 @@
 import { fn, col, Op } from "sequelize";
 import sequelize from "../config/connection";
 import Escola from "../models/Escola";
+import Turma from "../models/Turma";
 import { Competicao, Destinatario, Participacao, Pergunta, Questionario } from "../models/Dados";
 
 // Fase 4: as mesmas operações que o script do Google fazia na planilha (ferramentas/relatorio-email.gs), agora no banco,
@@ -77,7 +78,7 @@ const LETRAS_DO_CODIGO = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";   // sem 0/O e 1/I,
 const chaveDoNome = (n: unknown) => texto(n, 40).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
 const paraApp = (c: Competicao, comCodigo: boolean) => ({
-  id: c.id, nome: c.nome, jogo: c.jogo, jogoNome: c.jogo_nome, email: c.email || "",
+  id: c.id, nome: c.nome, jogo: c.jogo, jogoNome: c.jogo_nome, email: c.email || "", turmaId: c.turma_id || "",
   criada: c.created_at.toISOString(), encerra: c.encerra_em.toISOString(), aberta: Date.now() < c.encerra_em.getTime(),
   ...(comCodigo ? { codigo: c.codigo } : {})
 });
@@ -89,7 +90,8 @@ async function acharCompeticao(escopo: Escopo, id: unknown) {
   return c;
 }
 
-export async function criarCompeticao(escopo: Escopo, autorId: string | null, d: Record<string, unknown>) {
+// a competição é de uma turma (turmaId, já conferido por quem chama: a pessoa enxerga a turma)
+export async function criarCompeticao(escopo: Escopo, autorId: string | null, d: Record<string, unknown>, turmaId: string | null) {
   const nome = texto(d.nome, 60), jogo = texto(d.jogo, 30), jogoNome = texto(d.jogoNome, 60);
   const encerra = new Date(String(d.encerra));
   if (!jogo) throw erro("jogo");
@@ -98,22 +100,27 @@ export async function criarCompeticao(escopo: Escopo, autorId: string | null, d:
   let codigo: string;
   do { codigo = Array.from({ length: 5 }, () => LETRAS_DO_CODIGO[Math.floor(Math.random() * LETRAS_DO_CODIGO.length)]).join(""); }
   while (await Competicao.findOne({ where: { codigo } }));
-  const c = await Competicao.create({ escola_id: escopo, autor_id: autorId, codigo, nome: nome || jogoNome, jogo, jogo_nome: jogoNome,
+  const c = await Competicao.create({ escola_id: escopo, autor_id: autorId, turma_id: turmaId, codigo, nome: nome || jogoNome, jogo, jogo_nome: jogoNome,
     email: emailValido(email) ? email : null, encerra_em: encerra, id_planilha: null });
   return paraApp(c, true);
 }
 
-// para os alunos: as abertas e as que encerraram há menos de 3 dias (sem o código);
-// para o professor: as dos últimos 30 dias, com o código
-export async function listarCompeticoes(escopo: Escopo, doProfessor: boolean) {
+// para os alunos: as abertas e as que encerraram há menos de 3 dias; para o professor: as dos últimos 30 dias.
+// turmas: só as competições dessas turmas (o aluno logado: a turma dele; o professor: as turmas que ele dá aula).
+// comCodigo: o código interno da competição (o aluno logado pela turma também recebe, para mandar a pontuação)
+export async function listarCompeticoes(escopo: Escopo, doProfessor: boolean, turmas: string[] | null = null, comCodigo = doProfessor) {
   const limite = new Date(Date.now() - (doProfessor ? 30 : 3) * 24 * 3600 * 1000);
-  const cs = await Competicao.findAll({ where: { ...doEscopo(escopo), encerra_em: { [Op.gte]: limite } } });
+  const cs = await Competicao.findAll({ where: { ...doEscopo(escopo), encerra_em: { [Op.gte]: limite },
+    ...(turmas ? { turma_id: { [Op.in]: turmas } } : {}) } });
+  const turmasDelas = new Map((await Turma.findAll({ where: { id: { [Op.in]: cs.map((c) => c.turma_id).filter(Boolean) as string[] } }, attributes: ["id", "nome", "codigo"] }))
+    .map((x) => [x.id, x]));
   const contagem = await Participacao.findAll({
     attributes: ["competicao_id", [fn("COUNT", fn("DISTINCT", col("chave_nome"))), "qtd"]],
     where: { competicao_id: { [Op.in]: cs.map((c) => c.id) } }, group: ["competicao_id"], raw: true
   }) as unknown as { competicao_id: string; qtd: number }[];
   const participantes = new Map(contagem.map((x) => [x.competicao_id, Number(x.qtd)]));
-  return cs.map((c) => ({ ...paraApp(c, doProfessor), participantes: participantes.get(c.id) || 0 }))
+  return cs.map((c) => ({ ...paraApp(c, comCodigo), turma: (c.turma_id && turmasDelas.get(c.turma_id)?.nome) || "",
+    ...(doProfessor ? { turmaCodigo: (c.turma_id && turmasDelas.get(c.turma_id)?.codigo) || "" } : {}), participantes: participantes.get(c.id) || 0 }))
     .sort((a, b) => (a.aberta !== b.aberta ? (a.aberta ? -1 : 1) : b.criada.localeCompare(a.criada)));
 }
 

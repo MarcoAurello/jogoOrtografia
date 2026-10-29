@@ -3,7 +3,9 @@ import Usuario from "../models/Usuario";
 import Escola from "../models/Escola";
 
 // carrega o usuário do token (com a escola) e barra quem foi desativado ou cuja escola está bloqueada
-// (teste grátis vencido ou escola desativada: tudo bloqueado, menos para o administrador)
+// (teste grátis vencido ou escola desativada: tudo bloqueado, menos para o administrador).
+// O administrador pode "entrar" numa escola (cabeçalho X-Escola com o id dela): daí faz tudo como a coordenação
+// daquela escola (turmas, professores, competições...). Só nesta requisição: nada disso é gravado no usuário.
 export default async function carregarUsuarioLogado(
   request: Request,
   response: Response,
@@ -24,6 +26,16 @@ export default async function carregarUsuarioLogado(
 
     if (usuario.perfil !== "admin" && usuario.escola?.bloqueada) {
       return response.status(403).json({ message: "O acesso desta escola está bloqueado.", codigo: "escola_bloqueada" });
+    }
+
+    const naEscola = String(request.headers["x-escola"] || "");
+    if (usuario.perfil === "admin" && naEscola) {
+      const escola = await Escola.findByPk(naEscola);
+      if (!escola) return response.status(404).json({ message: "Escola não encontrada." });
+      usuario.perfil = "coordenacao";
+      usuario.escola_id = escola.id;
+      usuario.escola = escola;
+      request.adminNaEscola = true;
     }
 
     request.usuarioLogado = usuario;

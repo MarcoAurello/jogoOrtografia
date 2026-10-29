@@ -68,6 +68,7 @@ export class Competicao extends Model<InferAttributes<Competicao>, InferCreation
   declare id: CreationOptional<string>;
   declare escola_id: string | null;
   declare autor_id: string | null;
+  declare turma_id: CreationOptional<string | null>;
   declare codigo: string;
   declare nome: string;
   declare jogo: string;
@@ -82,6 +83,7 @@ Competicao.init({
   id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, allowNull: false, primaryKey: true },
   escola_id: { type: DataTypes.UUID, allowNull: true },
   autor_id: { type: DataTypes.UUID, allowNull: true },
+  turma_id: { type: DataTypes.UUID, allowNull: true },   // a turma da competição (o aluno entra com o código da turma)
   codigo: { type: DataTypes.STRING(8), allowNull: false },
   nome: { type: DataTypes.STRING(60), allowNull: false },
   jogo: { type: DataTypes.STRING(40), allowNull: false },
