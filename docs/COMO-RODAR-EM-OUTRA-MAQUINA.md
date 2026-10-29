@@ -54,7 +54,7 @@ Abra o `.env` e preencha (os valores abaixo são exemplos; invente os seus):
 | `URL_PLANILHA` | já vem com o endereço da planilha principal (não precisa mudar) |
 | `SENHA_PLANILHA` | a `SENHA_PROFESSOR` do script do Google (hoje `app0707`) |
 | `SENHA_ADMIN_PLANILHA` | a `SENHA_ADMIN` do script do Google (hoje `app1234`) |
-| `EMAIL_VIA` | `planilha` (o Gmail da planilha envia) ou `smtp` (caixa de teste, veja o passo 4) |
+| `EMAIL_VIA` | `smtp` (a API envia os e-mails, sem a planilha; no computador, use a caixa de teste do passo 4) ou `planilha` (o Gmail da planilha envia) |
 | `FRONTEND_URL` | `http://localhost:8089` |
 
 ---
@@ -174,7 +174,7 @@ docker compose logs api --tail 50
 | **502 Bad Gateway** logo depois de subir | Espere uns segundos (a API ainda está iniciando) e recarregue. |
 | O app parece "velho" depois de uma mudança | Abra numa **janela anônima** (o app guarda cópia para funcionar sem internet). |
 | Login do administrador não funciona | Confira `ADMIN_EMAIL`/`ADMIN_SENHA` no `.env`. O administrador só é criado se ainda não existir: mudar o `.env` depois não troca a senha. |
-| Relatório para o professor não chega | A planilha precisa do **script versão 6** (`ferramentas/relatorio-email.gs`): Implantar → Gerenciar implantações → ✏️ → Nova versão. |
+| Relatório para o professor não chega | Com `EMAIL_VIA=smtp`: confira as linhas `SMTP_` do `.env` e `docker compose logs api --tail 50`. Com `EMAIL_VIA=planilha`: a planilha precisa do **script versão 6** (`ferramentas/relatorio-email.gs`): Implantar → Gerenciar implantações → ✏️ → Nova versão. |
 | Quero começar o banco do zero | `docker compose down -v` (**apaga todos os dados locais**) e depois `docker compose up -d --build`. |
 
 ---
@@ -186,5 +186,5 @@ docker compose logs api --tail 50
 | `index.html`, `js/`, `style.css` | o app (os 36 jogos e as telas) |
 | `api/` | a API (TypeScript, Express, Sequelize/MySQL, como o E-CGU); rotas em `api/README.md` |
 | `docker-compose.yml`, `Dockerfile`, `nginx.conf` | o MySQL, a API e o app (nginx) no Docker |
-| `ferramentas/relatorio-email.gs` | o script do Google (hoje só o "carteiro" dos e-mails) |
+| `ferramentas/relatorio-email.gs` | o script do Google: só envia os e-mails quando `EMAIL_VIA=planilha` (com `smtp`, a API envia sozinha) |
 | `docs/plano-sistema-com-login.md` | o plano das fases (1 a 4 prontas) |

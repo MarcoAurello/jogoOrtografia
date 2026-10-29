@@ -30,7 +30,7 @@ O que ele confere:
 | 5. Questionário e competição | questionário da escola, competição com código, isolamento entre escolas, ranking (melhor partida), encerramento |
 | 6. Testar grátis | aceite da LGPD, cadastro, lista do administrador |
 | 7. Bloqueio | teste grátis vencido bloqueia professores e alunos; ativar o plano desbloqueia |
-| 8. Carteiro | o script do Google está na versão 6 (manda os relatórios por e-mail) |
+| 8. E-mail dos relatórios | com `EMAIL_VIA=smtp`: a API envia um relatório e ele chega na caixa de teste (mailpit) com o conteúdo certo; com `EMAIL_VIA=planilha`: o script do Google está na versão 6 |
 
 Para testar outro endereço: `python docs/testes/testar-fluxos.py http://localhost:8090`.
 
@@ -59,5 +59,5 @@ Dica: se o app parecer "velho" depois de uma mudança, use uma **janela anônima
 | 7 | **Questionário** | Aba **Questionário** | A lista de questionários (da plataforma ou da escola do endereço); responder até o fim |
 | 8 | **Competição** | Professor → 🏆 Competições → crie (anote o código) → no endereço da escola do professor (`/escola`), aba 🏆 Competição → entre com o código → jogue | O aluno da turma entra com o próprio nome; a pontuação aparece no ranking; depois de encerrar, ninguém entra |
 | 9 | **Testar grátis** | Início → 🎮 Teste grátis → cadastre **o seu e-mail** → jogue até o fim | O relatório em PDF chega no e-mail (pelo Gmail da planilha). Para não mandar de verdade: `EMAIL_VIA=smtp` com a caixa de teste (http://localhost:8025) |
-| 10 | **Relatório para o professor** | Antes de jogar, escolha um professor em "Para quem vai o relatório" | O e-mail chega (precisa do **script versão 6** implantado na planilha) |
+| 10 | **Relatório para o professor** | Antes de jogar, escolha um professor em "Para quem vai o relatório" | O e-mail chega (com `EMAIL_VIA=smtp`, na caixa de teste http://localhost:8025; com `planilha`, precisa do **script versão 6**) |
 | 11 | **Administrador: testes grátis** | Administrador → 🎁 Testes grátis | Quem se cadastrou, quantos relatórios recebeu, copiar os e-mails |

@@ -9,7 +9,8 @@ Como rodar (na pasta do projeto, com o sistema no ar: docker compose up -d):
     python docs/testes/testar-fluxos.py
     python docs/testes/testar-fluxos.py http://localhost:8090      (outro endereço)
 
-Precisa só do Python 3 (sem pacotes extras). Lê ADMIN_EMAIL, ADMIN_SENHA e URL_PLANILHA do arquivo .env.
+Precisa só do Python 3 (sem pacotes extras). Lê ADMIN_EMAIL, ADMIN_SENHA, EMAIL_VIA e URL_PLANILHA do arquivo .env.
+Com EMAIL_VIA=smtp, a parte 8 manda um relatório e confere se ele chegou na caixa de teste (mailpit, http://localhost:8025).
 Termina com "TUDO CERTO" ou com a lista do que falhou (e código de saída 1).
 """
 
@@ -17,6 +18,7 @@ import json
 import pathlib
 import random
 import sys
+import time
 import urllib.error
 import urllib.request
 import uuid
@@ -228,13 +230,46 @@ confere("alunos não entram (escola bloqueada)", s == 403)
 s, r = chamar(f"/escolas/{escola['id']}", "PUT", {"plano": "ativo"}, adm)
 confere("ativar o plano desbloqueia", s == 200 and not r.get("bloqueada"))
 
-# ---------- 8. planilha do Google (carteiro dos e-mails) ----------
-print("8. Script do Google (carteiro)")
-try:
-    versao = json.loads(urllib.request.urlopen(ENV["URL_PLANILHA"], timeout=60).read()).get("versao")
-    confere("script da planilha na versão 6 (manda os relatórios pelo carteiro)", versao == 6, f"versão {versao}")
-except Exception as e:
-    confere("script da planilha responde", False, str(e))
+# ---------- 8. e-mail dos relatórios ----------
+if ENV.get("EMAIL_VIA") == "smtp":
+    # a API monta e envia o relatório (sem a planilha); confere na caixa de teste (mailpit) que ele chegou
+    print("8. E-mail dos relatórios (SMTP, sem a planilha)")
+    email_rel = f"relatorio.{sufixo}@exemplo.test"
+    s, r = chamar("/planilha", "POST", {"acao": "adicionarEmail", "nome": "Professora Teste", "email": email_rel}, prof)
+    confere("e-mail entra na lista da escola", any(x.get("email") == email_rel for x in r.get("emails", [])))
+    relatorio = {"escola": slug, "para": email_rel, "tipo": "tabuada", "aluno": "Ana T.", "missao": "Tetris da Tabuada",
+                 "data": "29/10/2026", "acertos": 7, "total": 10, "estrelas": 2,
+                 "grupos": [{"titulo": "Tabuada do 8", "qtd": 2, "regra": "Lembrar os resultados da tabuada do 8."}],
+                 "palavras": [{"certa": "7 × 8 = 56", "tentou": ["tocou no quadrado 54"]}],
+                 "porRegra": [{"titulo": "Tabuada do 8", "total": 5, "erros": 2}],
+                 "niveis": [{"n": 1, "ok": True}, {"n": 2, "ok": False}], "resumo": ["Estourou 10 quadrados."],
+                 "tempos": [{"t": 2.5, "ok": True}, {"t": None, "ok": False}]}
+    s, r = chamar("/relatorios", "POST", relatorio)
+    confere("relatório enviado pela API (sem a planilha)", r.get("ok") is True, json.dumps(r))
+    caixa = ENV.get("MAILPIT_URL", "http://localhost:8025").rstrip("/")
+    try:
+        msg = None
+        for _ in range(10):
+            j = json.loads(urllib.request.urlopen(f"{caixa}/api/v1/search?query=to:{email_rel}", timeout=10).read())
+            if j.get("messages"):
+                msg = j["messages"][0]
+                break
+            time.sleep(1)
+        confere("o e-mail chegou na caixa de teste", bool(msg), msg.get("Subject", "") if msg else "nada em " + caixa)
+        if msg:
+            html = json.loads(urllib.request.urlopen(f"{caixa}/api/v1/message/{msg['ID']}", timeout=10).read()).get("HTML", "")
+            confere("o e-mail tem o relatório (assunto do jogo, gráficos e o que revisar)",
+                    "Cálculo mental" in html and "Tabuada do 8" in html and "7 × 8 = 56" in html)
+    except Exception as e:
+        print(f"  (a caixa de teste em {caixa} não respondeu: {e}; confira o e-mail no servidor SMTP)")
+else:
+    # o script do Google envia os relatórios (o "carteiro"): precisa estar na versão 6
+    print("8. Script do Google (carteiro)")
+    try:
+        versao = json.loads(urllib.request.urlopen(ENV["URL_PLANILHA"], timeout=60).read()).get("versao")
+        confere("script da planilha na versão 6 (manda os relatórios pelo carteiro)", versao == 6, f"versão {versao}")
+    except Exception as e:
+        confere("script da planilha responde", False, str(e))
 
 # ---------- fim: a escola de teste fica desativada ----------
 chamar(f"/turmas/{turma['id']}", "PUT", {"ativa": False}, prof)

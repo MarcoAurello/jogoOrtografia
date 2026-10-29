@@ -1,10 +1,18 @@
 import nodemailer from "nodemailer";
 
-// O PDF do Testar grátis sai de um destes jeitos (EMAIL_VIA):
-// - "planilha" (padrão): pelo Apps Script da planilha principal (acao relatorioPdf), como os relatórios de sempre. O e-mail
-//   sai pelo Gmail da conta que publicou o script, por HTTPS: funciona em qualquer rede (sem porta de e-mail).
-// - "smtp": por SMTP (e-mail da Hostinger, Gmail com senha de app, Resend...), com SMTP_HOST e companhia.
-const via = () => (process.env.EMAIL_VIA === "smtp" ? "smtp" : "planilha");
+// Os e-mails (o PDF do Testar grátis e o relatório de cada partida, em relatorioEmail.ts) saem de um destes jeitos (EMAIL_VIA):
+// - "planilha" (padrão): pelo Apps Script da planilha principal (o "carteiro"). O e-mail sai pelo Gmail da conta que
+//   publicou o script, por HTTPS: funciona em qualquer rede (sem porta de e-mail), mas depende da planilha.
+// - "smtp": direto daqui, por SMTP (Resend, e-mail da Hostinger, Gmail com senha de app...), com SMTP_HOST e companhia.
+//   Assim o sistema não depende mais da planilha para enviar.
+export const via = () => (process.env.EMAIL_VIA === "smtp" ? "smtp" : "planilha");
+export const transporteSmtp = () => nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT || 587),
+  secure: process.env.SMTP_SEGURO === "true",   // true para a porta 465
+  auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS || "" } : undefined
+});
+export const remetente = () => process.env.EMAIL_REMETENTE || "Pedagogia Gamificada <nao-responda@pedagociagamificada.com.br>";
 const erro = (codigo: string) => Object.assign(new Error(codigo), { codigo });
 const CHAVE_PLANILHA = "jogo-ortografia";   // a mesma CHAVE do script (ferramentas/relatorio-email.gs)
 
@@ -27,13 +35,8 @@ async function pelaPlanilha(para: string, nome: string, aluno: string, titulo: s
 
 async function porSmtp(para: string, nome: string, aluno: string, titulo: string, pdf: Buffer, arquivo: string) {
   if (!process.env.SMTP_HOST) throw erro("email_nao_configurado");
-  await nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: process.env.SMTP_SEGURO === "true",   // true para a porta 465
-    auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS || "" } : undefined
-  }).sendMail({
-    from: process.env.EMAIL_REMETENTE || "Pedagogia Gamificada <nao-responda@pedagociagamificada.com.br>",
+  await transporteSmtp().sendMail({
+    from: remetente(),
     to: para,
     subject: `Relatório de ${aluno}: ${titulo}`,
     text: `Olá, ${nome}!\n\nO relatório da partida de ${aluno} em "${titulo}" está em anexo (PDF).\n\n`
