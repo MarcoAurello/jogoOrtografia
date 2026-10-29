@@ -1,11 +1,11 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Escolas: o mesmo app com o logo, as cores e o nome de cada escola (pedagociagamificada.com.br/<escola>). */
 
-import { $, seguro } from './util.js?v=138';
-import { SOM } from './som.js?v=138';
-import { carregarEmails, parteProfessor, telaProfessor } from './professor.js?v=138';
-import { definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=138';
-import { api, definirEscolaDoAdmin } from './api.js?v=138';
+import { $, seguro } from './util.js?v=139';
+import { SOM } from './som.js?v=139';
+import { carregarEmails, parteProfessor, telaProfessor } from './professor.js?v=139';
+import { definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=139';
+import { api, definirEscolaDoAdmin } from './api.js?v=139';
 
 // ---------- Escolas ----------
 // O endereço diz a escola: pedagociagamificada.com.br/escolaExemplo (ou ?escola=escolaExemplo, para testar em outro
@@ -20,7 +20,6 @@ const CHAVE_VISUAL = 'pleno-ortografia:visual';         // cores e nome de cada 
 const CHAVE_PLANILHA = 'pleno-ortografia:planilha';      // de qual planilha são as cópias abaixo (e-mails e questionários)
 const COPIAS_DA_PLANILHA = ['pleno-ortografia:emails', 'pleno-ortografia:questionarios'];
 const RESERVADOS = new Set(['js', 'assets', 'icons', 'audio', 'vendor', 'docs', 'ferramentas', 'manual', 'privacidade', 'index', 'jogoortografia', 'ortografia', 'api']);
-const DOMINIO = 'https://pedagociagamificada.com.br';
 
 const lerJSON = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) || padrao; } catch (e) { return padrao; } };
 const gravar = (chave, valor) => { try { localStorage.setItem(chave, typeof valor === 'string' ? valor : JSON.stringify(valor)); } catch (e) { /* sem armazenamento */ } };
@@ -157,9 +156,10 @@ if (ESCOLA_DO_ENDERECO) carregarEscola(ESCOLA_DO_ENDERECO);
 else { conferirPlanilha(URL_PRINCIPAL); liberarTela(); }
 
 // ---------- Administrador: criar e editar escolas (Área do professor com o login de administrador) ----------
-// link de uma escola: no domínio da plataforma, /<escola>; em outro endereço (teste), ?escola=<escola>
-const linkDaEscola = (id) => (location.hostname.endsWith('pedagociagamificada.com.br') ? `${location.origin}/${id}`
-  : location.hostname === 'localhost' || location.hostname.endsWith('github.io') ? `${location.origin}${location.pathname}?escola=${id}` : `${DOMINIO}/${id}`);
+// link de uma escola: /<escola> no próprio endereço do sistema (o nginx entende, no computador e na VPS, em qualquer
+// domínio); no GitHub Pages, sem o nginx, ?escola=<escola>
+const linkDaEscola = (id) => (location.hostname.endsWith('github.io')
+  ? `${location.origin}${location.pathname.replace(/[^/]*$/, '')}?escola=${id}` : `${location.origin}/${id}`);
 
 const avisoEscola = (texto, ok = false) => { $('aviso-escola').textContent = texto; $('aviso-escola').classList.toggle('aviso-ok', ok); };
 const ERROS_ESCOLA = {
