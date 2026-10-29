@@ -1,11 +1,11 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Painel do professor: a turma inteira numa tela e a ficha de cada aluno (evolução, habilidades, antes × depois), com PDF. */
 
-import { $, seguro } from './util.js?v=135';
-import { SOM } from './som.js?v=135';
-import { api } from './api.js?v=135';
-import { parteProfessor } from './professor.js?v=135';
-import { NOME_HAB } from './habilidades.js?v=135';
+import { $, seguro } from './util.js?v=136';
+import { SOM } from './som.js?v=136';
+import { api } from './api.js?v=136';
+import { parteProfessor } from './professor.js?v=136';
+import { NOME_HAB } from './habilidades.js?v=136';
 
 // ---------- Painel ----------
 // Os números vêm da API (api/src/services/painel.ts). "Acerto" é acertos de primeira ÷ respondidas, como nos relatórios.
@@ -152,7 +152,7 @@ function desenharAluno(d) {
     ${blocos([[d.resumo.partidas, 'partidas'], [porcento(d.resumo.acerto), 'de acerto'], [d.resumo.minutos, 'minutos jogando'], [dataCurta(d.resumo.ultima), 'última partida']])}
     <div class="painel-grafico" id="graf-semanas"></div>
     <div class="painel-grafico" id="graf-habs"></div>
-    ${comparaveis.length ? `<h4 class="turma-subtitulo">↕️ Antes × depois <small>1ª metade × 2ª metade do período</small></h4>
+    ${comparaveis.length ? `<h4 class="turma-subtitulo">↕️ Antes × depois <small>1ª metade × 2ª metade das partidas do período</small></h4>
       <div class="painel-comparacao">${comparaveis.map((h) => {
         const dif = h.depois - h.antes;
         return `<div class="painel-comp-linha"><span>${seguro(nomeHab(h.habilidade))}</span><span>${h.antes}% → <b>${h.depois}%</b></span>
@@ -246,7 +246,7 @@ async function baixarPDFdoPainel({ tipo, dados: d }) {
   } else {
     const comparaveis = d.habilidades.filter((h) => h.antes != null && h.depois != null);
     if (comparaveis.length) {
-      texto('Antes × depois (1ª metade × 2ª metade do período)', 13, 'bold', AZUL);
+      texto('Antes × depois (1ª metade × 2ª metade das partidas do período)', 13, 'bold', AZUL);
       comparaveis.forEach((h) => texto(`${nomeHab(h.habilidade)}: ${h.antes}% → ${h.depois}% (${h.depois - h.antes >= 0 ? '+' : ''}${h.depois - h.antes})`, 10.5));
       y += 2;
     }

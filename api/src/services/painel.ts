@@ -69,7 +69,11 @@ export async function painelDaTurma(turmaId: string, dias: number) {
 // a ficha de um aluno: evolução por semana, habilidades (antes × depois), jogos e o que revisar
 export async function fichaDoAluno(alunoId: string, dias: number) {
   const desde = desdeDe(dias);
-  const meio = new Date((desde.getTime() + Date.now()) / 2);
+  // antes × depois: o meio do tempo em que o aluno jogou no período (da 1ª partida até hoje), não o meio do período;
+  // assim, quem começou a jogar há pouco também tem a comparação
+  const [inicio] = await consulta(`SELECT MIN(jogada_em) AS primeira FROM partidas WHERE aluno_id = :aluno AND jogada_em >= :desde`, { aluno: alunoId, desde });
+  const primeira = inicio?.primeira ? new Date(String(inicio.primeira)).getTime() : desde.getTime();
+  const meio = new Date((Math.max(primeira, desde.getTime()) + Date.now()) / 2);
   const r = { aluno: alunoId, desde, meio };
   const [resumo, semanas, habilidades, jogos, partidas] = await Promise.all([
     consulta(`SELECT COUNT(*) AS partidas, COALESCE(SUM(acertos), 0) AS acertos, COALESCE(SUM(total), 0) AS total,

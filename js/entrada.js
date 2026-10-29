@@ -1,11 +1,11 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Entrar na turma (depois do nome): código da turma → toca no nome → 3 figuras (a senha de criança). */
 
-import { $, seguro } from './util.js?v=135';
-import { SOM } from './som.js?v=135';
-import { api, guardarTokenAluno, lerTokenAluno } from './api.js?v=135';
-import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio } from './telas.js?v=135';
-import { enviarPartidas } from './partidas.js?v=135';
+import { $, seguro } from './util.js?v=136';
+import { SOM } from './som.js?v=136';
+import { api, guardarTokenAluno, lerTokenAluno } from './api.js?v=136';
+import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio } from './telas.js?v=136';
+import { enviarPartidas } from './partidas.js?v=136';
 
 // ---------- Entrada pela turma ----------
 // A entrada do app pede só o nome, como sempre. Quem tem turma toca em "Entrar com o código da turma" (no início ou no
