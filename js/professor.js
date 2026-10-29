@@ -1,51 +1,50 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=129';
-import { SOM } from './som.js?v=129';
-import { mostrar, telaInicio } from './telas.js?v=129';
-import { telaMissoes } from './ortografia.js?v=129';
-import { telaChuvaMenu } from './chuva.js?v=129';
-import { telaMatMenu } from './matematica.js?v=129';
-import { telaTiroMenu } from './tiro.js?v=129';
-import { telaPesoMenu } from './peso.js?v=129';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=129';
-import { telaLuzesMenu } from './luzes.js?v=129';
-import { telaRotinaMenu } from './rotina.js?v=129';
-import { telaFichasMenu } from './fichas.js?v=129';
-import { telaEscondidaMenu } from './escondida.js?v=129';
-import { telaCopiaMenu } from './copia.js?v=129';
-import { telaBarcosMenu } from './barcos.js?v=129';
-import { telaGiroMenu } from './giro.js?v=129';
-import { telaHoraMenu } from './hora.js?v=129';
-import { telaSomandoMenu } from './somando.js?v=129';
-import { telaDescobrirMenu } from './descobrir.js?v=129';
-import { telaChavesMenu } from './chaves.js?v=129';
-import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=129';
-import { telaPoliciaMenu } from './policia.js?v=129';
-import { telaPontosMenu } from './pontos.js?v=129';
-import { telaPixelsMenu } from './pixels.js?v=129';
-import { telaFracoesMenu } from './fracoes.js?v=129';
-import { telaCoresMenu } from './cores.js?v=129';
-import { telaLadosMenu } from './lados.js?v=129';
-import { telaSetasMenu } from './setas.js?v=129';
-import { telaVistasMenu } from './vistas.js?v=129';
-import { telaDinosMenu } from './dinos.js?v=129';
-import { telaSimbolosMenu } from './simbolos.js?v=129';
-import { telaTabuadaMenu } from './tabuada.js?v=129';
-import { telaClassesMenu } from './classes.js?v=129';
-import { telaGraficosMenu } from './graficos.js?v=129';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=129';
+import { $, seguro } from './util.js?v=130';
+import { SOM } from './som.js?v=130';
+import { mostrar, telaInicio } from './telas.js?v=130';
+import { telaMissoes } from './ortografia.js?v=130';
+import { telaChuvaMenu } from './chuva.js?v=130';
+import { telaMatMenu } from './matematica.js?v=130';
+import { telaTiroMenu } from './tiro.js?v=130';
+import { telaPesoMenu } from './peso.js?v=130';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=130';
+import { telaLuzesMenu } from './luzes.js?v=130';
+import { telaRotinaMenu } from './rotina.js?v=130';
+import { telaFichasMenu } from './fichas.js?v=130';
+import { telaEscondidaMenu } from './escondida.js?v=130';
+import { telaCopiaMenu } from './copia.js?v=130';
+import { telaBarcosMenu } from './barcos.js?v=130';
+import { telaGiroMenu } from './giro.js?v=130';
+import { telaHoraMenu } from './hora.js?v=130';
+import { telaSomandoMenu } from './somando.js?v=130';
+import { telaDescobrirMenu } from './descobrir.js?v=130';
+import { telaChavesMenu } from './chaves.js?v=130';
+import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=130';
+import { telaPoliciaMenu } from './policia.js?v=130';
+import { telaPontosMenu } from './pontos.js?v=130';
+import { telaPixelsMenu } from './pixels.js?v=130';
+import { telaFracoesMenu } from './fracoes.js?v=130';
+import { telaCoresMenu } from './cores.js?v=130';
+import { telaLadosMenu } from './lados.js?v=130';
+import { telaSetasMenu } from './setas.js?v=130';
+import { telaVistasMenu } from './vistas.js?v=130';
+import { telaDinosMenu } from './dinos.js?v=130';
+import { telaSimbolosMenu } from './simbolos.js?v=130';
+import { telaTabuadaMenu } from './tabuada.js?v=130';
+import { telaClassesMenu } from './classes.js?v=130';
+import { telaGraficosMenu } from './graficos.js?v=130';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=130';
+import { api, guardarToken, lerToken } from './api.js?v=130';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
 // e o aluno escolhe, ao entrar, para qual professor vai o relatório. O aparelho guarda uma cópia da lista
 // (para funcionar sem internet) e lembra a última escolha.
-const SENHA_PROFESSOR = 'app0707';   // conferida aqui (para os alunos não mexerem) e de novo no script
-const SENHA_ADMIN = 'app1234';       // administrador da plataforma: cria e edita as escolas (js/escola.js)
 const CHAVE_EMAILS = 'pleno-ortografia:emails';                    // cópia da aba "E-mails" [{ nome, email }]
 const CHAVE_EMAIL_ESCOLHIDO = 'pleno-ortografia:email-escolhido';  // e-mail escolhido, ou 'nenhum'
-let senhaProfessor = '';   // a senha digitada, mandada ao script para gravar questionários
+let usuarioLogado = null;   // quem entrou na Área do professor (login pela API): { nome, email, perfil, escola }
 const lerJSON = (chave, padrao) => { try { return JSON.parse(localStorage.getItem(chave)) || padrao; } catch (e) { return padrao; } };
 const gravarJSON = (chave, valor) => { try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) { /* sem armazenamento */ } };
 const jogoDaMissao = (mis) => (mis.quiz ? 'questionario' : mis.fracoes ? 'fracoes' : mis.pixels ? 'pixels' : mis.pontoAPonto ? 'pontos' : mis.policia ? 'policia' : mis.caminho ? 'caminho' : mis.taxi ? 'taxi' : mis.chaves ? 'chaves' : mis.descobrir ? 'descobrir' : mis.somando ? 'somando' : mis.hora ? 'hora' : mis.giro ? 'giro' : mis.barcos ? 'barcos' : mis.copia ? 'copia' : mis.escondida ? 'escondida' : mis.setas ? 'setas' : mis.vistas ? 'vistas' : mis.dinos ? 'dinos' : mis.simbolos ? 'simbolos' : mis.tabuada ? 'tabuada' : mis.classes ? 'classes' : mis.graficos ? 'graficos' : mis.cores ? 'cores' : mis.lados ? 'lados' : mis.fichas ? 'fichas' : mis.rotina ? 'rotina' : mis.luzes ? 'reflexo' : mis.peso ? 'peso' : mis.tiro ? 'tiro' : mis.matematica ? 'matematica' : mis.chuva ? 'chuva' : 'ortografia');
@@ -58,7 +57,8 @@ const definirEmailCompeticao = (email) => { emailCompeticao = email || ''; };
 const emailDoRelatorio = () => (emailCompeticao && listaEmails().some((x) => x.email === emailCompeticao) ? emailCompeticao
   : listaEmails().some((x) => x.email === emailEscolhido) ? emailEscolhido : '');
 
-// conversa com o script do Google: leituras por GET, gravações (com a senha) por POST
+// conversa com o script do Google: leituras por GET e as ações do aluno (competição) por POST, sem senha;
+// as gravações do professor vão pela API (gravarComoProfessor), que confere o login e põe a senha do script
 // chama o script; com internet e sem resposta (o Google manda a página de login, que o navegador bloqueia),
 // o script não está liberado para "Qualquer pessoa"
 async function chamarScript(url, opcoes) {
@@ -74,7 +74,14 @@ async function lerDoScript(acao, extra = '') {
 }
 async function gravarNoScript(dados) {
   const j = await chamarScript(URL_RELATORIO, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ chave: CHAVE_RELATORIO, senha: senhaProfessor, ...dados }) });
+    body: JSON.stringify({ chave: CHAVE_RELATORIO, ...dados }) });
+  if (!j.ok) throw new Error(j.erro || 'erro');
+  return j;
+}
+async function gravarComoProfessor(dados) {
+  let j;
+  try { j = await api('/planilha', { metodo: 'POST', corpo: dados }); }
+  catch (err) { throw new Error(err.codigo === 'internet' ? 'internet' : err.status === 401 ? 'login' : err.codigo || 'acesso'); }
   if (!j.ok) throw new Error(j.erro || 'erro');
   return j;
 }
@@ -151,6 +158,9 @@ $('escolha-prof-cancelar').onclick = () => { $('escolha-prof').hidden = true; de
 // Área do professor: senha → menu com dois botões → a parte escolhida (e-mails ou questionários)
 function parteProfessor(qual) {
   $('menu-professor').hidden = qual !== 'menu';
+  $('painel-usuarios').hidden = qual !== 'usuarios';
+  $('form-trocar-senha').hidden = qual !== 'senha';
+  $('prof-sessao').hidden = !usuarioLogado || qual === 'nenhuma';
   $('info-emails').hidden = qual !== 'emails';
   $('painel-questionarios').hidden = qual !== 'quiz';
   $('painel-links').hidden = qual !== 'links';
@@ -159,14 +169,62 @@ function parteProfessor(qual) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function telaProfessor() {
-  $('form-senha-professor').hidden = false;
+// Área do professor: com o login guardado no aparelho, entra direto; senão, pede e-mail e senha
+async function telaProfessor() {
+  $('form-senha-professor').hidden = true;
   parteProfessor('nenhuma');
-  $('professor-senha').value = '';
   $('erro-professor').textContent = '';
   mostrar('tela-professor');
-  setTimeout(() => $('professor-senha').focus(), 300);
+  if (lerToken()) {
+    try { entrarComo((await api('/sessions/eu')).usuario); return; } catch (err) { if (err.codigo === 'escola_bloqueada') $('erro-professor').textContent = `🔒 ${err.message}`; }
+  }
+  usuarioLogado = null;
+  $('form-senha-professor').hidden = false;
+  $('professor-senha').value = '';
+  setTimeout(() => $('professor-email').focus(), 300);
 }
+
+// o menu de cada perfil: o administrador cuida das escolas e dos usuários; a coordenação tem tudo do professor
+// e mais os usuários da escola; o professor, os e-mails, questionários, competições e links
+const CARTOES_DO_PERFIL = {
+  admin: ['btn-prof-escolas', 'btn-prof-usuarios'],
+  coordenacao: ['btn-prof-emails', 'btn-prof-quiz', 'btn-prof-comp', 'btn-prof-links', 'btn-prof-usuarios'],
+  professor: ['btn-prof-emails', 'btn-prof-quiz', 'btn-prof-comp', 'btn-prof-links'],
+};
+const NOME_DO_PERFIL = { admin: 'Administrador', coordenacao: 'Coordenação', professor: 'Professor' };
+function entrarComo(usuario) {
+  usuarioLogado = usuario;
+  $('form-senha-professor').hidden = true;
+  $('prof-sessao-nome').textContent = `👋 ${usuario.nome} · ${NOME_DO_PERFIL[usuario.perfil]}${usuario.escola ? ` · ${usuario.escola.nome}` : ''}`;
+  document.querySelectorAll('#menu-professor .jogo-card').forEach((c) => { c.hidden = !CARTOES_DO_PERFIL[usuario.perfil].includes(c.id); });
+  if (usuario.primeiro_login) { abrirTrocaDeSenha(true); return; }
+  parteProfessor('menu');
+  if (usuario.perfil !== 'admin') carregarEmails();   // já deixa a lista atualizada para quando abrir os e-mails
+}
+const usuarioAtual = () => usuarioLogado;
+
+// troca de senha: obrigatória no primeiro acesso (a senha veio de quem cadastrou)
+function abrirTrocaDeSenha(obrigatoria) {
+  $('form-trocar-senha').reset();
+  $('trocar-senha-aviso').textContent = obrigatoria ? 'Primeiro acesso: crie a sua senha (8 caracteres ou mais).' : '';
+  $('btn-trocar-senha-voltar').hidden = obrigatoria;
+  parteProfessor('senha');
+  setTimeout(() => $('senha-atual').focus(), 300);
+}
+$('form-trocar-senha').onsubmit = async (e) => {
+  e.preventDefault();
+  if ($('senha-nova').value !== $('senha-nova2').value) { $('trocar-senha-aviso').textContent = 'As duas senhas novas não são iguais.'; SOM.errado(); return; }
+  $('trocar-senha-aviso').textContent = 'Salvando…';
+  try {
+    await api('/usuarios/eu/senha', { metodo: 'PUT', corpo: { senhaAtual: $('senha-atual').value, novaSenha: $('senha-nova').value } });
+    SOM.certo();
+    usuarioLogado.primeiro_login = false;
+    entrarComo(usuarioLogado);
+  } catch (err) { $('trocar-senha-aviso').textContent = err.message; SOM.errado(); }
+};
+$('btn-trocar-senha-voltar').onclick = () => { SOM.clique(); parteProfessor('menu'); };
+$('btn-prof-senha').onclick = () => { SOM.clique(); abrirTrocaDeSenha(false); };
+$('btn-prof-sair').onclick = () => { SOM.clique(); guardarToken(''); usuarioLogado = null; telaProfessor(); };
 
 // carregando: mostra o reloginho animado enquanto espera a planilha
 function avisoEmail(texto, ok, carregando = false) {
@@ -175,7 +233,9 @@ function avisoEmail(texto, ok, carregando = false) {
   $('aviso-email').classList.toggle('carregando', carregando);
 }
 const mensagemDoErro = (err, padrao) => ({
-  senha: 'A planilha não aceitou a senha: confira a SENHA_PROFESSOR no script do Google.',
+  senha: 'A planilha não aceitou a senha: confira se a SENHA_PLANILHA do servidor é a mesma SENHA_PROFESSOR do script do Google.',
+  login: 'O seu login venceu. Toque em Sair e entre de novo.',
+  escola_bloqueada: 'O acesso desta escola está bloqueado (teste grátis encerrado).',
   email: 'Digite um e-mail válido, como nome@escola.com.',
   repetido: 'Este e-mail já está na lista.',
   internet: 'Sem internet agora. Tente de novo quando a conexão voltar.',
@@ -200,7 +260,7 @@ $('form-novo-email').onsubmit = async (e) => {
   const email = $('novo-email-email').value.trim().toLowerCase();
   avisoEmail('Salvando na planilha…', false, true);
   try {
-    const { emails } = await gravarNoScript({ acao: 'adicionarEmail', nome, email });
+    const { emails } = await gravarComoProfessor({ acao: 'adicionarEmail', nome, email });
     gravarJSON(CHAVE_EMAILS, emails || []);
     $('novo-email-nome').value = '';
     $('novo-email-email').value = '';
@@ -210,22 +270,20 @@ $('form-novo-email').onsubmit = async (e) => {
   } catch (err) { avisoEmail(mensagemDoErro(err, 'Não deu para salvar (sem internet ou script desatualizado).')); }
 };
 
+// login com e-mail e senha (a API confere; o app não guarda nenhuma senha)
 $('form-senha-professor').onsubmit = async (e) => {
   e.preventDefault();
-  const senha = $('professor-senha').value.trim();
-  // administrador: o menu mostra só as Escolas; professor: tudo, menos as Escolas
-  const admin = senha === SENHA_ADMIN;
-  document.querySelectorAll('#menu-professor .jogo-card').forEach((c) => { c.hidden = admin !== (c.id === 'btn-prof-escolas'); });
-  if (senha !== SENHA_PROFESSOR && !admin) {
-    $('erro-professor').textContent = 'Senha incorreta. 🔒';
+  $('erro-professor').textContent = 'Entrando…';
+  try {
+    const { token, usuario } = await api('/sessions', { metodo: 'POST', corpo: { email: $('professor-email').value.trim(), senha: $('professor-senha').value } });
+    guardarToken(token);
+    SOM.certo();
+    $('erro-professor').textContent = '';
+    entrarComo(usuario);
+  } catch (err) {
+    $('erro-professor').textContent = `${err.message} 🔒`;
     SOM.errado();
-    return;
   }
-  SOM.certo();
-  senhaProfessor = $('professor-senha').value.trim();
-  $('form-senha-professor').hidden = true;
-  parteProfessor('menu');
-  carregarEmails();   // já deixa a lista atualizada para quando abrir os e-mails
 };
 
 $('btn-prof-emails').onclick = async () => {
@@ -450,7 +508,7 @@ $('btn-quiz-salvar').onclick = async () => {
   if (incompleta >= 0) { avisoQuiz(`A pergunta ${incompleta + 1} precisa do texto, da resposta certa e de pelo menos uma errada.`); return; }
   avisoQuiz('Salvando na planilha…', false, true);
   try {
-    await gravarNoScript({ acao: 'salvarQuestionario', titulo, perguntas });
+    await gravarComoProfessor({ acao: 'salvarQuestionario', titulo, perguntas });
     SOM.certo();
     avisoQuiz(`Questionário "${titulo}" salvo! Os alunos já podem jogar. ✔`, true);
     $('quiz-nome').value = '';
@@ -464,4 +522,4 @@ $('btn-quiz-salvar').onclick = async () => {
 $('btn-professor').onclick = () => { SOM.clique(); telaProfessor(); };
 $('professor-voltar').onclick = telaInicio;
 
-export { carregarEmails, definirEmailCompeticao, SENHA_ADMIN, emailDoRelatorio, escolherProfessorE, gravarJSON, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, lerJSON, listaEmails, parteProfessor, telaProfessor };
+export { carregarEmails, definirEmailCompeticao, emailDoRelatorio, escolherProfessorE, gravarComoProfessor, gravarJSON, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, lerJSON, listaEmails, parteProfessor, telaProfessor, usuarioAtual };

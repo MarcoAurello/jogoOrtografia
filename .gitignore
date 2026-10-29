@@ -1,0 +1,7 @@
+# dependências e builds
+node_modules/
+api/dist/
+
+# segredos (use .env.example como modelo)
+.env
+api/.env

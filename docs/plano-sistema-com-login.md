@@ -1,6 +1,7 @@
 # Plano técnico: Pedagogia Gamificada com login e banco de dados
 
-> Status: **proposta para aprovação** · 29/10/2026
+> Status: **aprovado** · 29/10/2026 · decisões: MySQL (banco `games`), arquitetura do E-CGU, senha de figuras,
+> e-mail opcional, perfil de coordenação, `api/` neste repositório, teste grátis de 14 dias (depois, tudo bloqueado).
 > Objetivo: trocar a planilha do Google (Apps Script) por um servidor com banco de dados e login,
 > **mantendo os 36 jogos, o visual, o PWA e as escolas com marca própria**.
 
@@ -36,16 +37,17 @@ O que a planilha faz hoje (16 ações do Apps Script) e para onde vai:
 celular / tablet / PC  ──►  nginx (Dokploy, HTTPS)
                               ├─ /            → app estático (os jogos de hoje)
                               ├─ /<escola>    → mesmo app, já com a marca da escola no HTML
-                              └─ /api/*       → API Node.js ──► PostgreSQL
+                              └─ /api/*       → API Node.js ──► MySQL
                                                    └─► serviço de e-mail (Resend ou Amazon SES)
 ```
 
 **Escolhas (recomendação):**
 
-- **API: Node.js 22 + Express + Sequelize.** É a mesma base do sistema E-CGU, então o código fica familiar.
-- **Banco: PostgreSQL 16.** Guarda bem os detalhes de cada partida em JSON (`jsonb`) e permite consultas rápidas para os gráficos.
-- **Sessão: cookie `httpOnly`** no mesmo domínio (`/api`), em vez de token no `localStorage`. É mais seguro e funciona no PWA instalado.
-- **Senhas:** guardadas com hash `argon2` (ou `bcrypt`), nunca em texto.
+- **Arquitetura do E-CGU:** TypeScript + Express + Sequelize (mysql2), migrations e seeders do `sequelize-cli`,
+  controllers em classes, middlewares `ensureAuthenticated` / `carregarUsuarioLogado`, helmet e limite de tentativas de login.
+- **Banco: MySQL 8.0**, banco `games`. Os detalhes de cada partida ficam em colunas `JSON`.
+- **Sessão: JWT** no cabeçalho `Authorization: Bearer` (como no E-CGU), guardado no aparelho.
+- **Senhas:** guardadas com hash `bcryptjs`, nunca em texto.
 - **E-mail: Resend** (ou Amazon SES), que não tem as cotas do Gmail. O relatório por e-mail continua como opção.
 - **Hospedagem:** a VPS da Hostinger que já existe, com `docker-compose` no Dokploy (web + api + db + backup).
 
@@ -86,12 +88,12 @@ alunos          id, escola_id, turma_id, nome_exibicao (primeiro nome + inicial)
                 ativo, criado_em                            ← sem CPF, sem data de nascimento, sem foto
 partidas        id, escola_id, aluno_id (nulo p/ visitante), turma_id, jogo (ex.: 'fracoes'), nivel_max,
                 acertos, total, pontos, estrelas, duracao_s, iniciada_em, terminada_em,
-                detalhes jsonb                              ← a lista `resultados` de hoje (cada rodada: tipo, certa, erros, nível, tempo)
-                resumo jsonb                                ← `missao.resumo` de hoje
+                detalhes JSON                               ← a lista `resultados` de hoje (cada rodada: tipo, certa, erros, nível, tempo)
+                resumo JSON                                 ← `missao.resumo` de hoje
 partida_habilidades  partida_id, habilidade (ex.: 'memoria'), acertos, total   ← para os gráficos por habilidade
 questionarios   id, escola_id, autor_id, titulo, criado_em, publicado
-perguntas       id, questionario_id, ordem, enunciado, certa, erradas (text[]), explicacao
-competicoes     id, escola_id, autor_id, nome, jogo, codigo, config jsonb, encerra_em, encerrada
+perguntas       id, questionario_id, ordem, enunciado, certa, erradas (JSON), explicacao
+competicoes     id, escola_id, autor_id, nome, jogo, codigo, config JSON, encerra_em, encerrada
 participacoes   competicao_id, aluno_id (ou nome do visitante), pontos, acertos, respondidas, partidas, melhor_em
 destinatarios   id, escola_id, nome, email                  ← quem recebe relatório por e-mail (opcional)
 auditoria       id, escola_id, usuario_id, acao, quando     ← quem criou/apagou o quê (LGPD)
@@ -193,11 +195,11 @@ Administração (só admin)
 docker-compose.yml
   web     nginx: app estático + proxy /api (o Dockerfile/nginx.conf de hoje, com o bloco /api)
   api     node:22-alpine  (a API)
-  db      postgres:16-alpine  (volume persistente; porta fechada para fora)
-  backup  pg_dump diário → arquivo criptografado → envio para fora (ex.: Backblaze B2 / Google Drive)
+  db      mysql:8.0  (banco games, volume persistente, healthcheck; porta fechada para fora)
+  backup  mysqldump diário → arquivo criptografado → envio para fora (ex.: Backblaze B2 / Google Drive)
 ```
 
-- Variáveis no Dokploy: `DATABASE_URL`, `SESSAO_SEGREDO`, `RESEND_API_KEY`, `ADMIN_EMAIL`.
+- Variáveis no Dokploy: `DB_PASSWORD`, `JWT_SECRET`, `ADMIN_EMAIL`, `ADMIN_SENHA`, `SENHA_PLANILHA` (e depois `RESEND_API_KEY`).
 - Domínio: `pedagociagamificada.com.br` apontando para a VPS (o DNS A `@`/`www` → `187.127.60.12`, pendente desde o deploy do Docker).
 - **Custos novos:**
   - serviço de e-mail: grátis até cerca de 3 mil e-mails por mês no Resend;
@@ -229,7 +231,7 @@ Cada fase vai para o ar sozinha, sem parar o app de hoje.
 
 ## 11. Decisões para você tomar
 
-1. **Banco:** PostgreSQL (recomendado) ou MySQL, que você já usa no E-CGU?
+1. **Banco:** MySQL (recomendado) ou MySQL, que você já usa no E-CGU?
 2. **Login do aluno:** senha de figuras (recomendado para crianças) ou senha numérica de 4 dígitos?
 3. **Relatório por e-mail:** continua automático em toda partida, vira um resumo semanal, ou fica só no painel?
 4. **Coordenação:** cada escola terá um perfil de coordenação, ou o professor faz tudo?

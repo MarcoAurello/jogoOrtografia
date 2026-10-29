@@ -1,0 +1,52 @@
+# Jogos Psicopedagógicos com login e banco de dados (mesma arquitetura do E-CGU).
+# No Dokploy: tipo "Docker Compose", domínio no serviço "web" (porta 80). Variáveis: veja .env.example.
+# Para testar no computador:  docker compose up --build   →   http://localhost:8089
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME:-games}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PORT: 3333
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-games}
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: 12h
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_SENHA: ${ADMIN_SENHA}
+      URL_PLANILHA: ${URL_PLANILHA}
+      SENHA_PLANILHA: ${SENHA_PLANILHA}
+      FRONTEND_URL: ${FRONTEND_URL:-https://pedagociagamificada.com.br}
+
+  # o app (nginx): arquivos estáticos, /api → api e /<escola> → página da escola montada pela api
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "${PORTA_WEB:-8089}:80"
+
+volumes:
+  mysql_data:

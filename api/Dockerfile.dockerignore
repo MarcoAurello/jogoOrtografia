@@ -1,0 +1,7 @@
+# imagem da API (context = raiz do repositório): só a pasta api/ e o index.html
+*
+!api/
+!index.html
+api/node_modules
+api/dist
+api/.env

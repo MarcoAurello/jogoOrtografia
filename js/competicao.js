@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Competição: o professor cria (jogo + hora de encerrar), a turma entra com o código e o ranking fica na planilha. */
 
-import { $, seguro } from './util.js?v=129';
-import { aluno } from './estado.js?v=129';
-import { SOM } from './som.js?v=129';
-import { mostrar } from './telas.js?v=129';
-import { definirEmailCompeticao, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=129';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=129';
-import { comecarQuiz } from './quiz.js?v=129';
+import { $, seguro } from './util.js?v=130';
+import { aluno } from './estado.js?v=130';
+import { SOM } from './som.js?v=130';
+import { mostrar } from './telas.js?v=130';
+import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=130';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=130';
+import { comecarQuiz } from './quiz.js?v=130';
 
 // ---------- Competição ----------
 // A aba Competição lista as competições abertas (e as que encerraram há pouco, só com o ranking). Para entrar, o aluno
@@ -36,7 +36,8 @@ const ERROS = {
   nome: 'Digite o seu nome.',
   hora: 'Escolha uma hora de encerrar que ainda não passou.',
   jogo: 'Escolha o jogo da competição.',
-  senha: 'A planilha não aceitou a senha: confira a SENHA_PROFESSOR no script do Google.',
+  senha: 'A planilha não aceitou a senha: confira se a SENHA_PLANILHA do servidor é a mesma SENHA_PROFESSOR do script do Google.',
+  login: 'O seu login venceu. Toque em Sair e entre de novo.',
   acesso: 'A planilha desta escola não está liberada para "Qualquer pessoa" no Apps Script. Avise o professor.',
 };
 const mensagem = (err, padrao) => ERROS[String(err && err.message)] || padrao;
@@ -303,7 +304,7 @@ $('form-nova-comp').onsubmit = async (ev) => {
   if (!(encerra > new Date())) { avisoComp(ERROS.hora); return; }
   avisoComp('Criando na planilha…');
   try {
-    const { competicao: c } = await gravarNoScript({ acao: 'criarCompeticao', nome: $('comp-novo-nome').value.trim(), jogo,
+    const { competicao: c } = await gravarComoProfessor({ acao: 'criarCompeticao', nome: $('comp-novo-nome').value.trim(), jogo,
       jogoNome, encerra: encerra.toISOString(), email: $('comp-novo-email').value });
     SOM.certo();
     $('comp-novo-nome').value = '';
@@ -316,7 +317,7 @@ async function listarCompeticoesProfessor(dados) {
   const caixa = $('lista-comp-prof');
   if (!dados) caixa.innerHTML = '<p class="quiz-status carregando">Buscando as competições…</p>';
   try {
-    const { lista } = dados || await gravarNoScript({ acao: 'competicoesProfessor' });
+    const { lista } = dados || await gravarComoProfessor({ acao: 'competicoesProfessor' });
     caixa.innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhuma competição nos últimos 30 dias.</p>';
     for (const c of lista) {
       const item = document.createElement('div');
@@ -337,7 +338,7 @@ async function listarCompeticoesProfessor(dados) {
       if (c.aberta) {
         botao('⏹ Encerrar agora', 'quiz-excluir', async () => {
           if (!window.confirm(`Encerrar "${c.nome}" agora? Ninguém mais poderá entrar (o ranking fica guardado).`)) return;
-          try { listarCompeticoesProfessor(await gravarNoScript({ acao: 'encerrarCompeticao', id: c.id })); avisoComp(`"${c.nome}" foi encerrada.`, true); }
+          try { listarCompeticoesProfessor(await gravarComoProfessor({ acao: 'encerrarCompeticao', id: c.id })); avisoComp(`"${c.nome}" foi encerrada.`, true); }
           catch (e) { avisoComp('Não deu para encerrar (sem internet?). Tente de novo.'); }
         });
       }

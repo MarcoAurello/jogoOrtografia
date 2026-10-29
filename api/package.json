@@ -1,0 +1,37 @@
+{
+  "name": "pedagogia-gamificada-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API dos Jogos Psicopedagógicos (login, escolas e, nas próximas fases, turmas, partidas e painel)",
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "migrate": "sequelize-cli db:migrate",
+    "migrate:undo": "sequelize-cli db:migrate:undo",
+    "seed": "sequelize-cli db:seed:all",
+    "db:reset": "sequelize-cli db:drop && sequelize-cli db:create && sequelize-cli db:migrate && sequelize-cli db:seed:all"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.0",
+    "sequelize": "^6.37.3",
+    "sequelize-cli": "^6.6.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.14.9",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.3"
+  }
+}

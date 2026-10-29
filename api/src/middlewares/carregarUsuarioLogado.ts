@@ -1,0 +1,35 @@
+import { NextFunction, Request, Response } from "express";
+import Usuario from "../models/Usuario";
+import Escola from "../models/Escola";
+
+// carrega o usuário do token (com a escola) e barra quem foi desativado ou cuja escola está bloqueada
+// (teste grátis vencido ou escola desativada: tudo bloqueado, menos para o administrador)
+export default async function carregarUsuarioLogado(
+  request: Request,
+  response: Response,
+  next: NextFunction
+) {
+  try {
+    if (!request.userId) {
+      return response.status(401).json({ message: "Não autenticado." });
+    }
+
+    const usuario = await Usuario.findByPk(request.userId, {
+      include: [{ model: Escola, as: "escola" }]
+    });
+
+    if (!usuario || !usuario.ativo) {
+      return response.status(401).json({ message: "Usuário inválido ou inativo." });
+    }
+
+    if (usuario.perfil !== "admin" && usuario.escola?.bloqueada) {
+      return response.status(403).json({ message: "O acesso desta escola está bloqueado.", codigo: "escola_bloqueada" });
+    }
+
+    request.usuarioLogado = usuario;
+    return next();
+  } catch (error) {
+    console.error("Erro ao carregar usuário logado:", error);
+    return response.status(500).json({ message: "Erro ao carregar usuário logado." });
+  }
+}

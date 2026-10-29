@@ -17,6 +17,7 @@
     (function () {
       try {
         var reservados = ['js', 'assets', 'icons', 'audio', 'vendor', 'docs', 'ferramentas', 'manual', 'privacidade', 'index', 'jogoortografia', 'ortografia', 'api'];
+        if (window.ESCOLA_INICIAL) return;   // a página já veio do servidor com a marca da escola
         var valido = function (id) { return /^[A-Za-z0-9_-]{3,40}$/.test(id || '') && reservados.indexOf(id.toLowerCase()) < 0; };
         var id = new URLSearchParams(location.search).get('escola');
         if (!valido(id)) id = location.pathname.split('/').filter(Boolean).pop() || '';
@@ -40,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=129">
+  <link rel="stylesheet" href="style.css?v=130">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1349,13 +1350,38 @@
     <!-- Área do professor: senha e e-mail que recebe os relatórios -->
     <section class="tela" id="tela-professor">
       <h2 class="subtitulo">🧑‍🏫 Área do professor</h2>
-      <form class="cartao cartao-login" id="form-senha-professor" autocomplete="off">
+      <form class="cartao cartao-login" id="form-senha-professor" hidden>
         <label class="campo">
-          <span>Senha do professor</span>
-          <input type="password" id="professor-senha" maxlength="40" placeholder="Digite a senha" required>
+          <span>E-mail</span>
+          <input type="email" id="professor-email" maxlength="255" placeholder="nome@escola.com" autocomplete="username" required>
+        </label>
+        <label class="campo">
+          <span>Senha</span>
+          <input type="password" id="professor-senha" maxlength="100" placeholder="Digite a sua senha" autocomplete="current-password" required>
         </label>
         <p class="erro-login" id="erro-professor" role="alert"></p>
         <button class="btn-grande" type="submit">Entrar ▶</button>
+        <p class="professor-ajuda">Ainda não tem acesso? Peça à coordenação da sua escola.</p>
+      </form>
+      <!-- quem está logado, com trocar senha e sair -->
+      <div class="prof-sessao" id="prof-sessao" hidden>
+        <span id="prof-sessao-nome"></span>
+        <span class="prof-sessao-botoes">
+          <button class="btn-sec btn-pequeno" id="btn-prof-senha" type="button">🔑 Trocar senha</button>
+          <button class="btn-sec btn-pequeno" id="btn-prof-sair" type="button">Sair</button>
+        </span>
+      </div>
+      <form class="cartao cartao-login" id="form-trocar-senha" hidden>
+        <h3 class="chuva-pergunta">🔑 Trocar senha</h3>
+        <label class="campo"><span>Senha atual</span>
+          <input type="password" id="senha-atual" maxlength="100" autocomplete="current-password" required></label>
+        <label class="campo"><span>Senha nova (8 caracteres ou mais)</span>
+          <input type="password" id="senha-nova" maxlength="100" minlength="8" autocomplete="new-password" required></label>
+        <label class="campo"><span>Repita a senha nova</span>
+          <input type="password" id="senha-nova2" maxlength="100" minlength="8" autocomplete="new-password" required></label>
+        <p class="erro-login" id="trocar-senha-aviso" role="status"></p>
+        <button class="btn-grande" type="submit">Salvar senha</button>
+        <button class="btn-sec" id="btn-trocar-senha-voltar" type="button">← Voltar</button>
       </form>
       <!-- depois da senha: um botão para cada assunto -->
       <div class="menu-professor" id="menu-professor" hidden>
@@ -1378,6 +1404,11 @@
           <span class="jogo-card-icone">🏫</span>
           <span class="jogo-card-nome">Escolas</span>
           <span class="jogo-card-texto">Criar a versão de uma escola, com logo, cores e endereço próprios</span>
+        </button>
+        <button class="jogo-card" id="btn-prof-usuarios" type="button" style="--c:#2e7d32" hidden>
+          <span class="jogo-card-icone">👥</span>
+          <span class="jogo-card-nome">Usuários</span>
+          <span class="jogo-card-texto">Cadastrar a coordenação e os professores, desativar e dar senha nova</span>
         </button>
         <button class="jogo-card" id="btn-prof-links" type="button" style="--c:#e0a100">
           <span class="jogo-card-icone">🔗</span>
@@ -1409,7 +1440,8 @@
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
         <h3 class="chuva-pergunta">🏫 Escolas</h3>
         <p class="professor-ajuda">Cada escola ganha um endereço próprio (<b>pedagociagamificada.com.br/nomeDaEscola</b>) com o
-          <b>logo</b>, as <b>cores</b> e o <b>nome</b> dela, e todos os jogos. As escolas ficam na aba <b>"Escolas"</b> da planilha principal.</p>
+          <b>logo</b>, as <b>cores</b> e o <b>nome</b> dela, e todos os jogos. Escola nova começa com <b>14 dias de teste grátis</b>;
+          depois, tudo fica bloqueado até você ativar o plano. Cadastre a coordenação dela em 👥 Usuários.</p>
         <form class="cadastro-email" id="form-escola" autocomplete="off">
           <label class="campo campo-jogo"><span>Endereço (o que vem depois de .com.br/)</span>
             <input type="text" id="escola-id" maxlength="40" placeholder="Ex.: colegioNovo" spellcheck="false" autocapitalize="off"></label>
@@ -1436,6 +1468,30 @@
           <button class="btn-sec" id="btn-escola-limpar" type="button">Limpar</button>
         </form>
         <div class="lista-quiz" id="lista-escolas"></div>
+      </div>
+      <div class="cartao cartao-login" id="painel-usuarios" hidden>
+        <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
+        <h3 class="chuva-pergunta">👥 Usuários</h3>
+        <p class="professor-ajuda">Cada pessoa entra na Área do professor com o <b>próprio e-mail e senha</b>. Cadastre com uma
+          <b>senha provisória</b> e passe junto com o e-mail: no primeiro acesso, o app pede para criar a senha definitiva.</p>
+        <form class="cadastro-email" id="form-usuario" autocomplete="off">
+          <label class="campo campo-jogo" id="campo-usuario-escola"><span>Escola</span>
+            <select id="usuario-escola"></select></label>
+          <label class="campo campo-jogo"><span>Nome</span>
+            <input type="text" id="usuario-nome" maxlength="120" placeholder="Ex.: Ana Souza"></label>
+          <label class="campo campo-jogo"><span>E-mail</span>
+            <input type="email" id="usuario-email" maxlength="255" placeholder="ana@escola.com" autocomplete="off"></label>
+          <label class="campo campo-jogo"><span>Senha provisória (8 caracteres ou mais)</span>
+            <input type="text" id="usuario-senha" maxlength="100" autocomplete="off" spellcheck="false"></label>
+          <label class="campo campo-jogo"><span>Perfil</span>
+            <select id="usuario-perfil">
+              <option value="professor">Professor</option>
+              <option value="coordenacao">Coordenação</option>
+            </select></label>
+          <p class="erro-login" id="aviso-usuario" role="status"></p>
+          <button class="btn-grande" type="submit">👥 Cadastrar</button>
+        </form>
+        <div class="lista-quiz" id="lista-usuarios"></div>
       </div>
       <div class="cartao cartao-login" id="painel-links" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
@@ -1859,9 +1915,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=129"></script>
-  <script src="dados.js?v=129"></script>
-  <script type="module" src="js/main.js?v=129"></script>
+  <script src="plenix.js?v=130"></script>
+  <script src="dados.js?v=130"></script>
+  <script type="module" src="js/main.js?v=130"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

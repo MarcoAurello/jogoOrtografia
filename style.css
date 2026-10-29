@@ -2738,3 +2738,17 @@ html.escola-pendente body::after {
   border: 5px solid color-mix(in srgb, var(--primaria) 25%, transparent); border-top-color: var(--primaria); animation: girar-escola 0.8s linear infinite;
 }
 @keyframes girar-escola { to { transform: rotate(360deg); } }
+
+/* ---------- Login da Área do professor (API) ---------- */
+.prof-sessao { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; max-width: 620px; margin: 0 auto 12px;
+  padding: 8px 12px; border-radius: 14px; background: var(--branco); box-shadow: var(--sombra); font-weight: 700; color: var(--primaria-escura); }
+.prof-sessao[hidden] { display: none; }
+.prof-sessao-botoes { display: flex; gap: 6px; }
+.prof-sessao .btn-pequeno { margin: 0; }
+.usuario-item.inativo { opacity: 0.55; }
+/* escola bloqueada (teste grátis vencido): cobre o app inteiro */
+.escola-bloqueio { position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px;
+  background: rgba(19, 41, 75, 0.82); }
+.escola-bloqueio .cartao { max-width: 420px; text-align: center; }
+.escola-bloqueio-icone { margin: 0; font-size: 54px; }
+.escola-bloqueio .btn-grande { display: inline-block; margin-top: 10px; text-decoration: none; }

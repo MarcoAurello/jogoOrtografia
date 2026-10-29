@@ -1,21 +1,19 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Escolas: o mesmo app com o logo, as cores e o nome de cada escola (pedagociagamificada.com.br/<escola>). */
 
-import { $, seguro } from './util.js?v=129';
-import { SOM } from './som.js?v=129';
-import { carregarEmails, parteProfessor, SENHA_ADMIN } from './professor.js?v=129';
-import { CHAVE_RELATORIO, definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=129';
+import { $, seguro } from './util.js?v=130';
+import { SOM } from './som.js?v=130';
+import { carregarEmails, parteProfessor } from './professor.js?v=130';
+import { definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=130';
+import { api } from './api.js?v=130';
 
 // ---------- Escolas ----------
 // O endereço diz a escola: pedagociagamificada.com.br/escolaExemplo (ou ?escola=escolaExemplo, para testar em outro
-// endereço). A configuração da escola (nome, slogan, cores, logo e o script da planilha dela) vem daqui (as escolas que
-// já vêm prontas no app) ou da aba "Escolas" da planilha principal, onde o administrador cria escolas novas pelo app
-// (Área do professor com a senha de administrador). Com o script próprio, a escola tem os seus e-mails, questionários,
-// competições e relatórios; sem ele, usa a planilha principal. O app instalado lembra a escola.
-const ESCOLAS_PRONTAS = {
-  escolaexemplo: { id: 'escolaExemplo', nome: 'Escola Exemplo', slogan: 'Aprender é uma aventura!', cor: '#2e7d32', destaque: '#ffb300',
-    logo: 'assets/escolas/escola-exemplo.svg', script: '' },
-};
+// endereço). A configuração da escola (nome, slogan, cores, logo e o script da planilha dela) fica no banco de dados:
+// a página /<escola> já vem do servidor com ela (window.ESCOLA_INICIAL); com ?escola= ou sem internet, o app pede à API
+// ou usa a cópia do aparelho. O administrador cria e edita as escolas na Área do professor (login de administrador).
+// Com o script próprio, a escola tem os seus e-mails, questionários, competições e relatórios; sem ele, usa a planilha
+// principal. Escola com o teste grátis vencido (ou desativada) fica bloqueada. O app instalado lembra a escola.
 const CHAVE_ESCOLA = 'pleno-ortografia:escola';          // a escola do app instalado
 const CHAVE_CONFIGS = 'pleno-ortografia:escolas';        // cópia das configurações (para abrir sem internet)
 const CHAVE_VISUAL = 'pleno-ortografia:visual';         // cores e nome de cada escola, lidos no <head> antes de desenhar a página
@@ -76,7 +74,23 @@ function aplicarEscola(cfg) {
   if (definirUrlRelatorio(cfg.script || URL_PRINCIPAL)) carregarEmails();
   gravar(CHAVE_ESCOLA, cfg.id);
   instalacaoDaEscola(cfg);
+  mostrarBloqueio(cfg);
   liberarTela();
+}
+
+// teste grátis vencido ou escola desativada: tudo bloqueado, com o caminho para falar com a plataforma
+function mostrarBloqueio(cfg) {
+  document.getElementById('escola-bloqueio')?.remove();
+  if (!cfg.bloqueada) return;
+  const aviso = document.createElement('div');
+  aviso.id = 'escola-bloqueio';
+  aviso.className = 'escola-bloqueio';
+  aviso.setAttribute('role', 'alertdialog');
+  aviso.innerHTML = `<div class="cartao"><p class="escola-bloqueio-icone">🔒</p>
+    <h2 class="chuva-pergunta">O acesso de ${seguro(cfg.nome)} está pausado</h2>
+    <p>O período de teste grátis de 14 dias terminou. Para continuar usando os jogos e os relatórios, fale com a Pedagogia Gamificada.</p>
+    <a class="btn-grande" href="https://wa.me/5581985503305?text=${encodeURIComponent(`Olá! Quero ativar o plano da ${cfg.nome}.`)}" target="_blank" rel="noopener">💬 Falar no WhatsApp</a></div>`;
+  document.body.append(aviso);
 }
 
 // app instalado com a cara da escola: nome, ícone (o logo) e cor no Android (manifest) e no iPhone (ícone e título),
@@ -114,18 +128,16 @@ async function instalacaoDaEscola(cfg) {
   } catch (e) { /* logo que não carrega: fica o ícone da plataforma */ }
 }
 
-// configuração da escola: a cópia do aparelho na hora; depois confere com a planilha principal
+// configuração da escola: a que veio na página (servidor); senão a cópia do aparelho na hora e depois a da API
+const guardarCopia = (cfg) => gravar(CHAVE_CONFIGS, { ...lerJSON(CHAVE_CONFIGS, {}), [cfg.id.toLowerCase()]: cfg });
 async function carregarEscola(id) {
-  const pronta = ESCOLAS_PRONTAS[id.toLowerCase()];
-  const copias = lerJSON(CHAVE_CONFIGS, {});
-  aplicarEscola(pronta || copias[id.toLowerCase()]);
-  if (pronta || !URL_PRINCIPAL) { liberarTela(); return; }
+  const inicial = window.ESCOLA_INICIAL;
+  if (inicial && inicial.id.toLowerCase() === id.toLowerCase()) { guardarCopia(inicial); aplicarEscola(inicial); return; }
+  aplicarEscola(lerJSON(CHAVE_CONFIGS, {})[id.toLowerCase()]);
   try {
-    const r = await fetch(`${URL_PRINCIPAL}?acao=escola&id=${encodeURIComponent(id)}`);
-    const j = await r.json();
-    if (!j.ok || !j.escola) return;
-    gravar(CHAVE_CONFIGS, { ...lerJSON(CHAVE_CONFIGS, {}), [id.toLowerCase()]: j.escola });
-    aplicarEscola(j.escola);
+    const escola = await api(`/escolas/${encodeURIComponent(id)}/marca`);
+    guardarCopia(escola);
+    aplicarEscola(escola);
   } catch (e) { /* sem internet: fica com a cópia */ }
   finally { liberarTela(); }   // escola que não existe (ou sem internet na 1ª vez): abre com a marca da plataforma
 }
@@ -143,27 +155,26 @@ const ESCOLA_DO_ENDERECO = escolaDoEndereco();
 if (ESCOLA_DO_ENDERECO) carregarEscola(ESCOLA_DO_ENDERECO);
 else { conferirPlanilha(URL_PRINCIPAL); liberarTela(); }
 
-// ---------- Administrador: criar e editar escolas (Área do professor com a senha de administrador) ----------
+// ---------- Administrador: criar e editar escolas (Área do professor com o login de administrador) ----------
 // link de uma escola: no domínio da plataforma, /<escola>; em outro endereço (teste), ?escola=<escola>
 const linkDaEscola = (id) => (location.hostname.endsWith('pedagociagamificada.com.br') ? `${location.origin}/${id}`
   : location.hostname === 'localhost' || location.hostname.endsWith('github.io') ? `${location.origin}${location.pathname}?escola=${id}` : `${DOMINIO}/${id}`);
 
-async function chamarAdmin(dados) {
-  const r = await fetch(URL_PRINCIPAL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ chave: CHAVE_RELATORIO, senha: SENHA_ADMIN, ...dados }) });
-  const j = await r.json();
-  if (!j.ok) throw new Error(j.erro || 'erro');
-  return j;
-}
 const avisoEscola = (texto, ok = false) => { $('aviso-escola').textContent = texto; $('aviso-escola').classList.toggle('aviso-ok', ok); };
 const ERROS_ESCOLA = {
   endereco: 'Endereço inválido: use de 3 a 40 letras, números ou hífen, sem espaço (ex.: colegioNovo).',
   nome: 'Digite o nome da escola.',
-  senha: 'A planilha não aceitou a senha de administrador: confira a SENHA_ADMIN no script do Google.',
-  logo: 'O logo ficou grande demais. Use uma imagem mais simples.',
 };
+const dataCurta = (d) => new Date(d).toLocaleDateString('pt-BR');
+// situação do plano: ativo, teste (até quando) ou bloqueada
+function situacao(e) {
+  if (!e.ativa) return '🔒 desativada';
+  if (e.plano === 'ativo') return '✅ plano ativo';
+  return e.bloqueada ? `🔒 teste acabou em ${dataCurta(e.teste_ate)}` : `⏳ teste até ${dataCurta(e.teste_ate)}`;
+}
 
-let escolasDaPlanilha = [];
+let escolasDoBanco = [];
+let editandoId = '';   // id (no banco) da escola em edição
 async function abrirPainelEscolas() {
   parteProfessor('escolas');
   limparFormEscola();
@@ -173,35 +184,46 @@ async function abrirPainelEscolas() {
 async function listarEscolas() {
   const caixa = $('lista-escolas');
   caixa.innerHTML = '<p class="quiz-status carregando">Buscando as escolas…</p>';
-  try { escolasDaPlanilha = (await chamarAdmin({ acao: 'escolasAdmin' })).lista || []; }
-  catch (err) { escolasDaPlanilha = []; avisoEscola(ERROS_ESCOLA[String(err.message)] || 'Não deu para buscar as escolas da planilha (sem internet ou script desatualizado).'); }
-  const todas = [...Object.values(ESCOLAS_PRONTAS).map((e) => ({ ...e, pronta: true })),
-    ...escolasDaPlanilha.filter((e) => !ESCOLAS_PRONTAS[e.id.toLowerCase()])];
-  caixa.innerHTML = '';
-  for (const e of todas) {
+  try { escolasDoBanco = await api('/escolas'); }
+  catch (err) { escolasDoBanco = []; avisoEscola(err.message); }
+  caixa.innerHTML = escolasDoBanco.length ? '' : '<p class="quiz-status">Nenhuma escola ainda: crie a primeira aqui em cima.</p>';
+  for (const e of escolasDoBanco) {
     const item = document.createElement('div');
     item.className = 'quiz-item escola-item';
     item.style.borderLeftColor = corValida(e.cor) ? e.cor : '';
     item.innerHTML = `<img class="escola-logo-mini" src="${seguro(e.logo || 'assets/logo-pg-168.png')}" alt="">
       <span class="comp-item-texto"><span class="quiz-item-nome">${seguro(e.nome)}</span>
-      <span class="quiz-item-qtd">/${seguro(e.id)}${e.pronta ? ' · já vem no app' : ''}${e.script ? ' · planilha própria' : ' · planilha principal'}</span></span>`;
+      <span class="quiz-item-qtd">/${seguro(e.slug)} · ${situacao(e)} · ${e.usuarios} ${e.usuarios === 1 ? 'usuário' : 'usuários'}${e.script ? ' · planilha própria' : ' · planilha principal'}</span></span>`;
     const botoes = document.createElement('span');
     botoes.className = 'comp-item-botoes';
     const botao = (txt, acao) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'quiz-link'; b.textContent = txt; b.onclick = acao; botoes.append(b); };
     botao('📋 Copiar link', async () => {
-      const link = linkDaEscola(e.id);
+      const link = linkDaEscola(e.slug);
       try { await navigator.clipboard.writeText(link); avisoEscola(`Link copiado: ${link}`, true); } catch (err) { window.prompt('Copie o link:', link); }
     });
-    botao('👁️ Abrir', () => window.open(linkDaEscola(e.id), '_blank', 'noopener'));
-    if (!e.pronta) botao('✏️ Editar', () => editarEscola(e));
+    botao('👁️ Abrir', () => window.open(linkDaEscola(e.slug), '_blank', 'noopener'));
+    botao('✏️ Editar', () => editarEscola(e));
+    if (e.plano === 'teste') {
+      botao('✅ Ativar plano', () => mudarPlano(e, { plano: 'ativo', ativa: true }, `${e.nome} com o plano ativo.`));
+      botao('⏳ +14 dias', () => mudarPlano(e, { teste_ate: new Date(Math.max(Date.now(), new Date(e.teste_ate).getTime()) + 14 * 864e5).toISOString(), ativa: true },
+        `Teste de ${e.nome} estendido por mais 14 dias.`));
+    }
+    botao(e.ativa ? '⏸️ Desativar' : '▶️ Reativar', () => mudarPlano(e, { ativa: !e.ativa }, e.ativa ? `${e.nome} desativada.` : `${e.nome} reativada.`));
     item.append(botoes);
     caixa.append(item);
   }
 }
 
+async function mudarPlano(e, dados, mensagem) {
+  SOM.clique();
+  try { await api(`/escolas/${e.id}`, { metodo: 'PUT', corpo: dados }); avisoEscola(`${mensagem} ✔`, true); await listarEscolas(); }
+  catch (err) { avisoEscola(err.message); SOM.errado(); }
+}
+
 let logoEscolhido = '';
 function limparFormEscola() {
   $('form-escola').reset();
+  editandoId = '';
   $('escola-id').disabled = false;
   $('escola-cor').value = '#1fa2b0';
   $('escola-destaque').value = '#f9c62b';
@@ -213,7 +235,8 @@ function limparFormEscola() {
 }
 function editarEscola(e) {
   limparFormEscola();
-  $('escola-id').value = e.id;
+  editandoId = e.id;
+  $('escola-id').value = e.slug;
   $('escola-id').disabled = true;   // o endereço não muda (os links já foram mandados)
   $('escola-nome').value = e.nome;
   $('escola-slogan').value = e.slogan || '';
@@ -239,7 +262,7 @@ function previaEscola() {
 }
 ['escola-nome', 'escola-slogan', 'escola-cor', 'escola-destaque'].forEach((id) => { $(id).addEventListener('input', previaEscola); });
 
-// o logo vira uma imagem pequena (até 240 px), guardada na própria planilha
+// o logo vira uma imagem pequena (até 240 px), guardada no banco de dados
 $('escola-logo').onchange = () => {
   const arq = $('escola-logo').files[0];
   if (!arq) return;
@@ -270,21 +293,19 @@ $('form-escola').onsubmit = async (ev) => {
   const nome = $('escola-nome').value.trim();
   if (!valido(id)) { avisoEscola(ERROS_ESCOLA.endereco); return; }
   if (!nome) { avisoEscola(ERROS_ESCOLA.nome); return; }
-  const editando = $('escola-id').disabled;
-  if (!editando && (ESCOLAS_PRONTAS[id.toLowerCase()] || escolasDaPlanilha.some((e) => e.id.toLowerCase() === id.toLowerCase()))) {
-    avisoEscola(`Já existe uma escola com o endereço /${id}. Escolha outro ou toque em Editar.`);
-    return;
-  }
-  avisoEscola('Salvando na planilha…');
+  const editando = !!editandoId;
+  avisoEscola('Salvando…');
   try {
-    await chamarAdmin({ acao: 'salvarEscola', escola: { id, nome, slogan: $('escola-slogan').value.trim(), cor: $('escola-cor').value,
-      destaque: $('escola-destaque').value, logo: logoEscolhido, script: $('escola-script').value.trim() } });
+    const dados = { nome, slogan: $('escola-slogan').value.trim(), cor: $('escola-cor').value, destaque: $('escola-destaque').value,
+      logo: logoEscolhido, script: $('escola-script').value.trim() };
+    if (editando) await api(`/escolas/${editandoId}`, { metodo: 'PUT', corpo: dados });
+    else await api('/escolas', { metodo: 'POST', corpo: { ...dados, slug: id } });
     SOM.certo();
     const link = linkDaEscola(id);
     limparFormEscola();
-    avisoEscola(`${editando ? 'Alterações salvas' : 'Escola criada'}! Endereço: ${link} ✔`, true);
+    avisoEscola(`${editando ? 'Alterações salvas' : 'Escola criada, com 14 dias de teste grátis'}! Endereço: ${link} ✔`, true);
     await listarEscolas();
-  } catch (err) { avisoEscola(ERROS_ESCOLA[String(err.message)] || 'Não deu para salvar (sem internet ou script desatualizado).'); }
+  } catch (err) { avisoEscola(err.message); SOM.errado(); }
 };
 $('btn-escola-limpar').onclick = () => { SOM.clique(); limparFormEscola(); };
 $('btn-prof-escolas').onclick = () => { SOM.clique(); abrirPainelEscolas(); };

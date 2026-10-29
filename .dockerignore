@@ -8,3 +8,8 @@ docker-compose.yml
 .dockerignore
 vercel.json
 *.md
+
+# a API (pasta api/) tem a própria imagem
+api
+.env
+.env.example

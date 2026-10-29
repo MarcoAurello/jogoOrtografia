@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Somando as Cores. */
 
-import { $, embaralhar, sortear } from './util.js?v=129';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=129';
-import { SOM, tocar } from './som.js?v=129';
-import { mascote, mostrar, telaJogos } from './telas.js?v=129';
-import { escolherProfessorE } from './professor.js?v=129';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=129';
+import { $, embaralhar, sortear } from './util.js?v=130';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=130';
+import { SOM, tocar } from './som.js?v=130';
+import { mascote, mostrar, telaJogos } from './telas.js?v=130';
+import { escolherProfessorE } from './professor.js?v=130';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=130';
 
 // ---------- Somando as Cores ----------
 // Coordenadas, atenção e cálculo. Uma tabela de cores (linhas A, B, C... e colunas 1, 2, 3...) e, em cima, as
