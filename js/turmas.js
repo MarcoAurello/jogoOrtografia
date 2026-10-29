@@ -1,10 +1,11 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Turmas na Área do professor: criar turma (com código), cadastrar alunos, ver as figuras e as últimas partidas. */
 
-import { $, seguro } from './util.js?v=131';
-import { SOM } from './som.js?v=131';
-import { api } from './api.js?v=131';
-import { parteProfessor, usuarioAtual } from './professor.js?v=131';
+import { $, seguro } from './util.js?v=132';
+import { SOM } from './som.js?v=132';
+import { api } from './api.js?v=132';
+import { parteProfessor, usuarioAtual } from './professor.js?v=132';
+import { abrirFicha, abrirPainelTurma } from './painel.js?v=132';
 
 // ---------- Turmas ----------
 // O professor cria a turma e fica ligado a ela; a coordenação cria e escolhe os professores. Cada turma tem um código
@@ -71,6 +72,7 @@ $('form-turma').onsubmit = async (e) => {
 // ---------- uma turma: código, alunos (com as figuras) e as últimas partidas ----------
 async function abrirTurma(t) {
   turmaAberta = t;
+  parteProfessor('turmas');
   $('turmas-lista-parte').hidden = true;
   $('turma-detalhe').hidden = false;
   $('turma-det-nome').textContent = `🏫 ${t.nome}`;
@@ -97,6 +99,7 @@ async function listarAlunos() {
     const botoes = document.createElement('span');
     botoes.className = 'comp-item-botoes';
     const botao = (txt, acao) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'quiz-link'; b.textContent = txt; b.onclick = acao; botoes.append(b); };
+    botao('📈 Ficha', () => { SOM.clique(); abrirFicha(a.id, () => abrirTurma(turmaAberta)); });
     botao('🔑 Novas figuras', () => alterarAluno(a, { novaSenha: true }, `${a.nome} ganhou figuras novas. Mostre a nova senha para o aluno.`));
     botao(a.ativo ? '⏸️ Desativar' : '▶️ Ativar', () => alterarAluno(a, { ativo: !a.ativo }, a.ativo ? `${a.nome} saiu da lista da turma.` : `${a.nome} voltou para a turma.`));
     item.append(botoes);
@@ -149,5 +152,6 @@ $('btn-turma-encerrar').onclick = async () => {
   } catch (err) { avisoAlunos(err.message); SOM.errado(); }
 };
 $('btn-turma-atualizar').onclick = () => { SOM.clique(); listarAlunos(); listarPartidas(); };
+$('btn-turma-painel').onclick = () => { SOM.clique(); abrirPainelTurma(turmaAberta.id, () => abrirTurma(turmaAberta)); };
 $('btn-turmas-voltar').onclick = () => { SOM.clique(); abrirTurmas(); };
 $('btn-prof-turmas').onclick = () => { SOM.clique(); abrirTurmas(); };

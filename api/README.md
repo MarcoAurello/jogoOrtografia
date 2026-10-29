@@ -1,6 +1,6 @@
 # API — Jogos Psicopedagógicos
 
-Login, escolas e usuários (fase 1) e turmas, alunos e partidas (fase 2) do plano em `docs/plano-sistema-com-login.md`.
+Login, escolas e usuários (fase 1) e turmas, alunos e partidas (fase 2) e painel do professor (fase 3) do plano em `docs/plano-sistema-com-login.md`.
 Mesma arquitetura do E-CGU: TypeScript, Express, Sequelize (MySQL), migrations e seeders do `sequelize-cli`,
 JWT no cabeçalho `Authorization: Bearer`.
 
@@ -45,6 +45,8 @@ npm run dev               # http://localhost:3333
 | `POST /sessions/aluno`, `GET /sessions/aluno` | aluno | login por figuras (código + aluno + 3 figuras) e conferência |
 | `POST /partidas` | aluno | o fim de cada jogo (id do aparelho: reenviar não duplica) |
 | `GET /turmas/:id/partidas` | quem vê a turma | as últimas partidas da turma |
+| `GET /turmas/:id/painel?dias=30` | quem vê a turma | painel: quem jogou, acerto, semanas, habilidades e as 3 maiores dificuldades |
+| `GET /alunos/:id/ficha?dias=30` | quem vê a turma | ficha: evolução por semana, habilidades (antes × depois), jogos e o que revisar |
 
 ## Regras
 

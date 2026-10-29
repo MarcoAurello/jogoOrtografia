@@ -1,42 +1,42 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=131';
-import { SOM } from './som.js?v=131';
-import { mostrar, telaInicio } from './telas.js?v=131';
-import { telaMissoes } from './ortografia.js?v=131';
-import { telaChuvaMenu } from './chuva.js?v=131';
-import { telaMatMenu } from './matematica.js?v=131';
-import { telaTiroMenu } from './tiro.js?v=131';
-import { telaPesoMenu } from './peso.js?v=131';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=131';
-import { telaLuzesMenu } from './luzes.js?v=131';
-import { telaRotinaMenu } from './rotina.js?v=131';
-import { telaFichasMenu } from './fichas.js?v=131';
-import { telaEscondidaMenu } from './escondida.js?v=131';
-import { telaCopiaMenu } from './copia.js?v=131';
-import { telaBarcosMenu } from './barcos.js?v=131';
-import { telaGiroMenu } from './giro.js?v=131';
-import { telaHoraMenu } from './hora.js?v=131';
-import { telaSomandoMenu } from './somando.js?v=131';
-import { telaDescobrirMenu } from './descobrir.js?v=131';
-import { telaChavesMenu } from './chaves.js?v=131';
-import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=131';
-import { telaPoliciaMenu } from './policia.js?v=131';
-import { telaPontosMenu } from './pontos.js?v=131';
-import { telaPixelsMenu } from './pixels.js?v=131';
-import { telaFracoesMenu } from './fracoes.js?v=131';
-import { telaCoresMenu } from './cores.js?v=131';
-import { telaLadosMenu } from './lados.js?v=131';
-import { telaSetasMenu } from './setas.js?v=131';
-import { telaVistasMenu } from './vistas.js?v=131';
-import { telaDinosMenu } from './dinos.js?v=131';
-import { telaSimbolosMenu } from './simbolos.js?v=131';
-import { telaTabuadaMenu } from './tabuada.js?v=131';
-import { telaClassesMenu } from './classes.js?v=131';
-import { telaGraficosMenu } from './graficos.js?v=131';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=131';
-import { api, guardarToken, lerToken } from './api.js?v=131';
+import { $, seguro } from './util.js?v=132';
+import { SOM } from './som.js?v=132';
+import { mostrar, telaInicio } from './telas.js?v=132';
+import { telaMissoes } from './ortografia.js?v=132';
+import { telaChuvaMenu } from './chuva.js?v=132';
+import { telaMatMenu } from './matematica.js?v=132';
+import { telaTiroMenu } from './tiro.js?v=132';
+import { telaPesoMenu } from './peso.js?v=132';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=132';
+import { telaLuzesMenu } from './luzes.js?v=132';
+import { telaRotinaMenu } from './rotina.js?v=132';
+import { telaFichasMenu } from './fichas.js?v=132';
+import { telaEscondidaMenu } from './escondida.js?v=132';
+import { telaCopiaMenu } from './copia.js?v=132';
+import { telaBarcosMenu } from './barcos.js?v=132';
+import { telaGiroMenu } from './giro.js?v=132';
+import { telaHoraMenu } from './hora.js?v=132';
+import { telaSomandoMenu } from './somando.js?v=132';
+import { telaDescobrirMenu } from './descobrir.js?v=132';
+import { telaChavesMenu } from './chaves.js?v=132';
+import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=132';
+import { telaPoliciaMenu } from './policia.js?v=132';
+import { telaPontosMenu } from './pontos.js?v=132';
+import { telaPixelsMenu } from './pixels.js?v=132';
+import { telaFracoesMenu } from './fracoes.js?v=132';
+import { telaCoresMenu } from './cores.js?v=132';
+import { telaLadosMenu } from './lados.js?v=132';
+import { telaSetasMenu } from './setas.js?v=132';
+import { telaVistasMenu } from './vistas.js?v=132';
+import { telaDinosMenu } from './dinos.js?v=132';
+import { telaSimbolosMenu } from './simbolos.js?v=132';
+import { telaTabuadaMenu } from './tabuada.js?v=132';
+import { telaClassesMenu } from './classes.js?v=132';
+import { telaGraficosMenu } from './graficos.js?v=132';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=132';
+import { api, guardarToken, lerToken } from './api.js?v=132';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -160,6 +160,7 @@ function parteProfessor(qual) {
   $('menu-professor').hidden = qual !== 'menu';
   $('painel-usuarios').hidden = qual !== 'usuarios';
   $('painel-turmas').hidden = qual !== 'turmas';
+  $('painel-dados').hidden = qual !== 'dados';
   $('form-trocar-senha').hidden = qual !== 'senha';
   $('prof-sessao').hidden = !usuarioLogado || qual === 'nenhuma';
   $('info-emails').hidden = qual !== 'emails';

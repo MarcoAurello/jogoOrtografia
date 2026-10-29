@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=131">
+  <link rel="stylesheet" href="style.css?v=132">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1522,6 +1522,7 @@
           <h3 class="chuva-pergunta" id="turma-det-nome"></h3>
           <p class="turma-codigo-linha">Código da turma: <b class="turma-codigo-grande" id="turma-det-codigo"></b>
             <button class="quiz-link" id="btn-turma-copiar" type="button">📋 Copiar</button></p>
+          <button class="btn-grande painel-abrir" id="btn-turma-painel" type="button">📊 Painel da turma</button>
           <form class="cadastro-email" id="form-alunos" autocomplete="off">
             <label class="campo campo-jogo"><span>Novos alunos (um por linha: primeiro nome e inicial)</span>
               <textarea id="alunos-nomes" rows="4" placeholder="Ana S.&#10;Bruno L.&#10;Carla M."></textarea></label>
@@ -1534,6 +1535,15 @@
           <div class="partidas-turma" id="partidas-turma"></div>
           <button class="btn-sec btn-pequeno" id="btn-turma-encerrar" type="button"></button>
         </div>
+      </div>
+      <!-- painel do professor: a turma numa tela e a ficha de cada aluno (js/painel.js) -->
+      <div class="cartao cartao-login painel-dados" id="painel-dados" hidden>
+        <div class="painel-topo">
+          <button class="btn-sec btn-pequeno" id="btn-dados-voltar" type="button">← Voltar</button>
+          <button class="btn-sec btn-pequeno" id="btn-dados-pdf" type="button">📄 Baixar PDF</button>
+        </div>
+        <div class="periodo-botoes" id="periodo-botoes" role="group" aria-label="Período"></div>
+        <div id="dados-conteudo"></div>
       </div>
       <div class="cartao cartao-login" id="painel-usuarios" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
@@ -1981,9 +1991,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=131"></script>
-  <script src="dados.js?v=131"></script>
-  <script type="module" src="js/main.js?v=131"></script>
+  <script src="plenix.js?v=132"></script>
+  <script src="dados.js?v=132"></script>
+  <script type="module" src="js/main.js?v=132"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

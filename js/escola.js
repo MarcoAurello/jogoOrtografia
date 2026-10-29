@@ -1,11 +1,11 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Escolas: o mesmo app com o logo, as cores e o nome de cada escola (pedagociagamificada.com.br/<escola>). */
 
-import { $, seguro } from './util.js?v=131';
-import { SOM } from './som.js?v=131';
-import { carregarEmails, parteProfessor } from './professor.js?v=131';
-import { definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=131';
-import { api } from './api.js?v=131';
+import { $, seguro } from './util.js?v=132';
+import { SOM } from './som.js?v=132';
+import { carregarEmails, parteProfessor } from './professor.js?v=132';
+import { definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=132';
+import { api } from './api.js?v=132';
 
 // ---------- Escolas ----------
 // O endereço diz a escola: pedagociagamificada.com.br/escolaExemplo (ou ?escola=escolaExemplo, para testar em outro

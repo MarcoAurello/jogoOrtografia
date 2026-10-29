@@ -7,6 +7,7 @@ import PlanilhaController from '../controllers/PlanilhaController';
 import PaginaController from '../controllers/PaginaController';
 import AlunoController from '../controllers/AlunoController';
 import PartidaController from '../controllers/PartidaController';
+import PainelController from '../controllers/PainelController';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import carregarUsuarioLogado from '../middlewares/carregarUsuarioLogado';
 import carregarAlunoLogado from '../middlewares/carregarAlunoLogado';
@@ -23,6 +24,7 @@ routes.use('/usuarios', usuarioRoutes);
 routes.use('/escolas', escolaRoutes);
 routes.use('/turmas', turmaRoutes);
 routes.put('/alunos/:id', ensureAuthenticated, carregarUsuarioLogado, AlunoController.update);
+routes.get('/alunos/:id/ficha', ensureAuthenticated, carregarUsuarioLogado, PainelController.aluno);
 
 // o fim de cada jogo do aluno logado
 routes.post('/partidas', ensureAuthenticated, carregarAlunoLogado, PartidaController.store);

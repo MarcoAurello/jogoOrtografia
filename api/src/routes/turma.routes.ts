@@ -2,6 +2,7 @@ import { Router } from 'express';
 import TurmaController from '../controllers/TurmaController';
 import AlunoController from '../controllers/AlunoController';
 import PartidaController from '../controllers/PartidaController';
+import PainelController from '../controllers/PainelController';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import carregarUsuarioLogado from '../middlewares/carregarUsuarioLogado';
 
@@ -18,5 +19,6 @@ turmaRoutes.put('/:id', TurmaController.update);
 turmaRoutes.get('/:turmaId/alunos', AlunoController.index);
 turmaRoutes.post('/:turmaId/alunos', AlunoController.store);
 turmaRoutes.get('/:turmaId/partidas', PartidaController.daTurma);
+turmaRoutes.get('/:turmaId/painel', PainelController.turma);
 
 export default turmaRoutes;
