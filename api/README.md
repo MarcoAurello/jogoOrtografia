@@ -47,6 +47,9 @@ npm run dev               # http://localhost:3333
 | `GET /turmas/:id/partidas` | quem vê a turma | as últimas partidas da turma |
 | `GET /turmas/:id/painel?dias=30` | quem vê a turma | painel: quem jogou, acerto, semanas, habilidades e as 3 maiores dificuldades |
 | `GET /alunos/:id/ficha?dias=30` | quem vê a turma | ficha: evolução por semana, habilidades (antes × depois), jogos e o que revisar |
+| `POST /testes` | público | teste grátis: nome, e-mail, perfil e aceite → token (o mesmo e-mail reaproveita o cadastro) |
+| `POST /testes/relatorio` | teste grátis | o PDF do relatório de um jogo, mandado por e-mail (até 30 por dia) |
+| `GET /testes` | admin | quem se cadastrou no teste grátis |
 
 ## Regras
 
@@ -60,3 +63,6 @@ npm run dev               # http://localhost:3333
   legível para o professor (que mostra ao aluno); 5 erros seguidos travam aquele aluno por 1 minuto.
 - **Partidas:** só de quem entrou pela turma. Sem internet, ficam numa fila no aparelho e vão quando a conexão volta.
   Cada partida guarda as rodadas (`detalhes`), o resumo, a competição (se for de uma) e as habilidades do jogo.
+- **E-mail (teste grátis):** por SMTP (`SMTP_HOST`, `SMTP_PORT`, `SMTP_SEGURO`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_REMETENTE`):
+  serve o e-mail da Hostinger, o Gmail (senha de app) ou o Resend. No computador, o `docker-compose.override.yml` sobe o
+  Mailpit: os e-mails aparecem em http://localhost:8025 e nada sai de verdade.

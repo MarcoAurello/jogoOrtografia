@@ -20,6 +20,7 @@ const origensPermitidas = (process.env.FRONTEND_URL || 'http://localhost:8080')
 // sem a política de conteúdo do helmet: a página das escolas (/pagina) usa scripts e estilos no próprio HTML
 app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 app.use(cors({ origin: origensPermitidas }));
+app.use('/testes/relatorio', express.json({ limit: '2mb' }));   // o PDF do relatório (base64)
 app.use(express.json({ limit: '500kb' }));   // o logo da escola (até ~60 KB) e as rodadas de uma partida
 
 // Login é o alvo óbvio de força bruta: bloqueia só quem passar de 10 tentativas ERRADAS em 1 minuto
@@ -44,6 +45,9 @@ const limitadorAluno = rateLimit({
   message: { message: 'Muitas tentativas. Espere 1 minuto e tente de novo.' },
 });
 app.use('/sessions/aluno', limitadorAluno);
+// cadastro do teste grátis: poucos por IP (evita encher a lista com cadastros falsos)
+app.use('/testes', rateLimit({ windowMs: 60 * 60 * 1000, limit: 20, standardHeaders: true, legacyHeaders: false,
+  skip: (req) => req.method !== 'POST' || req.path !== '/', message: { message: 'Muitos cadastros deste endereço. Tente mais tarde.' } }));
 app.use('/sessions', limitadorLogin);
 app.use('/usuarios/eu/senha', limitadorLogin);
 

@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=132">
+  <link rel="stylesheet" href="style.css?v=133">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -54,6 +54,7 @@
         <button class="btn-menu" id="btn-menu" type="button" aria-expanded="false" aria-controls="menu-app-lista">☰ <span>Menu</span></button>
         <div class="menu-app-lista" id="menu-app-lista" hidden>
           <button class="menu-item" id="btn-menu-inicio" type="button">🏠 Início</button>
+          <button class="menu-item" id="btn-menu-teste" type="button">🎁 Testar grátis</button>
           <button class="menu-item" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
           <button class="menu-item" id="btn-trocar" type="button">👤 Trocar aluno</button>
           <button class="menu-item" id="btn-professor" type="button">🧑‍🏫 Área do professor</button>
@@ -114,6 +115,33 @@
         <button class="btn-grande" type="submit">Entrar ▶</button>
       </form>
       <button class="btn-sec entrada-troca" id="btn-com-turma" type="button" hidden>🏫 Entrar com o código da turma</button>
+    </section>
+
+    <!-- Testar grátis: cadastra o e-mail e recebe o relatório em PDF de cada jogo (js/testegratis.js) -->
+    <section class="tela" id="tela-teste">
+      <h2 class="subtitulo">🎁 Testar grátis</h2>
+      <form class="cartao cartao-login" id="form-teste" autocomplete="on">
+        <p class="professor-ajuda">Jogue à vontade: no fim de <b>cada jogo</b>, o <b>relatório em PDF</b> (acertos, erros, tempo de resposta
+          e o que revisar) chega no <b>seu e-mail</b>.</p>
+        <label class="campo"><span>Seu nome</span>
+          <input type="text" id="teste-nome" maxlength="120" autocomplete="name" required></label>
+        <label class="campo"><span>Seu e-mail</span>
+          <input type="email" id="teste-email" maxlength="255" autocomplete="email" placeholder="nome@escola.com" required></label>
+        <label class="campo"><span>Você é</span>
+          <select id="teste-perfil">
+            <option value="professor">Professor(a)</option>
+            <option value="psicopedagogo">Psicopedagogo(a)</option>
+            <option value="coordenacao">Coordenação / direção</option>
+            <option value="responsavel">Mãe, pai ou responsável</option>
+            <option value="outro">Outro</option>
+          </select></label>
+        <label class="teste-aceite"><input type="checkbox" id="teste-aceite">
+          <span>Aceito receber os relatórios e novidades da Pedagogia Gamificada por e-mail. Os dados ficam só com a gente (LGPD).</span></label>
+        <p class="erro-login" id="erro-teste" role="alert"></p>
+        <button class="btn-grande" type="submit">Começar o teste ▶</button>
+        <p class="teste-atual" id="teste-atual" hidden></p>
+        <button class="btn-sec" id="btn-teste-voltar" type="button">← Início</button>
+      </form>
     </section>
 
     <!-- Início -->
@@ -1437,6 +1465,11 @@
           <span class="jogo-card-nome">Escolas</span>
           <span class="jogo-card-texto">Criar a versão de uma escola, com logo, cores e endereço próprios</span>
         </button>
+        <button class="jogo-card" id="btn-prof-testes" type="button" style="--c:#c2185b" hidden>
+          <span class="jogo-card-icone">🎁</span>
+          <span class="jogo-card-nome">Testes grátis</span>
+          <span class="jogo-card-texto">Quem se cadastrou para testar e quantos relatórios recebeu</span>
+        </button>
         <button class="jogo-card" id="btn-prof-usuarios" type="button" style="--c:#2e7d32" hidden>
           <span class="jogo-card-icone">👥</span>
           <span class="jogo-card-nome">Usuários</span>
@@ -1544,6 +1577,14 @@
         </div>
         <div class="periodo-botoes" id="periodo-botoes" role="group" aria-label="Período"></div>
         <div id="dados-conteudo"></div>
+      </div>
+      <div class="cartao cartao-login" id="painel-testes" hidden>
+        <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
+        <h3 class="chuva-pergunta">🎁 Testes grátis</h3>
+        <p class="professor-ajuda">Quem cadastrou o e-mail no <b>Testar grátis</b> (aceitou receber os relatórios e novidades).</p>
+        <button class="quiz-link" id="btn-testes-copiar" type="button">📋 Copiar os e-mails</button>
+        <p class="erro-login" id="aviso-testes" role="status"></p>
+        <div class="lista-quiz" id="lista-testes"></div>
       </div>
       <div class="cartao cartao-login" id="painel-usuarios" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
@@ -1991,9 +2032,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=132"></script>
-  <script src="dados.js?v=132"></script>
-  <script type="module" src="js/main.js?v=132"></script>
+  <script src="plenix.js?v=133"></script>
+  <script src="dados.js?v=133"></script>
+  <script type="module" src="js/main.js?v=133"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

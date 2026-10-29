@@ -38,6 +38,13 @@ services:
       URL_PLANILHA: ${URL_PLANILHA}
       SENHA_PLANILHA: ${SENHA_PLANILHA}
       FRONTEND_URL: ${FRONTEND_URL:-https://pedagociagamificada.com.br}
+      # e-mail (relatório em PDF do teste grátis): o SMTP do e-mail da Hostinger, Gmail, Resend...
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SEGURO: ${SMTP_SEGURO:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      EMAIL_REMETENTE: ${EMAIL_REMETENTE:-Pedagogia Gamificada <nao-responda@pedagociagamificada.com.br>}
 
   # o app (nginx): arquivos estáticos, /api → api e /<escola> → página da escola montada pela api
   web:

@@ -1,15 +1,15 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Competição: o professor cria (jogo + hora de encerrar), a turma entra com o código e o ranking fica na planilha. */
 
-import { $, seguro } from './util.js?v=132';
-import { aluno } from './estado.js?v=132';
-import { lerTokenAluno } from './api.js?v=132';
-import { definirCompeticaoDaPartida } from './partidas.js?v=132';
-import { SOM } from './som.js?v=132';
-import { mostrar } from './telas.js?v=132';
-import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=132';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=132';
-import { comecarQuiz } from './quiz.js?v=132';
+import { $, seguro } from './util.js?v=133';
+import { aluno } from './estado.js?v=133';
+import { lerTokenAluno } from './api.js?v=133';
+import { definirCompeticaoDaPartida } from './partidas.js?v=133';
+import { SOM } from './som.js?v=133';
+import { mostrar } from './telas.js?v=133';
+import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=133';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=133';
+import { comecarQuiz } from './quiz.js?v=133';
 
 // ---------- Competição ----------
 // A aba Competição lista as competições abertas (e as que encerraram há pouco, só com o ranking). Para entrar, o aluno

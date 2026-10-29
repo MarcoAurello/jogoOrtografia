@@ -1,11 +1,11 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Entrada do aluno pela turma: código da turma → toca no nome → 3 figuras (a senha de criança). */
 
-import { $, seguro } from './util.js?v=132';
-import { SOM } from './som.js?v=132';
-import { api, guardarTokenAluno, lerTokenAluno } from './api.js?v=132';
-import { aoTrocarAluno, entrarComoAluno, mascote } from './telas.js?v=132';
-import { enviarPartidas } from './partidas.js?v=132';
+import { $, seguro } from './util.js?v=133';
+import { SOM } from './som.js?v=133';
+import { api, guardarTokenAluno, lerTokenAluno } from './api.js?v=133';
+import { aoTrocarAluno, entrarComoAluno, mascote } from './telas.js?v=133';
+import { enviarPartidas } from './partidas.js?v=133';
 
 // ---------- Entrada pela turma ----------
 // Na primeira vez, o aluno digita o código da turma (o professor passa); o aparelho lembra a turma, e das outras vezes

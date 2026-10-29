@@ -7,6 +7,7 @@
 const BASE = '/api';
 const CHAVE_TOKEN = 'pleno-ortografia:token';
 const CHAVE_TOKEN_ALUNO = 'pleno-ortografia:token-aluno';
+const CHAVE_TOKEN_TESTE = 'pleno-ortografia:token-teste';   // teste grátis: os relatórios em PDF vão para o e-mail cadastrado
 
 const ler = (chave) => { try { return localStorage.getItem(chave) || ''; } catch (e) { return ''; } };
 function guardar(chave, token) {
@@ -16,10 +17,12 @@ const lerToken = () => ler(CHAVE_TOKEN);
 const guardarToken = (token) => guardar(CHAVE_TOKEN, token);
 const lerTokenAluno = () => ler(CHAVE_TOKEN_ALUNO);
 const guardarTokenAluno = (token) => guardar(CHAVE_TOKEN_ALUNO, token);
+const lerTokenTeste = () => ler(CHAVE_TOKEN_TESTE);
+const guardarTokenTeste = (token) => guardar(CHAVE_TOKEN_TESTE, token);
 
 // faz o pedido e devolve o JSON; erro vira Error com a mensagem da API (e .status / .codigo)
-async function api(caminho, { metodo = 'GET', corpo, comoAluno = false } = {}) {
-  const chave = comoAluno ? CHAVE_TOKEN_ALUNO : CHAVE_TOKEN;
+async function api(caminho, { metodo = 'GET', corpo, comoAluno = false, comoTeste = false } = {}) {
+  const chave = comoAluno ? CHAVE_TOKEN_ALUNO : comoTeste ? CHAVE_TOKEN_TESTE : CHAVE_TOKEN;
   const token = ler(chave);
   let r;
   try {
@@ -45,4 +48,4 @@ async function api(caminho, { metodo = 'GET', corpo, comoAluno = false } = {}) {
   return dados;
 }
 
-export { api, guardarToken, guardarTokenAluno, lerToken, lerTokenAluno };
+export { api, guardarToken, guardarTokenAluno, guardarTokenTeste, lerToken, lerTokenAluno, lerTokenTeste };
