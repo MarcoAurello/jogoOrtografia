@@ -217,7 +217,7 @@ Cada fase vai para o ar sozinha, sem parar o app de hoje.
 | **1. Base** | API + banco + Docker; login de admin/coordenação/professor; escolas no banco; marca servida no HTML | o professor entra com e-mail e senha, a escola abre sem flash e as senhas fixas saíram do código | M |
 | **2. Turmas e alunos** | turmas com código, alunos, login por figuras; `POST /api/partidas` com fila sem internet | uma partida jogada aparece no banco com o aluno certo, mesmo se jogada sem internet | M |
 | **3. Painel** | painel da turma, ficha do aluno, gráficos por habilidade, PDF | o professor vê a evolução de um aluno em 4 semanas de partidas | G |
-| **4. Migração** | questionários, competições e ranking na API; script que copia a planilha para o banco; desligar o Apps Script | nenhuma tela chama mais o Apps Script | M |
+| **4. Migração** ✅ (Apps Script fica só como carteiro dos e-mails) | questionários, competições e ranking na API; script que copia a planilha para o banco; desligar o Apps Script | nenhuma tela chama mais o Apps Script | M |
 | **5. Extras** | planos e teste grátis com data, "Entrar com Google", avisos por e-mail (ex.: "turma sem jogar há 7 dias") | — | P a M |
 
 **Convivência durante a transição:** uma configuração por escola (`usa_api: sim/não`). As escolas migram uma de cada vez. Enquanto isso, quem ainda está no Apps Script continua funcionando como hoje.

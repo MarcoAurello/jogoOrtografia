@@ -1,6 +1,6 @@
 # API — Jogos Psicopedagógicos
 
-Login, escolas e usuários (fase 1) e turmas, alunos e partidas (fase 2) e painel do professor (fase 3) do plano em `docs/plano-sistema-com-login.md`.
+Login, escolas e usuários (fase 1) e turmas, alunos e partidas (fase 2) painel do professor (fase 3) e os dados que eram da planilha (fase 4) do plano em `docs/plano-sistema-com-login.md`.
 Mesma arquitetura do E-CGU: TypeScript, Express, Sequelize (MySQL), migrations e seeders do `sequelize-cli`,
 JWT no cabeçalho `Authorization: Bearer`.
 
@@ -50,6 +50,11 @@ npm run dev               # http://localhost:3333
 | `POST /testes` | público | teste grátis: nome, e-mail, perfil e aceite → token (o mesmo e-mail reaproveita o cadastro) |
 | `POST /testes/relatorio` | teste grátis | o PDF do relatório de um jogo, mandado por e-mail (até 30 por dia) |
 | `GET /testes` | admin | quem se cadastrou no teste grátis |
+| `GET /dados?acao=…&escola=` | público | e-mails dos relatórios, questionários, competições e ranking (as mesmas ações e respostas do antigo script) |
+| `POST /dados` | público | competição do aluno: `entrarCompeticao` e `resultadoCompeticao` |
+| `POST /planilha` | logado | gravações do professor: `adicionarEmail`, `salvarQuestionario`, `criarCompeticao`, `competicoesProfessor`, `encerrarCompeticao` (no banco) |
+| `POST /relatorios` | público | relatório de uma partida por e-mail: a API confere o destinatário e o script do Google só envia (carteiro) |
+| `POST /admin/importar-planilha` | admin | traz da planilha para o banco: escolas, e-mails, questionários, competições e ranking (pode repetir) |
 
 ## Regras
 
@@ -66,3 +71,6 @@ npm run dev               # http://localhost:3333
 - **E-mail (teste grátis):** por SMTP (`SMTP_HOST`, `SMTP_PORT`, `SMTP_SEGURO`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_REMETENTE`):
   serve o e-mail da Hostinger, o Gmail (senha de app) ou o Resend. No computador, o `docker-compose.override.yml` sobe o
   Mailpit: os e-mails aparecem em http://localhost:8025 e nada sai de verdade.
+- **Dados da planilha (fase 4):** e-mails, questionários, competições e ranking ficam no banco, cada escola com os seus
+  (sem escola = plataforma principal). O Apps Script ficou só como **carteiro**: envia os relatórios e o PDF do teste grátis
+  pelo Gmail da conta dele (por HTTPS, em qualquer rede). Links antigos de questionário (id da aba) continuam abrindo.

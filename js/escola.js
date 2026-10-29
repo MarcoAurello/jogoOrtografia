@@ -1,11 +1,11 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Escolas: o mesmo app com o logo, as cores e o nome de cada escola (pedagociagamificada.com.br/<escola>). */
 
-import { $, seguro } from './util.js?v=133';
-import { SOM } from './som.js?v=133';
-import { carregarEmails, parteProfessor } from './professor.js?v=133';
-import { definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=133';
-import { api } from './api.js?v=133';
+import { $, seguro } from './util.js?v=134';
+import { SOM } from './som.js?v=134';
+import { carregarEmails, parteProfessor } from './professor.js?v=134';
+import { definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=134';
+import { api } from './api.js?v=134';
 
 // ---------- Escolas ----------
 // O endereço diz a escola: pedagociagamificada.com.br/escolaExemplo (ou ?escola=escolaExemplo, para testar em outro
@@ -152,6 +152,7 @@ function conferirPlanilha(url) {
 }
 
 const ESCOLA_DO_ENDERECO = escolaDoEndereco();
+window.ESCOLA_ATUAL_ID = ESCOLA_DO_ENDERECO;   // os pedidos de dados (js/api.js) vão com a escola
 if (ESCOLA_DO_ENDERECO) carregarEscola(ESCOLA_DO_ENDERECO);
 else { conferirPlanilha(URL_PRINCIPAL); liberarTela(); }
 
@@ -309,5 +310,24 @@ $('form-escola').onsubmit = async (ev) => {
 };
 $('btn-escola-limpar').onclick = () => { SOM.clique(); limparFormEscola(); };
 $('btn-prof-escolas').onclick = () => { SOM.clique(); abrirPainelEscolas(); };
+
+// importar da planilha do Google: escolas, e-mails, questionários e competições que ainda não estão no banco
+$('btn-importar-planilha').onclick = async () => {
+  SOM.clique();
+  const aviso = $('aviso-importar');
+  aviso.classList.remove('aviso-ok');
+  aviso.textContent = 'Importando da planilha… (pode levar um minuto)';
+  $('btn-importar-planilha').disabled = true;
+  try {
+    const r = await api('/admin/importar-planilha', { metodo: 'POST', corpo: {} });
+    const linhas = r.resumos.map((x) => `${x.origem}: ${x.emails} e-mails, ${x.questionarios} questionários, ${x.competicoes} competições (${x.participacoes} no ranking)${
+      x.erros.length ? ` · avisos: ${x.erros.join('; ')}` : ''}`);
+    aviso.textContent = `✔ ${r.escolasNovas.length ? `Escolas novas: ${r.escolasNovas.join(', ')}. ` : ''}${linhas.join(' | ')}${r.erros.length ? ` · ${r.erros.join('; ')}` : ''}`;
+    aviso.classList.add('aviso-ok');
+    SOM.certo();
+    await listarEscolas();
+  } catch (err) { aviso.textContent = err.message; SOM.errado(); }
+  finally { $('btn-importar-planilha').disabled = false; }
+};
 
 export { escolaAtual };

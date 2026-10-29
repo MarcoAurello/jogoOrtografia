@@ -1,43 +1,43 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Relatório do fim do jogo: textos, gráficos, envio por e-mail (com fila offline), confete e PDF. */
 
-import { registrarPartida } from './partidas.js?v=133';
-import { $, seguro, semHTML, sortear } from './util.js?v=133';
-import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=133';
-import { frase, SOM } from './som.js?v=133';
-import { mascote, mostrar } from './telas.js?v=133';
-import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=133';
-import { comecarMissao, telaMissoes } from './ortografia.js?v=133';
-import { comecarChuva, telaChuvaMenu } from './chuva.js?v=133';
-import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=133';
-import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=133';
-import { comecarPeso, telaPesoMenu } from './peso.js?v=133';
-import { comecarQuiz, telaQuizMenu } from './quiz.js?v=133';
-import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=133';
-import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=133';
-import { comecarFichas, telaFichasMenu } from './fichas.js?v=133';
-import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=133';
-import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=133';
-import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=133';
-import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=133';
-import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=133';
-import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=133';
-import { comecarDescobrir, DESCOBRIR, telaDescobrirMenu } from './descobrir.js?v=133';
-import { CHAVES, comecarChaves, telaChavesMenu } from './chaves.js?v=133';
-import { CAMINHO, comecarCaminho, comecarTaxi, telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=133';
-import { comecarPolicia, POLICIA, telaPoliciaMenu } from './policia.js?v=133';
-import { comecarPontos, PONTOS, telaPontosMenu } from './pontos.js?v=133';
-import { comecarPixels, PIXELS, telaPixelsMenu } from './pixels.js?v=133';
-import { comecarFracoes, FRACOES, telaFracoesMenu } from './fracoes.js?v=133';
-import { comecarCores, telaCoresMenu } from './cores.js?v=133';
-import { comecarLados, telaLadosMenu } from './lados.js?v=133';
-import { comecarSetas, telaSetasMenu } from './setas.js?v=133';
-import { comecarVistas, telaVistasMenu } from './vistas.js?v=133';
-import { comecarDinos, telaDinosMenu } from './dinos.js?v=133';
-import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=133';
-import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=133';
-import { comecarClasses, telaClassesMenu } from './classes.js?v=133';
-import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=133';
+import { registrarPartida } from './partidas.js?v=134';
+import { $, seguro, semHTML, sortear } from './util.js?v=134';
+import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=134';
+import { frase, SOM } from './som.js?v=134';
+import { mascote, mostrar } from './telas.js?v=134';
+import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=134';
+import { comecarMissao, telaMissoes } from './ortografia.js?v=134';
+import { comecarChuva, telaChuvaMenu } from './chuva.js?v=134';
+import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=134';
+import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=134';
+import { comecarPeso, telaPesoMenu } from './peso.js?v=134';
+import { comecarQuiz, telaQuizMenu } from './quiz.js?v=134';
+import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=134';
+import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=134';
+import { comecarFichas, telaFichasMenu } from './fichas.js?v=134';
+import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=134';
+import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=134';
+import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=134';
+import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=134';
+import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=134';
+import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=134';
+import { comecarDescobrir, DESCOBRIR, telaDescobrirMenu } from './descobrir.js?v=134';
+import { CHAVES, comecarChaves, telaChavesMenu } from './chaves.js?v=134';
+import { CAMINHO, comecarCaminho, comecarTaxi, telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=134';
+import { comecarPolicia, POLICIA, telaPoliciaMenu } from './policia.js?v=134';
+import { comecarPontos, PONTOS, telaPontosMenu } from './pontos.js?v=134';
+import { comecarPixels, PIXELS, telaPixelsMenu } from './pixels.js?v=134';
+import { comecarFracoes, FRACOES, telaFracoesMenu } from './fracoes.js?v=134';
+import { comecarCores, telaCoresMenu } from './cores.js?v=134';
+import { comecarLados, telaLadosMenu } from './lados.js?v=134';
+import { comecarSetas, telaSetasMenu } from './setas.js?v=134';
+import { comecarVistas, telaVistasMenu } from './vistas.js?v=134';
+import { comecarDinos, telaDinosMenu } from './dinos.js?v=134';
+import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=134';
+import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=134';
+import { comecarClasses, telaClassesMenu } from './classes.js?v=134';
+import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=134';
 
 // ---------- Relatório de dificuldades ----------
 function montarRelatorio() {
@@ -353,8 +353,10 @@ const resultadoEnvio = {};   // id do relatório -> 'ok' ou 'erro'
 let enviando = false;
 
 // devolve '' se enviou, ou o erro do script; sem internet, a promessa falha
+// vai para a API (/api/relatorios), que confere o e-mail na lista da escola e entrega ao script do Google só para enviar
 async function postarRelatorio(dados) {
-  const r = await fetch(URL_RELATORIO, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(dados) });
+  const r = await fetch('/api/relatorios', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ escola: window.ESCOLA_ATUAL_ID || window.ESCOLA_INICIAL?.id || '', ...dados }) });
   const j = await r.json();
   return j.ok ? '' : (j.erro || 'erro');
 }

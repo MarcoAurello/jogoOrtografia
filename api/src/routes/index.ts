@@ -9,6 +9,9 @@ import AlunoController from '../controllers/AlunoController';
 import PartidaController from '../controllers/PartidaController';
 import PainelController from '../controllers/PainelController';
 import TesteGratisController from '../controllers/TesteGratisController';
+import DadosController from '../controllers/DadosController';
+import RelatorioController from '../controllers/RelatorioController';
+import ImportacaoController from '../controllers/ImportacaoController';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import carregarUsuarioLogado from '../middlewares/carregarUsuarioLogado';
 import carregarAlunoLogado from '../middlewares/carregarAlunoLogado';
@@ -35,7 +38,15 @@ routes.get('/testes', ensureAuthenticated, carregarUsuarioLogado, ensurePerfil('
 // o fim de cada jogo do aluno logado
 routes.post('/partidas', ensureAuthenticated, carregarAlunoLogado, PartidaController.store);
 
-// gravações do professor na planilha do Google (até a fase 4), com a senha do script guardada no servidor
+// e-mails dos relatórios, questionários e competições (o que antes vinha da planilha do Google; mesmas ações e respostas)
+routes.get('/dados', DadosController.ler);
+routes.post('/dados', DadosController.gravar);
+// o relatório de uma partida por e-mail: a API confere o destinatário e o script do Google só envia (carteiro)
+routes.post('/relatorios', RelatorioController.enviar);
+// administrador: traz para o banco o que está na planilha do Google (escolas, e-mails, questionários, competições)
+routes.post('/admin/importar-planilha', ensureAuthenticated, carregarUsuarioLogado, ensurePerfil('admin'), ImportacaoController.importar);
+
+// gravações do professor (e-mails, questionários, competições), no banco; o nome /planilha ficou do tempo da planilha
 routes.post('/planilha', ensureAuthenticated, carregarUsuarioLogado, ensurePerfil('professor', 'coordenacao', 'admin'), PlanilhaController.gravar);
 
 // a página de uma escola com a marca dela (o nginx manda /<escola> para cá)

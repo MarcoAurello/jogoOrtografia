@@ -1,42 +1,42 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=133';
-import { SOM } from './som.js?v=133';
-import { mostrar, telaInicio } from './telas.js?v=133';
-import { telaMissoes } from './ortografia.js?v=133';
-import { telaChuvaMenu } from './chuva.js?v=133';
-import { telaMatMenu } from './matematica.js?v=133';
-import { telaTiroMenu } from './tiro.js?v=133';
-import { telaPesoMenu } from './peso.js?v=133';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=133';
-import { telaLuzesMenu } from './luzes.js?v=133';
-import { telaRotinaMenu } from './rotina.js?v=133';
-import { telaFichasMenu } from './fichas.js?v=133';
-import { telaEscondidaMenu } from './escondida.js?v=133';
-import { telaCopiaMenu } from './copia.js?v=133';
-import { telaBarcosMenu } from './barcos.js?v=133';
-import { telaGiroMenu } from './giro.js?v=133';
-import { telaHoraMenu } from './hora.js?v=133';
-import { telaSomandoMenu } from './somando.js?v=133';
-import { telaDescobrirMenu } from './descobrir.js?v=133';
-import { telaChavesMenu } from './chaves.js?v=133';
-import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=133';
-import { telaPoliciaMenu } from './policia.js?v=133';
-import { telaPontosMenu } from './pontos.js?v=133';
-import { telaPixelsMenu } from './pixels.js?v=133';
-import { telaFracoesMenu } from './fracoes.js?v=133';
-import { telaCoresMenu } from './cores.js?v=133';
-import { telaLadosMenu } from './lados.js?v=133';
-import { telaSetasMenu } from './setas.js?v=133';
-import { telaVistasMenu } from './vistas.js?v=133';
-import { telaDinosMenu } from './dinos.js?v=133';
-import { telaSimbolosMenu } from './simbolos.js?v=133';
-import { telaTabuadaMenu } from './tabuada.js?v=133';
-import { telaClassesMenu } from './classes.js?v=133';
-import { telaGraficosMenu } from './graficos.js?v=133';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=133';
-import { api, guardarToken, lerToken, lerTokenTeste } from './api.js?v=133';
+import { $, seguro } from './util.js?v=134';
+import { SOM } from './som.js?v=134';
+import { mostrar, telaInicio } from './telas.js?v=134';
+import { telaMissoes } from './ortografia.js?v=134';
+import { telaChuvaMenu } from './chuva.js?v=134';
+import { telaMatMenu } from './matematica.js?v=134';
+import { telaTiroMenu } from './tiro.js?v=134';
+import { telaPesoMenu } from './peso.js?v=134';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=134';
+import { telaLuzesMenu } from './luzes.js?v=134';
+import { telaRotinaMenu } from './rotina.js?v=134';
+import { telaFichasMenu } from './fichas.js?v=134';
+import { telaEscondidaMenu } from './escondida.js?v=134';
+import { telaCopiaMenu } from './copia.js?v=134';
+import { telaBarcosMenu } from './barcos.js?v=134';
+import { telaGiroMenu } from './giro.js?v=134';
+import { telaHoraMenu } from './hora.js?v=134';
+import { telaSomandoMenu } from './somando.js?v=134';
+import { telaDescobrirMenu } from './descobrir.js?v=134';
+import { telaChavesMenu } from './chaves.js?v=134';
+import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=134';
+import { telaPoliciaMenu } from './policia.js?v=134';
+import { telaPontosMenu } from './pontos.js?v=134';
+import { telaPixelsMenu } from './pixels.js?v=134';
+import { telaFracoesMenu } from './fracoes.js?v=134';
+import { telaCoresMenu } from './cores.js?v=134';
+import { telaLadosMenu } from './lados.js?v=134';
+import { telaSetasMenu } from './setas.js?v=134';
+import { telaVistasMenu } from './vistas.js?v=134';
+import { telaDinosMenu } from './dinos.js?v=134';
+import { telaSimbolosMenu } from './simbolos.js?v=134';
+import { telaTabuadaMenu } from './tabuada.js?v=134';
+import { telaClassesMenu } from './classes.js?v=134';
+import { telaGraficosMenu } from './graficos.js?v=134';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=134';
+import { api, escolaDoEndereco, guardarToken, lerToken, lerTokenTeste } from './api.js?v=134';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -57,8 +57,9 @@ const definirEmailCompeticao = (email) => { emailCompeticao = email || ''; };
 const emailDoRelatorio = () => (emailCompeticao && listaEmails().some((x) => x.email === emailCompeticao) ? emailCompeticao
   : listaEmails().some((x) => x.email === emailEscolhido) ? emailEscolhido : '');
 
-// conversa com o script do Google: leituras por GET e as ações do aluno (competição) por POST, sem senha;
-// as gravações do professor vão pela API (gravarComoProfessor), que confere o login e põe a senha do script
+// os dados (e-mails, questionários, competições) vêm da API, com as mesmas ações e respostas do antigo script do Google:
+// leituras por GET e as ações do aluno (competição) por POST, com a escola do endereço; as gravações do professor
+// vão por gravarComoProfessor, com o login
 // chama o script; com internet e sem resposta (o Google manda a página de login, que o navegador bloqueia),
 // o script não está liberado para "Qualquer pessoa"
 async function chamarScript(url, opcoes) {
@@ -68,13 +69,13 @@ async function chamarScript(url, opcoes) {
   try { return JSON.parse(texto); } catch (e) { throw new Error('acesso'); }
 }
 async function lerDoScript(acao, extra = '') {
-  const j = await chamarScript(`${URL_RELATORIO}?acao=${acao}${extra}`);
+  const j = await chamarScript(`/api/dados?acao=${acao}&escola=${encodeURIComponent(escolaDoEndereco())}${extra}`);
   if (!j.ok) throw new Error(j.erro || 'erro');
   return j;
 }
 async function gravarNoScript(dados) {
-  const j = await chamarScript(URL_RELATORIO, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ chave: CHAVE_RELATORIO, ...dados }) });
+  const j = await chamarScript('/api/dados', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ escola: escolaDoEndereco(), ...dados }) });
   if (!j.ok) throw new Error(j.erro || 'erro');
   return j;
 }

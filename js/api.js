@@ -48,4 +48,7 @@ async function api(caminho, { metodo = 'GET', corpo, comoAluno = false, comoTest
   return dados;
 }
 
-export { api, guardarToken, guardarTokenAluno, guardarTokenTeste, lerToken, lerTokenAluno, lerTokenTeste };
+// a escola do endereço (/escolaExemplo ou ?escola=): os dados (e-mails, questionários, competições) são os dela
+const escolaDoEndereco = () => window.ESCOLA_ATUAL_ID || window.ESCOLA_INICIAL?.id || '';
+
+export { api, escolaDoEndereco, guardarToken, guardarTokenAluno, guardarTokenTeste, lerToken, lerTokenAluno, lerTokenTeste };

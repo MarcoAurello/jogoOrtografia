@@ -37,6 +37,7 @@ services:
       ADMIN_SENHA: ${ADMIN_SENHA}
       URL_PLANILHA: ${URL_PLANILHA}
       SENHA_PLANILHA: ${SENHA_PLANILHA}
+      SENHA_ADMIN_PLANILHA: ${SENHA_ADMIN_PLANILHA}
       FRONTEND_URL: ${FRONTEND_URL:-https://pedagociagamificada.com.br}
       # e-mail do PDF do teste grátis: "planilha" (Apps Script, padrão: funciona em qualquer rede) ou "smtp"
       EMAIL_VIA: ${EMAIL_VIA:-planilha}

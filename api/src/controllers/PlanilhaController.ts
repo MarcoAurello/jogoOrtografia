@@ -1,33 +1,29 @@
 import { Request, Response } from "express";
+import * as dados from "../services/dados";
 
-// Até a fase 4, e-mails, questionários e competições continuam na planilha do Google. As gravações do professor
-// passam por aqui: a API confere o login e manda a SENHA_PROFESSOR do script, que fica só no servidor
-// (antes ela ficava no código do app, à vista de qualquer um). A planilha é sempre a da escola do professor.
-const CHAVE = "jogo-ortografia";   // a mesma CHAVE do script (ferramentas/relatorio-email.gs)
-const ACOES = new Set(["adicionarEmail", "salvarQuestionario", "criarCompeticao", "competicoesProfessor", "encerrarCompeticao"]);
+// As gravações do professor (antes iam para a planilha do Google; desde a fase 4, para o banco). O endereço continua
+// /planilha para o app não mudar. Os dados são os da escola de quem está logado (sem escola = plataforma principal).
+const resposta = (res: Response, f: () => Promise<Record<string, unknown>>) =>
+  f().then((r) => res.json({ ok: true, ...r })).catch((e: Error) => res.json({ ok: false, erro: e.message }));
 
 class PlanilhaController {
-  async gravar(req: Request, res: Response): Promise<Response> {
+  async gravar(req: Request, res: Response): Promise<Response | void> {
     const eu = req.usuarioLogado!;
-    const acao = String(req.body.acao || "");
-    if (!ACOES.has(acao)) return res.status(400).json({ ok: false, erro: "acao" });
-    const url = eu.escola?.script || process.env.URL_PLANILHA;
-    if (!url) return res.status(503).json({ ok: false, erro: "planilha" });
-    try {
-      const r = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ ...req.body, acao, chave: CHAVE, senha: process.env.SENHA_PLANILHA || "" })
-      });
-      const texto = await r.text();
-      try {
-        return res.json(JSON.parse(texto));
-      } catch {
-        return res.status(502).json({ ok: false, erro: "acesso" });   // o Google mandou a página de login: script não liberado
-      }
-    } catch (error) {
-      console.error("Erro ao falar com a planilha:", error);
-      return res.status(502).json({ ok: false, erro: "acesso" });
+    const escopo = eu.escola_id;
+    const b = req.body || {};
+    switch (String(b.acao || "")) {
+      case "adicionarEmail":
+        return resposta(res, async () => { await dados.adicionarEmail(escopo, b.nome, b.email); return { emails: await dados.lerEmails(escopo) }; });
+      case "salvarQuestionario":
+        return resposta(res, async () => ({ id: await dados.salvarQuestionario(escopo, eu.id, b.titulo, b.perguntas) }));
+      case "criarCompeticao":
+        return resposta(res, async () => ({ competicao: await dados.criarCompeticao(escopo, eu.id, b) }));
+      case "competicoesProfessor":
+        return resposta(res, async () => ({ lista: await dados.listarCompeticoes(escopo, true) }));
+      case "encerrarCompeticao":
+        return resposta(res, async () => { await dados.encerrarCompeticao(escopo, b.id); return { lista: await dados.listarCompeticoes(escopo, true) }; });
+      default:
+        return res.status(400).json({ ok: false, erro: "acao" });
     }
   }
 }

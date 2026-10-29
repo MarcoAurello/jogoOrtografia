@@ -65,7 +65,7 @@ function doGet(e) {
     if (acao === 'competicoes') return resposta({ ok: true, lista: listarCompeticoes(false) });
     if (acao === 'ranking') return resposta({ ok: true, ...rankingDaCompeticao(e.parameter.id) });
     if (acao === 'escola') return resposta({ ok: true, escola: lerEscola(e.parameter.id) });
-    return resposta({ ok: true, versao: 5 });
+    return resposta({ ok: true, versao: 6 });
   } catch (err) {
     return resposta({ ok: false, erro: String(err) });
   }
@@ -409,9 +409,11 @@ function enviarRelatorio(d) {
     : d.tipo === 'medidas' || /peso certo/i.test(missao) ? 'medidas'
     : d.tipo === 'angulos' || /tiro certo/i.test(missao) ? 'angulos'
     : d.tipo === 'matematica' || /matem/i.test(String(d.assunto || '')) || /matem/i.test(missao) ? 'matematica' : 'ortografia';
-  // destinatário: o e-mail que o aluno escolheu, desde que esteja na aba "E-mails"
+  // destinatário: o e-mail que o aluno escolheu, desde que esteja na aba "E-mails". Com a SENHA_PROFESSOR, quem manda
+  // é a API do servidor (o script como "carteiro"): a lista está no banco de dados e a API já conferiu.
   const para = texto(d.para, 120).toLowerCase();
-  if (!emailValido(para) || !lerEmails().some((x) => x.email === para)) return resposta({ ok: false, erro: 'email' });
+  const carteiro = d.senha === SENHA_PROFESSOR;
+  if (!emailValido(para) || (!carteiro && !lerEmails().some((x) => x.email === para))) return resposta({ ok: false, erro: 'email' });
   if (MailApp.getRemainingDailyQuota() < 1) return resposta({ ok: false, erro: 'cota' });
 
   const tx = TEXTOS[tipo];
