@@ -2786,9 +2786,10 @@ html.escola-pendente body::after {
 .partida-jogo { color: var(--primaria-escura); font-weight: 700; }
 .partida-nota { color: var(--cinza-texto); font-weight: 700; }
 /* no celular, os botões do aluno descem para baixo do nome em vez de passar da borda */
-.aluno-item { flex-wrap: wrap; }
-.aluno-item .comp-item-texto { flex: 1 1 150px; min-width: 0; }
-.aluno-item .comp-item-botoes { flex-wrap: wrap; }
+.aluno-item, .escola-item, .usuario-item { flex-wrap: wrap; }
+.aluno-item .comp-item-texto, .escola-item .comp-item-texto, .usuario-item .comp-item-texto { flex: 1 1 150px; min-width: 0; }
+.escola-item .quiz-item-qtd, .usuario-item .quiz-item-qtd { white-space: normal; overflow-wrap: anywhere; }
+.aluno-item .comp-item-botoes, .escola-item .comp-item-botoes, .usuario-item .comp-item-botoes { flex-wrap: wrap; }
 
 /* ---------- Painel do professor (turma e ficha do aluno) ---------- */
 .painel-abrir { display: block; margin: 0 auto 12px; }
