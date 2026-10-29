@@ -2832,3 +2832,7 @@ html.escola-pendente body::after {
 #form-teste .btn-sec { display: block; margin: 8px auto 0; }
 .importar-planilha { margin: 14px 0; padding: 10px 12px; border-radius: 12px; background: #f6fbfc; border: 1px dashed #b9dde3; text-align: center; }
 .importar-planilha .btn-sec { margin: 4px auto; }
+
+/* entrar na turma: tela própria, aberta depois do nome */
+.turma-explica { margin: 0 auto 12px; max-width: 420px; text-align: center; font-weight: 700; color: var(--texto); }
+.btn-turma-inicio { display: block; margin: 10px auto 0; }

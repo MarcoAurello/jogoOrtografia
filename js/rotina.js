@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Rotina Certa. */
 
-import { $, embaralhar, seguro } from './util.js?v=134';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=134';
-import { SOM, tocar } from './som.js?v=134';
-import { mascote, mostrar, telaJogos } from './telas.js?v=134';
-import { escolherProfessorE } from './professor.js?v=134';
-import { segundos } from './luzes.js?v=134';
-import { fimDaMissao } from './relatorio.js?v=134';
+import { $, embaralhar, seguro } from './util.js?v=135';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=135';
+import { SOM, tocar } from './som.js?v=135';
+import { mascote, mostrar, telaJogos } from './telas.js?v=135';
+import { escolherProfessorE } from './professor.js?v=135';
+import { segundos } from './luzes.js?v=135';
+import { fimDaMissao } from './relatorio.js?v=135';
 
 // ---------- Rotina Certa ----------
 // Sequência e planejamento (funções executivas). Cada rotina do dia a dia tem 6 passos em ordem; os passos aparecem

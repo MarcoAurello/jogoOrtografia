@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=134">
+  <link rel="stylesheet" href="style.css?v=135">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -55,6 +55,7 @@
         <div class="menu-app-lista" id="menu-app-lista" hidden>
           <button class="menu-item" id="btn-menu-inicio" type="button">🏠 Início</button>
           <button class="menu-item" id="btn-menu-teste" type="button">🎁 Testar grátis</button>
+          <button class="menu-item" id="btn-menu-turma" type="button">🏫 Entrar na turma</button>
           <button class="menu-item" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
           <button class="menu-item" id="btn-trocar" type="button">👤 Trocar aluno</button>
           <button class="menu-item" id="btn-professor" type="button">🧑‍🏫 Área do professor</button>
@@ -74,7 +75,26 @@
       </h1>
       <p class="escola-nome" hidden></p>
       <p class="slogan">Jogos com relatórios de desempenho</p>
-      <!-- entrada pela turma: código → nome → 3 figuras (js/entrada.js) -->
+      <form class="cartao cartao-login" id="form-login" autocomplete="off">
+        <div class="davi-area" id="davi-login"></div>
+        <label class="campo">
+          <span>Seu primeiro nome</span>
+          <input type="text" id="login-nome" maxlength="40" placeholder="Digite seu nome" required>
+        </label>
+        <!-- campo de senha: aparece só se PEDIR_SENHA = true no jogo.js -->
+        <label class="campo" id="campo-senha" hidden>
+          <span>Senha</span>
+          <input type="password" id="login-senha" maxlength="40" placeholder="Senha da turma">
+        </label>
+        <p class="erro-login" id="erro-login" role="alert"></p>
+        <button class="btn-grande" type="submit">Entrar ▶</button>
+      </form>
+    </section>
+
+    <!-- Entrar na turma (depois do nome): código → toca no nome → 3 figuras; as partidas ficam guardadas (js/entrada.js) -->
+    <section class="tela" id="tela-turma">
+      <h2 class="subtitulo">🏫 Entrar na turma</h2>
+      <p class="turma-explica">Tem o <b>código da turma</b>? Entre com ele e o professor acompanha todas as suas partidas.</p>
       <form class="cartao cartao-login entrada-turma" id="entrada-turma" autocomplete="off">
         <div id="turma-passo-codigo">
           <label class="campo">
@@ -99,22 +119,9 @@
         </div>
         <p class="erro-login" id="erro-turma" role="alert"></p>
       </form>
-      <button class="btn-sec entrada-troca" id="btn-sem-turma" type="button">Não tenho turma: jogar só com o nome</button>
-      <form class="cartao cartao-login" id="form-login" autocomplete="off" hidden>
-        <div class="davi-area" id="davi-login"></div>
-        <label class="campo">
-          <span>Seu primeiro nome</span>
-          <input type="text" id="login-nome" maxlength="40" placeholder="Digite seu nome" required>
-        </label>
-        <!-- campo de senha: aparece só se PEDIR_SENHA = true no jogo.js -->
-        <label class="campo" id="campo-senha" hidden>
-          <span>Senha</span>
-          <input type="password" id="login-senha" maxlength="40" placeholder="Senha da turma">
-        </label>
-        <p class="erro-login" id="erro-login" role="alert"></p>
-        <button class="btn-grande" type="submit">Entrar ▶</button>
-      </form>
-      <button class="btn-sec entrada-troca" id="btn-com-turma" type="button" hidden>🏫 Entrar com o código da turma</button>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-sec" id="btn-turma-voltar" type="button">← Início</button>
+      </div>
     </section>
 
     <!-- Testar grátis: cadastra o e-mail e recebe o relatório em PDF de cada jogo (js/testegratis.js) -->
@@ -167,6 +174,7 @@
         </video>
       </div>
       <button class="btn-grande btn-teste" id="btn-area-jogos" type="button">🎮 Teste grátis</button>
+      <button class="btn-sec btn-turma-inicio" id="btn-entrar-turma" type="button">🏫 Entrar com o código da turma</button>
       <p class="link-privacidade"><a href="privacidade.html">Política de privacidade</a></p>
     </section>
 
@@ -2038,9 +2046,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=134"></script>
-  <script src="dados.js?v=134"></script>
-  <script type="module" src="js/main.js?v=134"></script>
+  <script src="plenix.js?v=135"></script>
+  <script src="dados.js?v=135"></script>
+  <script type="module" src="js/main.js?v=135"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
