@@ -330,6 +330,30 @@ confere("professor vê os planos de qualquer aluno da escola (só leitura)", s =
 s, _ = chamar(f"/planos/{p1.get('id')}", "DELETE", None, prof)
 confere("quem criou apaga o plano", s == 200)
 
+# ---------- 5e. plano de ação: habilidades-alvo e sessões com prontuário de bordo ----------
+print("5e. Plano de ação e sessões")
+obj2 = {"area": "Funções executivas", "descricao": "Manter a atenção por 10 minutos", "habilidades": ["sustentada", "memoria", "x!"],
+        "jogos": ["reflexo", "dinos"]}
+s, pa = chamar(f"/alunos/{ana['id']}/planos", "POST", {"ciclo": "Plano de ação", "status": "ativo", "objetivos": [obj2]}, prof)
+confere("objetivo grava as habilidades-alvo (só as válidas)", s == 201 and pa["objetivos"][0]["habilidades"] == ["sustentada", "memoria"], str(pa.get("objetivos")))
+oid = pa["objetivos"][0]["id"]
+s, r = chamar(f"/planos/{pa['id']}/sessoes", "POST", {"gerar": 4, "inicio": "2026-11-02", "a_cada_dias": 7}, prof)
+confere("gera o cronograma (4 sessões semanais)", s == 201 and [x["data"] for x in r] == ["2026-11-02", "2026-11-09", "2026-11-16", "2026-11-23"], str([x.get("data") for x in r] if isinstance(r, list) else r))
+confere("as sessões geradas já vêm com os objetivos e os jogos do plano", r[0]["objetivos"] == [oid] and set(r[0]["jogos"]) == {"reflexo", "dinos"})
+s1 = r[0]["id"]
+s, x = chamar(f"/sessoes/{s1}", "PUT", {"status": "realizada", "regulacao": 4, "engajamento": 9, "anotacao": "Chegou agitado, regulou no meio.",
+                                        "objetivos": [oid, "inexistente"]}, prof)
+confere("registra o prontuário da sessão (nota fora de 1 a 5 é ignorada)", s == 200 and x["regulacao"] == 4 and x["engajamento"] is None and x["objetivos"] == [oid] and x["autor_nome"])
+s, r = chamar(f"/planos/{pa['id']}/sessoes", "POST", {"atividades": "Jogo de cartas"}, prof)
+confere("nova sessão avulsa entra no fim do cronograma", s == 201 and r["numero"] == 5)
+s, r = chamar(f"/alunos/{ana['id']}/planos", token=prof)
+pl = next((x for x in r.get("planos", []) if x["id"] == pa["id"]), {})
+confere("a lista de planos mostra as sessões (1 de 5 realizadas)", pl.get("sessoes") == {"total": 5, "realizadas": 1}, str(pl.get("sessoes")))
+s, r = chamar(f"/planos/{pa['id']}/sessoes", token=coord)
+confere("coordenação vê o cronograma", s == 200 and len(r.get("sessoes", [])) == 5)
+s, _ = chamar(f"/planos/{pa['id']}/sessoes", "POST", {"gerar": 99, "inicio": "2026-11-02"}, prof)
+confere("gerar mais de 52 sessões é recusado", s == 400)
+
 # ---------- 6. testar grátis ----------
 print("6. Testar grátis")
 s, r = chamar("/testes", "POST", {"nome": "Visitante", "email": f"visitante.{sufixo}@exemplo.test", "perfil": "outro", "aceite": False})

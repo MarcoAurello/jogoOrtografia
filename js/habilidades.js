@@ -110,3 +110,50 @@ export const JOGOS_HAB = {
   'btn-hive': { h: ['teoriaMente', 'decisao', 'planejamento', 'espacial', 'frustracao'],
     r: 'Jogo de estratégia da colmeia: preveja a jogada do outro e não deixe sua abelha ser encurralada.' },
 };
+
+// o jogo pelo id do link (?jogo=..., o mesmo do plano de objetivos e das competições) → o cartão da tela de jogos
+export const CARTAO_DO_JOGO = {
+  ortografia: 'btn-jogar',
+  chuva: 'btn-chuva',
+  matematica: 'btn-mat',
+  tiro: 'btn-tiro',
+  peso: 'btn-peso',
+  reflexo: 'btn-luzes',
+  reflexo2: 'btn-luzes2',
+  rotina: 'btn-rotina',
+  fichas: 'btn-fichas',
+  escondida: 'btn-escondida',
+  copia: 'btn-copia',
+  barcos: 'btn-barcos',
+  giro: 'btn-giro',
+  hora: 'btn-hora',
+  somando: 'btn-somando',
+  descobrir: 'btn-descobrir',
+  chaves: 'btn-chaves',
+  caminho: 'btn-caminho',
+  taxi: 'btn-taxi',
+  policia: 'btn-policia',
+  pontos: 'btn-pontos',
+  pixels: 'btn-pixels',
+  fracoes: 'btn-fracoes',
+  cores: 'btn-cores',
+  lados: 'btn-lados',
+  setas: 'btn-setas',
+  vistas: 'btn-vistas',
+  dinos: 'btn-dinos',
+  forma: 'btn-simbolos',
+  tabuada: 'btn-tabuada',
+  classes: 'btn-classes',
+  graficos: 'btn-graficos',
+};
+// as habilidades que um jogo trabalha (pelo id do link)
+export const habilidadesDoJogo = (jogo) => JOGOS_HAB[CARTAO_DO_JOGO[jogo]]?.h || [];
+// os jogos (ids do link) que trabalham pelo menos uma das habilidades, os que trabalham mais delas primeiro
+export function jogosParaHabilidades(habilidades) {
+  const alvo = new Set(habilidades);
+  return Object.keys(CARTAO_DO_JOGO)
+    .map((jogo) => ({ jogo, comuns: habilidadesDoJogo(jogo).filter((h) => alvo.has(h)).length }))
+    .filter((x) => x.comuns > 0)
+    .sort((a, b) => b.comuns - a.comuns)
+    .map((x) => x.jogo);
+}

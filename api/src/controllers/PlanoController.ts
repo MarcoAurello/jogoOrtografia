@@ -3,6 +3,8 @@ import { randomBytes } from "crypto";
 import Aluno from "../models/Aluno";
 import { Objetivo, PlanoObjetivos, STATUS_PLANO, StatusPlano } from "../models/PlanoObjetivos";
 import { podeEditarAluno, podeVerAluno } from "../services/acessoAluno";
+import { PlanoSessao } from "../models/PlanoSessao";
+import { fn, col, Op } from "sequelize";
 
 // Plano de Objetivos Psicopedagógicos do aluno. Quem vê: quem vê o aluno (equipe da escola). Quem cria e muda: quem
 // mexe no aluno (coordenação, professor das turmas dele, administrador). Um aluno pode ter vários planos (um por ciclo).
@@ -26,7 +28,7 @@ function lerPlano(b: Record<string, unknown>, nomePadrao: string): { campos?: Re
     if (!descricao) return { erro: `Objetivo ${i + 1}: escreva a descrição do objetivo.` };
     objetivos.push({
       id: /^[a-z0-9]{4,16}$/.test(String(x.id || "")) ? String(x.id) : randomBytes(4).toString("hex"),
-      area, descricao, jogos: lista(x.jogos, 40, 40), recursos: String(x.recursos ?? "").trim().slice(0, 1000),
+      area, descricao, habilidades: lista(x.habilidades, 20, 30).filter((h) => /^[a-zA-Z]{3,30}$/.test(h)), jogos: lista(x.jogos, 40, 40), recursos: String(x.recursos ?? "").trim().slice(0, 1000),
       indicador: String(x.indicador ?? "").trim().slice(0, 1000), prazo: linha(x.prazo, 80),
       dias: lista(x.dias, 7, 3).filter((d) => DIAS.includes(d))
     });
@@ -53,7 +55,16 @@ class PlanoController {
     const aluno = await Aluno.findByPk(req.params.id);
     if (!aluno || !(await podeVerAluno(eu, aluno))) return res.status(404).json({ message: "Aluno não encontrado." });
     const planos = await PlanoObjetivos.findAll({ where: { aluno_id: aluno.id }, order: [["created_at", "DESC"]] });
-    return res.json({ pode_editar: await podeEditarAluno(eu, aluno), planos: planos.map(paraApp) });
+    // quantas sessões cada plano tem e quantas já foram realizadas
+    const contagem = planos.length ? await PlanoSessao.findAll({
+      attributes: ["plano_id", "status", [fn("COUNT", col("id")), "qtd"]], where: { plano_id: { [Op.in]: planos.map((p) => p.id) } },
+      group: ["plano_id", "status"], raw: true
+    }) as unknown as { plano_id: string; status: string; qtd: number }[] : [];
+    const sessoes = (id: string) => ({
+      total: contagem.filter((c) => c.plano_id === id).reduce((n, c) => n + Number(c.qtd), 0),
+      realizadas: contagem.filter((c) => c.plano_id === id && c.status === "realizada").reduce((n, c) => n + Number(c.qtd), 0)
+    });
+    return res.json({ pode_editar: await podeEditarAluno(eu, aluno), planos: planos.map((p) => ({ ...paraApp(p), sessoes: sessoes(p.id) })) });
   }
 
   async store(req: Request, res: Response): Promise<Response> {

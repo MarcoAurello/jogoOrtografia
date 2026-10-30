@@ -1,16 +1,16 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Competição: o professor cria para uma turma (jogo + hora de encerrar); o aluno entra com o código da turma e joga. */
 
-import { $, seguro } from './util.js?v=151';
-import { aluno, aoVoltarAoInicio } from './estado.js?v=151';
-import { api, lerTokenAluno } from './api.js?v=151';
-import { definirCompeticaoDaPartida } from './partidas.js?v=151';
-import { SOM } from './som.js?v=151';
-import { mostrar } from './telas.js?v=151';
-import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=151';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=151';
-import { comecarQuiz } from './quiz.js?v=151';
-import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=151';
+import { $, seguro } from './util.js?v=152';
+import { aluno, aoVoltarAoInicio } from './estado.js?v=152';
+import { api, lerTokenAluno } from './api.js?v=152';
+import { definirCompeticaoDaPartida } from './partidas.js?v=152';
+import { SOM } from './som.js?v=152';
+import { mostrar } from './telas.js?v=152';
+import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=152';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=152';
+import { comecarQuiz } from './quiz.js?v=152';
+import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=152';
 
 // ---------- Competição ----------
 // Cada competição é de uma turma. O aluno entra com o código da turma (js/entrada.js) e a aba Competição lista as

@@ -1,12 +1,14 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Plano de Objetivos Psicopedagógicos do aluno: a lista de planos (um por ciclo), o editor (identificação, objetivos e
-   metas montados livremente, parceria família/escola, status) e o PDF para o relatório. Padrão das telas de cadastro. */
+   metas montados livremente, parceria família/escola, status), o PDF para o relatório e o plano de ação: as
+   habilidades-alvo de cada objetivo sugerem os jogos, e o cronograma de sessões tem o prontuário de bordo. */
 
-import { $, seguro } from './util.js?v=151';
-import { SOM } from './som.js?v=151';
-import { api } from './api.js?v=151';
-import { JOGOS_DO_LINK, usuarioAtual } from './professor.js?v=151';
-import { criarPopup } from './popup.js?v=151';
+import { $, seguro } from './util.js?v=152';
+import { SOM } from './som.js?v=152';
+import { api } from './api.js?v=152';
+import { JOGOS_DO_LINK, usuarioAtual } from './professor.js?v=152';
+import { criarPopup, ligarFiltro } from './popup.js?v=152';
+import { GRUPOS_HAB, NOME_HAB, jogosParaHabilidades } from './habilidades.js?v=152';
 
 const STATUS = { elaboracao: '📝 Em elaboração', ativo: '▶️ Ativo', concluido: '✅ Concluído' };
 const DIAS = [['seg', 'Seg'], ['ter', 'Ter'], ['qua', 'Qua'], ['qui', 'Qui'], ['sex', 'Sex'], ['sab', 'Sáb'], ['dom', 'Dom']];
@@ -48,11 +50,12 @@ async function listar() {
     const item = document.createElement('div');
     item.className = `quiz-item plano-item plano-${p.status}`;
     item.innerHTML = `<span class="comp-item-texto"><span class="quiz-item-nome">🎯 ${seguro(p.ciclo || 'Plano sem ciclo')} <small>${STATUS[p.status]}</small></span>
-      <span class="quiz-item-qtd">${p.objetivos.length} ${p.objetivos.length === 1 ? 'objetivo' : 'objetivos'} · ${seguro(p.profissional_nome)} · atualizado em ${dataBR(p.atualizado_em)}</span></span>`;
+      <span class="quiz-item-qtd">${p.objetivos.length} ${p.objetivos.length === 1 ? 'objetivo' : 'objetivos'} · 🗓️ ${p.sessoes?.realizadas || 0} de ${p.sessoes?.total || 0} sessões · ${seguro(p.profissional_nome)} · atualizado em ${dataBR(p.atualizado_em)}</span></span>`;
     const botoes = document.createElement('span');
     botoes.className = 'comp-item-botoes';
     const botao = (txt, classe, acao) => { const b = document.createElement('button'); b.type = 'button'; b.className = classe; b.textContent = txt; b.onclick = acao; botoes.append(b); };
     botao(podeEditar ? '✏️ Abrir' : '👁️ Ver', 'quiz-link', (ev) => { SOM.clique(); abrirEditor(p, ev.currentTarget); });
+    botao('🗓️ Sessões', 'quiz-link', (ev) => { SOM.clique(); abrirSessoes(p, ev.currentTarget); });
     botao('📄 PDF', 'quiz-link', () => { SOM.clique(); baixarPDF(p); });
     if (podeEditar) {
       botao('🗑️ Apagar', 'quiz-excluir', async () => {
@@ -100,6 +103,7 @@ function blocoObjetivo(o = null) {
   div.className = 'plano-objetivo';
   if (o?.id) div.dataset.id = o.id;
   const jogos = new Set(o?.jogos || []);
+  const habs = new Set(o?.habilidades || []);
   div.innerHTML = `<legend><span class="plano-obj-num"></span>
       <span class="plano-obj-botoes"><button type="button" class="quiz-link" data-acao="subir" aria-label="Subir">↑</button>
       <button type="button" class="quiz-link" data-acao="descer" aria-label="Descer">↓</button>
@@ -108,7 +112,14 @@ function blocoObjetivo(o = null) {
       <input type="text" class="po-area" maxlength="80" list="plano-areas" placeholder="Escolha ou escreva"></label>
     <label class="campo campo-jogo"><span>Descrição do objetivo</span>
       <textarea class="po-descricao" rows="2" maxlength="2000" placeholder="Ex.: Ler palavras com sílabas complexas com 80% de acerto"></textarea></label>
+    <details class="po-jogos-caixa po-habs-caixa"${habs.size ? ' open' : ''}><summary>🧠 Habilidades-alvo <span class="po-habs-qtd"></span></summary>
+      <p class="professor-ajuda adm-dica">Marque o que este objetivo quer desenvolver: o sistema sugere os jogos que trabalham essas
+        habilidades e, depois, mede a evolução nelas.</p>
+      ${GRUPOS_HAB.map((g) => `<p class="po-habs-grupo">${seguro(g.nome)}</p><div class="plano-checks po-habs">${Object.entries(g.itens).map(([id, nome]) =>
+        `<label class="an-opcao"><input type="checkbox" value="${seguro(id)}"${habs.has(id) ? ' checked' : ''}> ${seguro(nome)}</label>`).join('')}</div>`).join('')}
+    </details>
     <details class="po-jogos-caixa"${jogos.size ? ' open' : ''}><summary>🎮 Jogos do sistema <span class="po-jogos-qtd"></span></summary>
+      <button type="button" class="quiz-link po-sugerir">✨ Sugerir jogos pelas habilidades-alvo</button>
       <div class="plano-checks po-jogos">${Object.entries(JOGOS_DO_LINK).map(([id, j]) =>
         `<label class="an-opcao"><input type="checkbox" value="${seguro(id)}"${jogos.has(id) ? ' checked' : ''}> ${seguro(j.nome)}</label>`).join('')}</div></details>
     <label class="campo campo-jogo"><span>Outras estratégias e recursos (materiais táteis, offline)</span>
@@ -126,8 +137,27 @@ function blocoObjetivo(o = null) {
   div.querySelector('.po-recursos').value = o?.recursos || '';
   div.querySelector('.po-indicador').value = o?.indicador || '';
   div.querySelector('.po-prazo').value = o?.prazo || '';
-  const contar = () => { const n = div.querySelectorAll('.po-jogos input:checked').length; div.querySelector('.po-jogos-qtd').textContent = n ? `(${n} escolhido${n === 1 ? '' : 's'})` : ''; };
+  const contar = () => {
+    const n = div.querySelectorAll('.po-jogos input:checked').length;
+    div.querySelector('.po-jogos-qtd').textContent = n ? `(${n} escolhido${n === 1 ? '' : 's'})` : '';
+    const h = [...div.querySelectorAll('.po-habs input:checked')].map((c) => c.value);
+    div.querySelector('.po-habs-qtd').textContent = h.length ? `(${h.map((x) => NOME_HAB[x]).join(', ')})` : '';
+    // os jogos que trabalham as habilidades marcadas ganham a estrela de sugerido
+    const sugeridos = new Set(jogosParaHabilidades(h));
+    div.querySelectorAll('.po-jogos label').forEach((l) => l.classList.toggle('sugerido', sugeridos.has(l.querySelector('input').value)));
+  };
   div.querySelector('.po-jogos').addEventListener('change', contar);
+  div.querySelectorAll('.po-habs').forEach((g) => g.addEventListener('change', contar));
+  // sugerir: marca os jogos que mais trabalham as habilidades-alvo (até 5 de uma vez)
+  div.querySelector('.po-sugerir').onclick = () => {
+    SOM.clique();
+    const h = [...div.querySelectorAll('.po-habs input:checked')].map((c) => c.value);
+    if (!h.length) { avisoPlano('Marque primeiro as habilidades-alvo do objetivo (🧠).'); div.querySelector('.po-habs-caixa').open = true; return; }
+    const novos = jogosParaHabilidades(h).filter((j) => !div.querySelector(`.po-jogos input[value="${j}"]`)?.checked).slice(0, 5);
+    novos.forEach((j) => { const c = div.querySelector(`.po-jogos input[value="${j}"]`); if (c) c.checked = true; });
+    contar();
+    avisoPlano(novos.length ? `${novos.length} ${novos.length === 1 ? 'jogo sugerido marcado' : 'jogos sugeridos marcados'} (⭐): desmarque o que não quiser.` : 'Os jogos sugeridos já estão marcados.', !!novos.length);
+  };
   contar();
   div.querySelector('.plano-obj-botoes').onclick = (ev) => {
     const acao = ev.target.closest('button')?.dataset.acao;
@@ -154,6 +184,7 @@ function lerEditor() {
     profissional_nome: $('plano-profissional').value.trim(), ciclo: $('plano-ciclo').value.trim(), foco: $('plano-foco').value.trim(),
     objetivos: [...$('plano-objetivos').children].map((b) => ({
       id: b.dataset.id, area: b.querySelector('.po-area').value.trim(), descricao: b.querySelector('.po-descricao').value.trim(),
+      habilidades: [...b.querySelectorAll('.po-habs input:checked')].map((c) => c.value),
       jogos: [...b.querySelectorAll('.po-jogos input:checked')].map((c) => c.value), recursos: b.querySelector('.po-recursos').value.trim(),
       indicador: b.querySelector('.po-indicador').value.trim(), prazo: b.querySelector('.po-prazo').value.trim(),
       dias: [...b.querySelectorAll('.po-dia:checked')].map((c) => c.value),
@@ -222,6 +253,8 @@ function baixarPDF(p) {
     pagina(20);
     texto(`Objetivo ${i + 1}${o.area ? `: ${o.area}` : ''}`, 11.5, 'bold', TEXTO);
     texto(o.descricao, 10.5, 'normal', TEXTO, 3);
+    const habs = (o.habilidades || []).map((h) => NOME_HAB[h] || h).join(', ');
+    if (habs) texto(`Habilidades-alvo: ${habs}`, 10, 'normal', TEXTO, 3);
     const jogos = (o.jogos || []).map(nomeDoJogo).join(', ');
     if (jogos) texto(`Jogos do sistema: ${jogos}`, 10, 'normal', TEXTO, 3);
     if (o.recursos) texto(`Outros recursos: ${o.recursos}`, 10, 'normal', TEXTO, 3);
@@ -243,3 +276,142 @@ function baixarPDF(p) {
   const nome = `plano-objetivos-${aluno.nome}-${p.ciclo || ''}`.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/-+$/, '').toLowerCase();
   doc.save(`${nome}.pdf`);
 }
+
+// ================= Sessões do plano (cronograma) e prontuário de bordo =================
+const STATUS_SESSAO = { planejada: '🗓️ Planejada', realizada: '✅ Realizada', faltou: '🚫 Faltou', cancelada: '⏸️ Cancelada' };
+const REGULACAO = ['', '😣', '😟', '😐', '🙂', '😌'];
+const avisoSessoes = aviso('aviso-sessoes');
+const avisoSessao = aviso('aviso-sessao');
+const hojeISO = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); };
+const popupSessoes = criarPopup('sessoes-modal', { fechar: ['btn-sessoes-fechar', 'btn-sessoes-cancelar'] });
+const popupSessao = criarPopup('sessao-modal', { fechar: ['btn-sessao-fechar', 'btn-sessao-cancelar'] });
+let planoDasSessoes = null;
+let sessoes = [];
+let sessaoAberta = null;
+const filtroSessoes = ligarFiltro('sessoes-filtro', () => { SOM.clique(); desenharSessoes(); });
+const objetivoCurto = (o, i) => `Objetivo ${i + 1}${o.area ? `: ${o.area}` : ''}`;
+
+async function abrirSessoes(plano, origem) {
+  planoDasSessoes = plano;
+  avisoSessoes('');
+  $('sessoes-modal-titulo').textContent = `🗓️ Sessões · ${plano.ciclo || 'plano'} · ${aluno.nome}`;
+  $('gerar-inicio').value = hojeISO();
+  $('sessoes-gerar').open = false;
+  $('lista-sessoes').innerHTML = '<p class="quiz-status carregando">Buscando as sessões…</p>';
+  popupSessoes.abrir(origem);
+  await listarSessoes();
+}
+async function listarSessoes() {
+  let r;
+  try { r = await api(`/planos/${planoDasSessoes.id}/sessoes`); } catch (err) { $('lista-sessoes').innerHTML = ''; avisoSessoes(err.message); return; }
+  sessoes = r.sessoes;
+  const pode = r.pode_editar;
+  $('btn-sessao-nova').hidden = !pode;
+  $('sessoes-gerar').hidden = !pode;
+  desenharSessoes();
+}
+function desenharSessoes() {
+  const caixa = $('lista-sessoes');
+  const f = filtroSessoes.valor();
+  filtroSessoes.contar((x) => (x === 'todas' ? sessoes.length : sessoes.filter((s) => s.status === x).length));
+  const realizadas = sessoes.filter((s) => s.status === 'realizada');
+  const regs = realizadas.map((s) => s.regulacao).filter(Boolean);
+  $('sessoes-resumo').textContent = sessoes.length
+    ? `${realizadas.length} de ${sessoes.length} sessões realizadas${regs.length ? ` · regulação média ${(regs.reduce((a, b) => a + b, 0) / regs.length).toFixed(1)} de 5` : ''}.`
+    : 'Nenhuma sessão ainda: crie uma por uma ou gere o cronograma de uma vez.';
+  const lista = f === 'todas' ? sessoes : sessoes.filter((s) => s.status === f);
+  caixa.innerHTML = lista.length ? '' : (sessoes.length ? '<p class="quiz-status">Nenhuma sessão com esse filtro.</p>' : '');
+  const objs = planoDasSessoes.objetivos;
+  for (const s of lista) {
+    const item = document.createElement('div');
+    item.className = `quiz-item sessao-item sessao-${s.status}`;
+    const objetivos = s.objetivos.map((id) => { const i = objs.findIndex((o) => o.id === id); return i >= 0 ? objetivoCurto(objs[i], i) : null; }).filter(Boolean);
+    item.innerHTML = `<span class="comp-item-texto"><span class="quiz-item-nome">Sessão ${s.numero}${s.data ? ` · ${dataBR(`${s.data}T12:00:00`)}` : ''} <small>${STATUS_SESSAO[s.status]}</small>${s.regulacao ? ` <span title="Regulação ${s.regulacao} de 5">${REGULACAO[s.regulacao]}</span>` : ''}</span>
+      <span class="quiz-item-qtd">${objetivos.length ? `🎯 ${seguro(objetivos.join(' · '))}` : '🎯 sem objetivo marcado'} · 🎮 ${s.jogos.length} ${s.jogos.length === 1 ? 'jogo' : 'jogos'}${s.anotacao ? ' · 📓 com anotação' : ''}</span></span>`;
+    const botoes = document.createElement('span');
+    botoes.className = 'comp-item-botoes';
+    const botao = (txt, classe, acao) => { const b = document.createElement('button'); b.type = 'button'; b.className = classe; b.textContent = txt; b.onclick = acao; botoes.append(b); };
+    botao($('btn-sessao-nova').hidden ? '👁️ Ver' : '✏️ Abrir', 'quiz-link', (ev) => { SOM.clique(); abrirSessao(s, ev.currentTarget); });
+    if (!$('btn-sessao-nova').hidden) {
+      if (s.status === 'planejada') botao('✅ Realizada', 'quiz-link', (ev) => { SOM.clique(); abrirSessao({ ...s, status: 'realizada', data: s.data || hojeISO() }, ev.currentTarget); });
+      botao('🗑️', 'quiz-excluir', async () => {
+        if (!window.confirm(`Apagar a sessão ${s.numero}?`)) return;
+        try { await api(`/sessoes/${s.id}`, { metodo: 'DELETE' }); avisoSessoes('Sessão apagada. ✔', true); await listarSessoes(); } catch (err) { avisoSessoes(err.message); }
+      });
+    }
+    item.append(botoes);
+    caixa.append(item);
+  }
+}
+$('btn-gerar-sessoes').onclick = async () => {
+  SOM.clique();
+  const corpo = { gerar: Number($('gerar-qtd').value), inicio: $('gerar-inicio').value, a_cada_dias: Number($('gerar-passo').value) };
+  if (!planoDasSessoes.objetivos.length) { avisoSessoes('O plano ainda não tem objetivos: crie os objetivos antes do cronograma.'); return; }
+  avisoSessoes('Gerando…');
+  try {
+    const criadas = await api(`/planos/${planoDasSessoes.id}/sessoes`, { metodo: 'POST', corpo });
+    $('sessoes-gerar').open = false;
+    avisoSessoes(`${criadas.length} sessões criadas. ✔`, true);
+    await listarSessoes();
+  } catch (err) { avisoSessoes(err.message); SOM.errado(); }
+};
+$('btn-sessao-nova').onclick = (ev) => { SOM.clique(); abrirSessao(null, ev.currentTarget); };
+
+// ---------- uma sessão: roteiro e prontuário ----------
+function abrirSessao(s, origem) {
+  sessaoAberta = s;
+  avisoSessao('');
+  const pode = !$('btn-sessao-nova').hidden;
+  const proximo = (sessoes.reduce((n, x) => Math.max(n, x.numero), 0) || 0) + 1;
+  $('sessao-modal-titulo').textContent = `🗓️ Sessão ${s?.numero || proximo} · ${aluno.nome}`;
+  $('sessao-data').value = s?.data || hojeISO();
+  document.querySelectorAll('input[name="sessao-status"]').forEach((r) => { r.checked = r.value === (s?.status || 'planejada'); });
+  const objs = planoDasSessoes.objetivos;
+  const marcados = new Set(s ? s.objetivos : objs.map((o) => o.id));
+  $('sessao-objetivos').innerHTML = objs.length ? objs.map((o, i) => `<label class="an-opcao sessao-obj"><input type="checkbox" value="${seguro(o.id)}"${marcados.has(o.id) ? ' checked' : ''}>
+      <span><b>${seguro(objetivoCurto(o, i))}</b><small>${seguro(o.descricao)}</small></span></label>`).join('')
+    : '<p class="quiz-status">O plano ainda não tem objetivos.</p>';
+  const jogos = new Set(s ? s.jogos : objs.flatMap((o) => o.jogos || []));
+  $('sessao-jogos').innerHTML = Object.entries(JOGOS_DO_LINK).map(([id, j]) =>
+    `<label class="an-opcao"><input type="checkbox" value="${seguro(id)}"${jogos.has(id) ? ' checked' : ''}> ${seguro(j.nome)}</label>`).join('');
+  contarJogosSessao();
+  $('sessao-atividades').value = s?.atividades || '';
+  $('sessao-anotacao').value = s?.anotacao || '';
+  document.querySelectorAll('input[name="sessao-regulacao"]').forEach((r) => { r.checked = Number(r.value) === s?.regulacao; });
+  document.querySelectorAll('input[name="sessao-engajamento"]').forEach((r) => { r.checked = Number(r.value) === s?.engajamento; });
+  $('sessao-autor').textContent = s?.autor_nome ? `Prontuário registrado por ${s.autor_nome}.` : '';
+  $('form-sessao').querySelectorAll('input, textarea, select').forEach((c) => { c.disabled = !pode; });
+  $('btn-sessao-salvar').hidden = !pode;
+  $('btn-sessao-jogos-objetivos').hidden = !pode;
+  popupSessao.abrir(origem, s?.status === 'realizada' && pode ? 'sessao-anotacao' : null);
+}
+function contarJogosSessao() { const n = $('sessao-jogos').querySelectorAll('input:checked').length; $('sessao-jogos-qtd').textContent = n ? `(${n})` : ''; }
+$('sessao-jogos').addEventListener('change', contarJogosSessao);
+$('btn-sessao-jogos-objetivos').onclick = () => {
+  SOM.clique();
+  const ids = new Set([...$('sessao-objetivos').querySelectorAll('input:checked')].map((c) => c.value));
+  const doObjetivo = new Set(planoDasSessoes.objetivos.filter((o) => ids.has(o.id)).flatMap((o) => o.jogos || []));
+  $('sessao-jogos').querySelectorAll('input').forEach((c) => { c.checked = doObjetivo.has(c.value); });
+  contarJogosSessao();
+};
+$('form-sessao').onsubmit = async (ev) => {
+  ev.preventDefault();
+  const valor = (nome) => { const r = document.querySelector(`input[name="${nome}"]:checked`); return r ? Number(r.value) : null; };
+  const corpo = {
+    data: $('sessao-data').value || null, status: document.querySelector('input[name="sessao-status"]:checked')?.value || 'planejada',
+    objetivos: [...$('sessao-objetivos').querySelectorAll('input:checked')].map((c) => c.value),
+    jogos: [...$('sessao-jogos').querySelectorAll('input:checked')].map((c) => c.value),
+    atividades: $('sessao-atividades').value.trim(), anotacao: $('sessao-anotacao').value.trim(),
+    regulacao: valor('sessao-regulacao'), engajamento: valor('sessao-engajamento'),
+  };
+  avisoSessao('Salvando…');
+  try {
+    if (sessaoAberta?.id) await api(`/sessoes/${sessaoAberta.id}`, { metodo: 'PUT', corpo });
+    else await api(`/planos/${planoDasSessoes.id}/sessoes`, { metodo: 'POST', corpo });
+    SOM.certo();
+    popupSessao.fechar();
+    avisoSessoes(corpo.status === 'realizada' ? 'Sessão registrada como realizada. ✔' : 'Sessão salva. ✔', true);
+    await listarSessoes();
+    await listar();   // a contagem de sessões na lista de planos
+  } catch (err) { avisoSessao(err.message); SOM.errado(); }
+};

@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=151">
+  <link rel="stylesheet" href="style.css?v=152">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -2121,6 +2121,99 @@
           </div>
         </form>
       </div>
+      <!-- popup: o cronograma de sessões de um plano (js/planos.js) -->
+      <div class="adm-popup" id="sessoes-modal" hidden>
+        <form class="cartao adm-popup-cartao adm-popup-largo" id="form-sessoes" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="sessoes-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="sessoes-modal-titulo">🗓️ Sessões</h3>
+            <button class="adm-popup-fechar" id="btn-sessoes-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <p class="professor-ajuda adm-dica" id="sessoes-resumo"></p>
+          <details class="sessoes-gerar" id="sessoes-gerar">
+            <summary>⚡ Gerar o cronograma de uma vez</summary>
+            <div class="plano-grade">
+              <label class="campo campo-jogo"><span>Quantas sessões</span><input type="number" id="gerar-qtd" min="1" max="52" value="12"></label>
+              <label class="campo campo-jogo"><span>Data da primeira</span><input type="date" id="gerar-inicio"></label>
+              <label class="campo campo-jogo"><span>Frequência</span>
+                <select id="gerar-passo" class="adm-select">
+                  <option value="7" selected>1 vez por semana</option>
+                  <option value="3">2 vezes por semana (a cada 3 dias)</option>
+                  <option value="14">A cada 15 dias</option>
+                  <option value="1">Todo dia</option>
+                </select></label>
+            </div>
+            <p class="professor-ajuda adm-dica">Cada sessão já vem com todos os objetivos e os jogos do plano; depois é só ajustar cada uma.</p>
+            <button class="btn-grande btn-pequeno" id="btn-gerar-sessoes" type="button">⚡ Gerar sessões</button>
+          </details>
+          <div class="adm-filtros" role="search">
+            <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar pela situação</span>
+              <select id="sessoes-filtro" class="adm-select">
+                <option value="todas" data-rotulo="Todas as sessões" selected>Todas as sessões</option>
+                <option value="planejada" data-rotulo="🗓️ Planejadas">🗓️ Planejadas</option>
+                <option value="realizada" data-rotulo="✅ Realizadas">✅ Realizadas</option>
+                <option value="faltou" data-rotulo="🚫 Faltou">🚫 Faltou</option>
+                <option value="cancelada" data-rotulo="⏸️ Canceladas">⏸️ Canceladas</option>
+              </select></label>
+          </div>
+          <div class="lista-quiz" id="lista-sessoes"></div>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-sessoes" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-sessoes-cancelar" type="button">Fechar</button>
+            <button class="btn-grande" id="btn-sessao-nova" type="button">＋ Nova sessão</button>
+          </div>
+        </form>
+      </div>
+      <!-- popup: uma sessão (roteiro e prontuário de bordo) -->
+      <div class="adm-popup" id="sessao-modal" hidden>
+        <form class="cartao adm-popup-cartao adm-popup-largo" id="form-sessao" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="sessao-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="sessao-modal-titulo">🗓️ Sessão</h3>
+            <button class="adm-popup-fechar" id="btn-sessao-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <h4 class="plano-secao">🗓️ Roteiro</h4>
+          <div class="plano-grade">
+            <label class="campo campo-jogo"><span>Data</span><input type="date" id="sessao-data"></label>
+            <div class="campo campo-jogo"><span>Situação</span>
+              <div class="plano-status" role="radiogroup" aria-label="Situação da sessão">
+                <label class="an-opcao"><input type="radio" name="sessao-status" value="planejada" checked> 🗓️ Planejada</label>
+                <label class="an-opcao"><input type="radio" name="sessao-status" value="realizada"> ✅ Realizada</label>
+                <label class="an-opcao"><input type="radio" name="sessao-status" value="faltou"> 🚫 Faltou</label>
+                <label class="an-opcao"><input type="radio" name="sessao-status" value="cancelada"> ⏸️ Cancelada</label>
+              </div></div>
+          </div>
+          <div class="campo campo-jogo"><span>Objetivos trabalhados</span><div class="sessao-objetivos" id="sessao-objetivos"></div></div>
+          <details class="po-jogos-caixa" id="sessao-jogos-caixa" open><summary>🎮 Jogos da sessão <span id="sessao-jogos-qtd"></span></summary>
+            <button class="quiz-link" id="btn-sessao-jogos-objetivos" type="button">✨ Usar os jogos dos objetivos marcados</button>
+            <div class="plano-checks" id="sessao-jogos"></div></details>
+          <label class="campo campo-jogo"><span>Atividades e materiais (sem tela, roteiro)</span>
+            <textarea id="sessao-atividades" rows="3" maxlength="4000" placeholder="Ex.: 10 min de jogo de memória com cartas; leitura compartilhada..."></textarea></label>
+          <h4 class="plano-secao">📓 Prontuário de bordo</h4>
+          <div class="campo campo-jogo"><span>Regulação emocional na sessão</span>
+            <div class="plano-dias sessao-escala">
+              <label class="an-opcao"><input type="radio" name="sessao-regulacao" value="1"> 😣 Muito desregulado</label>
+              <label class="an-opcao"><input type="radio" name="sessao-regulacao" value="2"> 😟 Desregulado</label>
+              <label class="an-opcao"><input type="radio" name="sessao-regulacao" value="3"> 😐 Oscilou</label>
+              <label class="an-opcao"><input type="radio" name="sessao-regulacao" value="4"> 🙂 Regulado</label>
+              <label class="an-opcao"><input type="radio" name="sessao-regulacao" value="5"> 😌 Calmo e regulado</label>
+            </div></div>
+          <div class="campo campo-jogo"><span>Engajamento</span>
+            <div class="plano-dias sessao-escala">
+              <label class="an-opcao"><input type="radio" name="sessao-engajamento" value="1"> 😴 Pouco</label>
+              <label class="an-opcao"><input type="radio" name="sessao-engajamento" value="2"> 🙁 Baixo</label>
+              <label class="an-opcao"><input type="radio" name="sessao-engajamento" value="3"> 😐 Médio</label>
+              <label class="an-opcao"><input type="radio" name="sessao-engajamento" value="4"> 🙂 Bom</label>
+              <label class="an-opcao"><input type="radio" name="sessao-engajamento" value="5"> 🤩 Muito</label>
+            </div></div>
+          <label class="campo campo-jogo"><span>Anotações da sessão</span>
+            <textarea id="sessao-anotacao" rows="4" maxlength="4000" placeholder="Comportamento, como reagiu às atividades, o que funcionou, o que ajustar..."></textarea></label>
+          <p class="professor-ajuda adm-dica" id="sessao-autor"></p>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-sessao" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-sessao-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" id="btn-sessao-salvar" type="submit">💾 Salvar sessão</button>
+          </div>
+        </form>
+      </div>
       <a class="btn-sec btn-manual" href="manual.html#professor">📘 Manual do professor</a>
       <button class="btn-sec" id="professor-voltar" type="button">← Início</button>
     </section>
@@ -2497,9 +2590,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=151"></script>
-  <script src="dados.js?v=151"></script>
-  <script type="module" src="js/main.js?v=151"></script>
+  <script src="plenix.js?v=152"></script>
+  <script src="dados.js?v=152"></script>
+  <script type="module" src="js/main.js?v=152"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

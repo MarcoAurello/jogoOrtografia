@@ -15,6 +15,7 @@ import ImportacaoController from '../controllers/ImportacaoController';
 import AnamneseController from '../controllers/AnamneseController';
 import ObservacaoController from '../controllers/ObservacaoController';
 import PlanoController from '../controllers/PlanoController';
+import SessaoController from '../controllers/SessaoController';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import carregarUsuarioLogado from '../middlewares/carregarUsuarioLogado';
 import carregarAlunoLogado from '../middlewares/carregarAlunoLogado';
@@ -51,6 +52,11 @@ routes.get('/alunos/:id/planos', ensureAuthenticated, carregarUsuarioLogado, Pla
 routes.post('/alunos/:id/planos', ensureAuthenticated, carregarUsuarioLogado, PlanoController.store);
 routes.put('/planos/:id', ensureAuthenticated, carregarUsuarioLogado, PlanoController.update);
 routes.delete('/planos/:id', ensureAuthenticated, carregarUsuarioLogado, PlanoController.destroy);
+// sessões do plano (cronograma do plano de ação) e o prontuário de bordo
+routes.get('/planos/:id/sessoes', ensureAuthenticated, carregarUsuarioLogado, SessaoController.index);
+routes.post('/planos/:id/sessoes', ensureAuthenticated, carregarUsuarioLogado, SessaoController.store);
+routes.put('/sessoes/:id', ensureAuthenticated, carregarUsuarioLogado, SessaoController.update);
+routes.delete('/sessoes/:id', ensureAuthenticated, carregarUsuarioLogado, SessaoController.destroy);
 // a página da família: pública, só com o token do link (vale 3 horas e uma resposta)
 routes.get('/anamnese-publica/:token', AnamneseController.publicaVer);
 routes.post('/anamnese-publica/:token', AnamneseController.publicaResponder);

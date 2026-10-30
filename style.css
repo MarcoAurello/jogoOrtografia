@@ -3028,3 +3028,18 @@ body.an-publica { margin: 0; min-height: 100vh; background: #eef6f8; }
 .plano-item.plano-ativo { border-left: 6px solid #2e7d32; }
 .plano-item.plano-concluido { opacity: 0.8; }
 .plano-resumo { margin: 4px 0 12px; padding-left: 22px; line-height: 1.5; }
+/* ---------- Plano de ação: habilidades-alvo, jogos sugeridos e sessões ---------- */
+.po-habs-grupo { margin: 8px 0 2px; font-size: 13px; font-weight: 800; color: var(--cinza-texto, #64748b); text-transform: uppercase; letter-spacing: .02em; }
+.po-jogos label.sugerido { border-color: #f5b301; background: #fff8e1; }
+.po-jogos label.sugerido::after { content: '⭐'; margin-left: auto; }
+.po-sugerir { margin: 4px 0; }
+.sessoes-gerar { margin: 4px 0 10px; padding: 8px 12px; border: 2px dashed #b9dde3; border-radius: 14px; background: #f6fbfc; }
+.sessoes-gerar summary { cursor: pointer; font-weight: 800; color: var(--primaria-escura); min-height: 32px; }
+.sessoes-gerar input, .sessoes-gerar select, #sessao-data { width: 100%; min-height: 44px; font-size: 16px; padding: 6px 8px; border: 2px solid #dbeef1; border-radius: 10px; box-sizing: border-box; }
+.sessao-item.sessao-realizada { border-left: 6px solid #2e7d32; }
+.sessao-item.sessao-faltou, .sessao-item.sessao-cancelada { opacity: 0.75; border-left: 6px solid #9aa8b3; }
+.sessao-objetivos { display: flex; flex-direction: column; gap: 6px; }
+.sessao-obj span { display: flex; flex-direction: column; }
+.sessao-obj small { color: var(--cinza-texto, #64748b); font-weight: 600; }
+.sessao-escala .an-opcao { flex: 1 1 140px; }
+#form-sessao textarea { width: 100%; box-sizing: border-box; font-size: 16px; font-family: inherit; padding: 8px; border: 2px solid #dbeef1; border-radius: 10px; }

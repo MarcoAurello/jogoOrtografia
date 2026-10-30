@@ -4,7 +4,8 @@ import sequelize from "../config/connection";
 // Plano de Objetivos Psicopedagógicos do aluno (PlanoController).
 export const STATUS_PLANO = ["elaboracao", "ativo", "concluido"] as const;
 export type StatusPlano = typeof STATUS_PLANO[number];
-export interface Objetivo { id: string; area: string; descricao: string; jogos: string[]; recursos: string; indicador: string; prazo: string; dias: string[] }
+// habilidades: as habilidades-alvo do objetivo (as mesmas dos jogos, js/habilidades.js): sugerem os jogos e medem a evolução
+export interface Objetivo { id: string; area: string; descricao: string; habilidades: string[]; jogos: string[]; recursos: string; indicador: string; prazo: string; dias: string[] }
 
 export class PlanoObjetivos extends Model<InferAttributes<PlanoObjetivos>, InferCreationAttributes<PlanoObjetivos>> {
   declare id: CreationOptional<string>;
