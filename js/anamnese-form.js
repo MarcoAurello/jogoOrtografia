@@ -7,6 +7,7 @@ export const TIPOS = {
   longa: 'Resposta longa (parágrafo)',
   simnao: 'Sim ou não',
   multipla: 'Múltipla escolha (uma opção)',
+  varias: 'Várias opções (marcar quantas quiser)',
   escala: 'Escala de 1 a 5',
 };
 const ESCALA = ['1 · Nunca', '2 · Raramente', '3 · Às vezes', '4 · Frequentemente', '5 · Sempre'];
@@ -27,6 +28,10 @@ export function desenharPerguntas(caixa, perguntas, respostas = {}) {
     } else if (q.tipo === 'multipla') {
       campo = `<span class="an-opcoes">${q.opcoes.map((o) =>
         `<label class="an-opcao"><input type="radio" name="${nome}" value="${esc(o)}"${v === o ? ' checked' : ''}> ${esc(o)}</label>`).join('')}</span>`;
+    } else if (q.tipo === 'varias') {
+      const marcadas = Array.isArray(v) ? v : [];
+      campo = `<span class="an-opcoes an-varias">${q.opcoes.map((o) =>
+        `<label class="an-opcao"><input type="checkbox" name="${nome}" value="${esc(o)}"${marcadas.includes(o) ? ' checked' : ''}> ${esc(o)}</label>`).join('')}</span>`;
     } else if (q.tipo === 'escala') {
       campo = `<span class="an-opcoes an-escala">${ESCALA.map((txt, k) =>
         `<label class="an-opcao"><input type="radio" name="${nome}" value="${k + 1}"${Number(v) === k + 1 ? ' checked' : ''}> ${txt}</label>`).join('')}</span>`;
@@ -45,7 +50,10 @@ export function lerRespostas(caixa, perguntas) {
     const nome = `q-${q.id}`;
     let v = null;
     if (q.tipo === 'curta' || q.tipo === 'longa') v = (caixa.querySelector(`[name="${nome}"]`)?.value || '').trim() || null;
-    else v = caixa.querySelector(`[name="${nome}"]:checked`)?.value ?? null;
+    else if (q.tipo === 'varias') {
+      const marcadas = [...caixa.querySelectorAll(`[name="${nome}"]:checked`)].map((c) => c.value);
+      v = marcadas.length ? marcadas : null;
+    } else v = caixa.querySelector(`[name="${nome}"]:checked`)?.value ?? null;
     if (v !== null) respostas[q.id] = q.tipo === 'escala' ? Number(v) : v;
     else if (q.obrigatoria && !faltando) faltando = { indice: i, campo: caixa.querySelector(`.an-pergunta[data-id="${q.id}"]`) };
   });
@@ -54,7 +62,8 @@ export function lerRespostas(caixa, perguntas) {
 
 // a resposta como texto (para ver uma anamnese já respondida)
 export function textoDaResposta(q, v) {
-  if (v === undefined || v === null || v === '') return '—';
+  if (v === undefined || v === null || v === '' || (Array.isArray(v) && !v.length)) return '—';
+  if (Array.isArray(v)) return v.join(', ');
   if (q.tipo === 'simnao') return v === 'sim' ? 'Sim' : 'Não';
   if (q.tipo === 'escala') return ESCALA[Number(v) - 1] || String(v);
   return String(v);

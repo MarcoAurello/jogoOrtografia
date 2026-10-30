@@ -278,6 +278,58 @@ chamar(f"/anamneses/{link2.get('id')}/cancelar", "PUT", {}, prof)
 s, _ = chamar(f"/anamnese-publica/{link2.get('token')}")
 confere("link cancelado não abre mais", s == 410)
 
+# ---------- 5c. observações de evolução, perguntas de várias opções e o administrador cadastrando aluno ----------
+print("5c. Observações, várias opções e aluno pelo administrador")
+s, obs = chamar(f"/alunos/{ana['id']}/observacoes", "POST", {"categoria": "aprendizagem", "texto": "Leu o texto todo sozinha."}, prof)
+confere("professor escreve observação no aluno da turma dele", s == 201 and obs.get("pode_editar"))
+s, _ = chamar(f"/alunos/{sem_turma}/observacoes", "POST", {"texto": "x x x"}, prof)
+confere("professor NÃO escreve observação em aluno fora das turmas dele", s == 404)
+s, r = chamar(f"/alunos/{ana['id']}/observacoes", token=coord)
+confere("coordenação vê a observação do professor", s == 200 and any(o["id"] == obs.get("id") for o in r))
+s, _ = chamar(f"/observacoes/{obs.get('id')}", "PUT", {"texto": "Leu o texto todo sozinha, com fluência."}, coord)
+confere("coordenação corrige a observação", s == 200)
+s, _ = chamar(f"/alunos/{ana['id']}/observacoes", "POST", {"texto": "No futuro", "data": "2099-01-01"}, prof)
+confere("observação com data no futuro é recusada", s == 400)
+s, f = chamar(f"/alunos/{ana['id']}/ficha?dias=90", token=prof)
+confere("a ficha traz as observações", s == 200 and any("fluência" in o["texto"] for o in f.get("observacoes", [])))
+s, _ = chamar(f"/observacoes/{obs.get('id')}", "DELETE", None, prof)
+confere("quem escreveu apaga a observação", s == 200)
+varias = [{"tipo": "varias", "texto": "Tem dificuldade para", "opcoes": ["Ler", "Escrever", "Calcular"], "obrigatoria": True}]
+s, mv = chamar("/anamneses/modelos", "POST", {"titulo": f"Várias {sufixo}", "perguntas": varias}, prof)
+qid = mv.get("perguntas", [{}])[0].get("id")
+s, _ = chamar(f"/alunos/{ana['id']}/anamneses", "POST", {"modelo_id": mv.get("id"), "respostas": {qid: ["Ler", "Inventada"]}}, prof)
+s, r = chamar(f"/alunos/{ana['id']}", token=prof)
+resp = next((a for a in r.get("anamneses", []) if a["titulo"] == f"Várias {sufixo}"), {}).get("respostas", {})
+confere("várias opções: grava as marcadas (e ignora opção inventada)", resp.get(qid) == ["Ler"], str(resp))
+s, r = chamar("/alunos", "POST", {"nome": "Pelo Admin T.", "turmas": []}, adm)
+confere("administrador sem escolher a escola: pede a escola", s == 400)
+s, r = chamar("/alunos", "POST", {"nome": "Pelo Admin T.", "turmas": [], "escola_id": escola["id"]}, adm)
+confere("administrador cadastra aluno escolhendo a escola", s == 201)
+s, r = chamar("/alunos", token=coord)
+confere("o aluno do administrador aparece para a coordenação da escola", any(a["nome"] == "Pelo Admin T." for a in r))
+
+# ---------- 5d. plano de objetivos psicopedagógicos ----------
+print("5d. Plano de objetivos")
+obj = {"area": "Leitura e escrita", "descricao": "Ler palavras com sílabas complexas", "jogos": ["ortografia", "inventado"],
+       "indicador": "80% de acerto", "prazo": "8 semanas", "dias": ["seg", "qua", "xyz"]}
+s, r = chamar(f"/alunos/{ana['id']}/planos", "POST", {"ciclo": "1º trimestre", "status": "ativo", "objetivos": []}, prof)
+confere("plano ativo sem objetivo é recusado", s == 400)
+s, p1 = chamar(f"/alunos/{ana['id']}/planos", "POST", {"ciclo": "1º trimestre", "status": "ativo", "objetivos": [obj],
+                                                       "adequacoes_escola": ["Mais tempo nas avaliações"], "orientacoes_familia": "Ler 10 min por dia"}, prof)
+confere("professor cria plano ativo no aluno da turma dele", s == 201 and p1["objetivos"][0]["dias"] == ["seg", "qua"], str(p1.get("objetivos")))
+s, _ = chamar(f"/alunos/{sem_turma}/planos", "POST", {"ciclo": "x", "objetivos": [obj]}, prof)
+confere("professor NÃO cria plano em aluno fora das turmas dele", s == 404)
+s, p2 = chamar(f"/alunos/{ana['id']}/planos", "POST", {"ciclo": "2º trimestre", "status": "ativo", "objetivos": [obj]}, coord)
+s, r = chamar(f"/alunos/{ana['id']}/planos", token=prof)
+st = {x["ciclo"]: x["status"] for x in r.get("planos", [])}
+confere("só um plano ativo: o anterior vira concluído", st.get("1º trimestre") == "concluido" and st.get("2º trimestre") == "ativo", str(st))
+s, f = chamar(f"/alunos/{ana['id']}/ficha?dias=90", token=prof)
+confere("a ficha traz o plano ativo", s == 200 and (f.get("plano") or {}).get("ciclo") == "2º trimestre")
+s, r = chamar(f"/alunos/{sem_turma}/planos", token=prof)
+confere("professor vê os planos de qualquer aluno da escola (só leitura)", s == 200 and r.get("pode_editar") is False)
+s, _ = chamar(f"/planos/{p1.get('id')}", "DELETE", None, prof)
+confere("quem criou apaga o plano", s == 200)
+
 # ---------- 6. testar grátis ----------
 print("6. Testar grátis")
 s, r = chamar("/testes", "POST", {"nome": "Visitante", "email": f"visitante.{sufixo}@exemplo.test", "perfil": "outro", "aceite": False})

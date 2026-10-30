@@ -3,7 +3,7 @@ import sequelize from "../config/connection";
 
 // Anamnese: os modelos (questionários criados pela coordenação ou pelo professor) e as anamneses aplicadas a um aluno
 // (presencial, preenchida por quem conversou com a família, ou por um link de 3 horas que a família responde em casa).
-export type TipoPergunta = "curta" | "longa" | "simnao" | "multipla" | "escala";
+export type TipoPergunta = "curta" | "longa" | "simnao" | "multipla" | "varias" | "escala";   // varias: marcar quantas quiser
 export interface PerguntaAnamnese { id: string; tipo: TipoPergunta; texto: string; opcoes: string[]; obrigatoria: boolean }
 
 const datas = {

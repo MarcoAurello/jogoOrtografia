@@ -1,11 +1,11 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Usuários: o administrador e a coordenação cadastram quem entra na Área do professor (pela API). */
 
-import { $, seguro } from './util.js?v=149';
-import { SOM } from './som.js?v=149';
-import { api } from './api.js?v=149';
-import { parteProfessor, usuarioAtual } from './professor.js?v=149';
-import { criarPopup, ligarFiltro } from './popup.js?v=149';
+import { $, seguro } from './util.js?v=151';
+import { SOM } from './som.js?v=151';
+import { api } from './api.js?v=151';
+import { parteProfessor, usuarioAtual } from './professor.js?v=151';
+import { criarPopup, ligarFiltro } from './popup.js?v=151';
 
 // ---------- Usuários ----------
 // O administrador cadastra coordenação, professores (com escola ou avulsos) e outros administradores; a coordenação
@@ -132,7 +132,7 @@ function abrirNovoUsuario(origem) {
   $('form-usuario').reset();
   avisoUsuario('');
   $('usuario-perfil').innerHTML = `<option value="professor">Professor</option><option value="coordenacao">Coordenação</option>${
-    admin ? '<option value="admin">Administrador (plataforma)</option>' : ''}`;
+    admin ? '<option value="admin">Administrador (plataforma)</option>' : ''}<option value="aluno">Aluno (vai para Alunos e anamnese)</option>`;
   if (admin) {
     $('usuario-escola').innerHTML = escolas.map((e) => `<option value="${seguro(e.id)}">${seguro(e.nome)} (/${seguro(e.slug)})</option>`).join('')
       + '<option value="">Sem escola (professor avulso)</option>';
@@ -147,7 +147,12 @@ function abrirNovoUsuario(origem) {
 }
 // a escola só aparece para o administrador, e não para o perfil Administrador (que é da plataforma)
 function mostrarCampoEscola() { $('campo-usuario-escola').hidden = !souAdmin() || $('usuario-perfil').value === 'admin'; }
-$('usuario-perfil').onchange = mostrarCampoEscola;
+// o aluno não é usuário (não tem e-mail nem senha: entra com o código da turma); o cadastro dele fica em
+// "Alunos e anamnese" (js/alunos.js), que abre já no popup de aluno novo
+$('usuario-perfil').onchange = () => {
+  if ($('usuario-perfil').value === 'aluno') { popupUsuario.fechar(); window.dispatchEvent(new Event('abrir-novo-aluno')); return; }
+  mostrarCampoEscola();
+};
 $('btn-usuario-gerar-senha').onclick = () => { SOM.clique(); $('usuario-senha').value = senhaAleatoria(); $('usuario-senha').focus(); };
 $('btn-usuario-novo').onclick = (ev) => { SOM.clique(); abrirNovoUsuario(ev.currentTarget); };
 

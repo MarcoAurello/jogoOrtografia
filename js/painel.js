@@ -1,12 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Painel do professor: a turma inteira numa tela e a ficha de cada aluno (evolução, habilidades, antes × depois), com PDF. */
 
-import { $, seguro } from './util.js?v=149';
-import { SOM } from './som.js?v=149';
-import { api } from './api.js?v=149';
-import { parteProfessor } from './professor.js?v=149';
-import { NOME_HAB } from './habilidades.js?v=149';
-import { desenharRespondida, textoDaResposta } from './anamnese-form.js?v=149';
+import { $, seguro } from './util.js?v=151';
+import { SOM } from './som.js?v=151';
+import { api } from './api.js?v=151';
+import { parteProfessor } from './professor.js?v=151';
+import { NOME_HAB } from './habilidades.js?v=151';
+import { desenharRespondida, textoDaResposta } from './anamnese-form.js?v=151';
+const CATEGORIAS_OBS = { evolucao: '📈 Evolução', aprendizagem: '📚 Aprendizagem', comportamento: '🙂 Comportamento', social: '🤝 Relacionamento', familia: '👪 Família', saude: '🩺 Saúde', outro: '📝 Outro' };
 
 // ---------- Painel ----------
 // Os números vêm da API (api/src/services/painel.ts). "Acerto" é acertos de primeira ÷ respondidas, como nos relatórios.
@@ -167,7 +168,14 @@ function desenharAluno(d) {
       ${r.respostas.length ? `<span class="painel-revisar-erro">respondeu: ${r.respostas.map(seguro).join(' · ')}</span>` : ''}</div>`).join('')}</div>` : ''}
     ${d.anamnese ? `<h4 class="turma-subtitulo">🧩 Anamnese <small>${seguro(d.anamnese.titulo)} · ${new Date(d.anamnese.respondida_em).toLocaleDateString('pt-BR')} · ${seguro(d.anamnese.respondida_por_nome || '')}</small></h4>
       <details class="an-historico"><summary>Ver as respostas</summary>${desenharRespondida(d.anamnese.perguntas, d.anamnese.respostas)}</details>`
-      : '<p class="quiz-status">🧩 Sem anamnese ainda (faça em 👧 Alunos e anamnese).</p>'}`;
+      : '<p class="quiz-status">🧩 Sem anamnese ainda (faça em 👧 Alunos e anamnese).</p>'}
+    ${d.plano ? `<h4 class="turma-subtitulo">🎯 Plano de objetivos ativo <small>${seguro(d.plano.ciclo || '')} · ${seguro(d.plano.profissional_nome)}</small></h4>
+      <ol class="plano-resumo">${d.plano.objetivos.map((o) => `<li>${o.area ? `<b>${seguro(o.area)}:</b> ` : ''}${seguro(o.descricao)}${o.prazo ? ` <small>(${seguro(o.prazo)})</small>` : ''}</li>`).join('')}</ol>` : ''}
+    <h4 class="turma-subtitulo">📝 Observações de evolução <small>as mais recentes</small></h4>
+    ${(d.observacoes || []).length ? `<div class="obs-lista">${d.observacoes.map((o) => `<div class="obs-item">
+      <div class="obs-topo"><b>${new Date(`${o.data}T12:00:00`).toLocaleDateString('pt-BR')}</b> · ${CATEGORIAS_OBS[o.categoria] || seguro(o.categoria)} · <small>${seguro(o.autor_nome)}</small></div>
+      <p class="obs-texto">${seguro(o.texto)}</p></div>`).join('')}</div>`
+      : '<p class="quiz-status">📝 Nenhuma observação ainda (escreva em 👧 Alunos e anamnese → 📝 Observação).</p>'}`;
   d.graficos = [];
   if (d.semanas.length) { const g = graficoSemanas('Evolução: acerto por semana', d.semanas); $('graf-semanas').append(g); d.graficos.push(g); }
   if (d.habilidades.length >= 3) { const g = graficoRadar('Habilidades', d.habilidades.slice(0, 10)); $('graf-habs').append(g); d.graficos.push(g); }
@@ -257,6 +265,18 @@ async function baixarPDFdoPainel({ tipo, dados: d }) {
     if (d.revisar.length) {
       texto('Para revisar', 13, 'bold', AZUL);
       d.revisar.forEach((r) => texto(`• ${r.certa} (${r.vezes}x) · ${r.tipo}${r.respostas.length ? ` · respondeu: ${r.respostas.join(', ')}` : ''}`, 10));
+    }
+    // o plano de objetivos ativo
+    if (d.plano) {
+      y += 2;
+      texto(`Plano de objetivos ativo${d.plano.ciclo ? ` (${d.plano.ciclo})` : ''}`, 13, 'bold', AZUL);
+      d.plano.objetivos.forEach((o, i) => texto(`${i + 1}. ${o.area ? `${o.area}: ` : ''}${o.descricao}${o.prazo ? ` (${o.prazo})` : ''}`, 10));
+    }
+    // as observações de evolução mais recentes
+    if ((d.observacoes || []).length) {
+      y += 2;
+      texto('Observações de evolução', 13, 'bold', AZUL);
+      d.observacoes.forEach((o) => { texto(`${new Date(`${o.data}T12:00:00`).toLocaleDateString('pt-BR')} · ${(CATEGORIAS_OBS[o.categoria] || o.categoria).replace(/^\S+ /, '')} · ${o.autor_nome}`, 10, 'bold'); texto(o.texto, 10); });
     }
     // a última anamnese (dados sensíveis: o PDF é só para a equipe da escola)
     if (d.anamnese) {

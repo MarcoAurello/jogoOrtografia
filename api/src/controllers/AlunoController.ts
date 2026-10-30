@@ -4,6 +4,9 @@ import Aluno, { AlunoTurma, senhaAleatoria } from "../models/Aluno";
 import Partida from "../models/Partida";
 import Turma from "../models/Turma";
 import { Anamnese } from "../models/Anamnese";
+import { Observacao } from "../models/Observacao";
+import { PlanoObjetivos } from "../models/PlanoObjetivos";
+import Escola from "../models/Escola";
 import { turmaDoUsuario } from "../services/acessoTurma";
 import { alunosDaTurma, filtroDosAlunosVisiveis, podeEditarAluno, podeVerAluno, turmasDoAluno, turmasDoProfessor, vincular } from "../services/acessoAluno";
 
@@ -84,13 +87,24 @@ class AlunoController {
       where: { aluno_id: { [Op.in]: ids }, status: "respondida" }, group: ["aluno_id"], raw: true
     }) as unknown as { aluno_id: string; qtd: number; ultima: Date }[] : [];
     const porAluno = new Map(contagem.map((x) => [x.aluno_id, x]));
+    const obs = ids.length ? await Observacao.findAll({
+      attributes: ["aluno_id", [fn("COUNT", col("id")), "qtd"]], where: { aluno_id: { [Op.in]: ids } }, group: ["aluno_id"], raw: true
+    }) as unknown as { aluno_id: string; qtd: number }[] : [];
+    const obsPorAluno = new Map(obs.map((x) => [x.aluno_id, Number(x.qtd)]));
+    const comPlano = new Set(ids.length ? (await PlanoObjetivos.findAll({ attributes: ["aluno_id"], where: { aluno_id: { [Op.in]: ids }, status: "ativo" } })).map((x) => x.aluno_id) : []);
+    // o administrador (fora de uma escola) vê os alunos de todas: a lista traz o nome da escola
+    const escolas = eu.perfil === "admin" && !eu.escola_id
+      ? new Map((await Escola.findAll({ attributes: ["id", "nome"] })).map((e) => [e.id, e.nome])) : null;
     const minhas = new Set(eu.perfil === "professor" ? await turmasDoProfessor(eu.id) : []);
     return res.json(alunos.map((a) => {
       const dele = ligacoes.filter((l) => l.aluno_id === a.id).map((l) => turmas.get(l.turma_id)).filter(Boolean) as Turma[];
       return {
         ...paraLista(a, dele.map((t) => ({ id: t.id, nome: t.nome })), Number(porAluno.get(a.id)?.qtd || 0), porAluno.get(a.id)?.ultima || null),
         // o professor só mexe (cadastro, anamnese, ficha) nos alunos das turmas dele
-        pode_editar: eu.perfil !== "professor" || dele.some((t) => minhas.has(t.id))
+        pode_editar: eu.perfil !== "professor" || dele.some((t) => minhas.has(t.id)),
+        observacoes: obsPorAluno.get(a.id) || 0,
+        plano_ativo: comPlano.has(a.id),
+        escola_id: a.escola_id, escola: escolas ? (a.escola_id && escolas.get(a.escola_id)) || "sem escola" : undefined
       };
     }));
   }
@@ -121,8 +135,14 @@ class AlunoController {
     const turmas = await turmasPermitidas(req, Array.isArray(req.body.turmas) ? req.body.turmas.map(String) : []);
     if (turmas === null) return res.status(403).json({ message: "Você só pode ligar o aluno às suas turmas." });
     if (eu.perfil === "professor" && !turmas.length) return res.status(400).json({ message: "Escolha pelo menos uma das suas turmas para o aluno." });
-    if (eu.perfil === "admin" && !turmas.length) return res.status(400).json({ message: "Entre na escola (🚪 Entrar na escola) para cadastrar um aluno sem turma." });
-    const escolaId = eu.perfil === "admin" ? turmas[0].escola_id : eu.escola_id;
+    // o administrador escolhe a escola (escola_id); com turmas, a escola é a delas
+    let escolaId = eu.escola_id;
+    if (eu.perfil === "admin") {
+      const pedida = req.body.escola_id ? await Escola.findByPk(String(req.body.escola_id)) : null;
+      escolaId = turmas[0]?.escola_id ?? pedida?.id ?? null;
+      if (!escolaId) return res.status(400).json({ message: "Escolha a escola do aluno." });
+    }
+    if (turmas.some((t) => t.escola_id !== escolaId)) return res.status(400).json({ message: "As turmas precisam ser da escola do aluno." });
     for (const t of turmas) {
       if ((await alunosDaTurma(t.id)).some((a) => a.nome.toLowerCase() === nome.toLowerCase())) {
         return res.status(409).json({ message: `Já existe um aluno chamado ${nome} na turma ${t.nome}.` });

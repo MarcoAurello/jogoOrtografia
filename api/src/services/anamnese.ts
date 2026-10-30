@@ -2,9 +2,9 @@ import { createHash, randomBytes } from "crypto";
 import { PerguntaAnamnese, TipoPergunta } from "../models/Anamnese";
 
 // Regras da anamnese: como um modelo (questionário) é montado e como as respostas são conferidas.
-export const TIPOS: TipoPergunta[] = ["curta", "longa", "simnao", "multipla", "escala"];
+export const TIPOS: TipoPergunta[] = ["curta", "longa", "simnao", "multipla", "varias", "escala"];
 export const HORAS_DO_LINK = 3;   // o link para a família vale 3 horas (e só uma resposta)
-const MAX_PERGUNTAS = 60;
+const MAX_PERGUNTAS = 150;   // um modelo completo do banco (dados-anamnese.js) passa de 80
 const MAX_RESPOSTA = { curta: 300, longa: 4000 };
 
 const limpo = (v: unknown, max: number) => String(v ?? "").replace(/\s+/g, " ").trim().slice(0, max);
@@ -22,10 +22,11 @@ export function validarPerguntas(entrada: unknown): { perguntas?: PerguntaAnamne
     const texto = limpo(q.texto, 300);
     if (!TIPOS.includes(tipo)) return { erro: `Pergunta ${i + 1}: escolha o tipo de resposta.` };
     if (!texto) return { erro: `Pergunta ${i + 1}: escreva a pergunta.` };
-    const opcoes = tipo === "multipla"
-      ? [...new Set((Array.isArray(q.opcoes) ? q.opcoes : []).map((o) => limpo(o, 120)).filter(Boolean))].slice(0, 12)
+    const comOpcoes = tipo === "multipla" || tipo === "varias";
+    const opcoes = comOpcoes
+      ? [...new Set((Array.isArray(q.opcoes) ? q.opcoes : []).map((o) => limpo(o, 120)).filter(Boolean))].slice(0, 20)
       : [];
-    if (tipo === "multipla" && opcoes.length < 2) return { erro: `Pergunta ${i + 1}: a múltipla escolha precisa de pelo menos 2 opções.` };
+    if (comOpcoes && opcoes.length < 2) return { erro: `Pergunta ${i + 1}: a pergunta de opções precisa de pelo menos 2 opções.` };
     let id = /^[a-z0-9]{4,16}$/.test(String(q.id || "")) ? String(q.id) : randomBytes(4).toString("hex");
     while (ids.has(id)) id = randomBytes(4).toString("hex");
     ids.add(id);
@@ -48,6 +49,9 @@ export function validarRespostas(perguntas: PerguntaAnamnese[], entrada: unknown
       valor = bruto === "sim" || bruto === "nao" ? bruto : null;
     } else if (q.tipo === "multipla") {
       valor = q.opcoes.includes(String(bruto ?? "")) ? String(bruto) : null;
+    } else if (q.tipo === "varias") {
+      const marcadas = (Array.isArray(bruto) ? bruto : []).map(String).filter((o) => q.opcoes.includes(o));
+      valor = marcadas.length ? [...new Set(marcadas)] : null;
     } else if (q.tipo === "escala") {
       const n = Math.round(Number(bruto));
       valor = n >= 1 && n <= 5 ? n : null;

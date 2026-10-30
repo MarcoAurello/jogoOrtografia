@@ -13,6 +13,8 @@ import DadosController from '../controllers/DadosController';
 import RelatorioController from '../controllers/RelatorioController';
 import ImportacaoController from '../controllers/ImportacaoController';
 import AnamneseController from '../controllers/AnamneseController';
+import ObservacaoController from '../controllers/ObservacaoController';
+import PlanoController from '../controllers/PlanoController';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import carregarUsuarioLogado from '../middlewares/carregarUsuarioLogado';
 import carregarAlunoLogado from '../middlewares/carregarAlunoLogado';
@@ -39,6 +41,16 @@ routes.get('/anamneses/modelos', ensureAuthenticated, carregarUsuarioLogado, Ana
 routes.post('/anamneses/modelos', ensureAuthenticated, carregarUsuarioLogado, AnamneseController.criarModelo);
 routes.put('/anamneses/modelos/:id', ensureAuthenticated, carregarUsuarioLogado, AnamneseController.atualizarModelo);
 routes.put('/anamneses/:id/cancelar', ensureAuthenticated, carregarUsuarioLogado, AnamneseController.cancelar);
+// observações de evolução do aluno (coordenação e professor)
+routes.get('/alunos/:id/observacoes', ensureAuthenticated, carregarUsuarioLogado, ObservacaoController.index);
+routes.post('/alunos/:id/observacoes', ensureAuthenticated, carregarUsuarioLogado, ObservacaoController.store);
+routes.put('/observacoes/:id', ensureAuthenticated, carregarUsuarioLogado, ObservacaoController.update);
+routes.delete('/observacoes/:id', ensureAuthenticated, carregarUsuarioLogado, ObservacaoController.destroy);
+// plano de objetivos psicopedagógicos do aluno
+routes.get('/alunos/:id/planos', ensureAuthenticated, carregarUsuarioLogado, PlanoController.index);
+routes.post('/alunos/:id/planos', ensureAuthenticated, carregarUsuarioLogado, PlanoController.store);
+routes.put('/planos/:id', ensureAuthenticated, carregarUsuarioLogado, PlanoController.update);
+routes.delete('/planos/:id', ensureAuthenticated, carregarUsuarioLogado, PlanoController.destroy);
 // a página da família: pública, só com o token do link (vale 3 horas e uma resposta)
 routes.get('/anamnese-publica/:token', AnamneseController.publicaVer);
 routes.post('/anamnese-publica/:token', AnamneseController.publicaResponder);

@@ -2,13 +2,15 @@
 /* Alunos e anamnese (Área do professor): os alunos da escola (com ou sem turma), o cadastro, a anamnese (presencial ou
    pelo link de 3 horas para a família) e os modelos de anamnese. Segue o padrão das telas de cadastro (js/popup.js). */
 
-import { $, seguro } from './util.js?v=149';
-import { SOM } from './som.js?v=149';
-import { api } from './api.js?v=149';
-import { parteProfessor, usuarioAtual } from './professor.js?v=149';
-import { abrirFicha } from './painel.js?v=149';
-import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=149';
-import { desenharPerguntas, desenharRespondida, lerRespostas, SUGERIDAS, TIPOS } from './anamnese-form.js?v=149';
+import { $, seguro } from './util.js?v=151';
+import { SOM } from './som.js?v=151';
+import { api } from './api.js?v=151';
+import { parteProfessor, usuarioAtual } from './professor.js?v=151';
+import { abrirFicha } from './painel.js?v=151';
+import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=151';
+import { desenharPerguntas, desenharRespondida, lerRespostas, SUGERIDAS, TIPOS } from './anamnese-form.js?v=151';
+import { BANCO_ANAMNESE, NOMES_MODELOS } from './dados-anamnese.js?v=151';
+import { abrirPlanos } from './planos.js?v=151';
 
 // Quem vê e quem mexe (a API confere tudo de novo): a coordenação mexe em todos os alunos da escola; o professor VÊ os
 // alunos e as anamneses da escola, mas só mexe (cadastro, anamnese, ficha) nos alunos das turmas dele.
@@ -30,11 +32,14 @@ const avisoLink = aviso('aviso-link-an');
 const avisoVer = aviso('aviso-ver-aluno');
 const avisoModelos = aviso('aviso-modelos');
 const avisoModelo = aviso('aviso-modelo');
+const avisoBanco = aviso('aviso-banco');
 
 let alunos = [];
 let turmasVisiveis = [];   // as turmas que a pessoa enxerga (para ligar o aluno)
 let modelos = [];
+let escolas = [];   // o administrador (fora de uma escola) escolhe a escola do aluno
 const SEM_TURMA = '__sem__';
+const adminFora = () => sou('admin');   // dentro de uma escola, o administrador aparece como coordenação
 
 // ================= Alunos =================
 async function abrirAlunos() {
@@ -44,7 +49,15 @@ async function abrirAlunos() {
   $('alunos-esc-contagem').textContent = '';
   try {
     [alunos, turmasVisiveis, modelos] = await Promise.all([api('/alunos'), api('/turmas'), api('/anamneses/modelos')]);
+    escolas = adminFora() ? await api('/escolas') : [];
   } catch (err) { alunos = []; avisoLista(err.message); }
+  $('campo-alunos-esc-escola').hidden = !adminFora();
+  if (adminFora()) {
+    const antesEscola = $('alunos-esc-escola').value;
+    $('alunos-esc-escola').innerHTML = '<option value="todos" data-rotulo="🏫 Todas as escolas">🏫 Todas as escolas</option>'
+      + escolas.map((e) => `<option value="${seguro(e.id)}" data-rotulo="${seguro(e.nome)}">${seguro(e.nome)}</option>`).join('');
+    if ([...$('alunos-esc-escola').options].some((o) => o.value === antesEscola)) $('alunos-esc-escola').value = antesEscola;
+  }
   // o filtro de turma: as turmas que aparecem nos alunos (o professor vê alunos de outras turmas da escola)
   const turmas = new Map();
   alunos.forEach((a) => a.turmas.forEach((t) => turmas.set(t.id, t.nome)));
@@ -59,6 +72,8 @@ async function abrirAlunos() {
 }
 
 const filtroTurma = ligarFiltro('alunos-esc-turma', () => { SOM.clique(); desenharAlunos(); });
+const filtroEscola = ligarFiltro('alunos-esc-escola', () => { SOM.clique(); desenharAlunos(); });
+const daEscola = (a, f) => (f === 'todos' || !adminFora() ? true : a.escola_id === f);
 const filtroAnamnese = ligarFiltro('alunos-esc-anamnese', () => { SOM.clique(); desenharAlunos(); });
 ligarBusca('alunos-esc-busca', () => desenharAlunos());
 const daTurma = (a, f) => (f === 'todos' ? true : f === SEM_TURMA ? !a.turmas.length : a.turmas.some((t) => t.id === f));
@@ -67,16 +82,18 @@ const daAnamnese = (a, f) => (f === 'todos' ? true : f === 'com' ? a.anamneses >
 function desenharAlunos() {
   const caixa = $('lista-alunos-esc');
   const busca = semAcento($('alunos-esc-busca').value.trim());
-  const base = alunos.filter((a) => !busca || [a.nome, a.nome_completo, a.responsavel_nome].some((x) => semAcento(x).includes(busca)));
+  const fe = filtroEscola.valor();
+  const base = alunos.filter((a) => daEscola(a, fe) && (!busca || [a.nome, a.nome_completo, a.responsavel_nome].some((x) => semAcento(x).includes(busca))));
   const ft = filtroTurma.valor(), fa = filtroAnamnese.valor();
   filtroTurma.contar((f) => base.filter((a) => daTurma(a, f) && daAnamnese(a, fa)).length);
   filtroAnamnese.contar((f) => base.filter((a) => daTurma(a, ft) && daAnamnese(a, f)).length);
   const lista = base.filter((a) => daTurma(a, ft) && daAnamnese(a, fa));
-  mostrarContagem('alunos-esc-contagem', lista.length, alunos.length, !!busca || ft !== 'todos' || fa !== 'todos', ['aluno', 'alunos']);
+  if (adminFora()) filtroEscola.contar((f) => alunos.filter((a) => daEscola(a, f)).length);
+  mostrarContagem('alunos-esc-contagem', lista.length, alunos.length, !!busca || ft !== 'todos' || fa !== 'todos' || (adminFora() && fe !== 'todos'), ['aluno', 'alunos']);
   caixa.innerHTML = '';
   if (!lista.length) {
     listaSemItens(caixa, !alunos.length, 'Nenhum aluno ainda. Toque em <b>＋ Novo aluno</b> (ou cadastre pela turma).', () => {
-      SOM.clique(); $('alunos-esc-busca').value = ''; filtroTurma.escolher('todos'); filtroAnamnese.escolher('todos'); desenharAlunos();
+      SOM.clique(); $('alunos-esc-busca').value = ''; filtroTurma.escolher('todos'); filtroAnamnese.escolher('todos'); filtroEscola.escolher('todos'); desenharAlunos();
     });
     return;
   }
@@ -87,12 +104,16 @@ function desenharAlunos() {
     item.innerHTML = `<span class="comp-item-texto"><span class="quiz-item-nome">${seguro(a.nome)}${extras ? ` <small>· ${seguro(extras)}</small>` : ''}</span>
       <span class="quiz-item-qtd">🏫 ${a.turmas.length ? a.turmas.map((t) => seguro(t.nome)).join(', ') : 'sem turma'} · ${
         a.anamneses ? `🧩 ${a.anamneses} ${a.anamneses === 1 ? 'anamnese' : 'anamneses'} (última em ${dataBR(a.ultima_anamnese)})` : '⏳ sem anamnese'}${
-        a.responsavel_nome ? ` · 👪 ${seguro(a.responsavel_nome)}` : ''}</span></span>`;
+        a.plano_ativo ? ' · 🎯 plano ativo' : ''}${
+        a.observacoes ? ` · 📝 ${a.observacoes} ${a.observacoes === 1 ? 'observação' : 'observações'}` : ''}${
+        a.responsavel_nome ? ` · 👪 ${seguro(a.responsavel_nome)}` : ''}${a.escola ? ` · 🏛️ ${seguro(a.escola)}` : ''}</span></span>`;
     const botoes = document.createElement('span');
     botoes.className = 'comp-item-botoes';
     const botao = (txt, acao) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'quiz-link'; b.textContent = txt; b.onclick = acao; botoes.append(b); };
     botao('👁️ Ver', (ev) => { SOM.clique(); verAluno(a.id, ev.currentTarget); });
+    botao('🎯 Plano de objetivos', (ev) => { SOM.clique(); abrirPlanos(a, ev.currentTarget, () => abrirAlunos()); });
     if (a.pode_editar) {
+      botao('📝 Observação', (ev) => { SOM.clique(); verAluno(a.id, ev.currentTarget, true); });
       botao('🧩 Anamnese', (ev) => { SOM.clique(); abrirAplicar(a, ev.currentTarget); });
       botao('🔗 Link para a família', (ev) => { SOM.clique(); abrirLink(a, ev.currentTarget); });
       botao('✏️ Cadastro', (ev) => { SOM.clique(); abrirCadastro(a, ev.currentTarget); });
@@ -119,9 +140,23 @@ function abrirCadastro(aluno, origem) {
     $('aluno-contato').value = aluno.responsavel_contato || '';
     $('aluno-observacoes').value = aluno.observacoes || '';
   }
-  // turmas: as que a pessoa enxerga (o professor, só as dele); as outras turmas do aluno ficam como estão
+  // o administrador (fora de uma escola) escolhe a escola; um aluno já cadastrado continua na escola dele
+  $('campo-aluno-escola').hidden = !adminFora() || !!aluno;
+  if (adminFora() && !aluno) {
+    $('aluno-escola').innerHTML = '<option value="">Escolha a escola…</option>'
+      + escolas.filter((e) => e.ativa).map((e) => `<option value="${seguro(e.id)}">${seguro(e.nome)}</option>`).join('');
+    const doFiltro = filtroEscola.valor();
+    if (doFiltro !== 'todos') $('aluno-escola').value = doFiltro;
+  }
+  mostrarTurmasDoCadastro(aluno);
+  popupAluno.abrir(origem, adminFora() && !aluno ? 'aluno-escola' : 'aluno-nome');
+}
+// turmas: as que a pessoa enxerga (o professor, só as dele; o administrador, as da escola escolhida); as outras turmas
+// do aluno ficam como estão
+function mostrarTurmasDoCadastro(aluno) {
   const marcadas = new Set((aluno?.turmas || []).map((t) => t.id));
-  const opcoes = turmasVisiveis.filter((t) => t.ativa || marcadas.has(t.id));
+  const escolaId = aluno ? aluno.escola_id : $('aluno-escola').value;
+  const opcoes = turmasVisiveis.filter((t) => (t.ativa || marcadas.has(t.id)) && (!adminFora() || t.escola_id === escolaId));
   $('aluno-turmas').innerHTML = opcoes.length
     ? opcoes.map((t) => `<label class="turma-prof"><input type="checkbox" value="${seguro(t.id)}"${marcadas.has(t.id) ? ' checked' : ''}> ${seguro(t.nome)}</label>`).join('')
     : '<p class="quiz-status">Nenhuma turma ainda.</p>';
@@ -129,8 +164,8 @@ function abrirCadastro(aluno, origem) {
   $('aluno-turmas-dica').textContent = [
     sou('professor') ? 'Você liga o aluno às suas turmas.' : 'Sem nenhuma turma marcada, o aluno fica só mapeado para análise (não entra no jogo).',
     deOutros.length ? `Também está em: ${deOutros.map((t) => t.nome).join(', ')}.` : ''].filter(Boolean).join(' ');
-  popupAluno.abrir(origem, 'aluno-nome');
 }
+$('aluno-escola').onchange = () => mostrarTurmasDoCadastro(null);
 $('btn-aluno-novo').onclick = (ev) => { SOM.clique(); abrirCadastro(null, ev.currentTarget); };
 $('form-aluno').onsubmit = async (ev) => {
   ev.preventDefault();
@@ -138,10 +173,11 @@ $('form-aluno').onsubmit = async (ev) => {
     responsavel_nome: $('aluno-responsavel').value, responsavel_contato: $('aluno-contato').value, observacoes: $('aluno-observacoes').value };
   const turmas = [...$('aluno-turmas').querySelectorAll('input:checked')].map((c) => c.value);
   if (sou('professor') && !turmas.length) { avisoAlunoForm('Marque pelo menos uma das suas turmas.'); SOM.errado(); return; }
+  if (adminFora() && !editandoAluno && !$('aluno-escola').value) { avisoAlunoForm('Escolha a escola do aluno.'); $('aluno-escola').focus(); SOM.errado(); return; }
   avisoAlunoForm('Salvando…');
   try {
     if (editandoAluno) await api(`/alunos/${editandoAluno.id}`, { metodo: 'PUT', corpo: { nome: $('aluno-nome').value, cadastro, turmas } });
-    else await api('/alunos', { metodo: 'POST', corpo: { nome: $('aluno-nome').value, ...cadastro, turmas } });
+    else await api('/alunos', { metodo: 'POST', corpo: { nome: $('aluno-nome').value, ...cadastro, turmas, escola_id: $('aluno-escola').value || undefined } });
     SOM.certo();
     popupAluno.fechar();
     await abrirAlunos();
@@ -240,15 +276,25 @@ $('btn-link-copiar').onclick = async () => {
 // ---------- popup: ver o aluno (cadastro e o histórico de anamneses) ----------
 const popupVer = criarPopup('ver-aluno-modal', { fechar: ['btn-ver-aluno-fechar', 'btn-ver-aluno-cancelar'] });
 const STATUS = { respondida: '✅ respondida', pendente: '⏳ aguardando a família', expirada: '⌛ link expirou', cancelada: '🚫 link cancelado' };
-async function verAluno(id, origem) {
+let alunoVisto = null;   // { id, origem, pode_editar } do aluno aberto no "Ver"
+let editandoObs = null;
+async function verAluno(id, origem, irParaObservacao = false) {
   avisoVer('');
   $('ver-aluno-dados').innerHTML = '<p class="quiz-status carregando">Buscando…</p>';
   $('ver-aluno-anamneses').innerHTML = '';
+  $('ver-aluno-obs').innerHTML = '';
+  limparObs();
   popupVer.abrir(origem);
   let r;
   try { r = await api(`/alunos/${id}`); } catch (err) { $('ver-aluno-dados').innerHTML = ''; avisoVer(err.message); return; }
   const a = r.aluno;
+  alunoVisto = { id, origem, pode_editar: r.pode_editar };
   $('ver-aluno-titulo').textContent = `👧 ${a.nome}`;
+  $('obs-nova').hidden = !r.pode_editar;   // escreve quem mexe no aluno; quem só vê, só lê
+  listarObservacoes();
+  if (irParaObservacao && r.pode_editar) {
+    setTimeout(() => { $('ver-aluno-obs-titulo').scrollIntoView({ behavior: 'smooth', block: 'start' }); $('obs-texto').focus({ preventScroll: true }); }, 200);
+  }
   const linha = (rot, v) => (v ? `<dt>${rot}</dt><dd>${seguro(v)}</dd>` : '');
   $('ver-aluno-dados').innerHTML = `<dl class="an-dados">${linha('Nome completo', a.nome_completo)}${
     linha('Nascimento', a.data_nascimento ? `${dataBR(`${a.data_nascimento}T12:00:00`)} (${idade(a.data_nascimento)})` : '')}${
@@ -257,6 +303,7 @@ async function verAluno(id, origem) {
     linha('Autorização (LGPD)', a.consentimento_em ? `registrada em ${dataBR(a.consentimento_em)}` : 'ainda não registrada')}</dl>`;
   const caixa = $('ver-aluno-anamneses');
   if (!r.anamneses.length) { caixa.innerHTML = '<p class="quiz-status">Nenhuma anamnese ainda.</p>'; return; }
+  // (continua abaixo: o histórico das anamneses)
   caixa.innerHTML = '';
   r.anamneses.forEach((x, i) => {
     const d = document.createElement('details');
@@ -280,6 +327,76 @@ async function verAluno(id, origem) {
     caixa.append(d);
   });
 }
+
+// ---------- observações de evolução (dentro do "Ver" do aluno) ----------
+const CATEGORIAS_OBS = { evolucao: '📈 Evolução', aprendizagem: '📚 Aprendizagem', comportamento: '🙂 Comportamento', social: '🤝 Relacionamento',
+  familia: '👪 Família', saude: '🩺 Saúde', outro: '📝 Outro' };
+const hojeISO = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); };
+function limparObs() {
+  editandoObs = null;
+  $('obs-data').value = hojeISO();
+  $('obs-data').max = hojeISO();
+  $('obs-categoria').value = 'evolucao';
+  $('obs-texto').value = '';
+  $('btn-obs-salvar').textContent = '💾 Salvar observação';
+  $('btn-obs-cancelar-edicao').hidden = true;
+}
+async function listarObservacoes() {
+  const caixa = $('ver-aluno-obs');
+  caixa.innerHTML = '<p class="quiz-status carregando">Buscando as observações…</p>';
+  let lista;
+  try { lista = await api(`/alunos/${alunoVisto.id}/observacoes`); } catch (err) { caixa.innerHTML = `<p class="quiz-status">${seguro(err.message)}</p>`; return; }
+  caixa.innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhuma observação ainda.</p>';
+  for (const o of lista) {
+    const item = document.createElement('div');
+    item.className = 'obs-item';
+    item.innerHTML = `<div class="obs-topo"><b>${dataBR(`${o.data}T12:00:00`)}</b> · ${CATEGORIAS_OBS[o.categoria] || o.categoria} · <small>${seguro(o.autor_nome)}</small></div>
+      <p class="obs-texto">${seguro(o.texto)}</p>`;
+    if (o.pode_editar) {
+      const botoes = document.createElement('div');
+      botoes.className = 'obs-botoes';
+      const b1 = document.createElement('button');
+      b1.type = 'button'; b1.className = 'quiz-link'; b1.textContent = '✏️ Editar';
+      b1.onclick = () => {
+        SOM.clique();
+        editandoObs = o;
+        $('obs-data').value = o.data; $('obs-categoria').value = o.categoria; $('obs-texto').value = o.texto;
+        $('btn-obs-salvar').textContent = '💾 Salvar alteração';
+        $('btn-obs-cancelar-edicao').hidden = false;
+        $('ver-aluno-obs-titulo').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        $('obs-texto').focus({ preventScroll: true });
+      };
+      const b2 = document.createElement('button');
+      b2.type = 'button'; b2.className = 'quiz-excluir'; b2.textContent = '🗑️ Apagar';
+      b2.onclick = async () => {
+        if (!window.confirm('Apagar esta observação? Não dá para desfazer.')) return;
+        try { await api(`/observacoes/${o.id}`, { metodo: 'DELETE' }); avisoVer('Observação apagada. ✔', true); listarObservacoes(); }
+        catch (err) { avisoVer(err.message); }
+      };
+      botoes.append(b1, b2);
+      item.append(botoes);
+    }
+    caixa.append(item);
+  }
+}
+$('btn-obs-salvar').onclick = async () => {
+  const texto = $('obs-texto').value.trim();
+  if (texto.length < 3) { avisoVer('Escreva a observação.'); $('obs-texto').focus(); SOM.errado(); return; }
+  const corpo = { data: $('obs-data').value, categoria: $('obs-categoria').value, texto };
+  avisoVer('Salvando…');
+  const eraEdicao = !!editandoObs;
+  try {
+    if (editandoObs) await api(`/observacoes/${editandoObs.id}`, { metodo: 'PUT', corpo });
+    else await api(`/alunos/${alunoVisto.id}/observacoes`, { metodo: 'POST', corpo });
+    SOM.certo();
+    avisoVer(eraEdicao ? 'Observação alterada. ✔' : 'Observação salva. ✔', true);
+    limparObs();
+    listarObservacoes();
+    const a = alunos.find((x) => x.id === alunoVisto.id);
+    if (a && !eraEdicao) { a.observacoes = (a.observacoes || 0) + 1; desenharAlunos(); }
+  } catch (err) { avisoVer(err.message); SOM.errado(); }
+};
+$('btn-obs-cancelar-edicao').onclick = () => { SOM.clique(); limparObs(); };
 
 // ================= Modelos de anamnese =================
 async function abrirModelos() {
@@ -348,7 +465,7 @@ function blocoPergunta(q = { tipo: 'curta', texto: '', opcoes: [], obrigatoria: 
   div.querySelector('.an-tipo').value = q.tipo;
   div.querySelector('.an-opcoes-campo').value = (q.opcoes || []).join('\n');
   div.querySelector('.an-obrigatoria').checked = !!q.obrigatoria;
-  const mostrarOpcoes = () => { div.querySelector('.an-opcoes-campo').hidden = div.querySelector('.an-tipo').value !== 'multipla'; };
+  const mostrarOpcoes = () => { div.querySelector('.an-opcoes-campo').hidden = !['multipla', 'varias'].includes(div.querySelector('.an-tipo').value); };
   div.querySelector('.an-tipo').onchange = mostrarOpcoes;
   mostrarOpcoes();
   div.querySelector('.an-bloco-botoes').onclick = (ev) => {
@@ -375,10 +492,85 @@ function abrirModelo(m, origem, soLer = false) {
   $('modelo-titulo').disabled = soLer;
   $('modelo-perguntas').innerHTML = '';
   (m ? m.perguntas : []).forEach((q) => blocoPergunta(q, soLer));
-  ['btn-modelo-pergunta', 'btn-modelo-sugeridas', 'btn-modelo-salvar'].forEach((id) => { $(id).hidden = soLer; });
+  ['btn-modelo-banco', 'btn-modelo-pergunta', 'btn-modelo-sugeridas', 'btn-modelo-salvar'].forEach((id) => { $(id).hidden = soLer; });
   popupModelo.abrir(origem, soLer ? null : 'modelo-titulo');
 }
 $('btn-modelo-novo').onclick = (ev) => { SOM.clique(); abrirModelo(null, ev.currentTarget); };
+// ---------- popup: banco de perguntas (js/dados-anamnese.js) por cima do editor do modelo ----------
+// O professor marca as perguntas que quer (por assunto, por modelo de origem ou pela busca) e elas entram no fim do
+// modelo; as que já estão no modelo (mesmo texto) aparecem marcadas e não se repetem.
+const popupBanco = criarPopup('banco-modal', { fechar: ['btn-banco-fechar', 'btn-banco-cancelar'] });
+const BANCO = BANCO_ANAMNESE.flatMap((s, i) => s.perguntas.map((q, k) => ({ ...q, secao: s.secao, chave: `${i}-${k}` })));
+const marcadasNoBanco = new Set();
+const textosDoModelo = () => new Set([...$('modelo-perguntas').querySelectorAll('.an-texto')].map((x) => semAcento(x.value.trim())));
+function abrirBanco(origem) {
+  marcadasNoBanco.clear();
+  avisoBanco('');
+  $('banco-busca').value = '';
+  $('banco-secao').innerHTML = '<option value="todas">📂 Todos os assuntos</option>'
+    + BANCO_ANAMNESE.map((s) => `<option value="${seguro(s.secao)}">${seguro(s.secao)} (${s.perguntas.length})</option>`).join('');
+  $('banco-modelo').innerHTML = '<option value="todos">📄 Todos os modelos</option>'
+    + Object.entries(NOMES_MODELOS).map(([n, nome]) => `<option value="${n}">Só do ${nome} (${BANCO.filter((q) => q.m.includes(Number(n))).length})</option>`).join('');
+  desenharBanco();
+  popupBanco.abrir(origem, 'banco-busca');
+}
+function desenharBanco() {
+  const busca = semAcento($('banco-busca').value.trim());
+  const secao = $('banco-secao').value, modelo = Number($('banco-modelo').value) || 0;
+  const jaNoModelo = textosDoModelo();
+  const lista = BANCO.filter((q) => (secao === 'todas' || q.secao === secao) && (!modelo || q.m.includes(modelo))
+    && (!busca || semAcento(`${q.texto} ${q.opcoes.join(' ')}`).includes(busca)));
+  const caixa = $('banco-lista');
+  caixa.innerHTML = '';
+  if (!lista.length) { caixa.innerHTML = '<p class="quiz-status">Nenhuma pergunta com esse filtro.</p>'; atualizarBotaoBanco(); return; }
+  const porSecao = new Map();
+  lista.forEach((q) => { if (!porSecao.has(q.secao)) porSecao.set(q.secao, []); porSecao.get(q.secao).push(q); });
+  for (const [nome, qs] of porSecao) {
+    const grupo = document.createElement('fieldset');
+    grupo.className = 'banco-secao';
+    const livres = qs.filter((q) => !jaNoModelo.has(semAcento(q.texto)));
+    grupo.innerHTML = `<legend>${seguro(nome)} <small>(${qs.length})</small></legend>`;
+    if (livres.length > 1) {
+      const todas = document.createElement('button');
+      todas.type = 'button'; todas.className = 'quiz-link banco-todas';
+      const todasMarcadas = livres.every((q) => marcadasNoBanco.has(q.chave));
+      todas.textContent = todasMarcadas ? 'Desmarcar todas' : 'Marcar todas';
+      todas.onclick = () => { livres.forEach((q) => (todasMarcadas ? marcadasNoBanco.delete(q.chave) : marcadasNoBanco.add(q.chave))); desenharBanco(); };
+      grupo.append(todas);
+    }
+    for (const q of qs) {
+      const ja = jaNoModelo.has(semAcento(q.texto));
+      const l = document.createElement('label');
+      l.className = `banco-pergunta${ja ? ' ja' : ''}`;
+      l.innerHTML = `<input type="checkbox"${ja || marcadasNoBanco.has(q.chave) ? ' checked' : ''}${ja ? ' disabled' : ''}>
+        <span><span class="banco-texto">${seguro(q.texto)}</span>
+        <small>${seguro(TIPOS[q.tipo])}${q.opcoes.length ? `: ${seguro(q.opcoes.join(' · '))}` : ''}${ja ? ' · já está no modelo' : ''}</small></span>`;
+      if (!ja) l.querySelector('input').onchange = (ev) => { (ev.target.checked ? marcadasNoBanco.add(q.chave) : marcadasNoBanco.delete(q.chave)); atualizarBotaoBanco(); };
+      grupo.append(l);
+    }
+    caixa.append(grupo);
+  }
+  atualizarBotaoBanco();
+}
+function atualizarBotaoBanco() {
+  const n = marcadasNoBanco.size;
+  $('btn-banco-adicionar').textContent = n ? `＋ Adicionar ${n} ${n === 1 ? 'pergunta' : 'perguntas'}` : '＋ Adicionar';
+  $('btn-banco-adicionar').disabled = !n;
+}
+ligarBusca('banco-busca', () => desenharBanco());
+$('banco-secao').onchange = () => { SOM.clique(); desenharBanco(); };
+$('banco-modelo').onchange = () => { SOM.clique(); desenharBanco(); };
+$('btn-modelo-banco').onclick = (ev) => { SOM.clique(); abrirBanco(ev.currentTarget); };
+$('form-banco').onsubmit = (ev) => {
+  ev.preventDefault();
+  const escolhidas = BANCO.filter((q) => marcadasNoBanco.has(q.chave));   // na ordem do banco (por assunto)
+  if (!escolhidas.length) return;
+  escolhidas.forEach((q) => blocoPergunta({ tipo: q.tipo, texto: q.texto, opcoes: q.opcoes, obrigatoria: false }));
+  if (!$('modelo-titulo').value.trim()) $('modelo-titulo').value = 'Anamnese psicopedagógica';
+  SOM.certo();
+  popupBanco.fechar();
+  avisoModelo(`${escolhidas.length} ${escolhidas.length === 1 ? 'pergunta adicionada' : 'perguntas adicionadas'} do banco: ajuste o texto, a ordem ou marque as obrigatórias.`, true);
+};
 $('btn-modelo-pergunta').onclick = () => { SOM.clique(); blocoPergunta().querySelector('.an-texto').focus(); };
 $('btn-modelo-sugeridas').onclick = () => {
   SOM.clique();
@@ -395,10 +587,10 @@ $('form-modelo').onsubmit = async (ev) => {
     opcoes: b.querySelector('.an-opcoes-campo').value.split('\n').map((o) => o.trim()).filter(Boolean),
     obrigatoria: b.querySelector('.an-obrigatoria').checked,
   }));
-  const ruim = perguntas.findIndex((q) => !q.texto || (q.tipo === 'multipla' && q.opcoes.length < 2));
+  const ruim = perguntas.findIndex((q) => !q.texto || (['multipla', 'varias'].includes(q.tipo) && q.opcoes.length < 2));
   if (!perguntas.length) { avisoModelo('Adicione pelo menos uma pergunta.'); return; }
   if (ruim >= 0) {
-    avisoModelo(perguntas[ruim].texto ? `Pergunta ${ruim + 1}: a múltipla escolha precisa de pelo menos 2 opções.` : `Pergunta ${ruim + 1}: escreva a pergunta.`);
+    avisoModelo(perguntas[ruim].texto ? `Pergunta ${ruim + 1}: a pergunta de opções precisa de pelo menos 2 opções (uma por linha).` : `Pergunta ${ruim + 1}: escreva a pergunta.`);
     blocos[ruim].classList.add('faltando');
     blocos[ruim].scrollIntoView({ behavior: 'smooth', block: 'center' });
     SOM.errado();
@@ -417,4 +609,6 @@ $('form-modelo').onsubmit = async (ev) => {
 };
 
 $('btn-prof-alunos').onclick = () => { SOM.clique(); abrirAlunos(); };
+// "Aluno" no cadastro de Usuários: o aluno não é usuário (não tem e-mail nem senha); abre esta tela já no cadastro
+window.addEventListener('abrir-novo-aluno', async () => { await abrirAlunos(); abrirCadastro(null, $('btn-aluno-novo')); });
 $('btn-prof-anamnese').onclick = () => { SOM.clique(); abrirModelos(); };

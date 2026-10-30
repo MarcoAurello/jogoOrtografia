@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=149">
+  <link rel="stylesheet" href="style.css?v=151">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1864,6 +1864,8 @@
         <div class="adm-filtros" role="search">
           <label class="campo adm-busca"><span class="sr-only">Buscar aluno</span>
             <input type="search" id="alunos-esc-busca" placeholder="🔍 Buscar por nome ou responsável" autocomplete="off" spellcheck="false"></label>
+          <label class="campo adm-campo-filtro" id="campo-alunos-esc-escola" hidden><span class="sr-only">Filtrar pela escola</span>
+            <select id="alunos-esc-escola" class="adm-select"></select></label>
           <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar pela turma</span>
             <select id="alunos-esc-turma" class="adm-select"></select></label>
           <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar pela anamnese</span>
@@ -1906,6 +1908,8 @@
             <h3 class="chuva-pergunta" id="aluno-modal-titulo">👧 Novo aluno</h3>
             <button class="adm-popup-fechar" id="btn-aluno-fechar" type="button" aria-label="Fechar">✕</button>
           </div>
+          <label class="campo campo-jogo" id="campo-aluno-escola" hidden><span>Escola</span>
+            <select id="aluno-escola" class="adm-select"></select></label>
           <label class="campo campo-jogo"><span>Nome na turma (como aparece no jogo, ex.: Ana S.)</span>
             <input type="text" id="aluno-nome" maxlength="40" required></label>
           <label class="campo campo-jogo"><span>Nome completo</span>
@@ -1980,6 +1984,27 @@
             <button class="adm-popup-fechar" id="btn-ver-aluno-fechar" type="button" aria-label="Fechar">✕</button>
           </div>
           <div id="ver-aluno-dados"></div>
+          <h4 class="turma-subtitulo" id="ver-aluno-obs-titulo">📝 Observações de evolução</h4>
+          <div class="obs-nova" id="obs-nova">
+            <div class="obs-nova-linha">
+              <label class="campo campo-jogo"><span>Data</span><input type="date" id="obs-data"></label>
+              <label class="campo campo-jogo"><span>Assunto</span>
+                <select id="obs-categoria" class="adm-select">
+                  <option value="evolucao">📈 Evolução</option>
+                  <option value="aprendizagem">📚 Aprendizagem</option>
+                  <option value="comportamento">🙂 Comportamento</option>
+                  <option value="social">🤝 Relacionamento</option>
+                  <option value="familia">👪 Família</option>
+                  <option value="saude">🩺 Saúde</option>
+                  <option value="outro">📝 Outro</option>
+                </select></label>
+            </div>
+            <label class="campo campo-jogo"><span>Observação</span>
+              <textarea id="obs-texto" rows="3" maxlength="4000" placeholder="O que você observou: avanços, dificuldades, conversa com a família..."></textarea></label>
+            <div class="linha-botoes"><button class="btn-grande btn-pequeno" id="btn-obs-salvar" type="button">💾 Salvar observação</button>
+              <button class="btn-sec btn-pequeno" id="btn-obs-cancelar-edicao" type="button" hidden>Cancelar edição</button></div>
+          </div>
+          <div class="obs-lista" id="ver-aluno-obs"></div>
           <h4 class="turma-subtitulo">🧩 Anamneses</h4>
           <div id="ver-aluno-anamneses"></div>
           <div class="adm-popup-botoes">
@@ -1999,13 +2024,100 @@
             <input type="text" id="modelo-titulo" maxlength="120" placeholder="Ex.: Anamnese de entrada – Fundamental I" required></label>
           <div id="modelo-perguntas"></div>
           <div class="linha-botoes">
-            <button class="btn-sec btn-pequeno" id="btn-modelo-pergunta" type="button">＋ Adicionar pergunta</button>
-            <button class="btn-sec btn-pequeno" id="btn-modelo-sugeridas" type="button">📄 Usar perguntas sugeridas</button>
+            <button class="btn-sec btn-pequeno" id="btn-modelo-banco" type="button">📚 Escolher do banco de perguntas</button>
+            <button class="btn-sec btn-pequeno" id="btn-modelo-pergunta" type="button">＋ Escrever uma pergunta</button>
+            <button class="btn-sec btn-pequeno" id="btn-modelo-sugeridas" type="button">📄 Perguntas sugeridas (curtas)</button>
           </div>
           <div class="adm-popup-botoes">
             <p class="erro-login adm-popup-aviso" id="aviso-modelo" role="status" aria-live="polite"></p>
             <button class="btn-sec" id="btn-modelo-cancelar" type="button">Cancelar</button>
             <button class="btn-grande" id="btn-modelo-salvar" type="submit">💾 Salvar modelo</button>
+          </div>
+        </form>
+      </div>
+      <!-- popup: banco de perguntas de anamnese (js/dados-anamnese.js), por cima do editor do modelo -->
+      <div class="adm-popup" id="banco-modal" hidden>
+        <form class="cartao adm-popup-cartao adm-popup-largo" id="form-banco" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="banco-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="banco-modal-titulo">📚 Banco de perguntas</h3>
+            <button class="adm-popup-fechar" id="btn-banco-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <p class="professor-ajuda adm-dica">As perguntas dos 5 modelos de anamnese psicopedagógica, por assunto. Marque as que quiser no
+            seu questionário; dá para mudar o texto depois. As que já estão no modelo aparecem marcadas.</p>
+          <div class="adm-filtros" role="search">
+            <label class="campo adm-busca"><span class="sr-only">Buscar pergunta</span>
+              <input type="search" id="banco-busca" placeholder="🔍 Buscar pergunta" autocomplete="off" spellcheck="false"></label>
+            <label class="campo adm-campo-filtro"><span class="sr-only">Assunto</span>
+              <select id="banco-secao" class="adm-select"></select></label>
+            <label class="campo adm-campo-filtro"><span class="sr-only">Modelo de origem</span>
+              <select id="banco-modelo" class="adm-select"></select></label>
+          </div>
+          <div class="banco-lista" id="banco-lista"></div>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-banco" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-banco-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" id="btn-banco-adicionar" type="submit">＋ Adicionar</button>
+          </div>
+        </form>
+      </div>
+      <!-- popup: os planos de objetivos de um aluno (js/planos.js) -->
+      <div class="adm-popup" id="planos-modal" hidden>
+        <form class="cartao adm-popup-cartao" id="form-planos" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="planos-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="planos-modal-titulo">🎯 Planos de objetivos</h3>
+            <button class="adm-popup-fechar" id="btn-planos-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <p class="professor-ajuda adm-dica">Um plano por ciclo (trimestre, semestre…). Só um fica <b>ativo</b>: ao ativar outro, o anterior passa a
+            concluído e continua no histórico.</p>
+          <div class="lista-quiz" id="lista-planos"></div>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-planos" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-planos-cancelar" type="button">Fechar</button>
+            <button class="btn-grande" id="btn-plano-novo" type="button">＋ Novo plano</button>
+          </div>
+        </form>
+      </div>
+      <!-- popup: o plano de objetivos (identificação, objetivos, parceria família/escola e status) -->
+      <div class="adm-popup" id="plano-modal" hidden>
+        <form class="cartao adm-popup-cartao adm-popup-largo" id="form-plano" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="plano-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="plano-modal-titulo">🎯 Plano de objetivos</h3>
+            <button class="adm-popup-fechar" id="btn-plano-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <h4 class="plano-secao">📌 1. Identificação e parâmetros</h4>
+          <div class="plano-grade">
+            <label class="campo campo-jogo"><span>Aluno</span><input type="text" id="plano-aluno" readonly tabindex="-1"></label>
+            <label class="campo campo-jogo"><span>Profissional responsável</span><input type="text" id="plano-profissional" maxlength="120"></label>
+            <label class="campo campo-jogo"><span>Ciclo / período de validação</span>
+              <input type="text" id="plano-ciclo" maxlength="80" list="plano-ciclos" placeholder="Ex.: 1º trimestre de 2026"></label>
+          </div>
+          <datalist id="plano-ciclos"><option value="1º trimestre"><option value="2º trimestre"><option value="3º trimestre"><option value="4º trimestre">
+            <option value="1º semestre"><option value="2º semestre"><option value="1 mês"><option value="2 meses"><option value="3 meses"><option value="6 meses"></datalist>
+          <label class="campo campo-jogo"><span>Abordagem / foco principal</span>
+            <textarea id="plano-foco" rows="2" maxlength="2000" placeholder="Linha teórica ou foco do plano"></textarea></label>
+          <h4 class="plano-secao">🎯 2. Objetivos e metas</h4>
+          <div id="plano-objetivos"></div>
+          <button class="btn-sec" id="btn-plano-objetivo" type="button">➕ Adicionar novo objetivo / meta</button>
+          <datalist id="plano-areas"><option value="Funções executivas"><option value="Leitura e escrita"><option value="Raciocínio lógico-matemático">
+            <option value="Socioemocional"><option value="Motricidade"><option value="Autonomia"><option value="Atenção e concentração"><option value="Memória">
+            <option value="Linguagem oral"><option value="Percepção visual e espacial"></datalist>
+          <h4 class="plano-secao">🤝 3. Plano de parceria (família e escola)</h4>
+          <label class="campo campo-jogo"><span>Orientações e atividades para casa (família)</span>
+            <textarea id="plano-familia" rows="3" maxlength="4000"></textarea></label>
+          <div class="campo campo-jogo"><span>Adequações e sugestões para a escola</span>
+            <div class="plano-checks" id="plano-adequacoes"></div>
+            <textarea id="plano-adequacoes-texto" rows="2" maxlength="4000" placeholder="Outras adequações"></textarea></div>
+          <h4 class="plano-secao">💾 4. Fechamento do plano</h4>
+          <div class="plano-status" role="radiogroup" aria-label="Status do plano">
+            <label class="an-opcao"><input type="radio" name="plano-status" value="elaboracao" checked> 📝 Em elaboração</label>
+            <label class="an-opcao"><input type="radio" name="plano-status" value="ativo"> ▶️ Ativo / em andamento</label>
+            <label class="an-opcao"><input type="radio" name="plano-status" value="concluido"> ✅ Concluído</label>
+          </div>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-plano" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-plano-cancelar" type="button">Cancelar</button>
+            <button class="btn-sec" id="btn-plano-pdf" type="button">📄 Exportar PDF</button>
+            <button class="btn-grande" id="btn-plano-salvar" type="submit">💾 Salvar plano</button>
           </div>
         </form>
       </div>
@@ -2385,9 +2497,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=149"></script>
-  <script src="dados.js?v=149"></script>
-  <script type="module" src="js/main.js?v=149"></script>
+  <script src="plenix.js?v=151"></script>
+  <script src="dados.js?v=151"></script>
+  <script type="module" src="js/main.js?v=151"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
