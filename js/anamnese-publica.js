@@ -2,7 +2,7 @@
 /* A página da família (anamnese.html?t=<token>): mostra o questionário e envia as respostas. O link vale 3 horas e uma
    resposta só (a API confere). Nada fica guardado no aparelho. */
 
-import { desenharPerguntas, lerRespostas } from './anamnese-form.js?v=146';
+import { desenharPerguntas, lerRespostas } from './anamnese-form.js?v=149';
 
 const $ = (id) => document.getElementById(id);
 const token = new URLSearchParams(location.search).get('t') || '';

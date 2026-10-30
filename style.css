@@ -2857,20 +2857,23 @@ html.escola-pendente body::after {
 .adm-mais { margin-top: 14px; }
 .adm-mais summary { cursor: pointer; font-weight: 800; color: var(--primaria-escura); padding: 6px 0; }
 /* o popup: por cima de tudo (até da barra de baixo), com a página atrás escurecida e sem rolar */
-.adm-popup { position: fixed; inset: 0; z-index: 55; display: flex; align-items: center; justify-content: center; padding: 16px;
-  background: rgba(19, 60, 80, 0.5); }
+.adm-popup { position: fixed; inset: 0; z-index: 55; display: flex; flex-direction: column; align-items: center; padding: 16px;
+  background: rgba(19, 60, 80, 0.5);
+  /* quem rola é a camada escura, como uma página: no celular (e com o teclado aberto) a rolagem dentro do cartão travava
+     e o botão Salvar ficava escondido. O cabeçalho e os botões ficam presos no alto e no rodapé (sticky). */
+  overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 .adm-popup[hidden] { display: none; }
-.adm-popup-cartao { width: min(100%, 520px); max-height: 100%; overflow-y: auto; margin: 0; animation: entrar 0.25s ease;
-  padding: 16px; background: #fff; border-radius: 22px;
+.adm-popup-cartao { width: min(100%, 520px); margin: auto; flex-shrink: 0; animation: entrar 0.25s ease;
+  padding: 16px; background: #fff; border-radius: 22px; backdrop-filter: none;
   display: flex; flex-direction: column; gap: 4px; }
-.adm-popup-topo { position: sticky; top: -16px; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+.adm-popup-topo { position: sticky; top: -16px; z-index: 2; border-radius: 22px 22px 0 0; display: flex; align-items: center; justify-content: space-between; gap: 8px;
   margin: -16px -16px 4px; padding: 12px 16px; background: #fff; border-bottom: 1px solid #e3edf0; }
 .adm-popup-topo .chuva-pergunta { margin: 0; font-size: 20px; overflow-wrap: anywhere; }
 .adm-popup-fechar { flex: 0 0 auto; width: 40px; height: 40px; border: 0; border-radius: 50%; background: #eef7fd; font-size: 18px;
   font-weight: 800; color: var(--primaria-escura); cursor: pointer; }
 .adm-popup-fechar:hover { background: #dbeef1; }
-.adm-popup-botoes { position: sticky; bottom: -16px; display: flex; gap: 10px; margin: 6px -16px -16px; padding: 12px 16px;
-  background: #fff; border-top: 1px solid #e3edf0; }
+.adm-popup-botoes { position: sticky; bottom: -16px; z-index: 2; display: flex; gap: 10px; margin: 6px -16px -16px; padding: 12px 16px;
+  background: #fff; border-top: 1px solid #e3edf0; border-radius: 0 0 22px 22px; box-shadow: 0 -6px 12px rgba(19, 60, 80, 0.06); }
 .adm-popup-botoes { flex-wrap: wrap; }
 /* o aviso do formulário fica no rodapé fixo: aparece mesmo com a lista de campos rolada (ex.: muitas perguntas) */
 .adm-popup-aviso { flex: 1 1 100%; margin: 0; }
@@ -2886,21 +2889,26 @@ html.escola-pendente body::after {
 .adm-popup-cartao.adm-popup-largo { width: min(100%, 760px); }
 .turma-det-profs { margin: 0 0 6px; white-space: normal; }
 body.com-popup { overflow: hidden; }
-body.com-popup .whats-flutuante { display: none; }
+/* com um popup aberto, a barra de baixo (que fica numa camada acima do app) e o WhatsApp somem: senão cobrem os botões
+   Cancelar / Salvar do popup no celular */
+body.com-popup .whats-flutuante, body.com-popup .barra-inferior { display: none; }
 /* campos do popup e da busca: 16px (no iPhone, letra menor faz a tela dar zoom ao tocar) e toque confortável (44px) */
 .adm-popup input:not([type="color"]):not([type="file"]), .adm-popup select, .adm-filtros input, .adm-filtros select { font-size: 16px; min-height: 44px; }
 .adm-popup-botoes .btn-sec, .adm-popup-botoes .btn-grande, .adm-cabecalho .btn-grande { min-height: 48px; }
 /* computador: popup no meio da tela, até 560px de largura */
 @media (min-width: 900px) {
-  .adm-popup-cartao { width: min(100%, 560px); max-height: 88vh; }
+  .adm-popup { padding: 32px 16px; }
+  .adm-popup-cartao { width: min(100%, 560px); }
 }
 /* celular: o popup vira uma "folha" que sobe de baixo, na largura toda, com os botões no alcance do polegar
    e respeitando a barra do iPhone (safe-area); o teclado não esconde os botões (dvh acompanha a área visível) */
 @media (max-width: 600px) {
-  .adm-popup { padding: 0; align-items: flex-end; }
-  .adm-popup-cartao { width: 100%; max-height: 94vh; max-height: 94dvh; border-radius: 20px 20px 0 0;
+  /* a folha encosta embaixo quando é curta; quando é comprida, a camada escura rola e os botões ficam no rodapé da tela */
+  .adm-popup { padding: 24px 0 0; }
+  .adm-popup-cartao { width: 100%; margin: auto 0 0; border-radius: 20px 20px 0 0;
     padding-bottom: calc(16px + env(safe-area-inset-bottom)); animation: subir-folha 0.25s ease-out; }
-  .adm-popup-botoes { bottom: calc(-16px - env(safe-area-inset-bottom)); padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  .adm-popup-topo { top: -24px; border-radius: 20px 20px 0 0; }
+  .adm-popup-botoes { bottom: 0; border-radius: 0; padding-bottom: calc(12px + env(safe-area-inset-bottom));
     margin-bottom: calc(-16px - env(safe-area-inset-bottom)); }
   .adm-popup-topo::before { content: ''; position: absolute; top: 5px; left: 50%; width: 40px; height: 4px; margin-left: -20px;
     border-radius: 2px; background: #cfdde2; }
@@ -2953,3 +2961,26 @@ body.an-publica { margin: 0; min-height: 100vh; background: #eef6f8; }
 .an-publica-form, .an-publica-fim { background: #fff; }
 .an-publica-fim { text-align: center; }
 .an-publica-ok { font-size: 56px; margin: 0; }
+/* ---------- No computador, o app usa a largura da tela (no celular continua uma coluna) ---------- */
+@media (min-width: 900px) {
+  .app { max-width: 1240px; }
+  /* aluno: competições, questionários e ranking em cartões largos; listas em duas colunas */
+  .cartao-chuva { max-width: 1100px; }
+  #lista-comp, #lista-quiz { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 12px; align-items: start; }
+  #lista-comp > .quiz-status, #lista-quiz > .quiz-status { grid-column: 1 / -1; }
+  .menu-inicio { max-width: 1100px; }
+  .inicio-video { max-width: 760px; }
+  /* Área do professor */
+  #tela-professor > .cartao-login[id^="painel-"], #tela-professor > #info-emails,
+  #tela-professor .prof-sessao, #tela-professor .menu-professor { max-width: 1180px; }
+  #tela-professor .menu-professor { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  /* listas em duas colunas de cartões */
+  #tela-professor > .cartao-login[id^="painel-"] .lista-quiz, #tela-professor > #info-emails .lista-quiz {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 12px; align-items: start; }
+  #tela-professor .lista-quiz > .quiz-status, #tela-professor .lista-quiz > .adm-limpar-filtro { grid-column: 1 / -1; }
+  /* busca e filtros na mesma linha */
+  #tela-professor .adm-filtros { display: flex; flex-wrap: wrap; align-items: stretch; }
+  #tela-professor .adm-filtros .adm-busca { flex: 2 1 300px; }
+  #tela-professor .adm-filtros .adm-campo-filtro { flex: 1 1 190px; }
+  #tela-professor .professor-ajuda { max-width: 820px; }
+}

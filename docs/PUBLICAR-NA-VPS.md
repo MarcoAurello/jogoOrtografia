@@ -72,6 +72,24 @@ Ligue também a verificação em duas etapas (2FA) da conta do Dokploy (**Settin
 
 **SSH (porta 22):** prefira entrar com **chave SSH** (Hostinger → VPS → Chave SSH) em vez da senha do root.
 
+**Na prática (Hostinger):**
+- Depois de editar as regras, clique em **Sincronizar** e deixe a chave do firewall **ligada** (na lista de firewalls).
+- Mesmo assim, a porta **3000** do Dokploy continua aberta: ele publica a porta direto no Docker, e o firewall da
+  Hostinger não a bloqueia. Com o painel já em `https://painel.<domínio>`, tire a porta do próprio Dokploy
+  (Web console):
+
+  ```bash
+  docker service update --publish-rm "published=3000,target=3000,mode=host" dokploy
+  ```
+
+  Para voltar (se o domínio do painel falhar): o mesmo comando com `--publish-add`. Depois de atualizar o Dokploy,
+  confira se a 3000 continua fechada.
+- O certificado do Let's Encrypt às vezes falha na primeira tentativa (o DNS da Locaweb demora a responder de fora).
+  O log mostra o motivo: `docker logs dokploy-traefik 2>&1 | grep -i acme | tail`. Para tentar de novo:
+  `docker restart dokploy-traefik`.
+- Esqueceu a senha do Dokploy: `docker exec -it $(docker ps -q --filter "name=^dokploy\.") bash -c "pnpm run reset-password"`
+  (e `reset-2fa` para desligar o 2FA).
+
 ---
 
 ## 3. Código no GitHub
@@ -207,12 +225,31 @@ o backup não abre.
 
 ---
 
-## 10. Atualizar depois
+## 10. Atualizar a produção (a cada versão nova)
 
-1. No computador: commit e `git push` na branch `sistema-com-login`.
-2. No Dokploy: **Deploy** (ou ligue o **Autodeploy**, aba General, para publicar a cada push).
+A produção roda a branch **`sistema-com-login`** do GitHub. O Dokploy só publica quando você manda (deploy manual).
 
-As migrações novas rodam sozinhas quando a API sobe. Antes de atualizar, faça um backup (passo 9).
+**No computador**
+1. Teste no `localhost` (`docker compose up -d --build`, depois `python docs/testes/testar-fluxos.py` → **TUDO CERTO**).
+2. Se mudou algum arquivo do app (`index.html`, `style.css`, `js/`), suba a versão para os aparelhos baixarem a nova:
+   `powershell -ExecutionPolicy Bypass -File ferramentasersao.ps1`.
+3. Commit e envio: `git add -A`, `git commit -m "o que mudou"`, `git push origin sistema-com-login`.
+   (O `.env`, o `.env.producao` e o `TESTE-LOCAL.md` nunca vão para o GitHub: estão no `.gitignore`.)
+
+**No Dokploy** (`https://painel.gamespedagogicos.store`)
+4. **Backup do banco antes** (passo 9): aba **Volume Backups** → rodar agora, ou o `mysqldump` pelo Web console.
+5. Projeto **Jogos Pedagógicos** → serviço **jogos** → botão **Deploy**.
+6. Aba **Deployments**: espere **Done** (1 a 3 minutos). Se der **Error**, clique em **View** e leia o fim do log.
+7. Aba **Logs** → serviço **api**: as migrações novas aparecem como `migrated` e, no fim, `Servidor rodando`.
+   Se uma variável nova foi criada no `.env.example`, ponha antes na aba **Environment** (e no `.env.producao`).
+
+**Conferir**
+8. `https://gamespedagogicos.store/api/health` → `{"status":"ok"}`.
+9. Abra o site numa janela anônima e entre na Área do professor. Quem já usava o app recebe a versão nova ao
+   abrir 1 ou 2 vezes (ou com **Ctrl+Shift+R**).
+
+**Se algo der errado:** desfaça o commit no Git (`git revert HEAD`, depois `git push origin sistema-com-login`) e faça
+**Deploy** de novo: o Dokploy volta para a versão anterior do código. Migração de banco não volta sozinha: por isso o backup do passo 4.
 
 ---
 

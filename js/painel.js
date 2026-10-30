@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Painel do professor: a turma inteira numa tela e a ficha de cada aluno (evolução, habilidades, antes × depois), com PDF. */
 
-import { $, seguro } from './util.js?v=146';
-import { SOM } from './som.js?v=146';
-import { api } from './api.js?v=146';
-import { parteProfessor } from './professor.js?v=146';
-import { NOME_HAB } from './habilidades.js?v=146';
-import { desenharRespondida, textoDaResposta } from './anamnese-form.js?v=146';
+import { $, seguro } from './util.js?v=149';
+import { SOM } from './som.js?v=149';
+import { api } from './api.js?v=149';
+import { parteProfessor } from './professor.js?v=149';
+import { NOME_HAB } from './habilidades.js?v=149';
+import { desenharRespondida, textoDaResposta } from './anamnese-form.js?v=149';
 
 // ---------- Painel ----------
 // Os números vêm da API (api/src/services/painel.ts). "Acerto" é acertos de primeira ÷ respondidas, como nos relatórios.

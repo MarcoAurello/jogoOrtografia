@@ -1,7 +1,7 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Popup do administrador (criar/editar escola, cadastrar usuário): abre por cima da lista e fecha sem perder o lugar. */
 
-import { $ } from './util.js?v=146';
+import { $ } from './util.js?v=149';
 
 // Fecha no ✕ e em Cancelar (botões passados em fechar), com Esc ou tocando fora do cartão. Enquanto está aberto, a
 // página atrás não rola. Ao fechar, o foco volta para o botão que abriu (quem usa teclado não se perde).
@@ -20,9 +20,9 @@ export function criarPopup(id, { fechar = [] } = {}) {
     origem = quemAbriu || document.activeElement;
     fundo.hidden = false;
     document.body.classList.add('com-popup');
-    const cartao = fundo.firstElementChild;
-    if (cartao) cartao.scrollTop = 0;
-    if (focar) setTimeout(() => $(focar).focus(), 50);
+    fundo.scrollTop = 0;   // quem rola é a camada escura (style.css .adm-popup)
+    // o foco não pode rolar a tela sozinho no celular (o teclado sobe e esconde o resto): rola só até o campo
+    if (focar) setTimeout(() => $(focar).focus({ preventScroll: true }), 50);
   }
   fechar.forEach((b) => { $(b).addEventListener('click', fecharPopup); });
   fundo.addEventListener('mousedown', (ev) => { if (ev.target === fundo) fecharPopup(); });
