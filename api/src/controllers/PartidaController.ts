@@ -13,6 +13,7 @@ class PartidaController {
   // o fim de um jogo do aluno logado; o id vem do aparelho, então a mesma partida reenviada pela fila não duplica
   async store(req: Request, res: Response): Promise<Response> {
     const aluno = req.alunoLogado!;
+    const turmaId = req.alunoTurmaId!;   // a turma por onde o aluno entrou
     const b = req.body || {};
     const id = String(b.id || "");
     const jogo = String(b.jogo || "").slice(0, 30);
@@ -27,7 +28,7 @@ class PartidaController {
 
     await sequelize.transaction(async (transaction) => {
       await Partida.create({
-        id, jogo, aluno_id: aluno.id, turma_id: aluno.turma_id, escola_id: aluno.escola_id,
+        id, jogo, aluno_id: aluno.id, turma_id: turmaId, escola_id: aluno.escola_id,
         titulo: String(b.titulo || jogo).slice(0, 160), acertos, total, estrelas: inteiro(b.estrelas, 3),
         nivel_max: b.nivel_max == null ? null : inteiro(b.nivel_max, 100), duracao_s: b.duracao_s == null ? null : inteiro(b.duracao_s, 86400),
         jogada_em: quando,
@@ -37,7 +38,7 @@ class PartidaController {
       }, { transaction });
       if (total && habilidades.length) {
         await PartidaHabilidade.bulkCreate(habilidades.map((habilidade) => ({
-          partida_id: id, aluno_id: aluno.id, turma_id: aluno.turma_id, habilidade, acertos, total, jogada_em: quando
+          partida_id: id, aluno_id: aluno.id, turma_id: turmaId, habilidade, acertos, total, jogada_em: quando
         })) as never[], { transaction });
       }
     });

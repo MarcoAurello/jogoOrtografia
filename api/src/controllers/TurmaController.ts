@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { fn, col, Op } from "sequelize";
 import Turma, { TurmaProfessor } from "../models/Turma";
 import Usuario from "../models/Usuario";
-import Aluno from "../models/Aluno";
+import Aluno, { AlunoTurma } from "../models/Aluno";
+import { alunosDaTurma } from "../services/acessoAluno";
 import Escola from "../models/Escola";
 import { codigoNovo, turmaDoUsuario } from "../services/acessoTurma";
 
@@ -28,8 +29,8 @@ class TurmaController {
       include: [{ model: Usuario, as: "professores", attributes: ["id", "nome"], through: { attributes: [] } }],
       order: [["ativa", "DESC"], ["nome", "ASC"]]
     });
-    const contagem = await Aluno.findAll({
-      attributes: ["turma_id", [fn("COUNT", col("id")), "qtd"]],
+    const contagem = await AlunoTurma.findAll({
+      attributes: ["turma_id", [fn("COUNT", col("aluno_id")), "qtd"]],
       where: { turma_id: { [Op.in]: turmas.map((t) => t.id) }, ativo: true },
       group: ["turma_id"], raw: true
     }) as unknown as { turma_id: string; qtd: number }[];
@@ -77,7 +78,7 @@ class TurmaController {
     });
     if (!turma) return res.status(404).json({ message: "Não achei essa turma. Confira o código com o professor." });
     if (turma.escola?.bloqueada) return res.status(403).json({ message: "O acesso desta escola está bloqueado.", codigo: "escola_bloqueada" });
-    const alunos = await Aluno.findAll({ where: { turma_id: turma.id, ativo: true }, attributes: ["id", "nome"], order: [["nome", "ASC"]] });
+    const alunos = (await alunosDaTurma(turma.id)).map((a) => ({ id: a.id, nome: a.nome }));
     return res.json({ turma: { nome: turma.nome, codigo: turma.codigo }, escola: turma.escola ? turma.escola.marca() : null, alunos });
   }
 }

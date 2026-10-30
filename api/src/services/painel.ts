@@ -21,8 +21,9 @@ export async function painelDaTurma(turmaId: string, dias: number) {
   const [alunos, habilidades, porAlunoHab, semanas] = await Promise.all([
     consulta(`SELECT a.id, a.nome, COUNT(p.id) AS partidas, COALESCE(SUM(p.acertos), 0) AS acertos, COALESCE(SUM(p.total), 0) AS total,
         COALESCE(SUM(p.duracao_s), 0) AS segundos, MAX(p.jogada_em) AS ultima
-      FROM alunos a LEFT JOIN partidas p ON p.aluno_id = a.id AND p.jogada_em >= :desde
-      WHERE a.turma_id = :turma AND a.ativo = 1 GROUP BY a.id, a.nome ORDER BY a.nome`, r),
+      FROM alunos a JOIN aluno_turmas at ON at.aluno_id = a.id AND at.turma_id = :turma AND at.ativo = 1
+        LEFT JOIN partidas p ON p.aluno_id = a.id AND p.turma_id = :turma AND p.jogada_em >= :desde
+      WHERE a.ativo = 1 GROUP BY a.id, a.nome ORDER BY a.nome`, r),
     consulta(`SELECT habilidade, SUM(acertos) AS acertos, SUM(total) AS total, COUNT(DISTINCT aluno_id) AS alunos
       FROM partida_habilidades WHERE turma_id = :turma AND jogada_em >= :desde GROUP BY habilidade`, r),
     consulta(`SELECT habilidade, aluno_id, SUM(acertos) AS acertos, SUM(total) AS total

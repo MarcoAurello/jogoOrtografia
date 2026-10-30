@@ -1,11 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Escolas: o mesmo app com o logo, as cores e o nome de cada escola (pedagociagamificada.com.br/<escola>). */
 
-import { $, seguro } from './util.js?v=139';
-import { SOM } from './som.js?v=139';
-import { carregarEmails, parteProfessor, telaProfessor } from './professor.js?v=139';
-import { definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=139';
-import { api, definirEscolaDoAdmin } from './api.js?v=139';
+import { $, seguro } from './util.js?v=146';
+import { SOM } from './som.js?v=146';
+import { carregarEmails, parteProfessor, telaProfessor } from './professor.js?v=146';
+import { definirUrlRelatorio, URL_PRINCIPAL } from './relatorio.js?v=146';
+import { api, definirEscolaDoAdmin } from './api.js?v=146';
+import { criarPopup, ligarFiltro } from './popup.js?v=146';
 
 // ---------- Escolas ----------
 // O endereço diz a escola: pedagociagamificada.com.br/escolaExemplo (ou ?escola=escolaExemplo, para testar em outro
@@ -161,12 +162,20 @@ else { conferirPlanilha(URL_PRINCIPAL); liberarTela(); }
 const linkDaEscola = (id) => (location.hostname.endsWith('github.io')
   ? `${location.origin}${location.pathname.replace(/[^/]*$/, '')}?escola=${id}` : `${location.origin}/${id}`);
 
+// avisos: os do formulário ficam no popup; os da lista (link copiado, plano ativado, escola criada) ficam acima da lista
 const avisoEscola = (texto, ok = false) => { $('aviso-escola').textContent = texto; $('aviso-escola').classList.toggle('aviso-ok', ok); };
+const avisoLista = (texto, ok = false) => { $('aviso-escolas').textContent = texto; $('aviso-escolas').classList.toggle('aviso-ok', ok); };
 const ERROS_ESCOLA = {
   endereco: 'Endereço inválido: use de 3 a 40 letras, números ou hífen, sem espaço (ex.: colegioNovo).',
   nome: 'Digite o nome da escola.',
 };
 const dataCurta = (d) => new Date(d).toLocaleDateString('pt-BR');
+// situação do plano, para o filtro: teste, ativo, bloqueada (o teste acabou) ou desativada
+function situacaoChave(e) {
+  if (!e.ativa) return 'desativada';
+  if (e.plano === 'ativo') return 'ativo';
+  return e.bloqueada ? 'bloqueada' : 'teste';
+}
 // situação do plano: ativo, teste (até quando) ou bloqueada
 function situacao(e) {
   if (!e.ativa) return '🔒 desativada';
@@ -178,17 +187,49 @@ let escolasDoBanco = [];
 let editandoId = '';   // id (no banco) da escola em edição
 async function abrirPainelEscolas() {
   parteProfessor('escolas');
-  limparFormEscola();
+  avisoLista('');
   await listarEscolas();
 }
 
+// ---------- lista com busca e filtro ----------
+// a busca ignora acentos e maiúsculas e procura no nome e no endereço; os botões filtram pela situação do plano
+// (cada um mostra quantas escolas tem). Tudo no aparelho, sem pedir de novo ao servidor.
+const semAcento = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 async function listarEscolas() {
-  const caixa = $('lista-escolas');
-  caixa.innerHTML = '<p class="quiz-status carregando">Buscando as escolas…</p>';
+  $('lista-escolas').innerHTML = '<p class="quiz-status carregando">Buscando as escolas…</p>';
+  $('escolas-contagem').textContent = '';
   try { escolasDoBanco = await api('/escolas'); }
-  catch (err) { escolasDoBanco = []; avisoEscola(err.message); }
-  caixa.innerHTML = escolasDoBanco.length ? '' : '<p class="quiz-status">Nenhuma escola ainda: crie a primeira aqui em cima.</p>';
-  for (const e of escolasDoBanco) {
+  catch (err) { escolasDoBanco = []; avisoLista(err.message); }
+  desenharEscolas();
+}
+
+function desenharEscolas() {
+  const caixa = $('lista-escolas');
+  const busca = semAcento($('escolas-busca').value.trim());
+  const daBusca = escolasDoBanco.filter((e) => !busca || semAcento(e.nome).includes(busca) || semAcento(e.slug).includes(busca));
+  // a quantidade em cada opção: quantas escolas da busca atual têm aquela situação
+  filtroEscolas.contar((f) => (f === 'todas' ? daBusca.length : daBusca.filter((e) => situacaoChave(e) === f).length));
+  const situacaoEscolhida = filtroEscolas.valor();
+  const lista = situacaoEscolhida === 'todas' ? daBusca : daBusca.filter((e) => situacaoChave(e) === situacaoEscolhida);
+  const filtrando = !!busca || situacaoEscolhida !== 'todas';
+  $('escolas-contagem').textContent = escolasDoBanco.length
+    ? (filtrando ? `Mostrando ${lista.length} de ${escolasDoBanco.length} escolas` : `${escolasDoBanco.length} ${escolasDoBanco.length === 1 ? 'escola' : 'escolas'}`) : '';
+  caixa.innerHTML = '';
+  if (!escolasDoBanco.length) {
+    caixa.innerHTML = '<p class="quiz-status">Nenhuma escola ainda. Toque em <b>＋ Nova escola</b> para criar a primeira.</p>';
+    return;
+  }
+  if (!lista.length) {
+    caixa.innerHTML = '<p class="quiz-status">Nenhuma escola com esse filtro.</p>';
+    const limpar = document.createElement('button');
+    limpar.type = 'button';
+    limpar.className = 'btn-sec btn-pequeno adm-limpar-filtro';
+    limpar.textContent = 'Limpar filtros';
+    limpar.onclick = () => { SOM.clique(); limparFiltros(); };
+    caixa.append(limpar);
+    return;
+  }
+  for (const e of lista) {
     const item = document.createElement('div');
     item.className = 'quiz-item escola-item';
     item.style.borderLeftColor = corValida(e.cor) ? e.cor : '';
@@ -202,25 +243,33 @@ async function listarEscolas() {
     botao('🚪 Entrar na escola', () => { SOM.clique(); definirEscolaDoAdmin(e.id); telaProfessor(); });
     botao('📋 Copiar link', async () => {
       const link = linkDaEscola(e.slug);
-      try { await navigator.clipboard.writeText(link); avisoEscola(`Link copiado: ${link}`, true); } catch (err) { window.prompt('Copie o link:', link); }
+      try { await navigator.clipboard.writeText(link); avisoLista(`Link copiado: ${link}`, true); } catch (err) { window.prompt('Copie o link:', link); }
     });
     botao('👁️ Abrir', () => window.open(linkDaEscola(e.slug), '_blank', 'noopener'));
-    botao('✏️ Editar', () => editarEscola(e));
+    botao('✏️ Editar', (ev) => { SOM.clique(); abrirModalEscola(e, ev.currentTarget); });
     if (e.plano === 'teste') {
       botao('✅ Ativar plano', () => mudarPlano(e, { plano: 'ativo', ativa: true }, `${e.nome} com o plano ativo.`));
       botao('⏳ +14 dias', () => mudarPlano(e, { teste_ate: new Date(Math.max(Date.now(), new Date(e.teste_ate).getTime()) + 14 * 864e5).toISOString(), ativa: true },
         `Teste de ${e.nome} estendido por mais 14 dias.`));
     }
-    botao(e.ativa ? '⏸️ Desativar' : '▶️ Reativar', () => mudarPlano(e, { ativa: !e.ativa }, e.ativa ? `${e.nome} desativada.` : `${e.nome} reativada.`));
+    botao(e.ativa ? '⏸️ Desativar' : '▶️ Reativar', () => {
+      if (e.ativa && !window.confirm(`Desativar "${e.nome}"? A escola, os professores e os alunos dela ficam sem acesso até você reativar.`)) return;
+      mudarPlano(e, { ativa: !e.ativa }, e.ativa ? `${e.nome} desativada.` : `${e.nome} reativada.`);
+    });
     item.append(botoes);
     caixa.append(item);
   }
 }
 
+const filtroEscolas = ligarFiltro('escolas-chips', () => { SOM.clique(); desenharEscolas(); });
+function limparFiltros() { $('escolas-busca').value = ''; filtroEscolas.escolher('todas'); desenharEscolas(); $('escolas-busca').focus(); }
+let esperaBusca = 0;
+$('escolas-busca').addEventListener('input', () => { clearTimeout(esperaBusca); esperaBusca = setTimeout(desenharEscolas, 150); });
+
 async function mudarPlano(e, dados, mensagem) {
   SOM.clique();
-  try { await api(`/escolas/${e.id}`, { metodo: 'PUT', corpo: dados }); avisoEscola(`${mensagem} ✔`, true); await listarEscolas(); }
-  catch (err) { avisoEscola(err.message); SOM.errado(); }
+  try { await api(`/escolas/${e.id}`, { metodo: 'PUT', corpo: dados }); avisoLista(`${mensagem} ✔`, true); await listarEscolas(); }
+  catch (err) { avisoLista(err.message); SOM.errado(); }
 }
 
 let logoEscolhido = '';
@@ -233,6 +282,7 @@ function limparFormEscola() {
   logoEscolhido = '';
   $('escola-logo-previa').hidden = true;
   $('btn-escola-salvar').textContent = '🏫 Criar escola';
+  $('escola-modal-titulo').textContent = '🏫 Nova escola';
   avisoEscola('');
   previaEscola();
 }
@@ -250,9 +300,18 @@ function editarEscola(e) {
   $('escola-logo-previa').src = logoEscolhido;
   $('escola-logo-previa').hidden = !logoEscolhido;
   $('btn-escola-salvar').textContent = '💾 Salvar alterações';
+  $('escola-modal-titulo').textContent = `✏️ Editar ${e.nome}`;
   previaEscola();
-  $('form-escola').scrollIntoView({ behavior: 'smooth' });
 }
+
+// ---------- popup de criar / editar (js/popup.js) ----------
+const popupEscola = criarPopup('escola-modal', { fechar: ['btn-escola-fechar', 'btn-escola-cancelar'] });
+function abrirModalEscola(escola = null, origem = null) {
+  if (escola) editarEscola(escola); else limparFormEscola();
+  popupEscola.abrir(origem, escola ? 'escola-nome' : 'escola-id');
+}
+const fecharModalEscola = () => popupEscola.fechar();
+$('btn-escola-nova').onclick = (ev) => { SOM.clique(); abrirModalEscola(null, ev.currentTarget); };
 
 // prévia: a barra do topo com o logo, o nome e as cores escolhidas
 function previaEscola() {
@@ -305,12 +364,11 @@ $('form-escola').onsubmit = async (ev) => {
     else await api('/escolas', { metodo: 'POST', corpo: { ...dados, slug: id } });
     SOM.certo();
     const link = linkDaEscola(id);
-    limparFormEscola();
-    avisoEscola(`${editando ? 'Alterações salvas' : 'Escola criada, com 14 dias de teste grátis'}! Endereço: ${link} ✔`, true);
+    fecharModalEscola();
+    avisoLista(`${editando ? 'Alterações salvas' : 'Escola criada, com 14 dias de teste grátis'}! Endereço: ${link} ✔`, true);
     await listarEscolas();
   } catch (err) { avisoEscola(err.message); SOM.errado(); }
 };
-$('btn-escola-limpar').onclick = () => { SOM.clique(); limparFormEscola(); };
 $('btn-prof-escolas').onclick = () => { SOM.clique(); abrirPainelEscolas(); };
 
 // importar da planilha do Google: escolas, e-mails, questionários e competições que ainda não estão no banco

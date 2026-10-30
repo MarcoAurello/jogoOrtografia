@@ -42,6 +42,11 @@ npm run dev               # http://localhost:3333
 | `GET/POST /turmas`, `PUT /turmas/:id` | professor, coordenação, admin | turmas (com código); o professor vê só as dele |
 | `GET/POST /turmas/:id/alunos`, `PUT /alunos/:id` | quem vê a turma | alunos (um nome por linha, opcional), desativar |
 | `GET /turmas/codigo/:codigo/alunos` | público | os nomes da turma para a tela de entrada do aluno |
+| `GET/POST /alunos`, `GET /alunos/:id` | coordenação, professor | alunos da escola (com ou sem turma), cadastro e histórico de anamneses; o professor vê todos da escola e mexe só nos das turmas dele |
+| `GET/POST/PUT /anamneses/modelos` | coordenação, professor | modelos (questionários) de anamnese da escola |
+| `POST /alunos/:id/anamneses` | quem mexe no aluno | anamnese presencial (exige o consentimento do responsável, LGPD) |
+| `POST /alunos/:id/anamneses/link`, `PUT /anamneses/:id/cancelar` | quem mexe no aluno | link para a família (3 horas, uma resposta; no banco fica só o hash do token) |
+| `GET/POST /anamnese-publica/:token` | público (com o token) | a página da família (`anamnese.html?t=`) |
 | `POST /sessions/aluno`, `GET /sessions/aluno` | aluno | login sem senha: código da turma + aluno da lista (`aluno_id`) ou nome digitado (nome novo entra na turma) |
 | `GET /sessions/aluno/competicoes` | aluno | as competições da turma do aluno logado |
 | `POST /partidas` | aluno | o fim de cada jogo (id do aparelho: reenviar não duplica) |
@@ -67,6 +72,11 @@ npm run dev               # http://localhost:3333
   por minuto bloqueiam o login por 1 minuto.
 - **Alunos:** só o nome e a turma, sem senha: o aluno entra com o código da turma e o nome (o mesmo nome, sem diferença
   de acentos e maiúsculas, é sempre o mesmo aluno). O app apaga o login quando o aluno volta à tela inicial.
+- **Aluno em várias turmas:** o aluno é da escola e fica ligado às turmas em `aluno_turmas` (ou a nenhuma: só mapeado
+  para análise). O token do aluno guarda a turma por onde ele entrou: as partidas e as competições são dessa turma.
+- **Anamnese:** modelos (`anamnese_modelos`) e as aplicadas (`anamneses`, com a cópia das perguntas do dia). Dado
+  sensível de criança: só a equipe da escola vê, o consentimento do responsável fica registrado no aluno e nada
+  disso vai nos e-mails dos relatórios.
 - **Competições:** cada uma é de uma turma (`competicoes.turma_id`); o aluno vê só as da turma dele. No ranking vale a
   maior nota de cada aluno; todas as partidas ficam no relatório do professor.
 - **Administrador dentro de uma escola:** com o cabeçalho `X-Escola: <id da escola>`, o administrador é tratado como a

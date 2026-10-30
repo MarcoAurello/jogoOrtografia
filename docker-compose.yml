@@ -54,8 +54,10 @@ services:
     restart: unless-stopped
     depends_on:
       - api
+    # só no próprio computador (127.0.0.1): no VPS, o site entra pelo domínio (Traefik do Dokploy), nunca direto por
+    # esta porta. Aberta para fora, ela deixaria inventar o IP no X-Forwarded-For e driblar a trava de login.
     ports:
-      - "${PORTA_WEB:-8089}:80"
+      - "127.0.0.1:${PORTA_WEB:-8089}:80"
 
 volumes:
   mysql_data:

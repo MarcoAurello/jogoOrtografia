@@ -1,11 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Painel do professor: a turma inteira numa tela e a ficha de cada aluno (evolução, habilidades, antes × depois), com PDF. */
 
-import { $, seguro } from './util.js?v=139';
-import { SOM } from './som.js?v=139';
-import { api } from './api.js?v=139';
-import { parteProfessor } from './professor.js?v=139';
-import { NOME_HAB } from './habilidades.js?v=139';
+import { $, seguro } from './util.js?v=146';
+import { SOM } from './som.js?v=146';
+import { api } from './api.js?v=146';
+import { parteProfessor } from './professor.js?v=146';
+import { NOME_HAB } from './habilidades.js?v=146';
+import { desenharRespondida, textoDaResposta } from './anamnese-form.js?v=146';
 
 // ---------- Painel ----------
 // Os números vêm da API (api/src/services/painel.ts). "Acerto" é acertos de primeira ÷ respondidas, como nos relatórios.
@@ -147,7 +148,7 @@ function desenharTurma(d) {
 function desenharAluno(d) {
   const caixa = $('dados-conteudo');
   const comparaveis = d.habilidades.filter((h) => h.antes != null && h.depois != null);
-  caixa.innerHTML = `<h3 class="chuva-pergunta">📈 ${seguro(d.aluno.nome)} · ${seguro(d.turma.nome)}</h3>
+  caixa.innerHTML = `<h3 class="chuva-pergunta">📈 ${seguro(d.aluno.nome)}${d.turma ? ` · ${seguro(d.turma.nome)}` : ''}</h3>
     <p class="painel-sub">Últimos ${periodoTexto()}</p>
     ${blocos([[d.resumo.partidas, 'partidas'], [porcento(d.resumo.acerto), 'de acerto'], [d.resumo.minutos, 'minutos jogando'], [dataCurta(d.resumo.ultima), 'última partida']])}
     <div class="painel-grafico" id="graf-semanas"></div>
@@ -163,7 +164,10 @@ function desenharAluno(d) {
     ${d.revisar.length ? `<h4 class="turma-subtitulo">📚 Para revisar <small>o que mais errou no período</small></h4><div class="painel-revisar">${d.revisar.map((r) => `<div class="painel-revisar-item">
       <b>${seguro(r.certa)}</b> <span class="painel-revisar-vezes">${r.vezes}×</span>
       <span class="painel-revisar-tipo">${seguro(r.tipo)} · ${seguro(r.jogo)}</span>
-      ${r.respostas.length ? `<span class="painel-revisar-erro">respondeu: ${r.respostas.map(seguro).join(' · ')}</span>` : ''}</div>`).join('')}</div>` : ''}`;
+      ${r.respostas.length ? `<span class="painel-revisar-erro">respondeu: ${r.respostas.map(seguro).join(' · ')}</span>` : ''}</div>`).join('')}</div>` : ''}
+    ${d.anamnese ? `<h4 class="turma-subtitulo">🧩 Anamnese <small>${seguro(d.anamnese.titulo)} · ${new Date(d.anamnese.respondida_em).toLocaleDateString('pt-BR')} · ${seguro(d.anamnese.respondida_por_nome || '')}</small></h4>
+      <details class="an-historico"><summary>Ver as respostas</summary>${desenharRespondida(d.anamnese.perguntas, d.anamnese.respostas)}</details>`
+      : '<p class="quiz-status">🧩 Sem anamnese ainda (faça em 👧 Alunos e anamnese).</p>'}`;
   d.graficos = [];
   if (d.semanas.length) { const g = graficoSemanas('Evolução: acerto por semana', d.semanas); $('graf-semanas').append(g); d.graficos.push(g); }
   if (d.habilidades.length >= 3) { const g = graficoRadar('Habilidades', d.habilidades.slice(0, 10)); $('graf-habs').append(g); d.graficos.push(g); }
@@ -224,7 +228,7 @@ async function baixarPDFdoPainel({ tipo, dados: d }) {
   };
   const titulo = tipo === 'turma' ? `Painel da turma ${d.turma.nome}` : `Ficha de ${d.aluno.nome}`;
   texto(titulo, 20, 'bold', AZUL);
-  texto(`${tipo === 'turma' ? '' : `Turma ${d.turma.nome} · `}Últimos ${periodoTexto()} · gerado em ${new Date().toLocaleDateString('pt-BR')}`, 10.5, 'normal', CINZA);
+  texto(`${tipo === 'turma' || !d.turma ? '' : `Turma ${d.turma.nome} · `}Últimos ${periodoTexto()} · gerado em ${new Date().toLocaleDateString('pt-BR')}`, 10.5, 'normal', CINZA);
   y += 2; doc.setDrawColor(...AZUL); doc.setLineWidth(0.6); doc.line(L, y, L + LARG, y); y += 7;
   if (tipo === 'turma') {
     texto(`Alunos que jogaram: ${d.resumo.jogaram} de ${d.resumo.alunos}    Partidas: ${d.resumo.partidas}    Acerto: ${porcento(d.resumo.acerto)}    Minutos: ${d.resumo.minutos}`, 11, 'bold');
@@ -253,6 +257,12 @@ async function baixarPDFdoPainel({ tipo, dados: d }) {
     if (d.revisar.length) {
       texto('Para revisar', 13, 'bold', AZUL);
       d.revisar.forEach((r) => texto(`• ${r.certa} (${r.vezes}x) · ${r.tipo}${r.respostas.length ? ` · respondeu: ${r.respostas.join(', ')}` : ''}`, 10));
+    }
+    // a última anamnese (dados sensíveis: o PDF é só para a equipe da escola)
+    if (d.anamnese) {
+      y += 2;
+      texto(`Anamnese: ${d.anamnese.titulo} (${new Date(d.anamnese.respondida_em).toLocaleDateString('pt-BR')}, ${d.anamnese.respondida_por_nome || ''})`, 13, 'bold', AZUL);
+      d.anamnese.perguntas.forEach((q, i) => { texto(`${i + 1}. ${q.texto}`, 10, 'bold'); texto(textoDaResposta(q, (d.anamnese.respostas || {})[q.id]), 10); });
     }
   }
   y += 4;

@@ -12,6 +12,7 @@ import TesteGratisController from '../controllers/TesteGratisController';
 import DadosController from '../controllers/DadosController';
 import RelatorioController from '../controllers/RelatorioController';
 import ImportacaoController from '../controllers/ImportacaoController';
+import AnamneseController from '../controllers/AnamneseController';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import carregarUsuarioLogado from '../middlewares/carregarUsuarioLogado';
 import carregarAlunoLogado from '../middlewares/carregarAlunoLogado';
@@ -27,7 +28,20 @@ routes.use('/sessions', sessionRoutes);
 routes.use('/usuarios', usuarioRoutes);
 routes.use('/escolas', escolaRoutes);
 routes.use('/turmas', turmaRoutes);
+// alunos da escola (com ou sem turma), o cadastro e as anamneses (tela Alunos e anamnese)
+routes.get('/alunos', ensureAuthenticated, carregarUsuarioLogado, AlunoController.escola);
+routes.post('/alunos', ensureAuthenticated, carregarUsuarioLogado, AlunoController.criar);
+routes.get('/alunos/:id', ensureAuthenticated, carregarUsuarioLogado, AlunoController.show);
 routes.put('/alunos/:id', ensureAuthenticated, carregarUsuarioLogado, AlunoController.update);
+routes.post('/alunos/:id/anamneses', ensureAuthenticated, carregarUsuarioLogado, AnamneseController.aplicar);
+routes.post('/alunos/:id/anamneses/link', ensureAuthenticated, carregarUsuarioLogado, AnamneseController.gerarLink);
+routes.get('/anamneses/modelos', ensureAuthenticated, carregarUsuarioLogado, AnamneseController.modelos);
+routes.post('/anamneses/modelos', ensureAuthenticated, carregarUsuarioLogado, AnamneseController.criarModelo);
+routes.put('/anamneses/modelos/:id', ensureAuthenticated, carregarUsuarioLogado, AnamneseController.atualizarModelo);
+routes.put('/anamneses/:id/cancelar', ensureAuthenticated, carregarUsuarioLogado, AnamneseController.cancelar);
+// a página da família: pública, só com o token do link (vale 3 horas e uma resposta)
+routes.get('/anamnese-publica/:token', AnamneseController.publicaVer);
+routes.post('/anamnese-publica/:token', AnamneseController.publicaResponder);
 routes.get('/alunos/:id/ficha', ensureAuthenticated, carregarUsuarioLogado, PainelController.aluno);
 
 // teste grátis: cadastro do e-mail e o PDF de cada jogo por e-mail; a lista é só do administrador

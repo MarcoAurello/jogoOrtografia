@@ -21,18 +21,27 @@ class Aluno extends Model<
 > {
   declare id: CreationOptional<string>;
   declare escola_id: string | null;
-  declare turma_id: string;
+  declare turma_id: string | null;   // a turma em que foi criado (histórico); as turmas de agora estão em aluno_turmas
   declare nome: string;
   declare senha_figuras: string;
   declare ativo: CreationOptional<boolean>;
   declare tentativas: CreationOptional<number>;
   declare bloqueado_ate: Date | null;
   declare ultimo_acesso: Date | null;
+  // cadastro completo (opcional) e o consentimento do responsável (LGPD), exigido para a anamnese
+  declare nome_completo: CreationOptional<string | null>;
+  declare data_nascimento: CreationOptional<string | null>;
+  declare responsavel_nome: CreationOptional<string | null>;
+  declare responsavel_contato: CreationOptional<string | null>;
+  declare observacoes: CreationOptional<string | null>;
+  declare consentimento_em: CreationOptional<Date | null>;
+  declare consentimento_por: CreationOptional<string | null>;
   declare created_at: CreationOptional<Date>;
   declare updated_at: CreationOptional<Date>;
 
   declare escola?: NonAttribute<Escola | null>;
   declare turma?: NonAttribute<Turma>;
+  declare turmas?: NonAttribute<Turma[]>;
 }
 
 Aluno.init(
@@ -49,7 +58,7 @@ Aluno.init(
     },
     turma_id: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: true
     },
     nome: {
       type: DataTypes.STRING(40),
@@ -77,6 +86,13 @@ Aluno.init(
       type: DataTypes.DATE,
       allowNull: true
     },
+    nome_completo: { type: DataTypes.STRING(120), allowNull: true },
+    data_nascimento: { type: DataTypes.DATEONLY, allowNull: true },
+    responsavel_nome: { type: DataTypes.STRING(120), allowNull: true },
+    responsavel_contato: { type: DataTypes.STRING(120), allowNull: true },
+    observacoes: { type: DataTypes.TEXT, allowNull: true },
+    consentimento_em: { type: DataTypes.DATE, allowNull: true },
+    consentimento_por: { type: DataTypes.STRING(160), allowNull: true },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false
@@ -98,6 +114,23 @@ Aluno.init(
 
 Aluno.belongsTo(Escola, { foreignKey: "escola_id", as: "escola" });
 Aluno.belongsTo(Turma, { foreignKey: "turma_id", as: "turma" });
-Turma.hasMany(Aluno, { foreignKey: "turma_id", as: "alunos" });
+
+// o aluno pode estar em várias turmas (ou em nenhuma): a ligação tem o "ativo" daquela turma
+export class AlunoTurma extends Model<InferAttributes<AlunoTurma>, InferCreationAttributes<AlunoTurma>> {
+  declare aluno_id: string;
+  declare turma_id: string;
+  declare ativo: CreationOptional<boolean>;
+  declare created_at: CreationOptional<Date>;
+  declare updated_at: CreationOptional<Date>;
+}
+AlunoTurma.init({
+  aluno_id: { type: DataTypes.UUID, allowNull: false, primaryKey: true },
+  turma_id: { type: DataTypes.UUID, allowNull: false, primaryKey: true },
+  ativo: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+  created_at: { type: DataTypes.DATE, allowNull: false },
+  updated_at: { type: DataTypes.DATE, allowNull: false }
+}, { sequelize, tableName: "aluno_turmas", modelName: "AlunoTurma", timestamps: true, createdAt: "created_at", updatedAt: "updated_at" });
+Aluno.belongsToMany(Turma, { through: AlunoTurma, foreignKey: "aluno_id", otherKey: "turma_id", as: "turmas" });
+Turma.belongsToMany(Aluno, { through: AlunoTurma, foreignKey: "turma_id", otherKey: "aluno_id", as: "alunos" });
 
 export default Aluno;

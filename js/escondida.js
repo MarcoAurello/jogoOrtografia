@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Palavra Escondida. */
 
-import { $, sortear } from './util.js?v=139';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=139';
-import { SOM, tocar } from './som.js?v=139';
-import { mascote, mostrar, telaJogos } from './telas.js?v=139';
-import { escolherProfessorE } from './professor.js?v=139';
-import { segundos } from './luzes.js?v=139';
-import { fimDaMissao } from './relatorio.js?v=139';
+import { $, sortear } from './util.js?v=146';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=146';
+import { SOM, tocar } from './som.js?v=146';
+import { mascote, mostrar, telaJogos } from './telas.js?v=146';
+import { escolherProfessorE } from './professor.js?v=146';
+import { segundos } from './luzes.js?v=146';
+import { fimDaMissao } from './relatorio.js?v=146';
 
 // ---------- Palavra Escondida ----------
 // Atenção seletiva, leitura e rapidez. As letras chegam em LINHAS: cada linha nova entra em cima e empurra as outras

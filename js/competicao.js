@@ -1,15 +1,16 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Competição: o professor cria para uma turma (jogo + hora de encerrar); o aluno entra com o código da turma e joga. */
 
-import { $, seguro } from './util.js?v=139';
-import { aluno, aoVoltarAoInicio } from './estado.js?v=139';
-import { api, lerTokenAluno } from './api.js?v=139';
-import { definirCompeticaoDaPartida } from './partidas.js?v=139';
-import { SOM } from './som.js?v=139';
-import { mostrar } from './telas.js?v=139';
-import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=139';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=139';
-import { comecarQuiz } from './quiz.js?v=139';
+import { $, seguro } from './util.js?v=146';
+import { aluno, aoVoltarAoInicio } from './estado.js?v=146';
+import { api, lerTokenAluno } from './api.js?v=146';
+import { definirCompeticaoDaPartida } from './partidas.js?v=146';
+import { SOM } from './som.js?v=146';
+import { mostrar } from './telas.js?v=146';
+import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=146';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=146';
+import { comecarQuiz } from './quiz.js?v=146';
+import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=146';
 
 // ---------- Competição ----------
 // Cada competição é de uma turma. O aluno entra com o código da turma (js/entrada.js) e a aba Competição lista as
@@ -239,9 +240,14 @@ depoisDoFim.push(async ({ rel, missao: mis }) => {
 $('btn-fim-ranking').onclick = () => { SOM.clique(); if (ativa) abrirRanking(ativa.id); };
 
 // ---------- Área do professor: criar, ver o código, encerrar ----------
+// avisos: os do formulário ficam no popup; os da lista (criada, código copiado, encerrada) ficam acima da lista
 function avisoComp(texto, ok = false) {
   $('aviso-comp').textContent = texto;
   $('aviso-comp').classList.toggle('aviso-ok', ok);
+}
+function avisoCompLista(texto, ok = false) {
+  $('aviso-comp-lista').textContent = texto;
+  $('aviso-comp-lista').classList.toggle('aviso-ok', ok);
 }
 // questionários do professor, para a competição também poder ser de um questionário; turmas: as que o professor vê
 let questionarios = [];
@@ -269,14 +275,20 @@ function prepararFormulario() {
 $('btn-prof-comp').onclick = async () => {
   SOM.clique();
   parteProfessor('comp');
-  prepararFormulario();
+  avisoCompLista('');
   listarCompeticoesProfessor();
+  // o que o formulário precisa já vem carregando, para o popup abrir pronto
   try { questionarios = (await lerDoScript('questionarios')).lista || []; } catch (e) { /* sem internet: só os jogos */ }
   try { turmas = await api('/turmas'); } catch (e) { turmas = []; }
   await carregarEmails();
-  const antes = $('comp-novo-email').value;
+};
+// popup: nova competição (js/popup.js)
+const popupComp = criarPopup('comp-modal', { fechar: ['btn-comp-fechar', 'btn-comp-cancelar'] });
+$('btn-comp-nova').onclick = (ev) => {
+  SOM.clique();
+  $('comp-novo-nome').value = '';
   prepararFormulario();
-  if (antes) $('comp-novo-email').value = antes;
+  popupComp.abrir(ev.currentTarget, 'comp-novo-turma');
 };
 
 $('form-nova-comp').onsubmit = async (ev) => {
@@ -296,46 +308,68 @@ $('form-nova-comp').onsubmit = async (ev) => {
       jogoNome, encerra: encerra.toISOString(), email: $('comp-novo-email').value });
     SOM.certo();
     $('comp-novo-nome').value = '';
+    popupComp.fechar();
     const daTurma = turmas.find((x) => x.id === turma);
-    avisoComp(`Competição criada! Os alunos entram com o código da turma${daTurma ? ` ${daTurma.codigo}` : ''} e ela aparece na aba 🏆 Competição. ✔`, true);
+    avisoCompLista(`Competição "${c.nome}" criada! Os alunos entram com o código da turma${daTurma ? ` ${daTurma.codigo}` : ''} e ela aparece na aba 🏆 Competição. ✔`, true);
+    chipsComp.escolher('aberta');
     listarCompeticoesProfessor();
   } catch (err) { avisoComp(mensagem(err, 'Não deu para criar (sem internet ou script desatualizado). Tente de novo.')); }
 };
 
+// ---------- lista do professor: busca (nome, jogo, turma) e situação (abertas, encerradas) ----------
+let competicoesProf = [];
+const chipsComp = ligarFiltro('comp-chips', () => { SOM.clique(); desenharCompeticoesProfessor(); });
+ligarBusca('comp-busca', () => desenharCompeticoesProfessor());
 async function listarCompeticoesProfessor(dados) {
   const caixa = $('lista-comp-prof');
-  if (!dados) caixa.innerHTML = '<p class="quiz-status carregando">Buscando as competições…</p>';
+  if (!dados) { caixa.innerHTML = '<p class="quiz-status carregando">Buscando as competições…</p>'; $('comp-contagem').textContent = ''; }
   try {
-    const { lista } = dados || await gravarComoProfessor({ acao: 'competicoesProfessor' });
-    caixa.innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhuma competição nos últimos 30 dias.</p>';
-    for (const c of lista) {
-      const item = document.createElement('div');
-      item.className = `quiz-item comp-item${c.aberta ? '' : ' encerrada'}`;
-      item.innerHTML = `<span class="comp-item-texto"><span class="quiz-item-nome">${seguro(c.nome)}</span>
-        ${c.turmaCodigo ? `<span class="comp-codigo" title="Código da turma (os alunos entram com ele)">${seguro(c.turmaCodigo)}</span>` : ''}
-        <span class="quiz-item-qtd">🏫 ${seguro(c.turma || 'sem turma')} · 🎮 ${seguro(c.jogoNome)} · ${pessoas(c.participantes)}</span>
-        <span class="comp-item-hora">${c.aberta ? `⏰ Aberta até ${horaTexto(c.encerra)} (${diaTexto(c.encerra)})` : `🔒 Encerrou ${diaTexto(c.encerra)} às ${horaTexto(c.encerra)}`}</span></span>`;
-      const botoes = document.createElement('span');
-      botoes.className = 'comp-item-botoes';
-      const botao = (txt, classe, acao) => { const b = document.createElement('button'); b.type = 'button'; b.className = classe; b.textContent = txt; b.onclick = acao; botoes.append(b); };
-      if (c.turmaCodigo) botao('📋 Copiar código da turma', 'quiz-link', async () => {
-        const texto = `Competição "${c.nome}" (${c.jogoNome}) no app Jogos Psicopedagógicos: toque em "Entrar com o código da turma" e use o código ${c.turmaCodigo}.`;
-        try { await navigator.clipboard.writeText(texto); avisoComp(`Código ${c.turmaCodigo} copiado! Cole no WhatsApp ou mural da turma.`, true); }
-        catch (e) { window.prompt('Copie o código da turma:', c.turmaCodigo); }
-      });
-      botao('🏆 Ranking', 'quiz-link', () => { SOM.clique(); abrirRanking(c.id); });
-      if (c.aberta) {
-        botao('⏹ Encerrar agora', 'quiz-excluir', async () => {
-          if (!window.confirm(`Encerrar "${c.nome}" agora? Ninguém mais poderá entrar (o ranking fica guardado).`)) return;
-          try { listarCompeticoesProfessor(await gravarComoProfessor({ acao: 'encerrarCompeticao', id: c.id })); avisoComp(`"${c.nome}" foi encerrada.`, true); }
-          catch (e) { avisoComp('Não deu para encerrar (sem internet?). Tente de novo.'); }
-        });
-      }
-      item.append(botoes);
-      caixa.append(item);
-    }
+    competicoesProf = (dados || await gravarComoProfessor({ acao: 'competicoesProfessor' })).lista;
+    desenharCompeticoesProfessor();
   } catch (err) {
-    caixa.innerHTML = `<p class="quiz-status">${seguro(mensagem(err, 'Não deu para buscar as competições (sem internet ou script desatualizado).'))}</p>`;
+    caixa.innerHTML = `<p class="quiz-status">${seguro(mensagem(err, 'Não deu para buscar as competições (sem internet?).'))}</p>`;
+  }
+}
+const situacaoComp = (c) => (c.aberta ? 'aberta' : 'encerrada');
+function desenharCompeticoesProfessor() {
+  const caixa = $('lista-comp-prof');
+  const busca = semAcento($('comp-busca').value.trim());
+  const daBusca = competicoesProf.filter((c) => !busca || [c.nome, c.jogoNome, c.turma, c.turmaCodigo].some((x) => semAcento(x).includes(busca)));
+  chipsComp.contar((f) => (f === 'todos' ? daBusca.length : daBusca.filter((c) => situacaoComp(c) === f).length));
+  const f = chipsComp.valor();
+  const lista = f === 'todos' ? daBusca : daBusca.filter((c) => situacaoComp(c) === f);
+  mostrarContagem('comp-contagem', lista.length, competicoesProf.length, !!busca || f !== 'aberta', ['competição', 'competições']);
+  caixa.innerHTML = '';
+  if (!lista.length) {
+    listaSemItens(caixa, !competicoesProf.length, 'Nenhuma competição nos últimos 30 dias. Toque em <b>＋ Nova competição</b>.',
+      () => { SOM.clique(); $('comp-busca').value = ''; chipsComp.escolher('todos'); desenharCompeticoesProfessor(); });
+    return;
+  }
+  for (const c of lista) {
+    const item = document.createElement('div');
+    item.className = `quiz-item comp-item${c.aberta ? '' : ' encerrada'}`;
+    item.innerHTML = `<span class="comp-item-texto"><span class="quiz-item-nome">${seguro(c.nome)}</span>
+      ${c.turmaCodigo ? `<span class="comp-codigo" title="Código da turma (os alunos entram com ele)">${seguro(c.turmaCodigo)}</span>` : ''}
+      <span class="quiz-item-qtd">🏫 ${seguro(c.turma || 'sem turma')} · 🎮 ${seguro(c.jogoNome)} · ${pessoas(c.participantes)}</span>
+      <span class="comp-item-hora">${c.aberta ? `⏰ Aberta até ${horaTexto(c.encerra)} (${diaTexto(c.encerra)})` : `🔒 Encerrou ${diaTexto(c.encerra)} às ${horaTexto(c.encerra)}`}</span></span>`;
+    const botoes = document.createElement('span');
+    botoes.className = 'comp-item-botoes';
+    const botao = (txt, classe, acao) => { const b = document.createElement('button'); b.type = 'button'; b.className = classe; b.textContent = txt; b.onclick = acao; botoes.append(b); };
+    if (c.turmaCodigo) botao('📋 Copiar código da turma', 'quiz-link', async () => {
+      const texto = `Competição "${c.nome}" (${c.jogoNome}) no app Jogos Psicopedagógicos: toque em "Entrar com o código da turma" e use o código ${c.turmaCodigo}.`;
+      try { await navigator.clipboard.writeText(texto); avisoCompLista(`Código ${c.turmaCodigo} copiado! Cole no WhatsApp ou mural da turma.`, true); }
+      catch (e) { window.prompt('Copie o código da turma:', c.turmaCodigo); }
+    });
+    botao('🏆 Ranking', 'quiz-link', () => { SOM.clique(); abrirRanking(c.id); });
+    if (c.aberta) {
+      botao('⏹ Encerrar agora', 'quiz-excluir', async () => {
+        if (!window.confirm(`Encerrar "${c.nome}" agora? Ninguém mais poderá jogar (o ranking fica guardado).`)) return;
+        try { listarCompeticoesProfessor(await gravarComoProfessor({ acao: 'encerrarCompeticao', id: c.id })); avisoCompLista(`"${c.nome}" foi encerrada.`, true); }
+        catch (e) { avisoCompLista('Não deu para encerrar (sem internet?). Tente de novo.'); }
+      });
+    }
+    item.append(botoes);
+    caixa.append(item);
   }
 }
 

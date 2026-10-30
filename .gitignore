@@ -11,3 +11,6 @@ docker-compose.override.yml
 
 # roteiro de testes com as senhas locais
 TESTE-LOCAL.md
+
+# variáveis da produção (VPS), com as senhas: ficam só no computador
+.env.producao

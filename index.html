@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=139">
+  <link rel="stylesheet" href="style.css?v=146">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1438,7 +1438,17 @@
         <button class="jogo-card" id="btn-prof-turmas" type="button" style="--c:#f5a000" hidden>
           <span class="jogo-card-icone">🏫</span>
           <span class="jogo-card-nome">Turmas e alunos</span>
-          <span class="jogo-card-texto">Criar turmas, cadastrar alunos, ver as figuras e as partidas</span>
+          <span class="jogo-card-texto">Criar turmas, cadastrar alunos e ver as partidas</span>
+        </button>
+        <button class="jogo-card" id="btn-prof-alunos" type="button" style="--c:#00897b" hidden>
+          <span class="jogo-card-icone">👧</span>
+          <span class="jogo-card-nome">Alunos e anamnese</span>
+          <span class="jogo-card-texto">Cadastro dos alunos (com ou sem turma), anamnese e o link para a família</span>
+        </button>
+        <button class="jogo-card" id="btn-prof-anamnese" type="button" style="--c:#5e35b1" hidden>
+          <span class="jogo-card-icone">🧩</span>
+          <span class="jogo-card-nome">Modelos de anamnese</span>
+          <span class="jogo-card-texto">Criar e ajustar os questionários de anamnese</span>
         </button>
         <button class="jogo-card" id="btn-prof-emails" type="button" style="--c:#1fa2b0">
           <span class="jogo-card-icone">📧</span>
@@ -1478,34 +1488,91 @@
       </div>
       <div class="cartao cartao-login" id="painel-competicoes" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
-        <h3 class="chuva-pergunta">🏆 Competições</h3>
-        <p class="professor-ajuda">Escolha o <b>jogo</b> (ou um questionário) e a <b>hora de encerrar</b>. A planilha cria um <b>código</b>:
-          passe para a turma. Os alunos entram pela aba 🏆 Competição com o nome e o código. Vale a <b>melhor partida</b> de cada aluno.
-          Depois da hora, ninguém mais entra; o ranking fica guardado na planilha (abas "Competições" e "Ranking").</p>
-        <form class="cadastro-email" id="form-nova-comp" autocomplete="off">
+        <div class="adm-cabecalho">
+          <h3 class="chuva-pergunta">🏆 Competições</h3>
+          <button class="btn-grande btn-pequeno" id="btn-comp-nova" type="button">＋ Nova competição</button>
+        </div>
+        <p class="professor-ajuda">Cada competição é de uma <b>turma</b>: os alunos entram com o <b>código da turma</b> e jogam. Vale a
+          <b>maior nota</b> de cada aluno no ranking; todas as partidas ficam no relatório. Depois da hora, ninguém mais joga.</p>
+        <div class="adm-filtros" role="search">
+          <label class="campo adm-busca"><span class="sr-only">Buscar competição</span>
+            <input type="search" id="comp-busca" placeholder="🔍 Buscar por nome, jogo ou turma" autocomplete="off" spellcheck="false"></label>
+          <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar pela situação</span>
+            <select id="comp-chips" class="adm-select">
+              <option value="aberta" data-rotulo="⏰ Abertas" selected>⏰ Abertas</option>
+              <option value="encerrada" data-rotulo="🔒 Encerradas">🔒 Encerradas</option>
+              <option value="todos" data-rotulo="Todas as competições">Todas as competições</option>
+            </select></label>
+        </div>
+        <p class="erro-login adm-aviso" id="aviso-comp-lista" role="status"></p>
+        <p class="adm-contagem" id="comp-contagem" aria-live="polite"></p>
+        <div class="lista-quiz" id="lista-comp-prof"></div>
+      </div>
+      <div class="adm-popup" id="comp-modal" hidden>
+        <form class="cartao adm-popup-cartao" id="form-nova-comp" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="comp-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="comp-modal-titulo">🏆 Nova competição</h3>
+            <button class="adm-popup-fechar" id="btn-comp-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
           <label class="campo campo-jogo"><span>Turma</span>
             <select id="comp-novo-turma"></select></label>
-          <label class="campo campo-jogo"><span>Nome da competição</span>
-            <input type="text" id="comp-novo-nome" maxlength="60" placeholder="Ex.: 5º A – Tabuada"></label>
           <label class="campo campo-jogo"><span>Jogo ou questionário</span>
             <select id="comp-novo-jogo"></select></label>
+          <label class="campo campo-jogo"><span>Nome da competição (opcional)</span>
+            <input type="text" id="comp-novo-nome" maxlength="60" placeholder="Ex.: 5º A – Tabuada"></label>
           <label class="campo campo-jogo"><span>Encerra hoje às</span>
             <input type="time" id="comp-novo-hora" value="23:59" required></label>
           <label class="campo campo-jogo"><span>Relatórios das partidas para</span>
             <select id="comp-novo-email"></select></label>
-          <p class="erro-login" id="aviso-comp" role="status"></p>
-          <button class="btn-grande" type="submit">🏆 Criar competição</button>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-comp" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-comp-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" type="submit">🏆 Criar</button>
+          </div>
         </form>
-        <div class="lista-quiz" id="lista-comp-prof"></div>
       </div>
       <div class="cartao cartao-login" id="painel-escolas" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
-        <h3 class="chuva-pergunta">🏫 Escolas</h3>
-        <p class="professor-ajuda">Cada escola ganha um endereço próprio (o endereço do sistema + <b>/nomeDaEscola</b>) com o
-          <b>logo</b>, as <b>cores</b> e o <b>nome</b> dela, e todos os jogos. Escola nova começa com <b>14 dias de teste grátis</b>;
-          depois, tudo fica bloqueado até você ativar o plano. Cadastre a coordenação dela em 👥 Usuários.</p>
-        <form class="cadastro-email" id="form-escola" autocomplete="off">
-          <label class="campo campo-jogo"><span>Endereço (o que vem depois de .com.br/)</span>
+        <div class="adm-cabecalho">
+          <h3 class="chuva-pergunta">🏫 Escolas</h3>
+          <button class="btn-grande btn-pequeno" id="btn-escola-nova" type="button">＋ Nova escola</button>
+        </div>
+        <p class="professor-ajuda">Cada escola tem um endereço próprio (<b>/nomeDaEscola</b>) com o logo, as cores e o nome dela.
+          Escola nova começa com <b>14 dias de teste grátis</b>.</p>
+        <!-- busca e filtro da lista (js/escola.js) -->
+        <div class="adm-filtros" role="search">
+          <label class="campo adm-busca"><span class="sr-only">Buscar escola</span>
+            <input type="search" id="escolas-busca" placeholder="🔍 Buscar por nome ou endereço" autocomplete="off" spellcheck="false"></label>
+          <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar pela situação</span>
+            <select id="escolas-chips" class="adm-select">
+              <option value="todas" data-rotulo="Todas as situações" selected>Todas as situações</option>
+              <option value="teste" data-rotulo="⏳ Em teste">⏳ Em teste</option>
+              <option value="ativo" data-rotulo="✅ Plano ativo">✅ Plano ativo</option>
+              <option value="bloqueada" data-rotulo="🔒 Teste acabou">🔒 Teste acabou</option>
+              <option value="desativada" data-rotulo="⏸️ Desativadas">⏸️ Desativadas</option>
+            </select></label>
+        </div>
+        <p class="erro-login adm-aviso" id="aviso-escolas" role="status"></p>
+        <p class="adm-contagem" id="escolas-contagem" aria-live="polite"></p>
+        <div class="lista-quiz" id="lista-escolas"></div>
+        <details class="adm-mais">
+          <summary>Mais opções</summary>
+          <div class="importar-planilha">
+            <p class="professor-ajuda">📥 <b>Trazer da planilha do Google</b>: as escolas, os e-mails dos relatórios, os questionários e as
+              competições (com o ranking) que ainda não estão no banco. Pode tocar de novo: o que já veio não se repete.</p>
+            <button class="btn-sec" id="btn-importar-planilha" type="button">📥 Importar da planilha</button>
+            <p class="erro-login" id="aviso-importar" role="status"></p>
+          </div>
+        </details>
+      </div>
+      <!-- popup: criar ou editar uma escola -->
+      <div class="adm-popup" id="escola-modal" hidden>
+        <form class="cartao adm-popup-cartao" id="form-escola" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="escola-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="escola-modal-titulo">🏫 Nova escola</h3>
+            <button class="adm-popup-fechar" id="btn-escola-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <label class="campo campo-jogo"><span>Endereço (o que vem depois da barra: site/<b>colegioNovo</b>)</span>
             <input type="text" id="escola-id" maxlength="40" placeholder="Ex.: colegioNovo" spellcheck="false" autocapitalize="off"></label>
           <label class="campo campo-jogo"><span>Nome da escola</span>
             <input type="text" id="escola-nome" maxlength="60" placeholder="Ex.: Colégio Novo Saber"></label>
@@ -1525,52 +1592,105 @@
             <p class="escola-previa-nome" id="escola-previa-nome"></p>
             <p class="escola-previa-slogan" id="escola-previa-slogan"></p>
           </div>
-          <p class="erro-login" id="aviso-escola" role="status"></p>
-          <button class="btn-grande" id="btn-escola-salvar" type="submit">🏫 Criar escola</button>
-          <button class="btn-sec" id="btn-escola-limpar" type="button">Limpar</button>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-escola" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-escola-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" id="btn-escola-salvar" type="submit">🏫 Criar escola</button>
+          </div>
         </form>
-        <div class="importar-planilha">
-          <p class="professor-ajuda">📥 <b>Trazer da planilha do Google</b>: as escolas, os e-mails dos relatórios, os questionários e as
-            competições (com o ranking) que ainda não estão no banco. Pode tocar de novo: o que já veio não se repete.</p>
-          <button class="btn-sec" id="btn-importar-planilha" type="button">📥 Importar da planilha</button>
-          <p class="erro-login" id="aviso-importar" role="status"></p>
-        </div>
-        <div class="lista-quiz" id="lista-escolas"></div>
       </div>
       <div class="cartao cartao-login" id="painel-turmas" hidden>
         <div id="turmas-lista-parte">
           <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
-          <h3 class="chuva-pergunta">🏫 Turmas e alunos</h3>
-          <p class="professor-ajuda">Cada turma ganha um <b>código</b>: os alunos digitam na entrada do app, tocam no nome e nas
-            <b>3 figuras</b> deles. Quem entra assim tem <b>todas as partidas guardadas</b> para você acompanhar.</p>
-          <form class="cadastro-email" id="form-turma" autocomplete="off">
-            <label class="campo campo-jogo"><span>Nome da turma</span>
-              <input type="text" id="turma-nome" maxlength="80" placeholder="Ex.: 3º ano B"></label>
-            <div class="campo campo-jogo" id="campo-turma-professores" hidden><span>Professores da turma</span>
-              <div class="turma-professores" id="turma-professores"></div></div>
-            <p class="erro-login" id="aviso-turma" role="status"></p>
-            <button class="btn-grande" type="submit">🏫 Criar turma</button>
-          </form>
+          <div class="adm-cabecalho">
+            <h3 class="chuva-pergunta">🏫 Turmas e alunos</h3>
+            <button class="btn-grande btn-pequeno" id="btn-turma-nova" type="button">＋ Nova turma</button>
+          </div>
+          <p class="professor-ajuda">Cada turma ganha um <b>código</b>: os alunos digitam na entrada do app e tocam no nome (ou
+            digitam). Quem entra assim tem <b>todas as partidas guardadas</b> para você acompanhar.</p>
+          <div class="adm-filtros" role="search">
+            <label class="campo adm-busca"><span class="sr-only">Buscar turma</span>
+              <input type="search" id="turmas-busca" placeholder="🔍 Buscar por nome, código ou professor" autocomplete="off" spellcheck="false"></label>
+            <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar pela situação</span>
+              <select id="turmas-chips" class="adm-select">
+                <option value="ativa" data-rotulo="✅ Ativas" selected>✅ Ativas</option>
+                <option value="encerrada" data-rotulo="⏸️ Encerradas">⏸️ Encerradas</option>
+                <option value="todos" data-rotulo="Todas as turmas">Todas as turmas</option>
+              </select></label>
+          </div>
+          <p class="erro-login adm-aviso" id="aviso-turmas" role="status"></p>
+          <p class="adm-contagem" id="turmas-contagem" aria-live="polite"></p>
           <div class="lista-quiz" id="lista-turmas"></div>
         </div>
         <div id="turma-detalhe" hidden>
           <button class="btn-sec btn-pequeno" id="btn-turmas-voltar" type="button">← Turmas</button>
-          <h3 class="chuva-pergunta" id="turma-det-nome"></h3>
+          <div class="adm-cabecalho">
+            <h3 class="chuva-pergunta" id="turma-det-nome"></h3>
+            <button class="btn-sec btn-pequeno" id="btn-turma-editar" type="button" hidden>✏️ Editar turma</button>
+          </div>
+          <p class="quiz-item-qtd turma-det-profs" id="turma-det-profs"></p>
           <p class="turma-codigo-linha">Código da turma: <b class="turma-codigo-grande" id="turma-det-codigo"></b>
             <button class="quiz-link" id="btn-turma-copiar" type="button">📋 Copiar</button></p>
           <button class="btn-grande painel-abrir" id="btn-turma-painel" type="button">📊 Painel da turma</button>
-          <form class="cadastro-email" id="form-alunos" autocomplete="off">
-            <label class="campo campo-jogo"><span>Novos alunos (um por linha: primeiro nome e inicial)</span>
-              <textarea id="alunos-nomes" rows="4" placeholder="Ana S.&#10;Bruno L.&#10;Carla M."></textarea></label>
-            <button class="btn-grande" type="submit">👧 Cadastrar alunos</button>
-          </form>
-          <p class="erro-login" id="aviso-alunos" role="status"></p>
+          <div class="adm-cabecalho">
+            <h4 class="turma-subtitulo">👧 Alunos</h4>
+            <button class="btn-grande btn-pequeno" id="btn-alunos-novos" type="button">＋ Cadastrar alunos</button>
+          </div>
+          <div class="adm-filtros" role="search">
+            <label class="campo adm-busca"><span class="sr-only">Buscar aluno</span>
+              <input type="search" id="alunos-busca" placeholder="🔍 Buscar aluno" autocomplete="off" spellcheck="false"></label>
+            <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar os alunos</span>
+              <select id="alunos-chips" class="adm-select">
+                <option value="ativo" data-rotulo="✅ Na turma" selected>✅ Na turma</option>
+                <option value="semjogar" data-rotulo="💤 Ainda não jogaram">💤 Ainda não jogaram</option>
+                <option value="desativado" data-rotulo="⏸️ Desativados">⏸️ Desativados</option>
+                <option value="todos" data-rotulo="Todos os alunos">Todos os alunos</option>
+              </select></label>
+          </div>
+          <p class="erro-login adm-aviso" id="aviso-alunos" role="status"></p>
+          <p class="adm-contagem" id="alunos-contagem" aria-live="polite"></p>
           <div class="lista-quiz" id="lista-alunos-turma"></div>
           <h4 class="turma-subtitulo">🎮 Últimas partidas
             <button class="quiz-link" id="btn-turma-atualizar" type="button">↻ Atualizar</button></h4>
           <div class="partidas-turma" id="partidas-turma"></div>
           <button class="btn-sec btn-pequeno" id="btn-turma-encerrar" type="button"></button>
         </div>
+      </div>
+      <!-- popup: nova turma -->
+      <div class="adm-popup" id="turma-modal" hidden>
+        <form class="cartao adm-popup-cartao" id="form-turma" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="turma-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="turma-modal-titulo">🏫 Nova turma</h3>
+            <button class="adm-popup-fechar" id="btn-turma-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <label class="campo campo-jogo"><span>Nome da turma</span>
+            <input type="text" id="turma-nome" maxlength="80" placeholder="Ex.: 3º ano B" required></label>
+          <div class="campo campo-jogo" id="campo-turma-professores" hidden><span>Professores da turma</span>
+            <div class="turma-professores" id="turma-professores"></div></div>
+          <p class="professor-ajuda adm-dica" id="turma-modal-dica">A turma ganha um código na hora. Os alunos podem ser cadastrados depois (ou só digitam o nome ao entrar).</p>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-turma" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-turma-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" id="btn-turma-salvar" type="submit">🏫 Criar turma</button>
+          </div>
+        </form>
+      </div>
+      <!-- popup: cadastrar alunos numa turma -->
+      <div class="adm-popup" id="alunos-modal" hidden>
+        <form class="cartao adm-popup-cartao" id="form-alunos" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="alunos-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="alunos-modal-titulo">👧 Cadastrar alunos</h3>
+            <button class="adm-popup-fechar" id="btn-alunos-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <label class="campo campo-jogo"><span>Um aluno por linha (primeiro nome e inicial)</span>
+            <textarea id="alunos-nomes" rows="7" placeholder="Ana S.&#10;Bruno L.&#10;Carla M." required></textarea></label>
+          <p class="professor-ajuda adm-dica" id="alunos-qtd-digitados">Dica: dá para colar a lista inteira de uma planilha.</p>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-alunos-form" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-alunos-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" type="submit">👧 Cadastrar</button>
+          </div>
+        </form>
       </div>
       <!-- painel do professor: a turma numa tela e a ficha de cada aluno (js/painel.js) -->
       <div class="cartao cartao-login painel-dados" id="painel-dados" hidden>
@@ -1591,27 +1711,67 @@
       </div>
       <div class="cartao cartao-login" id="painel-usuarios" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
-        <h3 class="chuva-pergunta">👥 Usuários</h3>
+        <div class="adm-cabecalho">
+          <h3 class="chuva-pergunta">👥 Usuários</h3>
+          <button class="btn-grande btn-pequeno" id="btn-usuario-novo" type="button">＋ Novo usuário</button>
+        </div>
         <p class="professor-ajuda">Cada pessoa entra na Área do professor com o <b>próprio e-mail e senha</b>. Cadastre com uma
-          <b>senha provisória</b> e passe junto com o e-mail: no primeiro acesso, o app pede para criar a senha definitiva.</p>
-        <form class="cadastro-email" id="form-usuario" autocomplete="off">
-          <label class="campo campo-jogo" id="campo-usuario-escola"><span>Escola</span>
-            <select id="usuario-escola"></select></label>
-          <label class="campo campo-jogo"><span>Nome</span>
-            <input type="text" id="usuario-nome" maxlength="120" placeholder="Ex.: Ana Souza"></label>
-          <label class="campo campo-jogo"><span>E-mail</span>
-            <input type="email" id="usuario-email" maxlength="255" placeholder="ana@escola.com" autocomplete="off"></label>
-          <label class="campo campo-jogo"><span>Senha provisória (8 caracteres ou mais)</span>
-            <input type="text" id="usuario-senha" maxlength="100" autocomplete="off" spellcheck="false"></label>
+          <b>senha provisória</b>: no primeiro acesso, o app pede para criar a senha definitiva.</p>
+        <!-- busca e filtros da lista (js/usuarios.js) -->
+        <div class="adm-filtros" role="search">
+          <label class="campo adm-busca"><span class="sr-only">Buscar usuário</span>
+            <input type="search" id="usuarios-busca" placeholder="🔍 Buscar por nome ou e-mail" autocomplete="off" spellcheck="false"></label>
+          <label class="campo adm-campo-filtro" id="campo-usuarios-filtro-escola"><span class="sr-only">Filtrar pela escola</span>
+            <select id="usuarios-filtro-escola" class="adm-select"></select></label>
+          <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar pelo perfil</span>
+            <select id="usuarios-chips-perfil" class="adm-select">
+              <option value="todos" data-rotulo="Todos os perfis" selected>Todos os perfis</option>
+              <option value="admin" data-rotulo="🛡️ Administradores">🛡️ Administradores</option>
+              <option value="coordenacao" data-rotulo="🏫 Coordenação">🏫 Coordenação</option>
+              <option value="professor" data-rotulo="👩‍🏫 Professores">👩‍🏫 Professores</option>
+            </select></label>
+          <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar pela situação</span>
+            <select id="usuarios-chips-situacao" class="adm-select">
+              <option value="todos" data-rotulo="Qualquer situação" selected>Qualquer situação</option>
+              <option value="ativo" data-rotulo="✅ Ativos">✅ Ativos</option>
+              <option value="novo" data-rotulo="✉️ Ainda não entraram">✉️ Ainda não entraram</option>
+              <option value="desativado" data-rotulo="⏸️ Desativados">⏸️ Desativados</option>
+            </select></label>
+        </div>
+        <p class="erro-login adm-aviso" id="aviso-usuarios" role="status"></p>
+        <p class="adm-contagem" id="usuarios-contagem" aria-live="polite"></p>
+        <div class="lista-quiz" id="lista-usuarios"></div>
+      </div>
+      <!-- popup: cadastrar um usuário -->
+      <div class="adm-popup" id="usuario-modal" hidden>
+        <form class="cartao adm-popup-cartao" id="form-usuario" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="usuario-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="usuario-modal-titulo">👥 Novo usuário</h3>
+            <button class="adm-popup-fechar" id="btn-usuario-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
           <label class="campo campo-jogo"><span>Perfil</span>
             <select id="usuario-perfil">
               <option value="professor">Professor</option>
               <option value="coordenacao">Coordenação</option>
             </select></label>
-          <p class="erro-login" id="aviso-usuario" role="status"></p>
-          <button class="btn-grande" type="submit">👥 Cadastrar</button>
+          <label class="campo campo-jogo" id="campo-usuario-escola"><span>Escola</span>
+            <select id="usuario-escola"></select></label>
+          <label class="campo campo-jogo"><span>Nome</span>
+            <input type="text" id="usuario-nome" maxlength="120" placeholder="Ex.: Ana Souza" required></label>
+          <label class="campo campo-jogo"><span>E-mail</span>
+            <input type="email" id="usuario-email" maxlength="255" placeholder="ana@escola.com" autocomplete="off" required></label>
+          <label class="campo campo-jogo"><span>Senha provisória (8 caracteres ou mais)</span>
+            <span class="adm-senha-linha">
+              <input type="text" id="usuario-senha" maxlength="100" minlength="8" autocomplete="off" spellcheck="false" required>
+              <button class="btn-sec btn-pequeno" id="btn-usuario-gerar-senha" type="button">🎲 Gerar</button>
+            </span></label>
+          <p class="professor-ajuda adm-dica">Passe o e-mail e a senha provisória para a pessoa: no primeiro acesso, ela cria a senha dela.</p>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-usuario" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-usuario-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" id="btn-usuario-salvar" type="submit">👥 Cadastrar</button>
+          </div>
         </form>
-        <div class="lista-quiz" id="lista-usuarios"></div>
       </div>
       <div class="cartao cartao-login" id="painel-links" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
@@ -1623,41 +1783,231 @@
       </div>
       <div class="cartao cartao-login" id="info-emails" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
-        <h3 class="chuva-pergunta">📧 E-mails dos relatórios</h3>
-        <p class="professor-ajuda">Cadastre o seu nome e e-mail para receber os relatórios. Na lista aparecem só os <b>nomes</b>
-          dos professores. Para corrigir ou excluir um e-mail, peça a quem cuida da planilha (aba <b>"E-mails"</b>).</p>
-        <form class="cadastro-email" id="form-novo-email" autocomplete="off">
-          <label class="campo campo-jogo"><span>Nome do professor</span>
+        <div class="adm-cabecalho">
+          <h3 class="chuva-pergunta">📧 E-mails dos relatórios</h3>
+          <button class="btn-grande btn-pequeno" id="btn-email-novo" type="button">＋ Novo e-mail</button>
+        </div>
+        <p class="professor-ajuda">Quem está nesta lista recebe os relatórios das partidas: no fim do jogo, o aluno escolhe o professor.
+          Aparecem só os <b>nomes</b> (o e-mail dos colegas fica escondido).</p>
+        <div class="adm-filtros" role="search">
+          <label class="campo adm-busca"><span class="sr-only">Buscar professor</span>
+            <input type="search" id="emails-busca" placeholder="🔍 Buscar pelo nome" autocomplete="off" spellcheck="false"></label>
+        </div>
+        <p class="erro-login adm-aviso" id="aviso-emails" role="status"></p>
+        <p class="adm-contagem" id="emails-contagem" aria-live="polite"></p>
+        <div class="lista-quiz" id="lista-emails-prof"></div>
+      </div>
+      <div class="adm-popup" id="email-modal" hidden>
+        <form class="cartao adm-popup-cartao" id="form-novo-email" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="email-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="email-modal-titulo">📧 Novo e-mail</h3>
+            <button class="adm-popup-fechar" id="btn-email-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <label class="campo campo-jogo"><span>Nome do professor (é o que o aluno vê)</span>
             <input type="text" id="novo-email-nome" maxlength="60" placeholder="Ex.: Prof. Maria"></label>
           <label class="campo campo-jogo"><span>E-mail</span>
-            <input type="email" id="novo-email-email" maxlength="120" placeholder="nome@escola.com" required></label>
-          <p class="erro-login" id="aviso-email" role="status"></p>
-          <button class="btn-grande" type="submit">➕ Adicionar</button>
+            <input type="email" id="novo-email-email" maxlength="120" placeholder="nome@escola.com" inputmode="email" required></label>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-email" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-email-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" type="submit">➕ Adicionar</button>
+          </div>
         </form>
-        <div class="lista-quiz" id="lista-emails-prof"></div>
       </div>
       <div class="cartao cartao-login" id="painel-questionarios" hidden>
         <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
-        <h3 class="chuva-pergunta">📝 Questionários da aula</h3>
-        <p class="professor-ajuda">Ficam guardados na planilha do Google: uma aba <b>"Q: nome"</b> para cada questionário.
-          Cada um tem um <b>link</b> que abre direto nele: é só copiar e mandar para a turma. Para excluir um questionário,
-          peça a quem cuida da planilha (é só apagar a aba dele).</p>
-        <details class="emails-jogos" id="novo-questionario">
-          <summary>➕ Novo questionário</summary>
+        <div class="adm-cabecalho">
+          <h3 class="chuva-pergunta">📝 Questionários da aula</h3>
+          <button class="btn-grande btn-pequeno" id="btn-quiz-novo" type="button">＋ Novo questionário</button>
+        </div>
+        <p class="professor-ajuda">Cada questionário tem um <b>link</b> que abre direto nele: é só copiar e mandar para a turma.
+          Também pode virar uma <b>competição</b>.</p>
+        <div class="adm-filtros" role="search">
+          <label class="campo adm-busca"><span class="sr-only">Buscar questionário</span>
+            <input type="search" id="quiz-busca" placeholder="🔍 Buscar pelo nome" autocomplete="off" spellcheck="false"></label>
+        </div>
+        <p class="erro-login adm-aviso" id="aviso-link" role="status"></p>
+        <p class="adm-contagem" id="quiz-contagem" aria-live="polite"></p>
+        <div class="lista-quiz" id="lista-quiz-prof"></div>
+      </div>
+      <div class="adm-popup" id="quiz-modal" hidden>
+        <form class="cartao adm-popup-cartao adm-popup-largo" id="form-quiz" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="quiz-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="quiz-modal-titulo">📝 Novo questionário</h3>
+            <button class="adm-popup-fechar" id="btn-quiz-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
           <label class="campo campo-jogo"><span>Nome do questionário</span>
             <input type="text" id="quiz-nome" maxlength="80" placeholder="Ex.: Ciências – Sistema Solar"></label>
-          <label class="campo campo-jogo"><span>📄 Enviar planilha (.xlsx ou .csv)</span>
+          <label class="campo campo-jogo"><span>📄 Enviar planilha (.xlsx ou .csv), se quiser</span>
             <input type="file" id="quiz-arquivo" accept=".xlsx,.xls,.csv,.txt"></label>
-          <p class="professor-ajuda">Na planilha: coluna <b>A</b> a pergunta, <b>B</b> a resposta certa e <b>C, D, E</b> as respostas erradas.
-            Depois de enviar, as perguntas aparecem abaixo para conferir. Também dá para digitar.</p>
+          <p class="professor-ajuda adm-dica">Na planilha: coluna <b>A</b> a pergunta, <b>B</b> a resposta certa e <b>C, D, E</b> as erradas.
+            <a href="assets/modelo-questionario.xlsx" download="modelo-questionario.xlsx">📥 Baixar a planilha modelo</a>.
+            As perguntas aparecem abaixo para conferir; também dá para digitar.</p>
           <div id="quiz-editor"></div>
           <button class="btn-sec" id="btn-quiz-mais" type="button">✍️ Adicionar pergunta</button>
-          <p class="erro-login" id="aviso-quiz" role="status"></p>
-          <button class="btn-grande" id="btn-quiz-salvar" type="button">Salvar questionário ✔</button>
-        </details>
-        <a class="btn-sec btn-modelo" href="assets/modelo-questionario.xlsx" download="modelo-questionario.xlsx">📥 Baixar planilha modelo</a>
-        <div class="lista-quiz" id="lista-quiz-prof"></div>
-        <p class="erro-login" id="aviso-link" role="status"></p>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-quiz" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-quiz-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" id="btn-quiz-salvar" type="submit">Salvar ✔</button>
+          </div>
+        </form>
+      </div>
+      <!-- Alunos e anamnese (js/alunos.js) -->
+      <div class="cartao cartao-login" id="painel-alunos" hidden>
+        <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
+        <div class="adm-cabecalho">
+          <h3 class="chuva-pergunta">👧 Alunos e anamnese</h3>
+          <button class="btn-grande btn-pequeno" id="btn-aluno-novo" type="button">＋ Novo aluno</button>
+        </div>
+        <p class="professor-ajuda">Todos os alunos da escola, com ou sem turma. A <b>anamnese</b> pode ser feita aqui, numa conversa com a
+          família, ou por um <b>link</b> que a família responde em casa (vale 3 horas).</p>
+        <div class="adm-filtros" role="search">
+          <label class="campo adm-busca"><span class="sr-only">Buscar aluno</span>
+            <input type="search" id="alunos-esc-busca" placeholder="🔍 Buscar por nome ou responsável" autocomplete="off" spellcheck="false"></label>
+          <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar pela turma</span>
+            <select id="alunos-esc-turma" class="adm-select"></select></label>
+          <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar pela anamnese</span>
+            <select id="alunos-esc-anamnese" class="adm-select">
+              <option value="todos" data-rotulo="Com ou sem anamnese" selected>Com ou sem anamnese</option>
+              <option value="com" data-rotulo="🧩 Com anamnese">🧩 Com anamnese</option>
+              <option value="sem" data-rotulo="⏳ Sem anamnese">⏳ Sem anamnese</option>
+            </select></label>
+        </div>
+        <p class="erro-login adm-aviso" id="aviso-alunos-esc" role="status"></p>
+        <p class="adm-contagem" id="alunos-esc-contagem" aria-live="polite"></p>
+        <div class="lista-quiz" id="lista-alunos-esc"></div>
+      </div>
+      <!-- Modelos de anamnese (js/alunos.js) -->
+      <div class="cartao cartao-login" id="painel-anamnese" hidden>
+        <button class="btn-sec btn-pequeno prof-voltar" type="button">← Voltar</button>
+        <div class="adm-cabecalho">
+          <h3 class="chuva-pergunta">🧩 Modelos de anamnese</h3>
+          <button class="btn-grande btn-pequeno" id="btn-modelo-novo" type="button">＋ Novo modelo</button>
+        </div>
+        <p class="professor-ajuda">Os questionários de anamnese da escola. Cada pergunta pode ser de resposta curta, longa, sim ou não,
+          múltipla escolha ou escala de 1 a 5. Quem criou (ou a coordenação) pode editar.</p>
+        <div class="adm-filtros" role="search">
+          <label class="campo adm-busca"><span class="sr-only">Buscar modelo</span>
+            <input type="search" id="modelos-busca" placeholder="🔍 Buscar pelo nome" autocomplete="off" spellcheck="false"></label>
+          <label class="campo adm-campo-filtro"><span class="sr-only">Filtrar pela situação</span>
+            <select id="modelos-situacao" class="adm-select">
+              <option value="ativo" data-rotulo="✅ Em uso" selected>✅ Em uso</option>
+              <option value="arquivado" data-rotulo="🗄️ Arquivados">🗄️ Arquivados</option>
+              <option value="todos" data-rotulo="Todos os modelos">Todos os modelos</option>
+            </select></label>
+        </div>
+        <p class="erro-login adm-aviso" id="aviso-modelos" role="status"></p>
+        <p class="adm-contagem" id="modelos-contagem" aria-live="polite"></p>
+        <div class="lista-quiz" id="lista-modelos"></div>
+      </div>
+      <div class="adm-popup" id="aluno-modal" hidden>
+        <form class="cartao adm-popup-cartao" id="form-aluno" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="aluno-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="aluno-modal-titulo">👧 Novo aluno</h3>
+            <button class="adm-popup-fechar" id="btn-aluno-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <label class="campo campo-jogo"><span>Nome na turma (como aparece no jogo, ex.: Ana S.)</span>
+            <input type="text" id="aluno-nome" maxlength="40" required></label>
+          <label class="campo campo-jogo"><span>Nome completo</span>
+            <input type="text" id="aluno-nome-completo" maxlength="120" autocomplete="off"></label>
+          <label class="campo campo-jogo"><span>Data de nascimento</span>
+            <input type="date" id="aluno-nascimento"></label>
+          <label class="campo campo-jogo"><span>Responsável</span>
+            <input type="text" id="aluno-responsavel" maxlength="120" autocomplete="off"></label>
+          <label class="campo campo-jogo"><span>Telefone ou e-mail do responsável</span>
+            <input type="text" id="aluno-contato" maxlength="120" autocomplete="off" inputmode="email"></label>
+          <label class="campo campo-jogo"><span>Observações</span>
+            <textarea id="aluno-observacoes" rows="3" maxlength="2000"></textarea></label>
+          <div class="campo campo-jogo"><span>Turmas</span>
+            <div class="turma-professores" id="aluno-turmas"></div>
+            <p class="professor-ajuda adm-dica" id="aluno-turmas-dica"></p></div>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-aluno-form" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-aluno-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" id="btn-aluno-salvar" type="submit">💾 Salvar</button>
+          </div>
+        </form>
+      </div>
+      <div class="adm-popup" id="aplicar-modal" hidden>
+        <form class="cartao adm-popup-cartao adm-popup-largo" id="form-aplicar" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="aplicar-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="aplicar-modal-titulo">🧩 Anamnese</h3>
+            <button class="adm-popup-fechar" id="btn-aplicar-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <label class="campo campo-jogo"><span>Questionário</span>
+            <select id="aplicar-modelo" class="adm-select"></select></label>
+          <label class="campo campo-jogo"><span>Quem está respondendo (quem conversou com a família)</span>
+            <input type="text" id="aplicar-quem" maxlength="120"></label>
+          <label class="an-consentimento" id="aplicar-consentimento-linha"><input type="checkbox" id="aplicar-consentimento">
+            O responsável pelo aluno <b>autorizou</b> a escola a registrar estas informações (LGPD).</label>
+          <div class="an-perguntas" id="aplicar-perguntas"></div>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-aplicar" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-aplicar-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" id="btn-aplicar-salvar" type="submit">💾 Salvar anamnese</button>
+          </div>
+        </form>
+      </div>
+      <div class="adm-popup" id="link-modal" hidden>
+        <form class="cartao adm-popup-cartao" id="form-link" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="link-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="link-modal-titulo">🔗 Link para a família</h3>
+            <button class="adm-popup-fechar" id="btn-link-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <p class="professor-ajuda">A família abre o link no celular e responde em casa. O link vale <b>3 horas</b> e aceita
+            <b>uma resposta só</b>. A resposta aparece aqui, no histórico do aluno.</p>
+          <label class="campo campo-jogo"><span>Questionário</span>
+            <select id="link-modelo" class="adm-select"></select></label>
+          <div class="an-link-pronto" id="link-pronto" hidden>
+            <p class="professor-ajuda">✅ Link criado. Vale até <b id="link-expira"></b>.</p>
+            <input type="text" id="link-url" readonly>
+            <div class="linha-botoes">
+              <button class="btn-sec btn-pequeno" id="btn-link-copiar" type="button">📋 Copiar</button>
+              <a class="btn-sec btn-pequeno" id="btn-link-whats" target="_blank" rel="noopener">💬 Mandar pelo WhatsApp</a>
+            </div>
+          </div>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-link-an" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-link-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" id="btn-link-gerar" type="submit">🔗 Gerar link</button>
+          </div>
+        </form>
+      </div>
+      <div class="adm-popup" id="ver-aluno-modal" hidden>
+        <form class="cartao adm-popup-cartao adm-popup-largo" id="form-ver-aluno" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="ver-aluno-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="ver-aluno-titulo">👧 Aluno</h3>
+            <button class="adm-popup-fechar" id="btn-ver-aluno-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <div id="ver-aluno-dados"></div>
+          <h4 class="turma-subtitulo">🧩 Anamneses</h4>
+          <div id="ver-aluno-anamneses"></div>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-ver-aluno" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-ver-aluno-cancelar" type="button">Fechar</button>
+            
+          </div>
+        </form>
+      </div>
+      <div class="adm-popup" id="modelo-modal" hidden>
+        <form class="cartao adm-popup-cartao adm-popup-largo" id="form-modelo" autocomplete="off" role="dialog" aria-modal="true" aria-labelledby="modelo-modal-titulo">
+          <div class="adm-popup-topo">
+            <h3 class="chuva-pergunta" id="modelo-modal-titulo">🧩 Novo modelo de anamnese</h3>
+            <button class="adm-popup-fechar" id="btn-modelo-fechar" type="button" aria-label="Fechar">✕</button>
+          </div>
+          <label class="campo campo-jogo"><span>Nome do questionário</span>
+            <input type="text" id="modelo-titulo" maxlength="120" placeholder="Ex.: Anamnese de entrada – Fundamental I" required></label>
+          <div id="modelo-perguntas"></div>
+          <div class="linha-botoes">
+            <button class="btn-sec btn-pequeno" id="btn-modelo-pergunta" type="button">＋ Adicionar pergunta</button>
+            <button class="btn-sec btn-pequeno" id="btn-modelo-sugeridas" type="button">📄 Usar perguntas sugeridas</button>
+          </div>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="aviso-modelo" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-modelo-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" id="btn-modelo-salvar" type="submit">💾 Salvar modelo</button>
+          </div>
+        </form>
       </div>
       <a class="btn-sec btn-manual" href="manual.html#professor">📘 Manual do professor</a>
       <button class="btn-sec" id="professor-voltar" type="button">← Início</button>
@@ -2035,9 +2385,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=139"></script>
-  <script src="dados.js?v=139"></script>
-  <script type="module" src="js/main.js?v=139"></script>
+  <script src="plenix.js?v=146"></script>
+  <script src="dados.js?v=146"></script>
+  <script type="module" src="js/main.js?v=146"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

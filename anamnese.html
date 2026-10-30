@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#1fa2b0">
+  <title>Questionário da escola</title>
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=146">
+</head>
+<!-- A página que a família abre pelo link de anamnese (vale 3 horas e aceita uma resposta). Não guarda nada no aparelho:
+     o link (token) vai só para a API, que confere e grava (js/anamnese-publica.js). -->
+<body class="an-publica">
+  <main class="an-publica-pagina">
+    <header class="an-publica-topo" id="an-topo">
+      <img id="an-logo" src="assets/logo-pg-168.png" alt="">
+      <div><p class="an-publica-escola" id="an-escola">Pedagogia Gamificada</p>
+        <h1 class="an-publica-titulo" id="an-titulo">Questionário</h1></div>
+    </header>
+    <p class="quiz-status carregando" id="an-status">Abrindo o questionário…</p>
+    <form class="cartao an-publica-form" id="an-form" autocomplete="off" hidden>
+      <p class="professor-ajuda" id="an-intro"></p>
+      <div class="an-perguntas" id="an-perguntas"></div>
+      <label class="campo campo-jogo"><span>Seu nome (de quem está respondendo)</span>
+        <input type="text" id="an-quem" maxlength="120" autocomplete="name" required></label>
+      <label class="an-consentimento" id="an-consentimento-linha" hidden><input type="checkbox" id="an-consentimento">
+        Autorizo a escola a guardar estas informações para acompanhar o desenvolvimento do aluno. Elas ficam só com a escola
+        (coordenação e professores) e não são compartilhadas.</label>
+      <p class="erro-login" id="an-aviso" role="status" aria-live="polite"></p>
+      <button class="btn-grande" type="submit" id="an-enviar">Enviar respostas ✔</button>
+    </form>
+    <div class="cartao an-publica-fim" id="an-fim" hidden>
+      <p class="an-publica-ok">✅</p>
+      <h2 class="chuva-pergunta">Obrigado! As respostas foram enviadas.</h2>
+      <p class="professor-ajuda">Já pode fechar esta página. Este link não vale mais.</p>
+    </div>
+  </main>
+  <script type="module" src="js/anamnese-publica.js?v=146"></script>
+</body>
+</html>

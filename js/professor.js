@@ -1,42 +1,43 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Área do professor e planilha (Google Apps Script): e-mails do relatório, questionários, links dos jogos e leitura de CSV/XLSX. */
 
-import { $, seguro } from './util.js?v=139';
-import { SOM } from './som.js?v=139';
-import { mostrar, telaInicio } from './telas.js?v=139';
-import { telaMissoes } from './ortografia.js?v=139';
-import { telaChuvaMenu } from './chuva.js?v=139';
-import { telaMatMenu } from './matematica.js?v=139';
-import { telaTiroMenu } from './tiro.js?v=139';
-import { telaPesoMenu } from './peso.js?v=139';
-import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=139';
-import { telaLuzesMenu } from './luzes.js?v=139';
-import { telaRotinaMenu } from './rotina.js?v=139';
-import { telaFichasMenu } from './fichas.js?v=139';
-import { telaEscondidaMenu } from './escondida.js?v=139';
-import { telaCopiaMenu } from './copia.js?v=139';
-import { telaBarcosMenu } from './barcos.js?v=139';
-import { telaGiroMenu } from './giro.js?v=139';
-import { telaHoraMenu } from './hora.js?v=139';
-import { telaSomandoMenu } from './somando.js?v=139';
-import { telaDescobrirMenu } from './descobrir.js?v=139';
-import { telaChavesMenu } from './chaves.js?v=139';
-import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=139';
-import { telaPoliciaMenu } from './policia.js?v=139';
-import { telaPontosMenu } from './pontos.js?v=139';
-import { telaPixelsMenu } from './pixels.js?v=139';
-import { telaFracoesMenu } from './fracoes.js?v=139';
-import { telaCoresMenu } from './cores.js?v=139';
-import { telaLadosMenu } from './lados.js?v=139';
-import { telaSetasMenu } from './setas.js?v=139';
-import { telaVistasMenu } from './vistas.js?v=139';
-import { telaDinosMenu } from './dinos.js?v=139';
-import { telaSimbolosMenu } from './simbolos.js?v=139';
-import { telaTabuadaMenu } from './tabuada.js?v=139';
-import { telaClassesMenu } from './classes.js?v=139';
-import { telaGraficosMenu } from './graficos.js?v=139';
-import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=139';
-import { api, definirEscolaDoAdmin, escolaDoEndereco, guardarToken, lerToken, lerTokenTeste } from './api.js?v=139';
+import { $, seguro } from './util.js?v=146';
+import { SOM } from './som.js?v=146';
+import { mostrar, telaInicio } from './telas.js?v=146';
+import { criarPopup, ligarBusca, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=146';
+import { telaMissoes } from './ortografia.js?v=146';
+import { telaChuvaMenu } from './chuva.js?v=146';
+import { telaMatMenu } from './matematica.js?v=146';
+import { telaTiroMenu } from './tiro.js?v=146';
+import { telaPesoMenu } from './peso.js?v=146';
+import { CHAVE_QUIZ_LISTA, QUIZ_DO_LINK } from './quiz.js?v=146';
+import { telaLuzesMenu } from './luzes.js?v=146';
+import { telaRotinaMenu } from './rotina.js?v=146';
+import { telaFichasMenu } from './fichas.js?v=146';
+import { telaEscondidaMenu } from './escondida.js?v=146';
+import { telaCopiaMenu } from './copia.js?v=146';
+import { telaBarcosMenu } from './barcos.js?v=146';
+import { telaGiroMenu } from './giro.js?v=146';
+import { telaHoraMenu } from './hora.js?v=146';
+import { telaSomandoMenu } from './somando.js?v=146';
+import { telaDescobrirMenu } from './descobrir.js?v=146';
+import { telaChavesMenu } from './chaves.js?v=146';
+import { telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=146';
+import { telaPoliciaMenu } from './policia.js?v=146';
+import { telaPontosMenu } from './pontos.js?v=146';
+import { telaPixelsMenu } from './pixels.js?v=146';
+import { telaFracoesMenu } from './fracoes.js?v=146';
+import { telaCoresMenu } from './cores.js?v=146';
+import { telaLadosMenu } from './lados.js?v=146';
+import { telaSetasMenu } from './setas.js?v=146';
+import { telaVistasMenu } from './vistas.js?v=146';
+import { telaDinosMenu } from './dinos.js?v=146';
+import { telaSimbolosMenu } from './simbolos.js?v=146';
+import { telaTabuadaMenu } from './tabuada.js?v=146';
+import { telaClassesMenu } from './classes.js?v=146';
+import { telaGraficosMenu } from './graficos.js?v=146';
+import { CHAVE_RELATORIO, URL_RELATORIO } from './relatorio.js?v=146';
+import { api, definirEscolaDoAdmin, escolaDoEndereco, guardarToken, lerToken, lerTokenTeste } from './api.js?v=146';
 
 // ---------- Para quem vai o relatório: lista da aba "E-mails" da planilha ----------
 // O app não cadastra e-mails: a lista vem da planilha do Google (pelo script ferramentas/relatorio-email.gs)
@@ -88,7 +89,6 @@ async function gravarComoProfessor(dados) {
 }
 
 // janela que aparece antes de cada jogo: o aluno digita parte do nome do professor e escolhe na lista que aparece
-const semAcento = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 function desenharEscolhaEmail() {
   const lista = listaEmails();
   if (lista.length === 1 && !emailEscolhido) emailEscolhido = lista[0].email;   // só um professor: já vem escolhido
@@ -170,6 +170,11 @@ function parteProfessor(qual) {
   $('painel-links').hidden = qual !== 'links';
   $('painel-competicoes').hidden = qual !== 'comp';
   $('painel-escolas').hidden = qual !== 'escolas';
+  $('painel-alunos').hidden = qual !== 'alunos';
+  $('painel-anamnese').hidden = qual !== 'anamnese';
+  // ao trocar de parte, nenhum popup de cadastro fica aberto por cima
+  document.querySelectorAll('.adm-popup').forEach((x) => { x.hidden = true; });
+  document.body.classList.remove('com-popup');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -192,8 +197,8 @@ async function telaProfessor() {
 // e mais os usuários da escola; o professor, os e-mails, questionários, competições e links
 const CARTOES_DO_PERFIL = {
   admin: ['btn-prof-escolas', 'btn-prof-usuarios', 'btn-prof-testes'],
-  coordenacao: ['btn-prof-turmas', 'btn-prof-emails', 'btn-prof-quiz', 'btn-prof-comp', 'btn-prof-links', 'btn-prof-usuarios'],
-  professor: ['btn-prof-turmas', 'btn-prof-emails', 'btn-prof-quiz', 'btn-prof-comp', 'btn-prof-links'],
+  coordenacao: ['btn-prof-turmas', 'btn-prof-alunos', 'btn-prof-anamnese', 'btn-prof-emails', 'btn-prof-quiz', 'btn-prof-comp', 'btn-prof-links', 'btn-prof-usuarios'],
+  professor: ['btn-prof-turmas', 'btn-prof-alunos', 'btn-prof-anamnese', 'btn-prof-emails', 'btn-prof-quiz', 'btn-prof-comp', 'btn-prof-links'],
 };
 const NOME_DO_PERFIL = { admin: 'Administrador', coordenacao: 'Coordenação', professor: 'Professor' };
 function entrarComo(usuario) {
@@ -251,10 +256,19 @@ const mensagemDoErro = (err, padrao) => ({
   acesso: 'A planilha desta escola não respondeu: ela pode não estar liberada. No Apps Script dela: Implantar → Gerenciar implantações → ✏️ → "Quem pode acessar: Qualquer pessoa" → Nova versão → Implantar.',
 }[String(err && err.message)] || padrao);
 
-// lista de professores: só os nomes (o e-mail dos colegas não aparece); excluir, só direto na planilha
+const avisoEmails = (texto, ok = false) => { $('aviso-emails').textContent = texto; $('aviso-emails').classList.toggle('aviso-ok', ok); };
+// lista de professores: só os nomes (o e-mail dos colegas não aparece), com busca pelo nome
 function listarEmailsProfessor() {
-  const lista = listaEmails();
-  $('lista-emails-prof').innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhum e-mail ainda: cadastre o primeiro aqui em cima.</p>';
+  const todos = listaEmails();
+  const busca = semAcento($('emails-busca').value.trim());
+  const lista = todos.filter((x) => !busca || semAcento(x.nome).includes(busca));
+  mostrarContagem('emails-contagem', lista.length, todos.length, !!busca, ['professor', 'professores']);
+  $('lista-emails-prof').innerHTML = '';
+  if (!lista.length) {
+    listaSemItens($('lista-emails-prof'), !todos.length, 'Nenhum e-mail ainda. Toque em <b>＋ Novo e-mail</b>.',
+      () => { SOM.clique(); $('emails-busca').value = ''; listarEmailsProfessor(); });
+    return;
+  }
   for (const x of lista) {
     const item = document.createElement('div');
     item.className = 'quiz-item';
@@ -271,11 +285,10 @@ $('form-novo-email').onsubmit = async (e) => {
   try {
     const { emails } = await gravarComoProfessor({ acao: 'adicionarEmail', nome, email });
     gravarJSON(CHAVE_EMAILS, emails || []);
-    $('novo-email-nome').value = '';
-    $('novo-email-email').value = '';
+    popupEmail.fechar();
     listarEmailsProfessor();
     SOM.certo();
-    avisoEmail(`${nome || email} entrou na lista! Os alunos já podem escolher. ✔`, true);
+    avisoEmails(`${nome || email} entrou na lista! Os alunos já podem escolher. ✔`, true);
   } catch (err) { avisoEmail(mensagemDoErro(err, 'Não deu para salvar (sem internet ou script desatualizado).')); }
 };
 
@@ -295,11 +308,18 @@ $('form-senha-professor').onsubmit = async (e) => {
   }
 };
 
+// popup: novo e-mail (js/popup.js)
+const popupEmail = criarPopup('email-modal', { fechar: ['btn-email-fechar', 'btn-email-cancelar'] });
+$('btn-email-novo').onclick = (ev) => {
+  SOM.clique();
+  $('form-novo-email').reset();
+  avisoEmail('');
+  popupEmail.abrir(ev.currentTarget, 'novo-email-nome');
+};
+ligarBusca('emails-busca', () => listarEmailsProfessor());
 $('btn-prof-emails').onclick = async () => {
   SOM.clique();
-  avisoEmail('');
-  $('novo-email-nome').value = '';
-  $('novo-email-email').value = '';
+  avisoEmails('');
   parteProfessor('emails');
   listarEmailsProfessor();
   await carregarEmails();
@@ -321,29 +341,52 @@ function avisoQuiz(texto, ok, carregando = false) {
   $('aviso-quiz').classList.toggle('carregando', carregando);
 }
 
+let questionariosProf = [];
 async function listarQuestionariosProfessor() {
   const caixa = $('lista-quiz-prof');
   caixa.innerHTML = '<p class="quiz-status carregando">Buscando questionários…</p>';
+  $('quiz-contagem').textContent = '';
   try {
     const { lista } = await lerDoScript('questionarios');
     gravarJSON(CHAVE_QUIZ_LISTA, lista);
-    caixa.innerHTML = lista.length ? '' : '<p class="quiz-status">Nenhum questionário ainda. Crie o primeiro em ➕ Novo questionário, aqui em cima!</p>';
-    for (const q of lista) {
-      const item = document.createElement('div');
-      item.className = 'quiz-item';
-      item.innerHTML = `<span class="quiz-item-nome">${seguro(q.titulo)}</span><span class="quiz-item-qtd">${q.perguntas} pergunta${q.perguntas === 1 ? '' : 's'}</span>`;
-      const copiar = document.createElement('button');
-      copiar.type = 'button';
-      copiar.className = 'quiz-link';
-      copiar.textContent = '🔗 Copiar link';
-      copiar.onclick = () => copiarLinkQuestionario(q);
-      item.append(copiar);   // excluir questionário, só direto na planilha (apagando a aba)
-      caixa.append(item);
-    }
+    questionariosProf = lista;
+    desenharQuestionarios();
   } catch (e) {
-    caixa.innerHTML = '<p class="quiz-status">Não deu para buscar os questionários (sem internet ou script desatualizado).</p>';
+    caixa.innerHTML = '<p class="quiz-status">Não deu para buscar os questionários (sem internet?).</p>';
   }
 }
+function desenharQuestionarios() {
+  const caixa = $('lista-quiz-prof');
+  const busca = semAcento($('quiz-busca').value.trim());
+  const lista = questionariosProf.filter((q) => !busca || semAcento(q.titulo).includes(busca));
+  mostrarContagem('quiz-contagem', lista.length, questionariosProf.length, !!busca, ['questionário', 'questionários']);
+  caixa.innerHTML = '';
+  if (!lista.length) {
+    listaSemItens(caixa, !questionariosProf.length, 'Nenhum questionário ainda. Toque em <b>＋ Novo questionário</b>.',
+      () => { SOM.clique(); $('quiz-busca').value = ''; desenharQuestionarios(); });
+    return;
+  }
+  for (const q of lista) {
+    const item = document.createElement('div');
+    item.className = 'quiz-item';
+    item.innerHTML = `<span class="quiz-item-nome">${seguro(q.titulo)}</span><span class="quiz-item-qtd">${q.perguntas} pergunta${q.perguntas === 1 ? '' : 's'}</span>`;
+    const copiar = document.createElement('button');
+    copiar.type = 'button';
+    copiar.className = 'quiz-link';
+    copiar.textContent = '🔗 Copiar link';
+    copiar.onclick = () => copiarLinkQuestionario(q);
+    item.append(copiar);
+    caixa.append(item);
+  }
+}
+ligarBusca('quiz-busca', () => desenharQuestionarios());
+// popup: novo questionário (o editor de perguntas fica dentro dele, mais largo no computador)
+const popupQuiz = criarPopup('quiz-modal', { fechar: ['btn-quiz-fechar', 'btn-quiz-cancelar'] });
+$('btn-quiz-novo').onclick = (ev) => {
+  SOM.clique();
+  avisoQuiz('');
+  popupQuiz.abrir(ev.currentTarget, 'quiz-nome');
+};
 
 // link que abre direto um questionário (o aluno não vê os outros jogos): endereço do jogo + ?q=<id da aba>
 // ---------- Links dos jogos: ?jogo=<id> abre direto naquele jogo (os de fora usam o próprio endereço) ----------
@@ -515,24 +558,43 @@ $('quiz-arquivo').onchange = async (e) => {
   e.target.value = '';
 };
 
-$('btn-quiz-salvar').onclick = async () => {
+$('form-quiz').onsubmit = async (ev) => {
+  ev.preventDefault();
   const titulo = $('quiz-nome').value.trim();
   if (!titulo) { avisoQuiz('Dê um nome ao questionário.'); $('quiz-nome').focus(); return; }
-  const perguntas = [...$('quiz-editor').children].map((b) => ({
+  const blocos = [...$('quiz-editor').children];
+  blocos.forEach((b) => b.classList.remove('faltando'));
+  const lidas = blocos.map((b) => ({
+    bloco: b,
     pergunta: b.querySelector('.q-pergunta').value.trim(),
     certa: b.querySelector('.q-certa').value.trim(),
     erradas: [...b.querySelectorAll('.q-errada')].map((i) => i.value.trim()).filter(Boolean),
   })).filter((q) => q.pergunta || q.certa);
-  const incompleta = perguntas.findIndex((q) => !q.pergunta || !q.certa || !q.erradas.length);
-  if (!perguntas.length) { avisoQuiz('Adicione pelo menos uma pergunta.'); return; }
-  if (incompleta >= 0) { avisoQuiz(`A pergunta ${incompleta + 1} precisa do texto, da resposta certa e de pelo menos uma errada.`); return; }
+  if (!lidas.length) { avisoQuiz('Adicione pelo menos uma pergunta (envie a planilha ou toque em ✍️ Adicionar pergunta).'); return; }
+  // pergunta incompleta: rola até ela, marca em vermelho e põe o cursor no primeiro campo vazio
+  const falta = lidas.find((q) => !q.pergunta || !q.certa || !q.erradas.length);
+  if (falta) {
+    const n = blocos.indexOf(falta.bloco) + 1;
+    avisoQuiz(`A pergunta ${n} precisa do texto, da resposta certa e de pelo menos uma errada (marcada em vermelho).`);
+    falta.bloco.classList.add('faltando');
+    falta.bloco.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const vazio = [...falta.bloco.querySelectorAll('input')].find((i, k) => !i.value.trim() && k < 3) || falta.bloco.querySelector('.q-errada');
+    setTimeout(() => vazio && vazio.focus({ preventScroll: true }), 300);
+    SOM.errado();
+    return;
+  }
+  const perguntas = lidas.map(({ bloco, ...q }) => q);
   avisoQuiz('Salvando na planilha…', false, true);
   try {
     await gravarComoProfessor({ acao: 'salvarQuestionario', titulo, perguntas });
     SOM.certo();
-    avisoQuiz(`Questionário "${titulo}" salvo! Os alunos já podem jogar. ✔`, true);
     $('quiz-nome').value = '';
+    $('quiz-arquivo').value = '';
     $('quiz-editor').innerHTML = '';
+    avisoQuiz('');
+    popupQuiz.fechar();
+    $('aviso-link').textContent = `Questionário "${titulo}" salvo! Os alunos já podem jogar. ✔`;
+    $('aviso-link').classList.add('aviso-ok');
     listarQuestionariosProfessor();
   } catch (err) {
     avisoQuiz(mensagemDoErro(err, 'Não deu para salvar (sem internet ou script desatualizado). Tente de novo.'));

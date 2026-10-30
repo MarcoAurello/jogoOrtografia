@@ -4,10 +4,13 @@ import jwt from "jsonwebtoken";
 import Usuario from "../models/Usuario";
 import Escola from "../models/Escola";
 import Aluno, { senhaAleatoria } from "../models/Aluno";
+import { alunosDaTurma, vincular } from "../services/acessoAluno";
 import Turma from "../models/Turma";
 import authConfig from "../config/auth";
 import { listarCompeticoes } from "../services/dados";
 
+// teto de alunos por turma criados pelo nome digitado: quem tem o código não consegue encher a turma de nomes falsos
+const MAX_ALUNOS_NA_TURMA = 150;
 const limparNome = (nome: unknown) => String(nome || "").replace(/\s+/g, " ").trim().slice(0, 40);
 const chaveDoNome = (n: string) => n.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
@@ -92,15 +95,19 @@ class SessionController {
       if (turma.escola?.bloqueada) return res.status(403).json({ message: "O acesso desta escola está bloqueado.", codigo: "escola_bloqueada" });
 
       let aluno: Aluno | null = null;
-      if (req.body.aluno_id) aluno = await Aluno.findOne({ where: { id: String(req.body.aluno_id), turma_id: turma.id, ativo: true } });
+      const daTurma = await alunosDaTurma(turma.id);
+      if (req.body.aluno_id) aluno = daTurma.find((a) => a.id === String(req.body.aluno_id)) || null;
       else {
         const nome = limparNome(req.body.nome);
         if (nome.length < 2) return res.status(400).json({ message: "Digite o seu nome." });
-        const daTurma = await Aluno.findAll({ where: { turma_id: turma.id, ativo: true } });
         aluno = daTurma.find((a) => chaveDoNome(a.nome) === chaveDoNome(nome)) || null;
         if (!aluno) {
+          if (daTurma.length >= MAX_ALUNOS_NA_TURMA) {
+            return res.status(403).json({ message: "Esta turma já está cheia. Peça ao professor para conferir a lista de alunos.", codigo: "turma_cheia" });
+          }
           aluno = await Aluno.create({ nome, turma_id: turma.id, escola_id: turma.escola_id, senha_figuras: senhaAleatoria(),
             bloqueado_ate: null, ultimo_acesso: null });
+          await vincular(aluno.id, turma.id);
         }
       }
       if (!aluno) return res.status(404).json({ message: "Não achei você nesta turma. Confira o código com o professor." });
@@ -110,7 +117,7 @@ class SessionController {
       aluno.turma = turma;
       aluno.escola = turma.escola || null;
       // o login do aluno vale até ele voltar à tela inicial (o app apaga); o prazo é só uma garantia
-      const token = jwt.sign({ tipo: "aluno" }, authConfig.secret, { subject: aluno.id, expiresIn: "12h" } as jwt.SignOptions);
+      const token = jwt.sign({ tipo: "aluno", turma: turma.id }, authConfig.secret, { subject: aluno.id, expiresIn: "12h" } as jwt.SignOptions);
       return res.json({ token, aluno: alunoParaApp(aluno) });
     } catch (error) {
       console.error("Erro no login do aluno:", error);
@@ -122,7 +129,7 @@ class SessionController {
   async alunoCompeticoes(req: Request, res: Response): Promise<Response> {
     try {
       const aluno = req.alunoLogado!;
-      const lista = await listarCompeticoes(aluno.escola_id, false, [aluno.turma_id], true);
+      const lista = await listarCompeticoes(aluno.escola_id, false, [req.alunoTurmaId!], true);
       return res.status(200).json({ ok: true, lista });
     } catch (error) {
       console.error("Erro ao listar as competições da turma:", error);

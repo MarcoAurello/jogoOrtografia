@@ -34,12 +34,12 @@ const limitadorLogin = rateLimit({
   skip: (req) => req.path.startsWith('/aluno'),
   message: { message: 'Muitas tentativas de login. Aguarde 1 minuto e tente novamente.' },
 });
-// Os alunos de uma escola saem pelo mesmo IP: o limite por IP é folgado, e a trava de verdade é por aluno
-// (5 erros seguidos travam aquele aluno por 1 minuto, no SessionController).
+// O aluno entra só com o código da turma e o nome (sem senha): o login quase sempre "dá certo", então o limite conta
+// todas as entradas. Os alunos de uma escola saem pelo mesmo IP, por isso o limite é folgado (uma turma inteira entra
+// junto); o SessionController ainda limita quantos alunos uma turma pode ter.
 const limitadorAluno = rateLimit({
   windowMs: 60 * 1000,
-  limit: 120,
-  skipSuccessfulRequests: true,
+  limit: 300,
   standardHeaders: true,
   legacyHeaders: false,
   message: { message: 'Muitas tentativas. Espere 1 minuto e tente de novo.' },
@@ -48,6 +48,9 @@ app.use('/sessions/aluno', limitadorAluno);
 // cadastro do teste grátis: poucos por IP (evita encher a lista com cadastros falsos)
 app.use('/testes', rateLimit({ windowMs: 60 * 60 * 1000, limit: 20, standardHeaders: true, legacyHeaders: false,
   skip: (req) => req.method !== 'POST' || req.path !== '/', message: { message: 'Muitos cadastros deste endereço. Tente mais tarde.' } }));
+// a página pública da anamnese (link da família): poucos pedidos por IP (o token já é impossível de adivinhar)
+app.use('/anamnese-publica', rateLimit({ windowMs: 60 * 1000, limit: 30, standardHeaders: true, legacyHeaders: false,
+  message: { message: 'Muitos pedidos. Espere 1 minuto e tente de novo.' } }));
 app.use('/sessions', limitadorLogin);
 app.use('/usuarios/eu/senha', limitadorLogin);
 

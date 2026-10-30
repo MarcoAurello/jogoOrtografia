@@ -2836,3 +2836,120 @@ html.escola-pendente body::after {
 /* entrar na turma: tela própria, aberta depois do nome */
 .turma-explica { margin: 0 auto 12px; max-width: 420px; text-align: center; font-weight: 700; color: var(--texto); }
 .btn-turma-inicio { display: block; margin: 10px auto 0; }
+/* ---------- Administrador: Escolas e Usuários (lista com busca e filtro; criar/editar num popup: js/popup.js) ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.adm-cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.adm-cabecalho .chuva-pergunta { margin: 0; }
+.adm-cabecalho .btn-grande { width: auto; margin: 0; padding: 10px 18px; }
+/* filtros: a busca na linha toda e os selects lado a lado embaixo (no celular, um por linha se não couberem);
+   nada rola de lado */
+.adm-filtros { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin: 10px 0 4px; }
+.adm-busca { grid-column: 1 / -1; margin: 0; }
+.adm-busca input { width: 100%; min-height: 44px; }
+.adm-campo-filtro { margin: 0; min-width: 0; }
+.adm-select { width: 100%; min-height: 44px; padding: 8px 10px; border: 2px solid #dbeef1; border-radius: 12px; background: #fff;
+  font: inherit; font-size: 16px; font-weight: 700; color: var(--primaria-escura); cursor: pointer; text-overflow: ellipsis; }
+.adm-select:hover { border-color: var(--primaria); }
+.adm-select:focus-visible, .adm-popup-fechar:focus-visible { outline: 3px solid var(--primaria); outline-offset: 2px; }
+.adm-contagem { margin: 2px 0 8px; font-size: 13px; font-weight: 700; color: var(--cinza-texto, #64748b); }
+.adm-contagem:empty, .adm-aviso:empty { display: none; }
+.adm-limpar-filtro { margin: 4px auto; }
+.adm-mais { margin-top: 14px; }
+.adm-mais summary { cursor: pointer; font-weight: 800; color: var(--primaria-escura); padding: 6px 0; }
+/* o popup: por cima de tudo (até da barra de baixo), com a página atrás escurecida e sem rolar */
+.adm-popup { position: fixed; inset: 0; z-index: 55; display: flex; align-items: center; justify-content: center; padding: 16px;
+  background: rgba(19, 60, 80, 0.5); }
+.adm-popup[hidden] { display: none; }
+.adm-popup-cartao { width: min(100%, 520px); max-height: 100%; overflow-y: auto; margin: 0; animation: entrar 0.25s ease;
+  padding: 16px; background: #fff; border-radius: 22px;
+  display: flex; flex-direction: column; gap: 4px; }
+.adm-popup-topo { position: sticky; top: -16px; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  margin: -16px -16px 4px; padding: 12px 16px; background: #fff; border-bottom: 1px solid #e3edf0; }
+.adm-popup-topo .chuva-pergunta { margin: 0; font-size: 20px; overflow-wrap: anywhere; }
+.adm-popup-fechar { flex: 0 0 auto; width: 40px; height: 40px; border: 0; border-radius: 50%; background: #eef7fd; font-size: 18px;
+  font-weight: 800; color: var(--primaria-escura); cursor: pointer; }
+.adm-popup-fechar:hover { background: #dbeef1; }
+.adm-popup-botoes { position: sticky; bottom: -16px; display: flex; gap: 10px; margin: 6px -16px -16px; padding: 12px 16px;
+  background: #fff; border-top: 1px solid #e3edf0; }
+.adm-popup-botoes { flex-wrap: wrap; }
+/* o aviso do formulário fica no rodapé fixo: aparece mesmo com a lista de campos rolada (ex.: muitas perguntas) */
+.adm-popup-aviso { flex: 1 1 100%; margin: 0; }
+.adm-popup-aviso:empty { display: none; }
+.quiz-bloco.faltando { outline: 3px solid #e53935; outline-offset: 2px; border-radius: 12px; }
+.adm-popup-botoes .btn-sec, .adm-popup-botoes .btn-grande { flex: 1; margin: 0; }
+.adm-popup-botoes .btn-grande { flex: 2; }
+.adm-senha-linha { display: flex; gap: 8px; align-items: stretch; }
+.adm-senha-linha input { flex: 1; min-width: 0; }
+.adm-senha-linha .btn-sec { flex: 0 0 auto; margin: 0; white-space: nowrap; }
+.adm-dica { margin: 2px 0 4px; font-size: 13px; }
+.adm-filtros select { width: 100%; min-height: 44px; }
+.adm-popup-cartao.adm-popup-largo { width: min(100%, 760px); }
+.turma-det-profs { margin: 0 0 6px; white-space: normal; }
+body.com-popup { overflow: hidden; }
+body.com-popup .whats-flutuante { display: none; }
+/* campos do popup e da busca: 16px (no iPhone, letra menor faz a tela dar zoom ao tocar) e toque confortável (44px) */
+.adm-popup input:not([type="color"]):not([type="file"]), .adm-popup select, .adm-filtros input, .adm-filtros select { font-size: 16px; min-height: 44px; }
+.adm-popup-botoes .btn-sec, .adm-popup-botoes .btn-grande, .adm-cabecalho .btn-grande { min-height: 48px; }
+/* computador: popup no meio da tela, até 560px de largura */
+@media (min-width: 900px) {
+  .adm-popup-cartao { width: min(100%, 560px); max-height: 88vh; }
+}
+/* celular: o popup vira uma "folha" que sobe de baixo, na largura toda, com os botões no alcance do polegar
+   e respeitando a barra do iPhone (safe-area); o teclado não esconde os botões (dvh acompanha a área visível) */
+@media (max-width: 600px) {
+  .adm-popup { padding: 0; align-items: flex-end; }
+  .adm-popup-cartao { width: 100%; max-height: 94vh; max-height: 94dvh; border-radius: 20px 20px 0 0;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom)); animation: subir-folha 0.25s ease-out; }
+  .adm-popup-botoes { bottom: calc(-16px - env(safe-area-inset-bottom)); padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    margin-bottom: calc(-16px - env(safe-area-inset-bottom)); }
+  .adm-popup-topo::before { content: ''; position: absolute; top: 5px; left: 50%; width: 40px; height: 4px; margin-left: -20px;
+    border-radius: 2px; background: #cfdde2; }
+  .adm-popup-topo { position: sticky; }
+  .adm-cabecalho .btn-grande { flex: 1 1 100%; }
+  .escola-cores { grid-template-columns: 1fr 1fr; }
+}
+@keyframes subir-folha { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .adm-popup-cartao { animation: none; } }
+/* ---------- Anamnese: perguntas para responder (Área do professor e a página da família) ---------- */
+.an-perguntas { display: flex; flex-direction: column; gap: 10px; margin: 8px 0; }
+.an-pergunta { margin: 0; padding: 12px; border: 2px solid #e3edf0; border-radius: 14px; background: #fbfdfe; min-width: 0; }
+.an-pergunta legend { padding: 0 4px; font-weight: 800; color: var(--primaria-escura); line-height: 1.35; }
+.an-pergunta input[type="text"], .an-pergunta textarea { width: 100%; min-height: 44px; font-size: 16px; padding: 10px; border: 2px solid #dbeef1;
+  border-radius: 10px; font-family: inherit; box-sizing: border-box; }
+.an-pergunta.faltando, .an-bloco.faltando { outline: 3px solid #e53935; outline-offset: 2px; }
+.an-opcoes { display: flex; flex-direction: column; gap: 6px; }
+.an-opcoes.an-linha { flex-direction: row; flex-wrap: wrap; }
+.an-opcao { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 12px; border: 2px solid #dbeef1; border-radius: 12px;
+  background: #fff; cursor: pointer; font-weight: 700; }
+.an-opcao:has(input:checked) { border-color: var(--primaria); background: #eaf7f9; }
+.an-opcao input { width: 20px; height: 20px; accent-color: var(--primaria); }
+.an-obrig { color: #e53935; font-weight: 800; }
+.an-consentimento { display: flex; gap: 10px; align-items: flex-start; margin: 8px 0; padding: 10px 12px; border-radius: 12px; background: #fff8e1;
+  font-size: 15px; line-height: 1.4; cursor: pointer; }
+.an-consentimento input { flex: 0 0 auto; width: 22px; height: 22px; margin-top: 2px; accent-color: var(--primaria); }
+/* editor do modelo */
+.an-bloco { display: flex; flex-direction: column; gap: 6px; }
+.an-bloco textarea { width: 100%; font-size: 16px; font-family: inherit; padding: 8px; border: 2px solid #dbeef1; border-radius: 10px; box-sizing: border-box; }
+.an-bloco-botoes { display: flex; gap: 4px; align-items: center; }
+.an-obrig-linha { display: flex; gap: 8px; align-items: center; font-weight: 700; min-height: 36px; }
+/* ver uma anamnese / o aluno */
+.an-dados { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; margin: 4px 0 10px; }
+.an-dados dt { font-weight: 800; color: var(--primaria-escura); }
+.an-dados dd { margin: 0; overflow-wrap: anywhere; }
+.an-historico { margin: 6px 0; padding: 8px 12px; border: 2px solid #e3edf0; border-radius: 12px; background: #fff; }
+.an-historico summary { cursor: pointer; line-height: 1.4; }
+.an-respondida dt { margin-top: 8px; font-weight: 800; color: var(--primaria-escura); }
+.an-respondida dd { margin: 2px 0 0; padding: 6px 10px; border-radius: 8px; background: #f3f8fa; white-space: pre-wrap; overflow-wrap: anywhere; }
+.an-link-pronto input { width: 100%; min-height: 44px; font-size: 14px; padding: 8px; border: 2px solid #dbeef1; border-radius: 10px; box-sizing: border-box; }
+@media (max-width: 480px) { .an-dados { grid-template-columns: 1fr; } .an-dados dd { margin-bottom: 6px; } }
+/* a página da família (anamnese.html) */
+body.an-publica { margin: 0; min-height: 100vh; background: #eef6f8; }
+.an-publica-pagina { max-width: 720px; margin: 0 auto; padding: 16px 16px calc(32px + env(safe-area-inset-bottom)); }
+.an-publica-topo { display: flex; align-items: center; gap: 12px; margin: 0 -16px 16px; padding: 14px 16px; color: #fff;
+  background: var(--an-cor, var(--primaria)); }
+.an-publica-topo img { width: 52px; height: 52px; border-radius: 50%; background: #fff; object-fit: contain; flex: 0 0 auto; }
+.an-publica-escola { margin: 0; font-weight: 800; opacity: 0.9; }
+.an-publica-titulo { margin: 2px 0 0; font-family: 'Fredoka', sans-serif; font-size: 22px; line-height: 1.2; }
+.an-publica-form, .an-publica-fim { background: #fff; }
+.an-publica-fim { text-align: center; }
+.an-publica-ok { font-size: 56px; margin: 0; }

@@ -5,6 +5,7 @@ import authConfig from '../config/auth';
 interface TokenPayload {
   sub: string;
   tipo?: 'aluno';
+  turma?: string;   // aluno: a turma por onde ele entrou (as partidas e as competições são dessa turma)
 }
 
 export default function ensureAuthenticated(
@@ -21,9 +22,10 @@ export default function ensureAuthenticated(
   const [, token] = authHeader.split(' ');
 
   try {
-    const { sub, tipo } = jwt.verify(token, authConfig.secret) as TokenPayload;
+    const { sub, tipo, turma } = jwt.verify(token, authConfig.secret) as TokenPayload;
     request.userId = sub;
-    // o token do aluno (login por figuras) é marcado: ele não abre as rotas do professor, e vice-versa
+    request.alunoTurmaId = turma;
+    // o token do aluno (código da turma + nome) é marcado: ele não abre as rotas do professor, e vice-versa
     request.tokenTipo = tipo === 'aluno' ? 'aluno' : 'usuario';
     return next();
   } catch {

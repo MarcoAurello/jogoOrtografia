@@ -34,7 +34,8 @@ navegador ──HTTPS──▶ Traefik (do Dokploy, portas 80/443, certificado L
 
 ## 1. Domínio (DNS) — no painel da Hostinger
 
-Em **Domínios → gamespedagogicos.store → DNS / Nameservers**, crie (ou edite) os registros:
+O DNS do `gamespedagogicos.store` fica na **Locaweb** (ns1.locaweb.com.br): os registros vão no painel da Locaweb,
+não no da Hostinger. Crie (ou edite) os registros:
 
 | Tipo | Nome | Aponta para | TTL |
 |---|---|---|---|
@@ -60,8 +61,16 @@ Deixe aberto só:
 | 80 e 443 | o site (HTTP/HTTPS, pelo Traefik) |
 | 3000 | o painel do Dokploy (feche depois de pôr o painel num domínio, se quiser) |
 
-A porta **8089** (o `PORTA_WEB` do compose, usada no computador) **não** precisa ficar aberta na VPS: o site entra
-pelo Traefik, em 80/443.
+A porta **8089** (o `PORTA_WEB` do compose) só vale no próprio computador (`127.0.0.1`): na VPS, o site entra só pelo
+domínio (Traefik, 80/443). Ela não pode ficar aberta para fora: direto no nginx, dá para inventar o IP no cabeçalho
+`X-Forwarded-For` e driblar a trava de tentativas de login (o Traefik descarta esse cabeçalho falso).
+
+**O painel do Dokploy (porta 3000) é HTTP, sem cadeado:** a senha do painel passa aberta pela rede. Depois que o
+domínio funcionar, dê a ele um endereço com HTTPS (Dokploy → **Settings → Web Server → Domain**, por exemplo
+`painel.gamespedagogicos.store`, com um registro A para o IP da VPS) e então **feche a porta 3000** no firewall.
+Ligue também a verificação em duas etapas (2FA) da conta do Dokploy (**Settings → Profile**).
+
+**SSH (porta 22):** prefira entrar com **chave SSH** (Hostinger → VPS → Chave SSH) em vez da senha do root.
 
 ---
 
@@ -161,6 +170,11 @@ pegar as regras. O certificado sai sozinho em 1 ou 2 minutos, **se o DNS do pass
 ---
 
 ## 8. Conferir
+
+**Antes do domínio (para testar já):** na aba **Domains**, use **Generate** (ou Add Domain com um host
+`*.traefik.me` que o Dokploy sugere) para o serviço `web`, porta `80`. O Dokploy cria um endereço provisório que
+aponta para o IP da VPS. Depois que o domínio de verdade funcionar, apague esse provisório.
+
 
 | O quê | Como | Deve aparecer |
 |---|---|---|
