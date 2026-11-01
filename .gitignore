@@ -1,6 +1,7 @@
 # dependências e builds
 node_modules/
 api/dist/
+gestao/dist/
 
 # segredos (use .env.example como modelo)
 .env
@@ -11,6 +12,7 @@ docker-compose.override.yml
 
 # roteiro de testes com as senhas locais
 TESTE-LOCAL.md
+TESTE-GESTAO.md
 
 # variáveis da produção (VPS), com as senhas: ficam só no computador
 .env.producao

@@ -5,7 +5,7 @@ import Usuario from "../models/Usuario";
 
 // endereços que já são do app (pastas e páginas) não podem virar escola
 export const RESERVADOS = new Set(["js", "assets", "icons", "audio", "vendor", "docs", "ferramentas", "manual", "privacidade",
-  "index", "jogoortografia", "ortografia", "api", "health"]);
+  "index", "jogoortografia", "ortografia", "api", "health", "gestao"]);
 export const slugValido = (slug: string) => /^[A-Za-z0-9_-]{3,40}$/.test(slug) && !RESERVADOS.has(slug.toLowerCase());
 const corValida = (c: unknown) => typeof c === "string" && /^#[0-9a-f]{6}$/i.test(c);
 const LOGO_MAXIMO = 60000;   // data URL de até 240 px (o app já reduz a imagem antes de mandar)
@@ -56,7 +56,9 @@ class EscolaController {
     if (erro || !dados) return res.status(400).json({ message: erro });
     try {
       const teste_ate = new Date(Date.now() + DIAS_DE_TESTE * 24 * 60 * 60 * 1000);
-      const escola = await Escola.create({ ...dados, slug, plano: "teste", teste_ate });
+      const escola = await Escola.create({ ...dados, slug, plano: "teste", teste_ate,
+        enviar_relatorios: typeof req.body.enviar_relatorios === "boolean" ? req.body.enviar_relatorios : true,
+        salvar_partidas: typeof req.body.salvar_partidas === "boolean" ? req.body.salvar_partidas : true });
       return res.status(201).json({ ...escola.toJSON(), bloqueada: escola.bloqueada });
     } catch (error) {
       if (error instanceof UniqueConstraintError) return res.status(409).json({ message: `Já existe uma escola com o endereço /${slug}.` });
@@ -79,6 +81,8 @@ class EscolaController {
       escola.teste_ate = data;
     }
     if (typeof req.body.ativa === "boolean") escola.ativa = req.body.ativa;
+    if (typeof req.body.enviar_relatorios === "boolean") escola.enviar_relatorios = req.body.enviar_relatorios;
+    if (typeof req.body.salvar_partidas === "boolean") escola.salvar_partidas = req.body.salvar_partidas;
     await escola.save();
     return res.json({ ...escola.toJSON(), bloqueada: escola.bloqueada });
   }

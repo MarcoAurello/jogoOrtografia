@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import Partida, { PartidaHabilidade } from "../models/Partida";
 import Aluno from "../models/Aluno";
+import Turma from "../models/Turma";
+import Escola from "../models/Escola";
 import sequelize from "../config/connection";
 import { turmaDoUsuario } from "../services/acessoTurma";
 
@@ -19,6 +21,13 @@ class PartidaController {
     const jogo = String(b.jogo || "").slice(0, 30);
     if (!UUID.test(id) || !jogo) return res.status(400).json({ message: "Partida inválida." });
     if (await Partida.findByPk(id)) return res.json({ ok: true, repetida: true });
+
+    // guardar a partida é configurável: só guarda se estiver ligado na escola, na turma e no aluno. Desligado, responde
+    // ok (o app tira da fila e não tenta de novo) e diz em que nível está desligado.
+    const turma = await Turma.findByPk(turmaId, { include: [{ model: Escola, as: "escola" }] });
+    const desligado = turma?.escola?.salvar_partidas === false ? "escola" : turma?.salvar_partidas === false ? "turma"
+      : aluno.salvar_partidas === false ? "aluno" : "";
+    if (desligado) return res.json({ ok: true, guardada: false, desligado });
 
     const jogadaEm = new Date(String(b.jogada_em || ""));
     const quando = Number.isNaN(jogadaEm.getTime()) || jogadaEm.getTime() > Date.now() + 5 * 60 * 1000 ? new Date() : jogadaEm;

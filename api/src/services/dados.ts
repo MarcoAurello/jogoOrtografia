@@ -36,6 +36,13 @@ export async function adicionarEmail(escopo: Escopo, nome: unknown, email: unkno
   await Destinatario.create({ escola_id: escopo, nome: texto(nome, 60) || m, email: m });
 }
 
+// tira um e-mail da lista (quem chama confere a permissão: só a coordenação da escola e o administrador)
+export async function removerEmail(escopo: Escopo, email: unknown) {
+  const m = texto(email, 120).toLowerCase();
+  const apagados = await Destinatario.destroy({ where: { ...doEscopo(escopo), email: m } });
+  if (!apagados) throw erro("email");
+}
+
 // ---------- questionários ----------
 export async function listarQuestionarios(escopo: Escopo) {
   const qs = await Questionario.findAll({ where: doEscopo(escopo), order: [["created_at", "ASC"]] });

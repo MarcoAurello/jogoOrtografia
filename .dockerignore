@@ -13,3 +13,7 @@ vercel.json
 api
 .env
 .env.example
+
+# a gestão é compilada dentro da imagem (estágio "gestao" do Dockerfile): não manda as dependências nem o build local
+gestao/node_modules
+gestao/dist

@@ -20,6 +20,8 @@ class Turma extends Model<
   declare codigo: string;
   declare ano_letivo: number;
   declare ativa: CreationOptional<boolean>;
+  // guardar as partidas desta turma no banco (painel e ficha); a coordenação desliga
+  declare salvar_partidas: CreationOptional<boolean>;
   declare criada_por: string | null;
   declare created_at: CreationOptional<Date>;
   declare updated_at: CreationOptional<Date>;
@@ -54,6 +56,11 @@ Turma.init(
       allowNull: false
     },
     ativa: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
+    salvar_partidas: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true

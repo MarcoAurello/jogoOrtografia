@@ -20,7 +20,7 @@ const dataValida = (v: unknown) => (/^\d{4}-\d{2}-\d{2}$/.test(String(v || "")) 
 const paraLista = (a: Aluno, turmas: { id: string; nome: string }[], anamneses: number, ultima: Date | null) => ({
   id: a.id, nome: a.nome, ativo: a.ativo, nome_completo: a.nome_completo, data_nascimento: a.data_nascimento,
   responsavel_nome: a.responsavel_nome, responsavel_contato: a.responsavel_contato, observacoes: a.observacoes,
-  consentimento_em: a.consentimento_em, turmas, anamneses, ultima_anamnese: ultima
+  consentimento_em: a.consentimento_em, turmas, anamneses, ultima_anamnese: ultima, salvar_partidas: a.salvar_partidas !== false
 });
 
 class AlunoController {
@@ -34,7 +34,7 @@ class AlunoController {
     const naTurma = new Map(ligacoes.map((l) => [l.aluno_id, l.ativo]));
     const alunos = await Aluno.findAll({
       where: { id: { [Op.in]: [...naTurma.keys()] } },
-      attributes: ["id", "nome", "ativo", "ultimo_acesso", "nome_completo"],
+      attributes: ["id", "nome", "ativo", "ultimo_acesso", "nome_completo", "salvar_partidas"],
       order: [["nome", "ASC"]]
     });
     const jogadas = await Partida.findAll({
@@ -181,6 +181,8 @@ class AlunoController {
       aluno.nome = nome;
     }
     if (typeof b.ativo === "boolean") aluno.ativo = b.ativo;
+    // guardar as partidas do aluno: só a coordenação (e o administrador) muda
+    if (typeof b.salvar_partidas === "boolean" && eu.perfil !== "professor") aluno.salvar_partidas = b.salvar_partidas;
     if (b.cadastro && typeof b.cadastro === "object") Object.assign(aluno, cadastro(b.cadastro));
 
     // turmas: a coordenação define todas (da escola); o professor só põe ou tira das turmas dele

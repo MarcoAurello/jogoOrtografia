@@ -1,49 +1,49 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Ponto de entrada: importa todos os módulos, liga o botão de instalar o app e abre a primeira tela. */
 
-import { $ } from './util.js?v=152';
-import { mostrar, telaInicio } from './telas.js?v=152';
-import { carregarEmails } from './professor.js?v=152';
-import { enviarFila } from './relatorio.js?v=152';
+import { $ } from './util.js?v=155';
+import { mostrar, telaInicio } from './telas.js?v=155';
+import { carregarEmails, telaProfessor } from './professor.js?v=155';
+import { enviarFila } from './relatorio.js?v=155';
 // cada jogo liga os próprios botões ao ser carregado
-import './ortografia.js?v=152';
-import './chuva.js?v=152';
-import './matematica.js?v=152';
-import './tiro.js?v=152';
-import './peso.js?v=152';
-import './quiz.js?v=152';
-import './luzes.js?v=152';
-import './rotina.js?v=152';
-import './fichas.js?v=152';
-import './cores.js?v=152';
-import './lados.js?v=152';
-import './setas.js?v=152';
-import './vistas.js?v=152';
-import './dinos.js?v=152';
-import './simbolos.js?v=152';
-import './tabuada.js?v=152';
-import './classes.js?v=152';
-import './graficos.js?v=152';
-import './escondida.js?v=152';
-import './copia.js?v=152';
-import './barcos.js?v=152';
-import './giro.js?v=152';
-import './hora.js?v=152';
-import './somando.js?v=152';
-import './descobrir.js?v=152';
-import './chaves.js?v=152';
-import './caminho.js?v=152';
-import './policia.js?v=152';
-import './pontos.js?v=152';
-import './pixels.js?v=152';
-import './fracoes.js?v=152';
-import './escola.js?v=152';
-import './usuarios.js?v=152';
-import './entrada.js?v=152';
-import './turmas.js?v=152';
-import './alunos.js?v=152';
-import './testegratis.js?v=152';
-import './competicao.js?v=152';
+import './ortografia.js?v=155';
+import './chuva.js?v=155';
+import './matematica.js?v=155';
+import './tiro.js?v=155';
+import './peso.js?v=155';
+import './quiz.js?v=155';
+import './luzes.js?v=155';
+import './rotina.js?v=155';
+import './fichas.js?v=155';
+import './cores.js?v=155';
+import './lados.js?v=155';
+import './setas.js?v=155';
+import './vistas.js?v=155';
+import './dinos.js?v=155';
+import './simbolos.js?v=155';
+import './tabuada.js?v=155';
+import './classes.js?v=155';
+import './graficos.js?v=155';
+import './escondida.js?v=155';
+import './copia.js?v=155';
+import './barcos.js?v=155';
+import './giro.js?v=155';
+import './hora.js?v=155';
+import './somando.js?v=155';
+import './descobrir.js?v=155';
+import './chaves.js?v=155';
+import './caminho.js?v=155';
+import './policia.js?v=155';
+import './pontos.js?v=155';
+import './pixels.js?v=155';
+import './fracoes.js?v=155';
+import './escola.js?v=155';
+import './usuarios.js?v=155';
+import './entrada.js?v=155';
+import './turmas.js?v=155';
+import './alunos.js?v=155';
+import './testegratis.js?v=155';
+import './competicao.js?v=155';
 
 // ---------- Instalar como app ----------
 let pedidoInstalacao = null;
@@ -85,3 +85,5 @@ window.addEventListener('online', enviarFila);
 carregarEmails().then(enviarFila);
 
 telaInicio();
+// /?area=professor: a gestão nova (/gestao/) manda para cá as áreas que ainda não migraram (Área do professor antiga)
+if (new URLSearchParams(location.search).get('area') === 'professor') telaProfessor();

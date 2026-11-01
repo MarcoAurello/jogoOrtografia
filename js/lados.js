@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Esquerda e Direita. */
 
-import { $, sortear } from './util.js?v=152';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=152';
-import { SOM, tocar } from './som.js?v=152';
-import { mascote, mostrar, telaJogos } from './telas.js?v=152';
-import { escolherProfessorE } from './professor.js?v=152';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=152';
+import { $, sortear } from './util.js?v=155';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=155';
+import { SOM, tocar } from './som.js?v=155';
+import { mascote, mostrar, telaJogos } from './telas.js?v=155';
+import { escolherProfessorE } from './professor.js?v=155';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=155';
 
 // ---------- Esquerda e Direita ----------
 // Lateralidade, atenção e controle inibitório. A mesa tem um buraco em cada canto e uma bola de cada lado.

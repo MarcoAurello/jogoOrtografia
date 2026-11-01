@@ -12,6 +12,8 @@ const CHAVE = "jogo-ortografia";   // a mesma CHAVE do script (ferramentas/relat
 class RelatorioController {
   async enviar(req: Request, res: Response): Promise<Response> {
     const { escopo, escola } = await dados.escopoDoEndereco(req.body.escola);
+    // o administrador desligou o e-mail do relatório nesta escola: não envia (o app tira da fila e não tenta de novo)
+    if (escola && escola.enviar_relatorios === false) return res.json({ ok: false, erro: "desligado" });
     const para = String(req.body.para || "").trim().toLowerCase();
     const lista = await dados.lerEmails(escopo);
     if (!dados.emailValido(para) || !lista.some((x) => x.email === para)) return res.json({ ok: false, erro: "email" });

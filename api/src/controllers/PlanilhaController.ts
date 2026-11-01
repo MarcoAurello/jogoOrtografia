@@ -24,6 +24,10 @@ class PlanilhaController {
     switch (String(b.acao || "")) {
       case "adicionarEmail":
         return resposta(res, async () => { await dados.adicionarEmail(escopo, b.nome, b.email); return { emails: await dados.lerEmails(escopo) }; });
+      case "removerEmail":
+        // tirar alguém da lista dos relatórios é da coordenação (o professor só acrescenta)
+        if (eu.perfil === "professor") return res.status(403).json({ ok: false, erro: "permissao" });
+        return resposta(res, async () => { await dados.removerEmail(escopo, b.email); return { emails: await dados.lerEmails(escopo) }; });
       case "salvarQuestionario":
         return resposta(res, async () => ({ id: await dados.salvarQuestionario(escopo, eu.id, b.titulo, b.perguntas) }));
       case "criarCompeticao":

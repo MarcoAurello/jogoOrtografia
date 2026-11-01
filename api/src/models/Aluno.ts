@@ -25,6 +25,8 @@ class Aluno extends Model<
   declare nome: string;
   declare senha_figuras: string;
   declare ativo: CreationOptional<boolean>;
+  // guardar as partidas deste aluno no banco (painel e ficha); a coordenação desliga
+  declare salvar_partidas: CreationOptional<boolean>;
   declare tentativas: CreationOptional<number>;
   declare bloqueado_ate: Date | null;
   declare ultimo_acesso: Date | null;
@@ -69,6 +71,11 @@ Aluno.init(
       allowNull: false
     },
     ativo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
+    salvar_partidas: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true

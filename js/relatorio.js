@@ -1,43 +1,43 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Relatório do fim do jogo: textos, gráficos, envio por e-mail (com fila offline), confete e PDF. */
 
-import { registrarPartida } from './partidas.js?v=152';
-import { $, seguro, semHTML, sortear } from './util.js?v=152';
-import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=152';
-import { frase, SOM } from './som.js?v=152';
-import { mascote, mostrar } from './telas.js?v=152';
-import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=152';
-import { comecarMissao, telaMissoes } from './ortografia.js?v=152';
-import { comecarChuva, telaChuvaMenu } from './chuva.js?v=152';
-import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=152';
-import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=152';
-import { comecarPeso, telaPesoMenu } from './peso.js?v=152';
-import { comecarQuiz, telaQuizMenu } from './quiz.js?v=152';
-import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=152';
-import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=152';
-import { comecarFichas, telaFichasMenu } from './fichas.js?v=152';
-import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=152';
-import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=152';
-import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=152';
-import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=152';
-import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=152';
-import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=152';
-import { comecarDescobrir, DESCOBRIR, telaDescobrirMenu } from './descobrir.js?v=152';
-import { CHAVES, comecarChaves, telaChavesMenu } from './chaves.js?v=152';
-import { CAMINHO, comecarCaminho, comecarTaxi, telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=152';
-import { comecarPolicia, POLICIA, telaPoliciaMenu } from './policia.js?v=152';
-import { comecarPontos, PONTOS, telaPontosMenu } from './pontos.js?v=152';
-import { comecarPixels, PIXELS, telaPixelsMenu } from './pixels.js?v=152';
-import { comecarFracoes, FRACOES, telaFracoesMenu } from './fracoes.js?v=152';
-import { comecarCores, telaCoresMenu } from './cores.js?v=152';
-import { comecarLados, telaLadosMenu } from './lados.js?v=152';
-import { comecarSetas, telaSetasMenu } from './setas.js?v=152';
-import { comecarVistas, telaVistasMenu } from './vistas.js?v=152';
-import { comecarDinos, telaDinosMenu } from './dinos.js?v=152';
-import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=152';
-import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=152';
-import { comecarClasses, telaClassesMenu } from './classes.js?v=152';
-import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=152';
+import { registrarPartida } from './partidas.js?v=155';
+import { $, seguro, semHTML, sortear } from './util.js?v=155';
+import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=155';
+import { frase, SOM } from './som.js?v=155';
+import { mascote, mostrar } from './telas.js?v=155';
+import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=155';
+import { comecarMissao, telaMissoes } from './ortografia.js?v=155';
+import { comecarChuva, telaChuvaMenu } from './chuva.js?v=155';
+import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=155';
+import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=155';
+import { comecarPeso, telaPesoMenu } from './peso.js?v=155';
+import { comecarQuiz, telaQuizMenu } from './quiz.js?v=155';
+import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=155';
+import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=155';
+import { comecarFichas, telaFichasMenu } from './fichas.js?v=155';
+import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=155';
+import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=155';
+import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=155';
+import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=155';
+import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=155';
+import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=155';
+import { comecarDescobrir, DESCOBRIR, telaDescobrirMenu } from './descobrir.js?v=155';
+import { CHAVES, comecarChaves, telaChavesMenu } from './chaves.js?v=155';
+import { CAMINHO, comecarCaminho, comecarTaxi, telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=155';
+import { comecarPolicia, POLICIA, telaPoliciaMenu } from './policia.js?v=155';
+import { comecarPontos, PONTOS, telaPontosMenu } from './pontos.js?v=155';
+import { comecarPixels, PIXELS, telaPixelsMenu } from './pixels.js?v=155';
+import { comecarFracoes, FRACOES, telaFracoesMenu } from './fracoes.js?v=155';
+import { comecarCores, telaCoresMenu } from './cores.js?v=155';
+import { comecarLados, telaLadosMenu } from './lados.js?v=155';
+import { comecarSetas, telaSetasMenu } from './setas.js?v=155';
+import { comecarVistas, telaVistasMenu } from './vistas.js?v=155';
+import { comecarDinos, telaDinosMenu } from './dinos.js?v=155';
+import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=155';
+import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=155';
+import { comecarClasses, telaClassesMenu } from './classes.js?v=155';
+import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=155';
 
 // ---------- Relatório de dificuldades ----------
 function montarRelatorio() {
@@ -371,7 +371,8 @@ async function enviarFila() {
       try { erro = await postarRelatorio(item); } catch (e) { break; }   // sem internet: tenta depois
       if (erro === 'cota') break;                                         // passou do limite do dia: tenta depois
       salvarFila(lerFila().filter((r) => r.id !== item.id));
-      resultadoEnvio[item.id] = erro ? 'erro' : 'ok';
+      // 'desligado': o administrador desligou o e-mail do relatório nesta escola (não é erro, só não envia)
+      resultadoEnvio[item.id] = erro === 'desligado' ? 'desligado' : erro ? 'erro' : 'ok';
     }
   } finally { enviando = false; }
 }
@@ -381,6 +382,8 @@ async function enviarRelatorioPorEmail({ rel, estrelas, missao: mis, data }) {
   aviso.hidden = true;
   const para = emailDoRelatorio();
   if (!URL_RELATORIO || !para || !rel.respondidas) return;
+  // a escola está com o e-mail do relatório desligado (configuração do administrador): nem tenta enviar
+  if (window.ESCOLA_INICIAL?.enviar_relatorios === false) return;
   const id = `${data.getTime()}-${Math.random().toString(36).slice(2, 8)}`;
   salvarFila([...lerFila(), {
     id, chave: CHAVE_RELATORIO, para, jogo: jogoDaMissao(mis), aluno, tipo: textosRelatorio(mis).tipo, assunto: textosRelatorio(mis).assunto, missao: mis.titulo, data: data.toLocaleDateString('pt-BR'),
@@ -400,6 +403,8 @@ async function enviarRelatorioPorEmail({ rel, estrelas, missao: mis, data }) {
   if (resultadoEnvio[id] === 'ok') {
     aviso.className = 'envio-email ok';
     aviso.textContent = `📧 Relatório enviado para ${(listaEmails().find((x) => x.email === para) || { nome: para }).nome}.`;
+  } else if (resultadoEnvio[id] === 'desligado') {
+    aviso.hidden = true;
   } else if (resultadoEnvio[id] === 'erro') {
     aviso.className = 'envio-email erro';
     aviso.textContent = 'Não foi possível enviar o relatório. Peça ao professor para conferir o e-mail na Área do professor.';

@@ -21,6 +21,10 @@ class Escola extends Model<
   declare destaque: CreationOptional<string>;
   declare logo: string | null;
   declare script: string | null;
+  // o relatório de cada partida vai por e-mail para o professor (o administrador desliga por escola)
+  declare enviar_relatorios: CreationOptional<boolean>;
+  // guardar as partidas dos alunos no banco (painel e ficha); o administrador desliga por escola
+  declare salvar_partidas: CreationOptional<boolean>;
   declare plano: CreationOptional<"teste" | "ativo">;
   declare teste_ate: Date | null;
   declare ativa: CreationOptional<boolean>;
@@ -43,6 +47,8 @@ class Escola extends Model<
       destaque: this.destaque,
       logo: this.logo || "",
       script: this.script || "",
+      enviar_relatorios: this.enviar_relatorios !== false,   // o app nem tenta mandar o relatório quando está desligado
+      salvar_partidas: this.salvar_partidas !== false,       // a gestão avisa que o painel e a ficha não recebem partidas
       bloqueada: this.bloqueada
     };
   }
@@ -86,6 +92,16 @@ Escola.init(
     script: {
       type: DataTypes.STRING(255),
       allowNull: true
+    },
+    enviar_relatorios: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
+    salvar_partidas: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
     plano: {
       type: DataTypes.ENUM("teste", "ativo"),

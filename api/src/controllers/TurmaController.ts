@@ -61,6 +61,8 @@ class TurmaController {
     if (!turma) return res.status(404).json({ message: "Turma não encontrada." });
     if (typeof req.body.nome === "string" && req.body.nome.trim()) turma.nome = req.body.nome.trim().slice(0, 80);
     if (typeof req.body.ativa === "boolean") turma.ativa = req.body.ativa;
+    // guardar as partidas da turma: só a coordenação (e o administrador) muda
+    if (typeof req.body.salvar_partidas === "boolean" && eu.perfil !== "professor") turma.salvar_partidas = req.body.salvar_partidas;
     await turma.save();
     if (Array.isArray(req.body.professores) && eu.perfil !== "professor") {
       const ids = await professoresValidos(req.body.professores, turma.escola_id);

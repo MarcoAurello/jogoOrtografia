@@ -415,6 +415,56 @@ else:
     except Exception as e:
         confere("script da planilha responde", False, str(e))
 
+# ---------- 9. o administrador desliga o e-mail do relatório dos jogos na escola ----------
+print("9. Relatório por e-mail: ligar e desligar por escola (administrador)")
+s, r = chamar(f"/escolas/{escola['id']}", "PUT", {"enviar_relatorios": False}, prof)
+confere("professor não muda a configuração da escola", s in (401, 403, 404), f"status {s}")
+s, r = chamar(f"/escolas/{escola['id']}", "PUT", {"enviar_relatorios": False}, adm)
+confere("administrador desliga o e-mail do relatório", s == 200 and r.get("enviar_relatorios") is False, json.dumps(r)[:200])
+s, r = chamar(f"/escolas/{slug}/marca")
+confere("a marca da escola avisa o app que está desligado", r.get("enviar_relatorios") is False)
+s, r = chamar("/relatorios", "POST", {"escola": slug, "para": "qualquer@exemplo.test", "aluno": "Ana", "missao": "x"})
+confere("com o envio desligado, a API não manda o relatório", r.get("ok") is False and r.get("erro") == "desligado", json.dumps(r))
+s, r = chamar(f"/escolas/{escola['id']}", "PUT", {"enviar_relatorios": True}, adm)
+confere("administrador liga de novo", s == 200 and r.get("enviar_relatorios") is True)
+
+# ---------- 10. a coordenação tira um e-mail da lista dos relatórios (o professor só acrescenta) ----------
+print("10. Lista de e-mails: tirar alguém")
+email_tirar = f"tirar.{sufixo}@exemplo.test"
+s, r = chamar("/planilha", "POST", {"acao": "adicionarEmail", "nome": "Para Tirar", "email": email_tirar}, prof)
+confere("professor acrescenta e-mail", r.get("ok") is True and any(x.get("email") == email_tirar for x in r.get("emails", [])))
+s, r = chamar("/planilha", "POST", {"acao": "removerEmail", "email": email_tirar}, prof)
+confere("professor não tira e-mail da lista", s == 403, f"status {s}")
+s, r = chamar("/planilha", "POST", {"acao": "removerEmail", "email": email_tirar}, coord)
+confere("coordenação tira o e-mail", r.get("ok") is True and not any(x.get("email") == email_tirar for x in r.get("emails", [])), json.dumps(r)[:200])
+s, r = chamar("/planilha", "POST", {"acao": "removerEmail", "email": email_tirar}, coord)
+confere("tirar de novo avisa que não está na lista", r.get("ok") is False)
+
+# ---------- 11. guardar as partidas: configurável por escola (admin), turma e aluno (coordenação) ----------
+print("11. Guardar as partidas: escola, turma e aluno")
+def partida_nova():
+    return {"id": str(uuid.uuid4()), "jogo": "giro", "titulo": "Giro", "acertos": 5, "total": 10, "estrelas": 1,
+            "jogada_em": datetime.now(timezone.utc).isoformat(), "habilidades": ["espacial"]}
+def qtd_partidas():
+    return len(chamar(f"/turmas/{turma['id']}/partidas?limite=200", token=prof)[1])
+antes = qtd_partidas()
+s, r = chamar(f"/turmas/{turma['id']}", "PUT", {"salvar_partidas": False}, prof)
+confere("professor não desliga a gravação da turma", s == 200 and r.get("salvar_partidas") is True, json.dumps(r)[:120])
+for nivel, liga, desliga, quem in (
+        ("escola", f"/escolas/{escola['id']}", f"/escolas/{escola['id']}", adm),
+        ("turma", f"/turmas/{turma['id']}", f"/turmas/{turma['id']}", coord),
+        ("aluno", f"/alunos/{ana['id']}", f"/alunos/{ana['id']}", coord)):
+    s, r = chamar(desliga, "PUT", {"salvar_partidas": False}, quem)
+    confere(f"desliga a gravação na {nivel}", s == 200)
+    s, r = chamar("/partidas", "POST", partida_nova(), aluna)
+    confere(f"com a {nivel} desligada, a partida não é guardada", s == 200 and r.get("guardada") is False and r.get("desligado") == nivel, json.dumps(r))
+    chamar(liga, "PUT", {"salvar_partidas": True}, quem)
+confere("nenhuma partida a mais enquanto estava desligado", qtd_partidas() == antes)
+s, r = chamar("/partidas", "POST", partida_nova(), aluna)
+confere("tudo ligado de novo: a partida é guardada", s == 201 and qtd_partidas() == antes + 1)
+s, r = chamar("/turmas", token=prof)
+confere("a turma informa se guarda as partidas", any(t.get("id") == turma["id"] and t.get("salvar_partidas") is True for t in r))
+
 # ---------- fim: a escola de teste fica desativada ----------
 chamar(f"/turmas/{turma['id']}", "PUT", {"ativa": False}, prof)
 chamar(f"/escolas/{escola['id']}", "PUT", {"ativa": False}, adm)
