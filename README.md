@@ -80,6 +80,18 @@ vermelho): as espécies repetidas em outra cor treinam o olhar no detalhe. As fi
 trocar pela mesma espécie de outra cor, trocar dois vizinhos de lugar, inverter a fila, trocar o primeiro com o último e
 trocar um dinossauro por outro. O relatório mostra a maior sequência acertada e separa os erros de ordem dos erros de dinossauro.
 
+## Pilhas de Cores (planejamento e funções executivas)
+
+Fica em **Psicopedagogia**. São **4 colunas** que cabem **5 bolinhas** cada, com 4 cores (três com 5 bolinhas e uma com 4),
+então nas fases 1 e 2 há **um lugar vazio** só (aquecimento: só as bolinhas de cima se mexem). O aluno toca numa coluna para pegar a bolinha **de cima** e toca na coluna
+onde quer colocar (no computador, também pelas teclas 1 a 4); só dá para colocar onde tem lugar. A fase termina quando
+cada coluna tem **uma cor só**. Cada cor tem um símbolo dentro (♥ ● ★ ▲) para quem confunde cores. São **6 fases**: da
+fase 3 em diante entra uma **5ª coluna** de apoio e as cores ficam cada vez mais misturadas. A fase nasce da
+arrumação pronta embaralhada com jogadas válidas, então sempre tem solução; a referência de movimentos do relatório é
+o mínimo calculado (busca em largura) nas fases de 4 colunas e, nas de 5, o número de jogadas do embaralho. Dá para **recomeçar a fase** e, depois de
+muitos movimentos sem conseguir, aparece **Pular fase**. O relatório mostra movimentos por fase contra a referência,
+movimentos perdidos (bolinha levada de volta para onde estava), toques em coluna cheia, recomeços e o tempo de cada fase.
+
 ## Atenção à Forma (atenção seletiva e discriminação visual)
 
 Fica em **Psicopedagogia**, baseado na placa de pinos com cartas de modelo. No alto aparece uma **carta** com uma figura
@@ -246,7 +258,7 @@ Abra o `index.html` no navegador.
   - `relatorio.js` — fim do jogo: textos, gráficos, envio por e-mail (com fila sem internet), confete e PDF
   - um arquivo por jogo: `ortografia.js`, `chuva.js` (Chuva de Erros), `matematica.js` (Chuva de Matemática), `tiro.js`,
     `peso.js`, `quiz.js` (questionário do aluno), `luzes.js` (Jogo do Reflexo 1 e 2), `rotina.js`, `fichas.js`,
-    `cores.js` (Somando as Cores), `lados.js` (Esquerda e Direita), `setas.js` (Setas e Cores), `vistas.js` (De Lado e de Cima), `dinos.js` (Memória dos Dinossauros), `simbolos.js` (Atenção à Forma), `tabuada.js` (Tetris da Tabuada), `classes.js` (Classes de Palavras, com as frases em `dados-classes.js`) e `graficos.js` (Jogo dos Gráficos, com as perguntas em `dados-graficos.js`). Cada um tem as telas `telaXMenu`, `comecarX`, `pararX`
+    `cores.js` (Somando as Cores), `lados.js` (Esquerda e Direita), `setas.js` (Setas e Cores), `vistas.js` (De Lado e de Cima), `dinos.js` (Memória dos Dinossauros), `pilhas.js` (Pilhas de Cores), `simbolos.js` (Atenção à Forma), `tabuada.js` (Tetris da Tabuada), `classes.js` (Classes de Palavras, com as frases em `dados-classes.js`) e `graficos.js` (Jogo dos Gráficos, com as perguntas em `dados-graficos.js`). Cada um tem as telas `telaXMenu`, `comecarX`, `pararX`
     e liga os próprios botões (ids com o prefixo do jogo, ex.: `cores-`, `lados-`)
   - os imports levam o mesmo `?v=` do `index.html` (o `ferramentas/versao.ps1` troca todos); ao criar um módulo novo,
     ponha-o também na lista `ARQUIVOS` do `service-worker.js`

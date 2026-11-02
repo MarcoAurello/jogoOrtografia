@@ -1897,6 +1897,46 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .dino.entra, .dino.volta, .dino.sai, .dinos-oculto, .dinos-palco.tremer, .dinos-opcao, .dinos-opcao.certa, .dinos-opcao.errada { animation: none; }
 }
 
+/* ---------- Pilhas de Cores ---------- */
+/* a mesa com as 4 colunas (tubos); o tamanho da bolinha acompanha a largura e a altura da tela */
+.pilhas-palco { --bola: min(17vw, 9.5dvh, 64px); margin: 6px auto 0; width: 100%; max-width: 560px; padding: 14px 8px 10px; box-sizing: border-box;
+  border: 2.5px solid #13294b; border-radius: 20px; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.2);
+  background: linear-gradient(#fff4e6, #ffe2c2 78%, #e9b98a 78%, #d9a171); }
+.pilhas-colunas { display: flex; justify-content: center; align-items: flex-end; gap: min(4vw, 22px); }
+/* com a 5ª coluna (vazia, de apoio) as bolinhas encolhem um pouco para caber no celular */
+.pilhas-colunas.cinco { --bola: min(12vw, 9.5dvh, 58px); gap: min(2.5vw, 18px); }
+.pilhas-coluna { display: flex; flex-direction: column-reverse; align-items: center; gap: 3px; padding: calc(var(--bola) * 0.55) 5px 6px;
+  width: calc(var(--bola) + 14px); border: 3px solid #13294b; border-top: none; border-radius: 0 0 22px 22px; cursor: pointer;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.25) 40%, rgba(255, 255, 255, 0.6));
+  box-shadow: inset 0 -4px 0 rgba(19, 41, 75, 0.12), 0 4px 0 rgba(19, 41, 75, 0.25); transition: transform 0.12s, background 0.15s;
+  font: inherit; -webkit-tap-highlight-color: transparent; }
+.pilhas-coluna:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 3px; }
+.pilhas-coluna.escolhida { background: linear-gradient(90deg, #fff7c2, #fffbe0 40%, #fff7c2); transform: translateY(-3px); }
+.pilhas-coluna.tremer { animation: tremer 0.35s ease; }
+.pilhas-coluna.pronta { background: linear-gradient(90deg, #d6f5e0, #effbf2 40%, #d6f5e0); border-color: var(--verde); animation: cores-quique 0.45s ease-out; }
+.pilhas-bola, .pilhas-vaga { width: var(--bola); height: var(--bola); border-radius: 50%; flex: none; }
+.pilhas-bola { display: grid; place-items: center; color: #fff; font-size: calc(var(--bola) * 0.42); line-height: 1; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+  background: radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.75) 0 12%, transparent 13%), radial-gradient(circle at 50% 45%, var(--cor) 58%, var(--sombra));
+  border: 2.5px solid #13294b; box-sizing: border-box; transition: transform 0.18s cubic-bezier(0.3, 0.7, 0.4, 1.4); }
+/* a bolinha pega sobe para fora do tubo; a que chegou cai quicando (comprime e estica) */
+.pilhas-bola.no-ar { transform: translateY(calc(var(--bola) * -0.75)); }
+.pilhas-bola.chegou { animation: pilhas-cai 0.38s cubic-bezier(0.3, 0.7, 0.4, 1) both; }
+.pilhas-bola.nasce { animation: cores-nascer 0.32s ease-out both; animation-delay: calc(var(--i) * 18ms); }
+@keyframes pilhas-cai { 0% { transform: translateY(calc(var(--bola) * -1.2)); } 65% { transform: translateY(0) scale(1.12, 0.86); }
+  85% { transform: scale(0.96, 1.05); } 100% { transform: none; } }
+.pilhas-acoes { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 2px; }
+
+/* capa do cartão: quatro tubos misturados */
+.pilhas-capa { display: flex; justify-content: center; align-items: flex-end; gap: 7%; padding: 12px 10px 10px; box-sizing: border-box;
+  background: linear-gradient(#fff4e6, #ffe2c2 80%, #e9b98a 80%); }
+.pilhas-capa i { display: flex; flex-direction: column-reverse; gap: 2px; width: 16%; padding: 8px 3px 4px; border: 2px solid #13294b; border-top: none;
+  border-radius: 0 0 12px 12px; background: rgba(255, 255, 255, 0.5); }
+.pilhas-capa b { aspect-ratio: 1; border-radius: 50%; border: 1.5px solid #13294b;
+  background: radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.7) 0 12%, transparent 13%), radial-gradient(circle at 50% 45%, var(--cor) 58%, var(--sombra)); }
+@media (prefers-reduced-motion: reduce) {
+  .pilhas-bola, .pilhas-bola.chegou, .pilhas-bola.nasce, .pilhas-coluna.tremer, .pilhas-coluna.pronta { animation: none; transition: none; }
+}
+
 /* ---------- Atenção à Forma ---------- */
 /* a carta: papel branco com os símbolos; chega girando e sai voando quando fica vazia */
 .simbolos-mesa { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 2px 0 8px; }

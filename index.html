@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=155">
+  <link rel="stylesheet" href="style.css?v=156">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -629,6 +629,39 @@
       <p class="vistas-pergunta" id="dinos-pergunta" hidden>Qual a sequência de dinossauros?</p>
       <div class="dinos-respostas" id="dinos-respostas"></div>
       <p class="cores-msg" id="dinos-msg" role="status"></p>
+    </section>
+
+    <!-- Pilhas de Cores: instruções -->
+    <section class="tela" id="tela-pilhas-menu">
+      <h2 class="subtitulo">🎨 Pilhas de Cores</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-pilhas"></div>
+        <div class="balao balao-esq">
+          São <b>4 colunas</b> com bolinhas misturadas e só <b>um lugar vazio</b>. Toque numa coluna para pegar a bolinha
+          <b>de cima</b> e toque onde quer colocar. Deixe cada coluna com <b>uma cor só</b>! Pense antes de mexer: quanto menos movimentos, melhor. 🧠
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-pilhas-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="pilhas-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Pilhas de Cores: o jogo -->
+    <section class="tela tela-jogo" id="tela-pilhas" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="pilhas-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="pilhas-nivel"></span>
+        <span class="chuva-placar"><span id="pilhas-pontos">0</span> pts · <span id="pilhas-movimentos">0</span> mov.</span>
+      </div>
+      <div class="pilhas-palco">
+        <div class="pilhas-colunas" id="pilhas-colunas"></div>
+      </div>
+      <p class="cores-msg" id="pilhas-msg" role="status"></p>
+      <div class="pilhas-acoes">
+        <button class="btn-sec btn-pequeno" id="pilhas-recomecar" type="button">↺ Recomeçar fase</button>
+        <button class="btn-sec btn-pequeno" id="pilhas-pular" type="button" hidden>Pular fase ⏭</button>
+      </div>
     </section>
 
     <!-- Atenção à Forma: instruções -->
@@ -2436,6 +2469,11 @@
           <span class="jogo-card-nome">Memória dos Dinossauros</span>
           <span class="jogo-card-texto">Guarde a fila de dinossauros e ache a igual!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-pilhas" type="button" data-tema="psicopedagogia" style="--c:#e5731f">
+          <span class="jogo-card-capa pilhas-capa" id="pilhas-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Pilhas de Cores</span>
+          <span class="jogo-card-texto">Mova uma bolinha por vez e separe as cores!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-simbolos" type="button" data-tema="psicopedagogia" style="--c:#8e44ad">
           <span class="jogo-card-capa simbolos-capa" id="simbolos-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Atenção à Forma</span>
@@ -2590,9 +2628,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=155"></script>
-  <script src="dados.js?v=155"></script>
-  <script type="module" src="js/main.js?v=155"></script>
+  <script src="plenix.js?v=156"></script>
+  <script src="dados.js?v=156"></script>
+  <script type="module" src="js/main.js?v=156"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {
