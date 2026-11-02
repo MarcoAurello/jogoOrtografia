@@ -142,13 +142,17 @@
     @media (hover: hover) { .barra-inferior .aba:hover { background: #f6f2fc; color: #c2185b; } }
     @media (max-width: 400px) { .barra-inferior .aba { font-size: 11px; padding: 6px 2px; } }
     .rodape { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+    .beneficios, .habilidades { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin: 8px 0 20px; }
+    .beneficios > div, .habilidades > div { background: #fff; border-radius: 14px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .beneficios b, .habilidades b { display: block; margin-bottom: 4px; }
+    .beneficios span, .habilidades span { color: #4a5568; font-size: 15px; line-height: 1.5; }
   </style>
 </head>
 <body>
   <header class="topo">
     <img class="logo" src="assets/logo-pg-168.png" alt="Pedagogia Gamificada" width="84" height="84">
     <h1>📘 Manual do usuário</h1>
-    <p>Jogos Psicopedagógicos: jogos com relatórios de desempenho. Aqui você aprende a usar a Área do professor e a jogar cada jogo.</p>
+    <p>Jogos Psicopedagógicos: jogos com relatórios de desempenho. Aqui você aprende a usar a Área do professor (turmas, painel, anamnese, questionários e competições) e a jogar cada jogo.</p>
   </header>
 
   <nav class="abas" aria-label="Partes do manual">
@@ -169,13 +173,17 @@
       <p>Em pouco mais de 2 minutos: as telas, a Área do professor e para que serve cada jogo.</p>
     </section>
 
-    <!-- ================= PARTE 1: PROFESSOR ================= -->
+    <!-- ================= PARTE 1: PROFESSOR E COORDENAÇÃO (gestão, /gestao) ================= -->
     <section class="parte" id="professor">
-      <h2>🧑‍🏫 Para o professor</h2>
-      <p class="intro">Na Área do professor você <b>cadastra os e-mails</b> que recebem os relatórios dos alunos,
-        <b>cria os questionários da aula</b> e <b>copia o link de cada jogo</b> para mandar à turma. Tudo fica guardado na planilha do Google da escola.</p>
+      <h2>🧑‍🏫 Para o professor e a coordenação</h2>
+      <p class="intro">A <b>Área do professor</b> é onde a escola cria as <b>turmas</b>, acompanha cada aluno no <b>painel</b> e na
+        <b>ficha</b>, faz a <b>anamnese</b> e o <b>plano de objetivos</b>, e prepara <b>questionários</b> e <b>competições</b>.
+        Cada pessoa entra com o <b>próprio e-mail e senha</b> e vê só o que é da sua escola. Funciona no computador, no tablet e no celular.</p>
+      <p class="intro"><b>Quem faz o quê:</b> o <b>professor</b> cuida das turmas dele (e vê os alunos da escola toda); a
+        <b>coordenação</b> cuida de todas as turmas e também cadastra os professores. A criação da escola e o plano de uso são com a
+        <b>Pedagogia Gamificada</b>.</p>
 
-      <h3 class="grupo">Entrar na Área do professor</h3>
+      <h3 class="grupo">🔐 Entrar</h3>
 
       <div class="passo">
         <div>
@@ -191,197 +199,387 @@
       <div class="passo">
         <div>
           <span class="passo-num">2</span>
-          <h4>Digite a senha do professor</h4>
-          <p>Digite a senha e toque em <span class="botao">Entrar ▶</span>. A senha protege a área para que os alunos não mexam nos cadastros.</p>
-          <p class="dica">💡 Não sabe a senha? Peça ao responsável pelos jogos na escola.</p>
+          <h4>Entre com o seu e-mail e a sua senha</h4>
+          <p>A tela de entrada já aparece com o <b>logo e as cores da sua escola</b>. Digite o <b>e-mail</b> e a <b>senha</b> e toque em
+            <span class="botao">Entrar</span>. O 👁 mostra a senha que você digitou.</p>
+          <p><b>Primeiro acesso:</b> você recebe uma senha provisória e, ao entrar, cria a sua (8 caracteres ou mais).</p>
+          <p class="dica">💡 Esqueceu a senha? Peça uma senha nova à coordenação da escola. Para sair, toque no ícone da sua conta, no canto de cima.</p>
         </div>
-        <img class="print" src="assets/manual/p02-senha.jpg" alt="Campo Senha do professor e botão Entrar" width="400" height="440" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/ge01-login.jpg" alt="Tela de entrada com o logo da escola, e-mail e senha" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo">
         <div>
           <span class="passo-num">3</span>
           <h4>Escolha o que vai fazer</h4>
+          <p>O início mostra um atalho para cada parte. No celular, o menu completo abre no <span class="botao">☰</span>; no computador, ele fica sempre à esquerda.</p>
           <ul>
-            <li><b>📧 E-mails dos relatórios</b>: cadastrar quem recebe os relatórios.</li>
-            <li><b>📝 Questionários da aula</b>: criar questionários e copiar o link.</li>
-            <li><b>🔗 Links dos jogos</b>: copiar o link de um jogo para mandar à turma.</li>
+            <li><b>🎒 Turmas</b>: as turmas, o código de entrada, os alunos, o painel.</li>
+            <li><b>📋 Alunos e anamnese</b>: cadastro, anamnese, observações e plano de objetivos.</li>
+            <li><b>📝 Questionários</b>, <b>🏆 Competições</b>, <b>🔗 Links</b> e <b>✉️ E-mails</b> dos relatórios.</li>
+            <li>Só a coordenação: <b>👥 Usuários</b> e os <b>🗂️ Modelos de anamnese</b> da escola.</li>
           </ul>
-          <p>Dentro de cada parte, o botão <span class="botao">← Voltar</span> traz você de novo para este menu.</p>
         </div>
-        <img class="print" src="assets/manual/p03-menu.jpg" alt="Menu com os botões E-mails dos relatórios, Questionários da aula e Links dos jogos" width="400" height="720" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/ge02-inicio.jpg" alt="Início da área do professor com os atalhos de cada parte" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
-      <h3 class="grupo">📧 Cadastrar o e-mail que recebe os relatórios</h3>
+      <h3 class="grupo">🎒 Turmas e alunos</h3>
 
       <div class="passo">
         <div>
           <span class="passo-num">4</span>
-          <h4>Preencha o nome e o e-mail</h4>
-          <p>Toque em <b>E-mails dos relatórios</b>. Em cima aparece a lista de quem já está cadastrado.
-            Embaixo, escreva o <b>nome do professor</b> (é o nome que o aluno vai ver) e o <b>e-mail</b>, e toque em
-            <span class="botao">➕ Adicionar</span>.</p>
+          <h4>Crie a turma</h4>
+          <p>Em <b>Turmas</b>, toque em <span class="botao">＋ Nova turma</span> e escreva o nome (ex.: <i>3º ano B · Manhã</i>).
+            A turma ganha um <b>código de 5 letras</b>, que aparece no cartão: é com ele que os alunos entram.</p>
+          <p>A coordenação escolhe os <b>professores da turma</b> (pode ter mais de um). O professor que cria a turma já fica ligado a ela.</p>
+          <p class="dica">💡 Use a busca e o filtro <b>Situação</b> (ativas ou encerradas) quando a lista crescer. Tocar no código copia, sem abrir a turma.</p>
         </div>
-        <img class="print" src="assets/manual/p04-emails.jpg" alt="Lista de e-mails e formulário com nome e e-mail preenchidos" width="400" height="820" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/ge04-turmas.jpg" alt="Lista de turmas com o código de entrada de cada uma" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo">
         <div>
           <span class="passo-num">5</span>
-          <h4>Pronto: o professor entrou na lista</h4>
-          <p>Aparece uma mensagem verde e o novo nome já está na lista. A partir de agora os alunos podem escolher esse professor.</p>
-          <p>Na lista aparecem só os <b>nomes</b> dos professores: o e-mail dos colegas fica escondido. Pelo app não se exclui ninguém.</p>
-          <p class="dica">💡 Os e-mails ficam na aba <b>"E-mails"</b> da planilha do Google (coluna A o nome, coluna B o e-mail). Para corrigir ou excluir um e-mail, edite direto na planilha.</p>
+          <h4>Passe o código para os alunos</h4>
+          <p>Toque na turma. O <b>código de entrada</b> aparece grande, com o botão <span class="botao">Copiar código</span> e o passo a passo
+            do aluno. Embaixo ficam as abas <b>Alunos</b> e <b>Últimas partidas</b>.</p>
+          <p>No menu <span class="botao">⋮</span> você <b>encerra a turma</b> no fim do ano: o código para de funcionar, mas as partidas e o painel ficam guardados.</p>
         </div>
-        <img class="print" src="assets/manual/p05-email-ok.jpg" alt="Mensagem verde confirmando que o professor entrou na lista" width="400" height="820" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/ge05-turma.jpg" alt="Página da turma com o código de entrada em destaque" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo">
         <div>
           <span class="passo-num">6</span>
-          <h4>O que o aluno vê</h4>
-          <p>Antes de abrir qualquer jogo (ou o questionário), o aluno escolhe <b>para quem vai o relatório</b> e toca em
-            <span class="botao">Continuar ▶</span>. No fim da partida, o relatório chega no e-mail do professor escolhido, com os acertos,
-            os erros e o que precisa revisar.</p>
-          <p class="aviso">✔ O app lembra a última escolha do aluno, então nas próximas vezes o professor já vem marcado.</p>
+          <h4>Coloque os alunos na turma</h4>
+          <p>Toque em <span class="botao">Cadastrar alunos</span> e escreva <b>um nome por linha</b>, do jeito que a criança vai procurar
+            (ex.: <i>Ana S.</i>). Dá para <b>colar a lista</b> de uma planilha. Nomes que já estão na turma são pulados.</p>
+          <p>Não precisa cadastrar todos: o aluno que digitar um nome novo ao entrar com o código <b>entra na lista sozinho</b>.</p>
+          <p class="dica">💡 Para tirar um aluno da turma, use o <span class="botao">⋮</span> ao lado do nome. As partidas dele continuam guardadas.</p>
         </div>
-        <img class="print" src="assets/manual/p09-escolha-prof.jpg" alt="Janela Para quem vai o relatório, com a lista de professores" width="400" height="820" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/ge06-cadastrar-alunos.jpg" alt="Janela Cadastrar alunos com um nome por linha" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
-      <h3 class="grupo">📝 Criar e compartilhar um questionário</h3>
-
-      <div class="passo roxo">
+      <div class="passo">
         <div>
           <span class="passo-num">7</span>
-          <h4>Abra os Questionários da aula</h4>
-          <p>No menu do professor, toque em <b>Questionários da aula</b>. Você vê todos os questionários já criados, com o número de perguntas
-            e o botão <span class="botao">🔗 Copiar link</span>.</p>
-          <p>Para montar as perguntas no Excel ou no Google Planilhas, toque em <span class="botao">📥 Baixar planilha modelo</span>.</p>
+          <h4>Como o aluno entra pela turma</h4>
+          <ol>
+            <li>Na tela inicial do app, toca em <span class="botao">🏫 Entrar com o código da turma</span>.</li>
+            <li>Digita o <b>código</b> que você passou e toca em <span class="botao">Continuar ▶</span>.</li>
+            <li>Toca no <b>nome dele</b> (ou digita, se não estiver na lista). Não precisa de senha.</li>
+          </ol>
+          <p>Pronto: as partidas dele vão para o <b>painel da turma</b> e para a <b>ficha</b>, e ele vê as <b>competições da turma</b>.
+            Quando ele volta para a tela inicial, sai da turma, e o próximo aluno pode entrar no mesmo tablet.</p>
+          <p class="aviso">✔ O aluno também pode jogar só digitando o nome, sem o código: o relatório vai por e-mail, mas a partida não fica no painel.</p>
         </div>
-        <img class="print" src="assets/manual/p06-quiz-lista.jpg" alt="Lista de questionários com o botão Copiar link" width="400" height="820" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/a02-nomes-turma.jpg" alt="Tela Entrar na turma com os nomes dos alunos para tocar" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <h3 class="grupo">📊 Acompanhar a turma e cada aluno</h3>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">8</span>
+          <h4>Painel da turma</h4>
+          <p>Na página da turma, toque em <span class="botao">Painel</span>. Escolha o período (<b>7 dias</b>, <b>30 dias</b>, <b>90 dias</b> ou <b>12 meses</b>) e veja:</p>
+          <ul>
+            <li>quantos alunos jogaram, as partidas, o <b>acerto da turma</b> e o tempo jogando;</li>
+            <li>as <b>habilidades com mais dificuldade</b> e quantos alunos estão abaixo de 60%;</li>
+            <li>o <b>acerto por semana</b> (toque no gráfico para ver cada semana) e o <b>acerto por habilidade</b>;</li>
+            <li>a lista de alunos, que dá para ordenar por acerto, partidas ou última partida, e quem <b>não jogou</b> no período.</li>
+          </ul>
+          <p class="dica">💡 Cores do acerto: <b>verde</b> 80% ou mais, <b>amarelo</b> de 60 a 79%, <b>vermelho</b> abaixo de 60%. O número aparece sempre junto.</p>
+        </div>
+        <img class="print" src="assets/manual/ge07-painel.jpg" alt="Painel da turma com os números do período e as habilidades com mais dificuldade" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">9</span>
+          <h4>Ficha do aluno</h4>
+          <p>Toque no nome de um aluno no painel (ou em <span class="botao">Ficha</span>, na lista da turma). A ficha tem:</p>
+          <ul>
+            <li><b>Desempenho</b>: evolução por semana, habilidades, <b>antes × depois</b> e os jogos que mais jogou;</li>
+            <li><b>Para revisar</b>: o que ele mais errou, com o que respondeu;</li>
+            <li><b>Anamnese e plano</b> e as <b>observações</b> mais recentes.</li>
+          </ul>
+          <p>O botão de <b>imprimir</b> gera a ficha completa (todas as partes) para salvar em PDF.</p>
+        </div>
+        <img class="print" src="assets/manual/ge08-ficha.jpg" alt="Ficha do aluno com partidas, acerto e as abas" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <h3 class="grupo">📋 Alunos e anamnese</h3>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">10</span>
+          <h4>A lista de alunos da escola</h4>
+          <p>Em <b>Alunos e anamnese</b> aparecem todos os alunos, com o que cada um já tem: <b>anamnese</b>, <b>plano ativo</b> e
+            <b>observações</b>. Filtre por turma ou por situação (ex.: <i>Sem anamnese</i>).</p>
+          <p>Em <span class="botao">＋ Novo aluno</span> dá para cadastrar com os dados da família (nome completo, nascimento, responsável e contato).</p>
+          <p class="dica">💡 O professor vê todos os alunos da escola, mas só edita os das turmas dele.</p>
+        </div>
+        <img class="print" src="assets/manual/ge09-alunos.jpg" alt="Lista de alunos com etiquetas de anamnese, plano e observações" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo roxo">
         <div>
-          <span class="passo-num">8</span>
-          <h4>Crie um questionário novo</h4>
-          <ol>
-            <li>Toque em <span class="botao">➕ Novo questionário</span>.</li>
-            <li>Escreva o <b>nome</b> (ex.: Geografia – Regiões do Brasil).</li>
-            <li>Coloque as perguntas de um destes jeitos:
-              <ul>
-                <li><b>Enviando a planilha</b> (.xlsx ou .csv): as perguntas aparecem embaixo para você conferir;</li>
-                <li><b>Digitando</b>: toque em <span class="botao">✍️ Adicionar pergunta</span>. O campo verde é a resposta certa e os vermelhos são as erradas.</li>
-              </ul>
-            </li>
-            <li>Toque em <span class="botao">Salvar questionário ✔</span>.</li>
-          </ol>
-          <div class="tutorial-yt">
-            <button class="yt-capa" type="button" data-video="SQTBViShdW0" aria-label="Assistir o tutorial em vídeo: criar um questionário novo">
-              <img src="https://i.ytimg.com/vi/SQTBViShdW0/hqdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async">
-              <span class="yt-play" aria-hidden="true"></span>
-            </button>
-            <p class="yt-legenda">▶️ Tutorial em vídeo · <a href="https://youtube.com/shorts/SQTBViShdW0" target="_blank" rel="noopener">abrir no YouTube ↗</a></p>
-          </div>
-          <p>Como montar a planilha (a primeira linha pode ser o cabeçalho):</p>
+          <span class="passo-num">11</span>
+          <h4>A página do aluno</h4>
+          <p>Toque num aluno. A página tem as abas <b>Anamnese</b>, <b>Observações</b>, <b>Plano de objetivos</b> e <b>Cadastro</b>,
+            e os botões <span class="botao">Ficha</span> e <span class="botao">Editar</span> no topo.</p>
+          <p>Na aba Anamnese há duas formas de aplicar: <b>Preencher agora</b> e <b>Mandar link para a família</b>. Embaixo fica o histórico.</p>
+        </div>
+        <img class="print" src="assets/manual/ge10-aluno.jpg" alt="Página do aluno com as abas e as duas formas de aplicar a anamnese" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">12</span>
+          <h4>Anamnese preenchida na hora</h4>
+          <p>Em <span class="botao">Preencher agora</span>, escolha o questionário, diga <b>quem está respondendo</b> e responda.
+            Se faltar uma pergunta obrigatória, ela fica marcada em vermelho.</p>
+          <p class="aviso">✔ Na primeira anamnese do aluno, confirme que o <b>responsável autorizou</b> o registro (LGPD). A anamnese é dado
+            sensível da criança: só a equipe da escola vê, e ela nunca vai nos e-mails de relatório.</p>
+        </div>
+        <img class="print" src="assets/manual/ge11-anamnese.jpg" alt="Formulário da anamnese com as perguntas para responder" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">13</span>
+          <h4>Anamnese pelo link da família</h4>
+          <p>Em <span class="botao">Mandar link para a família</span>, escolha o questionário e toque em <span class="botao">Gerar link</span>.
+            Mande pelo botão do <b>WhatsApp</b> ou copie a mensagem pronta.</p>
+          <p>A família responde no celular, sem senha. O link vale <b>3 horas</b> e aceita uma resposta só. Quando ela responde, a anamnese aparece como
+            <b>Respondida</b> no histórico. Um link que ainda não foi respondido pode ser cancelado.</p>
+        </div>
+        <img class="print" src="assets/manual/ge12-link-familia.jpg" alt="Janela para gerar o link da anamnese para a família" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">14</span>
+          <h4>Observações de evolução</h4>
+          <p>Na aba <b>Observações</b>, toque em <span class="botao">Nova observação</span>: a data, a categoria (aprendizagem,
+            comportamento, família, saúde…) e o que você observou. Elas formam uma linha do tempo, a mais recente em cima.</p>
+          <p class="dica">💡 Quem escreveu (ou a coordenação) pode corrigir ou apagar a observação.</p>
+        </div>
+        <img class="print" src="assets/manual/ge13-observacoes.jpg" alt="Linha do tempo das observações do aluno" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">15</span>
+          <h4>Plano de objetivos</h4>
+          <p>Na aba <b>Plano de objetivos</b>, toque em <span class="botao">Novo plano</span>. Para cada objetivo: a área, a descrição, as
+            <b>habilidades-alvo</b> e os jogos. O botão <span class="botao">Sugerir jogos</span> traz os jogos que trabalham aquelas habilidades.</p>
+          <p>Complete com o indicador de sucesso, o prazo, os dias da semana, as <b>orientações para a família</b> e as <b>adequações na escola</b>.
+            Só um plano fica <b>ativo</b> por aluno; os anteriores viram histórico.</p>
+          <p>O botão <span class="botao">PDF</span> gera o plano em folha A4, com espaço para as assinaturas do profissional e do responsável.</p>
+        </div>
+        <img class="print" src="assets/manual/ge15-plano-editor.jpg" alt="Editor do plano com um objetivo, as habilidades-alvo e os jogos sugeridos" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <h3 class="grupo">📝 Questionários da aula</h3>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">16</span>
+          <h4>Crie um questionário</h4>
+          <p>Em <b>Questionários</b>, toque em <span class="botao">＋ Novo questionário</span> e dê um nome (ex.: <i>Regiões do Brasil</i>). Depois:</p>
+          <ul>
+            <li><b>Digite</b> as perguntas: cada uma tem 1 resposta certa (✔ verde) e até 3 erradas (✘ vermelho); ou</li>
+            <li>baixe a <span class="botao">Planilha modelo</span>, preencha no Excel ou no Google Planilhas e use <span class="botao">Enviar planilha</span>:
+              as perguntas aparecem para você conferir.</li>
+          </ul>
+          <p>Toque em <span class="botao">Salvar questionário</span>. Os alunos já podem jogar.</p>
           <table class="planilha">
             <tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
             <tr><td>Pergunta</td><td>Resposta certa</td><td>Errada 1</td><td>Errada 2</td><td>Errada 3</td></tr>
             <tr><td>Em qual região fica Pernambuco?</td><td>Nordeste</td><td>Sul</td><td>Norte</td><td>Sudeste</td></tr>
           </table>
-          <p class="dica">💡 Cada pergunta precisa de 1 resposta certa e pelo menos 1 errada. No jogo, as respostas aparecem sempre embaralhadas.</p>
+          <p class="dica">💡 No jogo, as respostas aparecem sempre embaralhadas. Para mudar um questionário salvo, use <b>Fazer uma versão nova</b>: ele abre uma cópia para editar.</p>
         </div>
-        <img class="print" src="assets/manual/p07-quiz-novo.jpg" alt="Formulário de novo questionário com uma pergunta preenchida" width="400" height="820" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/ge17-questionario-novo.jpg" alt="Editor de questionário com uma pergunta, a resposta certa e as erradas" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
-      <div class="passo roxo">
+      <div class="passo">
         <div>
-          <span class="passo-num">9</span>
-          <h4>Copie o link e mande para a turma</h4>
-          <p>Na lista, toque em <span class="botao">🔗 Copiar link</span> no questionário que você quer. Logo abaixo da lista aparece a mensagem
-            verde com o link já copiado.</p>
-          <p>Agora é só <b>colar</b> no grupo de WhatsApp da turma, no e-mail ou no mural da escola.</p>
-          <p class="aviso">✔ O link funciona pela internet, em qualquer celular ou computador. O aluno não precisa instalar nada.</p>
+          <span class="passo-num">17</span>
+          <h4>Mande o link para a turma</h4>
+          <p>Na lista, toque em <span class="botao">Copiar link</span> (ou, no <span class="botao">⋮</span>, mande direto pelo WhatsApp).
+            Cole no grupo da turma, no e-mail ou no mural da escola. <span class="botao">Ver</span> mostra as perguntas com a resposta certa.</p>
+          <p class="aviso">✔ O link já abre com a marca da sua escola, em qualquer celular ou computador. O aluno não precisa instalar nada.</p>
         </div>
-        <img class="print" src="assets/manual/p08-link.jpg" alt="Mensagem verde: link do questionário copiado" width="400" height="820" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/ge16-questionarios.jpg" alt="Lista de questionários com o botão Copiar link" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
-      <div class="passo roxo">
+      <div class="passo">
         <div>
-          <span class="passo-num">10</span>
+          <span class="passo-num">18</span>
           <h4>O aluno abre o link e responde</h4>
           <p>Pelo link, o aluno digita o primeiro nome, escolhe o professor e o questionário <b>abre direto</b>, sem passar pelos outros jogos.
             Ele toca na resposta que acha certa e vê na hora se acertou. No fim, o relatório vai para o seu e-mail.</p>
-          <p>O aluno também pode achar o questionário pela tela inicial, no botão <b>📝 Questionário da aula</b>.</p>
-          <p class="dica">💡 Pelo app não se exclui questionário. Para apagar um, quem cuida da planilha apaga a aba dele; o link deixa de funcionar.</p>
+          <p>O aluno também acha o questionário na aba <b>📝 Questionário</b>, na barra de baixo.</p>
         </div>
         <img class="print" src="assets/manual/p10-quiz-aluno.jpg" alt="Pergunta do questionário na tela do aluno, com quatro respostas" width="400" height="660" loading="lazy" decoding="async">
+      </div>
+
+      <h3 class="grupo">🏆 Competições</h3>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">19</span>
+          <h4>Crie uma competição para a turma</h4>
+          <p>Em <b>Competições</b>, toque em <span class="botao">＋ Nova competição</span>. Escolha a <b>turma</b>, o <b>jogo</b> ou um dos
+            <b>questionários</b>, o <b>dia e a hora de encerrar</b> e, se quiser, quem recebe o relatório. O nome é opcional (vazio: usa o nome do jogo).</p>
+          <p>Os alunos entram com o <b>código da turma</b> e a competição aparece para eles na aba <b>🏆 Competição</b>.</p>
+        </div>
+        <img class="print" src="assets/manual/ge19-competicao-nova.jpg" alt="Janela Nova competição com turma, jogo e hora de encerrar" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">20</span>
+          <h4>Convide a turma e acompanhe o ranking</h4>
+          <p>No cartão da competição: <span class="botao">Convite</span> copia a mensagem com o código da turma para o WhatsApp;
+            <span class="botao">Ranking</span> mostra 🥇🥈🥉, os pontos e os acertos. No <span class="botao">⋮</span>, <b>Encerrar agora</b> fecha antes da hora.</p>
+          <p class="dica">💡 Depois de encerrar, ninguém mais joga, mas o ranking fica guardado.</p>
+        </div>
+        <img class="print" src="assets/manual/ge18-competicoes.jpg" alt="Lista de competições com os botões Ranking e Convite" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">21</span>
+          <h4>O que o aluno vê</h4>
+          <p>O jogo abre direto. No fim de cada partida, os pontos vão para o <b>ranking</b>, com a posição do aluno.
+            Ele pode jogar de novo: vale a <b>melhor partida</b>. No empate, ganha quem acertou mais e, depois, quem fez a pontuação primeiro.</p>
+          <p>O ranking guarda a <b>configuração</b> que o aluno escolheu no jogo (ex.: as operações da Chuva de Matemática, o nível do Peso Certo)
+            e cada configuração tem o <b>seu próprio pódio</b>: quem escolheu o fácil não disputa com quem escolheu o difícil.</p>
+          <p class="dica">💡 Nos questionários, cada acerto de primeira vale 10 pontos.</p>
+        </div>
+        <img class="print" src="assets/manual/p13-competicao-ranking.jpg" alt="Fim da partida com o ranking da competição" width="375" height="667" loading="lazy" decoding="async">
+      </div>
+
+      <h3 class="grupo">✉️ Relatórios por e-mail</h3>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">22</span>
+          <h4>Quem recebe os relatórios</h4>
+          <p>Em <b>E-mails</b>, toque em <span class="botao">＋ Novo e-mail</span>: o <b>nome que os alunos veem</b> e o e-mail.
+            A partir daí, os alunos podem escolher essa pessoa para receber o relatório.</p>
+          <p>Por privacidade, o professor vê só os <b>nomes</b> dos colegas. A coordenação vê os e-mails e pode <b>tirar alguém da lista</b>.</p>
+        </div>
+        <img class="print" src="assets/manual/ge21-emails.jpg" alt="Lista de quem recebe os relatórios por e-mail" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">23</span>
+          <h4>O aluno escolhe para quem vai o relatório</h4>
+          <p>Antes de abrir um jogo (ou o questionário), o aluno escolhe <b>para quem vai o relatório</b> e toca em
+            <span class="botao">Continuar ▶</span>. No fim da partida, o relatório chega no e-mail do professor escolhido, com os acertos,
+            os erros e o que precisa revisar.</p>
+          <p class="aviso">✔ O app lembra a última escolha do aluno. Se a escola optar por não receber os relatórios por e-mail, as partidas continuam no painel.</p>
+        </div>
+        <img class="print" src="assets/manual/p09-escolha-prof.jpg" alt="Janela Para quem vai o relatório, com a lista de professores" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <h3 class="grupo">🔗 Compartilhar um jogo</h3>
 
       <div class="passo">
         <div>
-          <span class="passo-num">11</span>
+          <span class="passo-num">24</span>
           <h4>Copie o link de um jogo</h4>
-          <p>No menu do professor, toque em <b>Links dos jogos</b>. Aparece a lista de todos os jogos, cada um com o botão
-            <span class="botao">🔗 Copiar link</span>.</p>
-          <p>Mande o link para a turma: o aluno digita o primeiro nome, escolhe o professor e o <b>jogo abre direto</b>,
-            sem precisar procurar na lista.</p>
-          <p class="dica">💡 Os jogos com <b>↗</b> (ABC da Tia Ana, Desafio da Rotina, Desafio das Peças e Hive) são de outros sites: o link copiado é o endereço do próprio jogo.</p>
+          <p>Em <b>Links</b>, busque o jogo e toque em copiar (ou no WhatsApp). O link já abre com a <b>marca da sua escola</b> e o
+            <b>jogo abre direto</b>: o aluno digita o nome, escolhe o professor e joga.</p>
+          <p class="dica">💡 Os jogos parceiros (ABC da Tia Ana, Desafio da Rotina, Desafio das Peças e Hive) são de outros sites: o link é o endereço do próprio jogo.</p>
         </div>
-        <img class="print" src="assets/manual/p11-links-jogos.jpg" alt="Lista Links dos jogos com o botão Copiar link em cada jogo" width="400" height="820" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/ge22-links.jpg" alt="Lista de links dos jogos com os botões copiar, WhatsApp e abrir" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
-      <h3 class="grupo">🏆 Criar uma competição</h3>
+      <h3 class="grupo">🏫 Para a coordenação</h3>
 
       <div class="passo roxo">
         <div>
-          <span class="passo-num">12</span>
-          <h4>Crie a competição e passe o código</h4>
-          <p>No menu do professor, toque em <b>Competições</b>. Dê um nome (ex.: <i>5º A – Tabuada</i>), escolha o <b>jogo</b>
-            ou um dos seus <b>questionários</b>, a <b>hora de encerrar</b> (hoje) e para quem vão os relatórios. Toque em
-            <span class="botao">🏆 Criar competição</span>.</p>
-          <p>A planilha cria um <b>código de 5 letras</b>. Use <span class="botao">📋 Copiar código</span> e mande para a turma.
-            Na mesma lista você vê quantos alunos já jogaram, abre o <span class="botao">🏆 Ranking</span> ou
-            <span class="botao">⏹ Encerrar agora</span>.</p>
-          <p class="dica">💡 Depois da hora de encerrar, ninguém mais entra, mas <b>nada é apagado</b>: as abas <b>"Competições"</b> e
-            <b>"Ranking"</b> da planilha guardam tudo.</p>
+          <span class="passo-num">25</span>
+          <h4>Cadastre os professores</h4>
+          <p>Em <b>Usuários</b>, toque em <span class="botao">＋ Novo usuário</span>: nome, e-mail e perfil (Professor ou Coordenação).
+            O sistema cria uma <b>senha provisória</b> e mostra a <b>mensagem pronta</b> para mandar à pessoa.</p>
+          <p>No <span class="botao">⋮</span> de cada pessoa: <b>Senha nova</b> (quando alguém esquece) e <b>Desativar</b> (quem sai da escola; nada do que ela fez é apagado).</p>
         </div>
-        <img class="print" src="assets/manual/p12-competicao-prof.jpg" alt="Lista de competições do professor com o código, o jogo e a hora de encerrar" width="375" height="667" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/ge23-usuarios.jpg" alt="Lista de usuários da escola com perfil e último acesso" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo roxo">
         <div>
-          <span class="passo-num">13</span>
-          <h4>Os alunos entram com o código e veem o ranking</h4>
-          <p>O aluno toca em <b>🏆 Competição</b>, na barra de baixo, e vê as competições abertas. Ao tocar em
-            <span class="botao">Entrar ▶</span>, digita o <b>nome</b> e o <b>código</b>: só tocar na competição não basta.</p>
-          <p>O jogo abre direto. No fim de cada partida, os pontos vão para o <b>ranking</b>, que aparece logo ali, com a posição do aluno.
-            Ele pode jogar de novo: vale a <b>melhor partida</b>. No empate, ganha quem acertou mais e, depois, quem fez a pontuação primeiro.</p>
-          <p>O ranking guarda a <b>configuração</b> que o aluno escolheu no jogo (ex.: as operações da Chuva de Matemática, o nível do Peso Certo)
-            e cada configuração tem o <b>seu próprio pódio</b>: quem escolheu o fácil não disputa com quem escolheu o difícil.</p>
-          <p class="dica">💡 Nos questionários, cada acerto de primeira vale 10 pontos. Peça nome e sobrenome: dois alunos com o mesmo nome contam como um só.</p>
+          <span class="passo-num">26</span>
+          <h4>Monte os modelos de anamnese</h4>
+          <p>Em <b>Modelos de anamnese</b>, toque em <span class="botao">＋ Novo modelo</span> e em <span class="botao">Abrir o banco de perguntas</span>:
+            são as perguntas de <b>5 modelos de anamnese psicopedagógica</b>, organizadas por assunto. Marque as que quiser (ou <b>Marcar todas</b> de um assunto).</p>
+          <p>Depois ajuste: o tipo de resposta (curta, longa, sim ou não, opções, escala de 1 a 5), as <b>obrigatórias</b> e a ordem.</p>
         </div>
-        <img class="print" src="assets/manual/p13-competicao-ranking.jpg" alt="Fim da partida com o ranking da competição" width="375" height="667" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/ge25-banco.jpg" alt="Banco de perguntas por assunto, com as caixas de marcar" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">27</span>
+          <h4>Guardar as partidas: por turma e por aluno</h4>
+          <p>Ao <b>editar uma turma</b> ou <b>um aluno</b>, a coordenação pode desligar <b>Guardar as partidas</b>. Desligado, as partidas daquela
+            turma (ou daquele aluno) não vão para o painel nem para a ficha. O ranking das competições continua.</p>
+          <p class="dica">💡 Uma etiqueta amarela <b>"Não guarda partidas"</b> avisa onde está desligado.</p>
+        </div>
+        <img class="print" src="assets/manual/ge26-turma-editar.jpg" alt="Janela Editar turma com a chave Guardar as partidas desta turma" width="400" height="820" loading="lazy" decoding="async">
       </div>
     </section>
 
     <!-- ================= PARTE 2: JOGOS ================= -->
     <section class="parte" id="jogos">
       <h2>🎮 Os jogos</h2>
-      <p class="intro">Na tela inicial, o aluno toca em <b>🎮 Jogos</b> e vê todos os jogos. O menu <b>Categoria</b>, no alto, filtra os jogos:
-        Português, Matemática, Inglês e Psicopedagogia.</p>
+      <p class="intro">São mais de 30 jogos de <b>Português</b>, <b>Matemática</b>, <b>Inglês</b> e <b>Psicopedagogia</b>. Na tela inicial,
+        o aluno toca em <b>🎮 Jogos</b> e o menu <b>Categoria</b>, no alto, filtra por matéria.</p>
+
+      <h3 class="grupo">Por que jogar</h3>
+      <div class="beneficios">
+        <div><b>🎯 Cada jogo se ajusta ao aluno</b><span>Acertou, o nível sobe; errou, desce. Ninguém fica parado no fácil nem travado no difícil.</span></div>
+        <div><b>💬 O erro vira explicação</b><span>As respostas erradas imitam os erros comuns (trocar a linha pela coluna, inverter a ordem…), e o jogo explica por que não serve.</span></div>
+        <div><b>📧 Relatório a cada partida</b><span>Acertos, erros e o que revisar chegam no e-mail do professor escolhido pelo aluno.</span></div>
+        <div><b>📊 Evolução no tempo</b><span>Entrando pela turma, cada partida vai para o painel e para a ficha do aluno, por habilidade e por semana.</span></div>
+      </div>
+
+      <h3 class="grupo">Habilidades que os jogos trabalham</h3>
+      <p class="intro" style="margin-top:-4px">Cada jogo trabalha várias habilidades ao mesmo tempo. Elas aparecem no cartão do jogo, no painel da turma e no plano de objetivos do aluno.</p>
+      <div class="habilidades">
+        <div>
+          <b>🧠 Funções executivas e cognitivas</b>
+          <span>Memória de trabalho · Planejamento e organização · Controle inibitório · Atenção sustentada, alternada e seletiva ·
+            Raciocínio lógico · Percepção visual · Visão espacial · Tomada de decisão · Velocidade de processamento</span>
+        </div>
+        <div>
+          <b>💛 Socioemocionais e comportamentais</b>
+          <span>Tolerância à frustração · Flexibilidade cognitiva · Colaboração · Autoeficácia · Empatia · Teoria da mente · Autocontrole</span>
+        </div>
+        <div>
+          <b>✏️ Acadêmicas, motoras e linguísticas</b>
+          <span>Coordenação motora fina e grossa · Desenvolvimento da linguagem · Consciência fonológica · Habilidades matemáticas · Lateralidade</span>
+        </div>
+      </div>
 
       <div class="passo">
         <div>
           <h4>Como o aluno começa</h4>
+          <p><b>Pela turma</b> (as partidas ficam no painel e na ficha):</p>
           <ol>
-            <li>Digita o <b>primeiro nome</b> e toca em <span class="botao">Entrar ▶</span>.</li>
-            <li>Toca em <b>🎮 Jogos</b> e escolhe um jogo (se quiser, filtra pelo tema).</li>
-            <li>Escolhe <b>para quem vai o relatório</b> (só nos jogos do app).</li>
-            <li>Joga! No fim, vê como foi, e o professor recebe o relatório.</li>
+            <li>Toca em <span class="botao">🏫 Entrar com o código da turma</span>, digita o código e toca no nome dele.</li>
+            <li>Toca em <b>🎮 Jogos</b> e escolhe um jogo.</li>
+            <li>Escolhe <b>para quem vai o relatório</b> e joga. No fim, vê como foi.</li>
           </ol>
+          <p><b>Só com o nome</b> (para um teste rápido): digita o primeiro nome e toca em <span class="botao">Entrar ▶</span>. O relatório vai por e-mail, mas a partida não fica no painel.</p>
           <p class="dica">💡 Os jogos com <b>↗</b> no cartão são de outros sites: abrem em outra aba e têm o próprio relatório, que não vem para o e-mail cadastrado aqui.</p>
         </div>
         <img class="print" src="assets/manual/g00-lista.jpg" alt="Tela Escolha um jogo com o menu Categoria e os cartões dos jogos" width="400" height="711" loading="lazy" decoding="async">
@@ -1027,6 +1225,215 @@
           <div class="jogo-imagens">
             <img src="assets/capa-fracoes.jpg" alt="Conta de soma de frações com pizzas" width="368" height="300" loading="lazy">
             <img src="assets/manual/g24-fracoes.jpg" alt="Tela da Pizzaria das Frações com a soma 2/10 + 4/10 e quatro alternativas" width="375" height="667" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Classes de Palavras -->
+      <article class="jogo" style="--c:#1e64d2">
+        <div class="jogo-topo"><h3>🔤 Classes de Palavras</h3><span class="tema">Português</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Ensina a reconhecer a <b>classe de cada palavra</b> dentro da frase: artigo, substantivo, verbo, adjetivo e, depois, pronome, numeral, advérbio, preposição, conjunção e interjeição.</li>
+              <li>Cada acerto mostra também o <b>tipo</b> da palavra, ligado à frase (ex.: advérbio de tempo, “responde à pergunta: chegou quando?”).</li>
+              <li>O relatório mostra os acertos por classe e as palavras para revisar.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Aparece uma frase. O aluno toca numa palavra sublinhada e depois na <b>classe</b> dela.</li>
+              <li>Acertou: a palavra fica verde com o nome da classe. Errou: o jogo explica por que aquela classe não serve e dá uma dica; no segundo erro, mostra a certa.</li>
+              <li>Começa <b>fácil</b>, com frases curtas, e vai para o <b>médio</b> e o <b>difícil</b> quando o aluno acerta duas frases seguidas. São 12 frases por partida.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/manual/gj-classes.jpg" alt="Frase com as palavras sublinhadas e os botões das classes" width="400" height="820" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Tetris da Tabuada -->
+      <article class="jogo" style="--c:#1e64d2">
+        <div class="jogo-topo"><h3>🔢 Tetris da Tabuada</h3><span class="tema">Matemática</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Treina a <b>tabuada de 1 a 9</b> de cabeça, com atenção e rapidez: o aluno parte do resultado e descobre a conta.</li>
+              <li>Insiste nos resultados que mais confundem (36, 42, 48, 54, 56, 63, 64, 72, 81).</li>
+              <li>O relatório mostra quantos quadrados estourou, os quadrados por tabuada e os toques errados.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Quadrados com <b>resultados da tabuada</b> caem e se empilham no pote, como no Tetris.</li>
+              <li>O aluno monta a conta no teclado da tela (ex.: <b>7 × 8</b>) e toca no quadrado com o resultado (56), que estoura.</li>
+              <li>A cada 4 quadrados, sobe de nível: a tabuada vai até o 9, os quadrados caem mais depressa e ficam maiores. O jogo acaba quando a pilha chega ao topo.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/manual/gj-tabuada.jpg" alt="Pote com quadrados de números caindo e o teclado da conta" width="400" height="820" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Jogo dos Gráficos -->
+      <article class="jogo" style="--c:#1e64d2">
+        <div class="jogo-topo"><h3>📊 Jogo dos Gráficos</h3><span class="tema">Matemática</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Ensina a <b>ler gráficos</b> de colunas, barras, linha e pizza, ligando os dados de uma frase à figura certa.</li>
+              <li>Os gráficos errados imitam erros reais de leitura: valores trocados, um valor errado, a ordem do tempo invertida, fatias do tamanho errado.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Escolha o nível: <b>Fácil</b> (números pequenos escritos no gráfico), <b>Médio</b> (dezenas, sem os números) ou <b>Difícil</b> (centenas, milhares e decimais).</li>
+              <li>Aparece uma frase com dados (ex.: “Sofia leu 8 livros, Pedro 5 e Tiago 3.”) e três gráficos: só um está certo.</li>
+              <li>Errou: o gráfico escolhido fica vermelho com a explicação do erro, e dá para tentar de novo. São 8 perguntas por partida.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/manual/gj-graficos.jpg" alt="Frase com os dados e os gráficos de barras para escolher" width="400" height="820" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Somando as Cores -->
+      <article class="jogo" style="--c:#8e44ad">
+        <div class="jogo-topo"><h3>🎨 Somando as Cores</h3><span class="tema">Psicopedagogia</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Trabalha a <b>atenção alternada</b>, a <b>localização em tabela</b> (linha e coluna) e o <b>cálculo mental</b>.</li>
+              <li>As respostas erradas imitam os erros comuns (ler A2 como B1, olhar a casa vizinha, errar a conta), e o relatório mostra qual foi o erro.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Em cima ficam bolinhas com o <b>valor de cada cor</b>; embaixo, uma tabela de cores com linhas (A, B, C…) e colunas (1, 2, 3…).</li>
+              <li>A conta usa casas da tabela (ex.: <b>B2 + B4</b>): o aluno acha a cor de cada casa, troca pelo valor e toca na resposta.</li>
+              <li>Tocar numa casa da conta acende a linha e a coluna (dica). São 8 níveis: a tabela cresce, entram mais cores, a subtração e a multiplicação.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/manual/gj-cores.jpg" alt="Tabela de cores com linhas e colunas e a conta B2 + B4" width="400" height="820" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Esquerda e Direita -->
+      <article class="jogo" style="--c:#0a8f6a">
+        <div class="jogo-topo"><h3>↔️ Esquerda e Direita</h3><span class="tema">Psicopedagogia</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Trabalha a <b>lateralidade</b> (esquerda e direita), a <b>orientação espacial</b> e a <b>atenção</b> com tempo.</li>
+              <li>O relatório separa os erros de lado, de direção, de tempo e de jogar só uma das duas bolas.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>A mesa tem um buraco em cada canto e uma bola de cada lado. No meio aparecem setas.</li>
+              <li>A seta deitada (← ou →) diz <b>qual bola</b> jogar; a seta em pé (↑ ou ↓) diz <b>para onde</b>. O aluno desliza o dedo ou toca no buraco.</li>
+              <li>Uma barra mostra o tempo de cada comando. Nos níveis altos vêm duas setas: as duas bolas vão, cada uma para o seu lado.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/manual/gj-lados.jpg" alt="Mesa com duas bolas, os buracos nos cantos e as setas no meio" width="400" height="820" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Setas e Cores -->
+      <article class="jogo" style="--c:#8e44ad">
+        <div class="jogo-topo"><h3>🎯 Setas e Cores</h3><span class="tema">Psicopedagogia</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Trabalha a <b>atenção</b>, a <b>memória de trabalho</b> e a <b>flexibilidade cognitiva</b>: largar a regra antiga e seguir a nova.</li>
+              <li>O relatório conta quantas vezes as cores mudaram e quantos erros vieram logo depois da mudança.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Em cima fica a legenda: cada seta tem uma cor (ex.: roxo = ↑, verde = ↓).</li>
+              <li>No meio aparece uma fila de setas; o aluno troca cada seta pela cor dela e toca na faixa de cores certa, na mesma ordem.</li>
+              <li>A cada 3 ou 4 perguntas, a <b>legenda muda</b>, com aviso: é preciso olhar de novo. As filas crescem e entram as setas na diagonal.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/manual/gj-setas.jpg" alt="Legenda de setas coloridas, a fila de setas e as faixas de cores" width="400" height="820" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- De Lado e de Cima -->
+      <article class="jogo" style="--c:#1e64d2">
+        <div class="jogo-topo"><h3>🔺 De Lado e de Cima</h3><span class="tema">Psicopedagogia</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Trabalha a <b>percepção e a visão espacial</b>: imaginar o mesmo objeto visto de outro ponto.</li>
+              <li>O relatório separa os acertos de cada sentido e conta quantas vezes o aluno virou a ordem das peças.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Uma pirâmide de argolas aparece <b>vista de lado</b>, e o aluno escolhe como ela fica <b>vista de cima</b> (anéis um dentro do outro).</li>
+              <li>De vez em quando o jogo <b>inverte</b>: mostra a vista de cima e o aluno acha a pirâmide de lado.</li>
+              <li>São 6 níveis, de 2 a 5 peças, com mais opções parecidas nos níveis altos.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/manual/gj-vistas.jpg" alt="Pirâmide de argolas vista de lado e as opções vistas de cima" width="400" height="820" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Memória dos Dinossauros -->
+      <article class="jogo" style="--c:#3fae5a">
+        <div class="jogo-topo"><h3>🦕 Memória dos Dinossauros</h3><span class="tema">Psicopedagogia</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Trabalha a <b>memória visual de sequência</b> e a <b>atenção ao detalhe</b> (a mesma espécie aparece em cores diferentes).</li>
+              <li>O relatório mostra a maior sequência acertada e separa os erros de ordem dos erros de dinossauro.</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>Uma fila de dinossauros aparece por alguns segundos (uma barra mostra o tempo) e se esconde atrás do mato.</li>
+              <li>Vem a pergunta <b>“Qual a sequência de dinossauros?”</b> com 4 filas para escolher.</li>
+              <li>Acertou: a próxima fila tem um dinossauro a mais (até 8); errou: um a menos. São 12 sequências.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/manual/gj-dinos.jpg" alt="Dinossauro aparecendo antes de se esconder, com a barra de tempo" width="400" height="820" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Atenção à Forma -->
+      <article class="jogo" style="--c:#8e44ad">
+        <div class="jogo-topo"><h3>🔷 Atenção à Forma</h3><span class="tema">Psicopedagogia</span></div>
+        <div class="jogo-corpo">
+          <div>
+            <h4>Para que serve</h4>
+            <ul>
+              <li>Trabalha a <b>atenção seletiva</b> e a <b>discriminação visual</b>: separar o que é igual do que só parece igual.</li>
+              <li>O relatório mostra as figuras completadas no tempo e separa os toques errados (mesma forma de outra cor, mesma cor de outra forma).</li>
+            </ul>
+            <h4>Como jogar</h4>
+            <ol>
+              <li>No alto aparece uma <b>carta</b> com uma figura montada com várias peças; embaixo, um tabuleiro com peças soltas.</li>
+              <li>O aluno toca nas peças <b>exatamente iguais</b>: mesma forma e mesma cor. A mesma forma de outra cor é erro.</li>
+              <li>Cada carta tem um tempo. Sem erros, a próxima figura tem mais peças e mais armadilhas.</li>
+            </ol>
+          </div>
+          <div class="jogo-imagens uma">
+            <img src="assets/manual/gj-forma.jpg" alt="Carta com a figura modelo e o tabuleiro com as peças soltas" width="400" height="820" loading="lazy">
           </div>
         </div>
       </article>
