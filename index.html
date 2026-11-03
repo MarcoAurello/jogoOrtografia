@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=156">
+  <link rel="stylesheet" href="style.css?v=159">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -662,6 +662,35 @@
         <button class="btn-sec btn-pequeno" id="pilhas-recomecar" type="button">↺ Recomeçar fase</button>
         <button class="btn-sec btn-pequeno" id="pilhas-pular" type="button" hidden>Pular fase ⏭</button>
       </div>
+    </section>
+
+    <!-- Conte os Blocos: instruções -->
+    <section class="tela" id="tela-blocos-menu">
+      <h2 class="subtitulo">🧊 Conte os Blocos</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-blocos"></div>
+        <div class="balao balao-esq">
+          Aparece uma construção de <b>blocos empilhados</b>. Quantos blocos ela tem? Toque no número certo entre os 4.
+          Cuidado: tem bloco <b>escondido</b> embaixo e atrás dos outros! Acertou? A construção cresce. 🧠
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-blocos-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="blocos-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Conte os Blocos: o jogo -->
+    <section class="tela tela-jogo" id="tela-blocos" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="blocos-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="blocos-nivel"></span>
+        <span class="chuva-placar"><span id="blocos-pontos">0</span> pts · <span id="blocos-contador"></span></span>
+      </div>
+      <div class="blocos-palco" id="blocos-figura" aria-live="polite"></div>
+      <p class="vistas-pergunta">Quantos blocos tem na figura?</p>
+      <div class="blocos-respostas" id="blocos-respostas"></div>
+      <p class="cores-msg" id="blocos-msg" role="status"></p>
     </section>
 
     <!-- Atenção à Forma: instruções -->
@@ -2474,6 +2503,11 @@
           <span class="jogo-card-nome">Pilhas de Cores</span>
           <span class="jogo-card-texto">Mova uma bolinha por vez e separe as cores!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-blocos" type="button" data-tema="psicopedagogia" style="--c:#1e64d2">
+          <span class="jogo-card-capa blocos-capa" id="blocos-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Conte os Blocos</span>
+          <span class="jogo-card-texto">Quantos blocos tem na construção?</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-simbolos" type="button" data-tema="psicopedagogia" style="--c:#8e44ad">
           <span class="jogo-card-capa simbolos-capa" id="simbolos-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Atenção à Forma</span>
@@ -2628,9 +2662,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=156"></script>
-  <script src="dados.js?v=156"></script>
-  <script type="module" src="js/main.js?v=156"></script>
+  <script src="plenix.js?v=159"></script>
+  <script src="dados.js?v=159"></script>
+  <script type="module" src="js/main.js?v=159"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

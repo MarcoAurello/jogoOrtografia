@@ -30,6 +30,7 @@ const TEXTOS = {
   lateralidade: { assunto: 'Lateralidade e atenção (esquerda, direita, cima e baixo)', unidade: 'comando', revisar: 'Comandos para revisar', certo: 'Comando', tentou: 'O que aconteceu', porRegra: 'Acertos por tipo de comando', niveis: 'Nível em cada comando', nivelMax: 8 },
   setas: { assunto: 'Atenção e flexibilidade (setas e cores)', unidade: 'sequência', revisar: 'Sequências para revisar', certo: 'Setas e cores certas', tentou: 'O aluno escolheu', porRegra: 'Acertos por número de setas', niveis: 'Nível em cada sequência', nivelMax: 7 },
   vistas: { assunto: 'Percepção espacial (vista de lado e de cima)', unidade: 'pirâmide', revisar: 'Pirâmides para revisar', certo: 'Pirâmide (de baixo para cima)', tentou: 'O aluno escolheu', porRegra: 'Acertos por tipo de vista', niveis: 'Nível em cada pirâmide', nivelMax: 6 },
+  blocos: { assunto: 'Visão espacial e contagem (blocos empilhados)', unidade: 'construção', revisar: 'Construções para revisar', certo: 'Blocos na construção', tentou: 'O aluno respondeu', porRegra: 'Acertos por nível', niveis: 'Nível em cada construção', nivelMax: 7 },
   pilhas: { assunto: 'Planejamento e funções executivas (separar as cores nas pilhas)', unidade: 'fase', revisar: 'Fases para revisar', certo: 'Fase', tentou: 'O que aconteceu', porRegra: 'Fases sem dificuldade', niveis: 'Fase', nivelMax: 6 },
   dinos: { assunto: 'Memória visual de sequência (dinossauros)', unidade: 'sequência', revisar: 'Sequências para revisar', certo: 'Sequência que apareceu', tentou: 'O aluno escolheu', porRegra: 'Acertos por tamanho da sequência', niveis: 'Dinossauros em cada sequência', nivelMax: 8 },
   simbolos: { assunto: 'Atenção seletiva e discriminação visual (forma e cor)', unidade: 'carta', revisar: 'Cartas para revisar', certo: 'Figura', tentou: 'Toques errados', porRegra: 'Cartas sem erro por tamanho da figura', niveis: 'Nível em cada carta', nivelMax: 6 },
@@ -61,7 +62,7 @@ const TITULO_TEMPO: Record<string, string> = {
   chaves: 'Tempo para responder cada quadrado', caminho: 'Tempo para fazer cada caminho', taxi: 'Tempo para fazer cada caminho',
   policia: 'Tempo para prender cada ladrão', pontos: 'Tempo para desenhar cada modelo', pixels: 'Tempo para montar cada desenho',
   fracoes: 'Tempo para responder cada pedido', cores: 'Tempo para resolver cada conta', lateralidade: 'Tempo de resposta em cada comando',
-  setas: 'Tempo para responder cada sequência', vistas: 'Tempo para responder cada pirâmide', dinos: 'Tempo para escolher cada sequência', pilhas: 'Tempo para separar as cores em cada fase',
+  setas: 'Tempo para responder cada sequência', vistas: 'Tempo para responder cada pirâmide', dinos: 'Tempo para escolher cada sequência', pilhas: 'Tempo para separar as cores em cada fase', blocos: 'Tempo para contar cada construção',
   simbolos: 'Tempo para completar cada carta', tabuada: 'Tempo para estourar cada quadrado',
 };
 

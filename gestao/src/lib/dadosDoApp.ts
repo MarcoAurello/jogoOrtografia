@@ -34,6 +34,7 @@ export const NOME_DO_JOGO: Record<string, string> = {
   pontos: 'Ponto a Ponto', pixels: 'Quebra-Cabeça de Pixels', fracoes: 'Pizzaria das Frações', cores: 'Somando as Cores',
   lados: 'Esquerda e Direita', setas: 'Setas e Cores', vistas: 'De Lado e de Cima', dinos: 'Memória dos Dinossauros',
   pilhas: 'Pilhas de Cores',
+  blocos: 'Conte os Blocos',
   forma: 'Atenção à Forma', tabuada: 'Tetris da Tabuada', classes: 'Classes de Palavras', graficos: 'Jogo dos Gráficos',
 };
 export const nomeDoJogo = (id: string) => NOME_DO_JOGO[id] || id;
