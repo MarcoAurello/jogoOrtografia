@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Peso Certo (medidas de massa). */
 
-import { $, embaralhar, sortear } from './util.js?v=175';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=175';
-import { SOM, tocar } from './som.js?v=175';
-import { mascote, mostrar, telaJogos } from './telas.js?v=175';
-import { escolherProfessorE } from './professor.js?v=175';
-import { entre } from './matematica.js?v=175';
-import { fimDaMissao } from './relatorio.js?v=175';
+import { $, embaralhar, sortear } from './util.js?v=179';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=179';
+import { SOM, tocar } from './som.js?v=179';
+import { mascote, mostrar, telaJogos } from './telas.js?v=179';
+import { escolherProfessorE } from './professor.js?v=179';
+import { entre } from './matematica.js?v=179';
+import { fimDaMissao } from './relatorio.js?v=179';
 
 // ---------- Peso Certo ----------
 // Balança de dois pratos: o objeto fica no prato da esquerda e o aluno coloca pesos (em unidades diferentes)

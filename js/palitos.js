@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Palitos Sobrepostos. */
 
-import { $, embaralhar, sortear } from './util.js?v=175';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=175';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=175';
-import { mascote, mostrar, telaJogos } from './telas.js?v=175';
-import { escolherProfessorE } from './professor.js?v=175';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=175';
+import { $, embaralhar, sortear } from './util.js?v=179';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=179';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=179';
+import { mascote, mostrar, telaJogos } from './telas.js?v=179';
+import { escolherProfessorE } from './professor.js?v=179';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=179';
 
 // ---------- Palitos Sobrepostos ----------
 // Percepção visual (figura e fundo) e controle inibitório: de 3 a 6 palitos coloridos, um por cima do outro, e a

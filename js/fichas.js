@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Fichas Coloridas. */
 
-import { $, embaralhar } from './util.js?v=175';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=175';
-import { SOM, tocar } from './som.js?v=175';
-import { mascote, mostrar, telaJogos } from './telas.js?v=175';
-import { escolherProfessorE } from './professor.js?v=175';
-import { fimDaMissao } from './relatorio.js?v=175';
+import { $, embaralhar } from './util.js?v=179';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=179';
+import { SOM, tocar } from './som.js?v=179';
+import { mascote, mostrar, telaJogos } from './telas.js?v=179';
+import { escolherProfessorE } from './professor.js?v=179';
+import { fimDaMissao } from './relatorio.js?v=179';
 
 // ---------- Fichas Coloridas ----------
 // Agrupar e trocar (a ideia do valor posicional, em base 3), cálculo e atenção. A criança joga contra o Plenix:

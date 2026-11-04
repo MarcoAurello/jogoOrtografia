@@ -41,6 +41,7 @@ export const NOME_DO_JOGO: Record<string, string> = {
   loja: 'Jogo da Loja',
   palitos: 'Palitos Sobrepostos',
   bordas: 'Cores da Borda',
+  cadeado: 'Chave e Cadeado',
   forma: 'Atenção à Forma', tabuada: 'Tetris da Tabuada', classes: 'Classes de Palavras', graficos: 'Jogo dos Gráficos',
 };
 export const nomeDoJogo = (id: string) => NOME_DO_JOGO[id] || id;

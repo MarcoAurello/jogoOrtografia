@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=175">
+  <link rel="stylesheet" href="style.css?v=179">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -692,6 +692,35 @@
       </div>
       <div class="lugar-opcoes" id="lugar-opcoes"></div>
       <p class="cores-msg" id="lugar-msg" role="status"></p>
+    </section>
+
+    <!-- Chave e Cadeado: instruções -->
+    <section class="tela" id="tela-cadeado-menu">
+      <h2 class="subtitulo">🔑 Chave e Cadeado</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-cadeado"></div>
+        <div class="balao balao-esq">
+          Cada <b>cadeado</b> tem um buraco com um formato. Só a <b>chave com os dentes iguais</b> abre! A cor e o desenho da chave
+          não importam: olhe os <b>dentes</b>. Toque na chave que abre o cadeado pedido. 🔓
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-cadeado-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="cadeado-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Chave e Cadeado: o jogo -->
+    <section class="tela tela-jogo" id="tela-cadeado" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="cadeado-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="cad-nivel"></span>
+        <span class="chuva-placar"><span id="cad-pontos">0</span> pts · <span id="cad-contador"></span></span>
+      </div>
+      <div class="cad-cadeados" id="cad-cadeados"></div>
+      <p class="vistas-pergunta" id="cad-pergunta"></p>
+      <div class="cad-chaves" id="cad-chaves"></div>
+      <p class="cores-msg" id="cad-msg" role="status"></p>
     </section>
 
     <!-- Cores da Borda: instruções -->
@@ -2709,6 +2738,11 @@
           <span class="jogo-card-nome">Cada Coisa no Seu Lugar</span>
           <span class="jogo-card-texto">O que a gente leva para a praia? E para a escola?</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-cadeado" type="button" data-tema="psicopedagogia" style="--c:#c99700">
+          <span class="jogo-card-capa cadeado-capa" id="cadeado-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Chave e Cadeado</span>
+          <span class="jogo-card-texto">Qual chave abre cada cadeado?</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-bordas" type="button" data-tema="psicopedagogia" style="--c:#e5731f">
           <span class="jogo-card-capa bordas-capa" id="bordas-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Cores da Borda</span>
@@ -2888,9 +2922,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=175"></script>
-  <script src="dados.js?v=175"></script>
-  <script type="module" src="js/main.js?v=175"></script>
+  <script src="plenix.js?v=179"></script>
+  <script src="dados.js?v=179"></script>
+  <script type="module" src="js/main.js?v=179"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

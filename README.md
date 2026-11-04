@@ -136,6 +136,17 @@ relatório (com a informação de que a fila montada estava certa ou errada). S�
 de 3 só com primeiro, último e lugar N; fila de 3 com "logo depois"; fila de 4; fila de 4 com "antes" e "entre"; fila de 5
 e fila de 6 (com "não é o primeiro"). Começa com 3 crianças porque com 2 só existem 2 filas.
 
+## Chave e Cadeado (discriminação visual e atenção aos detalhes)
+
+Fica em **Psicopedagogia** (`js/cadeado.js`). Cadeados numerados, cada um com o **buraco da fechadura** num formato de
+dentes (alto, baixo ou sem dente), e chaves soltas; a pergunta vem um cadeado por vez: **"Qual chave abre o cadeado 2?"**.
+Só a chave com os dentes iguais abre (o cadeado abre 🔓). Tudo colorido e com **modelos variados** (cadeado quadrado,
+redondo, em arco ou oitavado; cabeça da chave em argola, quadrada, trevo, coração ou oval), mas a cor e o modelo são só
+enfeite: a cor da chave nunca é a do cadeado que ela abre. Errou: a chave treme e sai; depois de 2 erros, a certa pisca.
+São **6 níveis** (6 conjuntos; sem erro sobe, com 2 erros desce): 2 cadeados; 3 com uma chave a mais; 3 com chave quase
+igual (um dente diferente); 4 com 4 dentes; 4 com chaves tortas; 5 cadeados e 8 chaves tortas e quase iguais.
+O relatório separa "chave quase igual" de "chave de outro formato".
+
 ## Cores da Borda (atenção e coordenação de linha e coluna)
 
 Fica em **Psicopedagogia** (`js/bordas.js`). Um tabuleiro com **cores nas bordas** (em cima e embaixo de cada coluna, à
