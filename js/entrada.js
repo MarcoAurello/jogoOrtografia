@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Entrar na turma: código da turma → toca no nome (ou digita) → as competições da turma. Sem senha. */
 
-import { $, seguro } from './util.js?v=159';
-import { SOM } from './som.js?v=159';
-import { api, guardarTokenAluno, lerTokenAluno } from './api.js?v=159';
-import { aoVoltarAoInicio } from './estado.js?v=159';
-import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio } from './telas.js?v=159';
-import { enviarPartidas } from './partidas.js?v=159';
-import { telaCompeticao } from './competicao.js?v=159';
+import { $, seguro } from './util.js?v=167';
+import { SOM } from './som.js?v=167';
+import { api, guardarTokenAluno, lerTokenAluno } from './api.js?v=167';
+import { aoVoltarAoInicio } from './estado.js?v=167';
+import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio } from './telas.js?v=167';
+import { enviarPartidas } from './partidas.js?v=167';
+import { telaCompeticao } from './competicao.js?v=167';
 
 // ---------- Entrada pela turma ----------
 // A entrada do app pede só o nome, como sempre (e com o link, o aluno abre qualquer jogo). Para as competições, o aluno

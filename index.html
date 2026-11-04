@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=159">
+  <link rel="stylesheet" href="style.css?v=167">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -156,19 +156,13 @@
       </h1>
       <p class="escola-nome" hidden></p>
       <p class="slogan">Jogos com relatórios de desempenho</p>
-      <div class="cena">
-        <div class="davi-area grande" id="davi-inicio"></div>
-        <div class="balao balao-esq">
-          Oi, <b id="nome-saudacao"></b>! 👋<br>
-          Eu sou o <b>Plenix</b>, o seu amigo robô! 🤖<br>
-          Toque em <b>Teste grátis</b> e escolha um jogo!
-        </div>
-      </div>
-      <!-- o vídeo de apresentação e o teste grátis (Jogos, Competições e Questionário ficam na barra de baixo) -->
+      <!-- a tela de entrada: o vídeo de apresentação começa sozinho e, embaixo, só o teste grátis e a entrada pela turma
+           (o navegador só deixa começar com som depois de um toque; sem isso, começa mudo e aparece o botão de ouvir) -->
       <div class="inicio-video">
-        <video controls preload="none" playsinline poster="assets/video/capa-video.jpg" width="1920" height="1080">
+        <video id="video-inicio" controls autoplay muted preload="auto" playsinline poster="assets/video/capa-video.jpg" width="1920" height="1080">
           <source src="assets/video/jogos-educacionais.mp4" type="video/mp4">
         </video>
+        <button class="video-som" id="video-som" type="button" hidden>🔊 Toque para ouvir</button>
       </div>
       <button class="btn-grande btn-teste" id="btn-area-jogos" type="button">🎮 Teste grátis</button>
       <button class="btn-sec btn-turma-inicio" id="btn-entrar-turma" type="button">🏫 Entrar com o código da turma</button>
@@ -662,6 +656,112 @@
         <button class="btn-sec btn-pequeno" id="pilhas-recomecar" type="button">↺ Recomeçar fase</button>
         <button class="btn-sec btn-pequeno" id="pilhas-pular" type="button" hidden>Pular fase ⏭</button>
       </div>
+    </section>
+
+    <!-- Cada Coisa no Seu Lugar: instruções -->
+    <section class="tela" id="tela-lugar-menu">
+      <h2 class="subtitulo">🏠 Cada Coisa no Seu Lugar</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-lugar"></div>
+        <div class="balao balao-esq">
+          Vai aparecer um <b>lugar</b>: a praia, o banheiro, a escola... Escute a pergunta e toque no <b>objeto</b> que a gente
+          usa nesse lugar, entre os 3. Errou? Sem problema, é só tentar de novo! 🔊
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-lugar-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="lugar-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Cada Coisa no Seu Lugar: o jogo -->
+    <section class="tela tela-jogo" id="tela-lugar" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="lugar-sair" type="button">← Sair</button>
+        <span class="barra-titulo">🏠 Seu Lugar</span>
+        <span class="chuva-placar"><span id="lugar-pontos">0</span> pts · <span id="lugar-contador"></span></span>
+      </div>
+      <div class="lugar-progresso" aria-hidden="true"><span id="lugar-barra"></span></div>
+      <div class="lugar-topo">
+        <button class="lugar-ouvir" id="lugar-ouvir" type="button" aria-label="Ouvir a pergunta">🔊</button>
+        <p class="vistas-pergunta" id="lugar-pergunta"></p>
+      </div>
+      <div class="lugar-palco">
+        <div class="lugar-cena" id="lugar-cena"></div>
+        <span class="lugar-nome" id="lugar-nome"></span>
+      </div>
+      <div class="lugar-opcoes" id="lugar-opcoes"></div>
+      <p class="cores-msg" id="lugar-msg" role="status"></p>
+    </section>
+
+    <!-- Jogo da Fila: instruções -->
+    <section class="tela" id="tela-fila-menu">
+      <h2 class="subtitulo">🧍 Jogo da Fila</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-fila"></div>
+        <div class="balao balao-esq">
+          As crianças querem fazer uma <b>fila</b>! Leia (ou escute 🔊) as <b>pistas</b>, arraste as crianças para os lugares
+          <b>1º, 2º, 3º...</b> para pensar e depois toque na <b>fila certa</b> entre as 3. O 1º é quem está na frente! 🕵️
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-fila-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="fila-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Jogo da Fila: o jogo -->
+    <section class="tela tela-jogo" id="tela-fila" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="fila-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="fila-nivel"></span>
+        <span class="chuva-placar"><span id="fila-pontos">0</span> pts · <span id="fila-contador"></span></span>
+      </div>
+      <div class="fila-turma" id="fila-turma"></div>
+      <div class="malha-pedido">
+        <button class="lugar-ouvir" id="fila-ouvir" type="button" aria-label="Ouvir as pistas">🔊</button>
+        <ol class="malha-ordem fila-pistas" id="fila-pistas"></ol>
+      </div>
+      <p class="fila-dica">Arraste (ou toque na criança e depois no lugar) para montar a fila:</p>
+      <div class="fila-vagas" id="fila-vagas"></div>
+      <div class="fila-opcoes" id="fila-opcoes" hidden></div>
+      <p class="cores-msg" id="fila-msg" role="status"></p>
+    </section>
+
+    <!-- Caminho na Malha: instruções -->
+    <section class="tela" id="tela-malha-menu">
+      <h2 class="subtitulo">🧭 Caminho na Malha</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-malha"></div>
+        <div class="balao balao-esq">
+          O boneco está na casa <b>S</b>. Leia (ou escute 🔊) o caminho: quantas casas andar para a <b>direita</b>, <b>esquerda</b>,
+          <b>cima</b> ou <b>baixo</b>. Depois <b>toque na casa</b> onde ele vai parar! As linhas são contadas de <b>baixo para cima</b>. 🧠
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-malha-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="malha-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Caminho na Malha: o jogo -->
+    <section class="tela tela-jogo" id="tela-malha" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="malha-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="malha-nivel"></span>
+        <span class="chuva-placar"><span id="malha-pontos">0</span> pts · <span id="malha-contador"></span></span>
+      </div>
+      <div class="malha-pedido">
+        <button class="lugar-ouvir" id="malha-ouvir" type="button" aria-label="Ouvir o caminho">🔊</button>
+        <ol class="malha-ordem" id="malha-ordem"></ol>
+      </div>
+      <div class="malha-quadro">
+        <div class="malha-linhas" id="malha-linhas" aria-hidden="true"></div>
+        <div class="malha-casas" id="malha-casas"></div>
+        <span></span>
+        <div class="malha-colunas" id="malha-colunas" aria-hidden="true"></div>
+      </div>
+      <p class="cores-msg" id="malha-msg" role="status"></p>
     </section>
 
     <!-- Conte os Blocos: instruções -->
@@ -2503,6 +2603,21 @@
           <span class="jogo-card-nome">Pilhas de Cores</span>
           <span class="jogo-card-texto">Mova uma bolinha por vez e separe as cores!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-lugar" type="button" data-tema="psicopedagogia" style="--c:#f08a24">
+          <span class="jogo-card-capa lugar-capa" id="lugar-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Cada Coisa no Seu Lugar</span>
+          <span class="jogo-card-texto">O que a gente leva para a praia? E para a escola?</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-fila" type="button" data-tema="psicopedagogia" style="--c:#e5484d">
+          <span class="jogo-card-capa fila-capa" id="fila-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Jogo da Fila</span>
+          <span class="jogo-card-texto">Siga as pistas e descubra a ordem da fila!</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-malha" type="button" data-tema="psicopedagogia" style="--c:#1e88e5">
+          <span class="jogo-card-capa malha-capa" id="malha-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Caminho na Malha</span>
+          <span class="jogo-card-texto">Siga as setas: onde o boneco vai parar?</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-blocos" type="button" data-tema="psicopedagogia" style="--c:#1e64d2">
           <span class="jogo-card-capa blocos-capa" id="blocos-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Conte os Blocos</span>
@@ -2662,9 +2777,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=159"></script>
-  <script src="dados.js?v=159"></script>
-  <script type="module" src="js/main.js?v=159"></script>
+  <script src="plenix.js?v=167"></script>
+  <script src="dados.js?v=167"></script>
+  <script type="module" src="js/main.js?v=167"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

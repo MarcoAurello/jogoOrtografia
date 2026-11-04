@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Tetris da Tabuada. */
 
-import { $, sortear } from './util.js?v=159';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=159';
-import { SOM, tocar } from './som.js?v=159';
-import { mascote, mostrar, telaJogos } from './telas.js?v=159';
-import { escolherProfessorE } from './professor.js?v=159';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=159';
+import { $, sortear } from './util.js?v=167';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=167';
+import { SOM, tocar } from './som.js?v=167';
+import { mascote, mostrar, telaJogos } from './telas.js?v=167';
+import { escolherProfessorE } from './professor.js?v=167';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=167';
 
 // ---------- Tetris da Tabuada ----------
 // Tabuada (multiplicação de 1 a 9). Quadrados com resultados da tabuada caem em colunas e se empilham no pote, como no

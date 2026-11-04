@@ -1,44 +1,47 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Telas e navegação: moldura, mascote, troca de telas, encaixe na tela, login, menu do topo, barra inferior e filtro dos jogos. */
 
-import { $ } from './util.js?v=159';
-import { aluno, aoVoltarAoInicio, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=159';
-import { frase, pararVoz, SOM } from './som.js?v=159';
-import { escolherProfessorE, irParaGestao, JOGOS_DO_LINK } from './professor.js?v=159';
-import { pararChuva } from './chuva.js?v=159';
-import { pararMat } from './matematica.js?v=159';
-import { desenharTiro, pararTiro, tiro } from './tiro.js?v=159';
-import { pararPeso } from './peso.js?v=159';
-import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=159';
-import { pararLuz } from './luzes.js?v=159';
-import { pararRotina } from './rotina.js?v=159';
-import { pararFichas } from './fichas.js?v=159';
-import { pararEscondida } from './escondida.js?v=159';
-import { pararCopia } from './copia.js?v=159';
-import { pararBarcos } from './barcos.js?v=159';
-import { pararGiro } from './giro.js?v=159';
-import { pararHora } from './hora.js?v=159';
-import { pararSomando } from './somando.js?v=159';
-import { pararDescobrir } from './descobrir.js?v=159';
-import { pararChaves } from './chaves.js?v=159';
-import { pararCaminho } from './caminho.js?v=159';
-import { pararPolicia } from './policia.js?v=159';
-import { pararPontos } from './pontos.js?v=159';
-import { pararPixels } from './pixels.js?v=159';
-import { pararFracoes } from './fracoes.js?v=159';
-import { telaCompeticao } from './competicao.js?v=159';
-import { pararCores } from './cores.js?v=159';
-import { pararLados } from './lados.js?v=159';
-import { pararSetas } from './setas.js?v=159';
-import { pararVistas } from './vistas.js?v=159';
-import { pararDinos } from './dinos.js?v=159';
-import { pararPilhas } from './pilhas.js?v=159';
-import { pararBlocos } from './blocos.js?v=159';
-import { pararSimbolos } from './simbolos.js?v=159';
-import { pararTabuada } from './tabuada.js?v=159';
-import { pararClasses } from './classes.js?v=159';
-import { pararGraficos } from './graficos.js?v=159';
-import { GRUPOS_HAB, JOGOS_HAB, NOME_HAB } from './habilidades.js?v=159';
+import { $ } from './util.js?v=167';
+import { aluno, aoVoltarAoInicio, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=167';
+import { frase, pararVoz, SOM } from './som.js?v=167';
+import { escolherProfessorE, irParaGestao, JOGOS_DO_LINK } from './professor.js?v=167';
+import { pararChuva } from './chuva.js?v=167';
+import { pararMat } from './matematica.js?v=167';
+import { desenharTiro, pararTiro, tiro } from './tiro.js?v=167';
+import { pararPeso } from './peso.js?v=167';
+import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=167';
+import { pararLuz } from './luzes.js?v=167';
+import { pararRotina } from './rotina.js?v=167';
+import { pararFichas } from './fichas.js?v=167';
+import { pararEscondida } from './escondida.js?v=167';
+import { pararCopia } from './copia.js?v=167';
+import { pararBarcos } from './barcos.js?v=167';
+import { pararGiro } from './giro.js?v=167';
+import { pararHora } from './hora.js?v=167';
+import { pararSomando } from './somando.js?v=167';
+import { pararDescobrir } from './descobrir.js?v=167';
+import { pararChaves } from './chaves.js?v=167';
+import { pararCaminho } from './caminho.js?v=167';
+import { pararPolicia } from './policia.js?v=167';
+import { pararPontos } from './pontos.js?v=167';
+import { pararPixels } from './pixels.js?v=167';
+import { pararFracoes } from './fracoes.js?v=167';
+import { telaCompeticao } from './competicao.js?v=167';
+import { pararCores } from './cores.js?v=167';
+import { pararLados } from './lados.js?v=167';
+import { pararSetas } from './setas.js?v=167';
+import { pararVistas } from './vistas.js?v=167';
+import { pararDinos } from './dinos.js?v=167';
+import { pararPilhas } from './pilhas.js?v=167';
+import { pararBlocos } from './blocos.js?v=167';
+import { pararLugar } from './lugar.js?v=167';
+import { pararMalha } from './malha.js?v=167';
+import { pararFila } from './fila.js?v=167';
+import { pararSimbolos } from './simbolos.js?v=167';
+import { pararTabuada } from './tabuada.js?v=167';
+import { pararClasses } from './classes.js?v=167';
+import { pararGraficos } from './graficos.js?v=167';
+import { GRUPOS_HAB, JOGOS_HAB, NOME_HAB } from './habilidades.js?v=167';
 
 // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
 const ENFEITES = {
@@ -83,7 +86,7 @@ const ABA_DA_TELA = {
   'tela-turma': 'inicio',
   'tela-inicio': 'inicio', 'tela-jogos': 'jogos', 'tela-missoes': 'jogos', 'tela-regra': 'jogos', 'tela-chuva-menu': 'jogos',
   'tela-mat-menu': 'jogos', 'tela-tiro-menu': 'jogos', 'tela-peso-menu': 'jogos', 'tela-luzes-menu': 'jogos', 'tela-fim': 'jogos',
-  'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-escondida-menu': 'jogos', 'tela-copia-menu': 'jogos', 'tela-barcos-menu': 'jogos', 'tela-giro-menu': 'jogos', 'tela-hora-menu': 'jogos', 'tela-somando-menu': 'jogos', 'tela-descobrir-menu': 'jogos', 'tela-chaves-menu': 'jogos', 'tela-caminho-menu': 'jogos', 'tela-policia-menu': 'jogos', 'tela-pontos-menu': 'jogos', 'tela-pixels-menu': 'jogos', 'tela-fracoes-menu': 'jogos', 'tela-taxi-menu': 'jogos', 'tela-cores-menu': 'jogos', 'tela-lados-menu': 'jogos', 'tela-setas-menu': 'jogos', 'tela-vistas-menu': 'jogos', 'tela-dinos-menu': 'jogos', 'tela-pilhas-menu': 'jogos', 'tela-blocos-menu': 'jogos', 'tela-simbolos-menu': 'jogos', 'tela-tabuada-menu': 'jogos', 'tela-classes-menu': 'jogos', 'tela-graficos-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-competicao': 'competicao', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
+  'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-escondida-menu': 'jogos', 'tela-copia-menu': 'jogos', 'tela-barcos-menu': 'jogos', 'tela-giro-menu': 'jogos', 'tela-hora-menu': 'jogos', 'tela-somando-menu': 'jogos', 'tela-descobrir-menu': 'jogos', 'tela-chaves-menu': 'jogos', 'tela-caminho-menu': 'jogos', 'tela-policia-menu': 'jogos', 'tela-pontos-menu': 'jogos', 'tela-pixels-menu': 'jogos', 'tela-fracoes-menu': 'jogos', 'tela-taxi-menu': 'jogos', 'tela-cores-menu': 'jogos', 'tela-lados-menu': 'jogos', 'tela-setas-menu': 'jogos', 'tela-vistas-menu': 'jogos', 'tela-dinos-menu': 'jogos', 'tela-pilhas-menu': 'jogos', 'tela-blocos-menu': 'jogos', 'tela-lugar-menu': 'jogos', 'tela-malha-menu': 'jogos', 'tela-fila-menu': 'jogos', 'tela-simbolos-menu': 'jogos', 'tela-tabuada-menu': 'jogos', 'tela-classes-menu': 'jogos', 'tela-graficos-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-competicao': 'competicao', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
 };
 function encaixarTela() {
   const tela = document.querySelector('.tela.ativa');
@@ -91,7 +94,11 @@ function encaixarTela() {
   document.body.classList.toggle('em-jogo', emJogo);
   // barra inferior: aparece depois do login e fora das partidas
   const barra = $('barra-inferior');
-  barra.hidden = !tela || tela.id === 'tela-login' || emJogo;
+  // na tela de entrada (vídeo), antes de entrar, só os dois botões: teste grátis e código da turma
+  barra.hidden = !tela || tela.id === 'tela-login' || (tela.id === 'tela-inicio' && !aluno) || emJogo;
+  // saiu da tela do vídeo: pausa (senão continua tocando por trás)
+  const video = $('video-inicio');
+  if (video && !video.paused && tela && tela.id !== 'tela-inicio') video.pause();
   document.body.classList.toggle('com-barra', !barra.hidden);
   const aba = tela ? ABA_DA_TELA[tela.id] : '';
   barra.querySelectorAll('.aba').forEach((b) => {
@@ -146,19 +153,33 @@ function telaLogin() {
 }
 
 // tela com a lista de jogos (Português e Matemática); o questionário tem botão próprio na tela inicial
+// sem aluno (não fez o teste grátis nem entrou pela turma): volta para a tela de entrada, que não pede mais o nome
 function telaJogos() {
-  if (!aluno) return telaLogin();
+  if (!aluno) return telaInicio();
   mostrar('tela-jogos');
 }
 
-// voltar à tela inicial tira o login da turma (e a competição): para entrar de novo, é o código da turma outra vez
+// voltar à tela inicial tira o login da turma (e a competição): para entrar de novo, é o código da turma outra vez.
+// A tela inicial é a do vídeo, que começa sozinho; a tela do nome (tela-login) não aparece mais.
 function telaInicio() {
   aoVoltarAoInicio.forEach((f) => f());
-  if (!aluno) return telaLogin();
-  $('nome-saudacao').textContent = aluno;
-  mascote('davi-inicio', 'oi');
   mostrar('tela-inicio');
+  tocarVideoInicio();
 }
+
+// tenta com som; o navegador costuma bloquear som antes de um toque, então começa mudo e mostra "Toque para ouvir"
+function tocarVideoInicio() {
+  const v = $('video-inicio');
+  v.muted = false;
+  v.play().then(() => { $('video-som').hidden = true; }).catch(() => {
+    v.muted = true;
+    v.play().catch(() => { /* sem vídeo (offline): fica a capa */ });
+    $('video-som').hidden = false;
+  });
+}
+const ligarSomDoVideo = () => { const v = $('video-inicio'); v.muted = false; $('video-som').hidden = true; v.play().catch(() => {}); };
+$('video-som').onclick = ligarSomDoVideo;
+$('video-inicio').addEventListener('volumechange', () => { if (!$('video-inicio').muted) $('video-som').hidden = true; });
 
 $('form-login').onsubmit = (e) => {
   e.preventDefault();
@@ -180,10 +201,11 @@ function entrarComoAluno(nome, depois = null) {
   definirUltimoNome(aluno);
   try { localStorage.setItem(CHAVE_ALUNO, aluno); } catch (err) { /* sem armazenamento */ }
   SOM.certo();
-  if (depois) { depois(); return; }
+  // o link do professor (questionário ou jogo) vale mais que o destino padrão de quem entrou (turma ou teste grátis)
   if (QUIZ_DO_LINK) { escolherProfessorE('Questionário da aula', telaQuizMenu); return; }   // veio pelo link de um questionário
   const doLink = Object.hasOwn(JOGOS_DO_LINK, JOGO_DO_LINK || '') ? JOGOS_DO_LINK[JOGO_DO_LINK] : null;
   if (doLink) { telaJogos(); escolherProfessorE(doLink.nome, doLink.abrir); return; }       // veio pelo link de um jogo
+  if (depois) { depois(); return; }
   if (ABA_DO_LINK && ABA_DO_LINK !== 'inicio') { abrirAba(ABA_DO_LINK); return; }             // veio da barra de baixo do manual
   telaInicio();
   frase('ola');   // apresentação gravada pelo Davi (se existir)
@@ -199,7 +221,7 @@ $('menu-app-lista').addEventListener('click', (e) => { if (e.target.closest('.me
 document.addEventListener('click', (e) => { if (!e.target.closest('#menu-app')) abrirMenu(false); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirMenu(false); });
 
-function pararJogos() { pararFracoes(); pararPixels(); pararPontos(); pararPolicia(); pararCaminho(); pararChaves(); pararDescobrir(); pararSomando(); pararHora(); pararGiro(); pararBarcos(); pararCopia(); pararEscondida(); pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararSetas(); pararVistas(); pararDinos(); pararPilhas(); pararBlocos(); pararSimbolos(); pararTabuada(); pararClasses(); pararGraficos(); pararVoz(); }
+function pararJogos() { pararFracoes(); pararPixels(); pararPontos(); pararPolicia(); pararCaminho(); pararChaves(); pararDescobrir(); pararSomando(); pararHora(); pararGiro(); pararBarcos(); pararCopia(); pararEscondida(); pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararSetas(); pararVistas(); pararDinos(); pararPilhas(); pararBlocos(); pararLugar(); pararMalha(); pararFila(); pararSimbolos(); pararTabuada(); pararClasses(); pararGraficos(); pararVoz(); }
 const irParaInicio = () => { pararJogos(); $('escolha-prof').hidden = true; telaInicio(); };
 $('btn-logo-inicio').onclick = irParaInicio;
 $('btn-menu-inicio').onclick = irParaInicio;
@@ -228,7 +250,7 @@ $('btn-trocar').onclick = () => {
   try { localStorage.removeItem(CHAVE_ALUNO); } catch (e) { /* sem armazenamento */ }
   $('login-nome').value = '';
   aoTrocarAluno.forEach((f) => f());   // o login pela turma sai também (js/entrada.js)
-  telaLogin();
+  telaInicio();
 };
 // quem precisa saber que o aluno saiu (sem telas.js depender desses módulos)
 const aoTrocarAluno = [];

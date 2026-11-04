@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Testar grátis: a pessoa cadastra o e-mail e recebe, no fim de cada jogo, o relatório em PDF. */
 
-import { $, seguro } from './util.js?v=159';
-import { SOM } from './som.js?v=159';
-import { aluno } from './estado.js?v=159';
-import { api, guardarTokenTeste, lerTokenTeste } from './api.js?v=159';
-import { mostrar, telaJogos } from './telas.js?v=159';
-import { depoisDoFim, montarPDF } from './relatorio.js?v=159';
-import { parteProfessor } from './professor.js?v=159';
+import { $, seguro } from './util.js?v=167';
+import { SOM } from './som.js?v=167';
+import { aluno } from './estado.js?v=167';
+import { api, guardarTokenTeste, lerTokenTeste } from './api.js?v=167';
+import { entrarComoAluno, mostrar, telaJogos } from './telas.js?v=167';
+import { depoisDoFim, montarPDF } from './relatorio.js?v=167';
+import { parteProfessor } from './professor.js?v=167';
 
 // ---------- Testar grátis ----------
 // O botão "Teste grátis" do início (e o item do menu) abre o cadastro: nome, e-mail, quem é e o aceite (LGPD).
@@ -41,13 +41,20 @@ $('form-teste').onsubmit = async (e) => {
     guardarTokenTeste(token);
     guardarTeste(teste);
     SOM.certo();
-    telaJogos();
+    irParaOsJogos();
   } catch (err) { $('erro-teste').textContent = err.message; SOM.errado(); }
 };
 $('btn-teste-voltar').onclick = () => { SOM.clique(); $('btn-menu-inicio').click(); };
 
+// a tela do nome saiu: quem testa grátis joga com o primeiro nome do cadastro (aparece nos relatórios)
+// (entrarComoAluno também segue o link do professor, se a pessoa veio por um)
+function irParaOsJogos() {
+  if (aluno) { telaJogos(); return; }
+  entrarComoAluno((lerTeste()?.nome || $('teste-nome').value || 'Visitante').trim().split(/\s+/)[0], telaJogos);
+}
+
 // "Teste grátis" do início: primeiro o cadastro; depois, direto para os jogos
-$('btn-area-jogos').onclick = () => { SOM.clique(); if (lerTokenTeste()) telaJogos(); else telaTeste(); };
+$('btn-area-jogos').onclick = () => { SOM.clique(); if (lerTokenTeste()) irParaOsJogos(); else telaTeste(); };
 $('btn-menu-teste').onclick = () => { SOM.clique(); telaTeste(); };
 
 // no fim de cada jogo: o PDF do relatório vai para o e-mail cadastrado (o aviso aparece na tela do fim)

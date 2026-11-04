@@ -102,6 +102,40 @@ com pilhas de 4; acertou, sobe um nível; errou, desce. A rodada tem 12 constru�
 comuns: contar só os blocos que aparecem (esquecer os escondidos), contar só as pilhas e errar por um ou dois. Depois
 de responder, os blocos ficam transparentes (raio-x) e a conta aparece camada por camada. O relatório separa esses erros.
 
+## Cada Coisa no Seu Lugar (vida diária e autonomia)
+
+Fica em **Psicopedagogia** e foi pensado também para alunos com **deficiência intelectual**. Um lugar aparece desenhado em
+cima (12 lugares em SVG no `js/lugar.js`: praia, banheiro, cozinha, quarto, escola, parque, piscina, dia de chuva, dia de
+frio, mercado, médico e festa de aniversário), a pergunta é **falada** ("O que nós levamos para a praia?"; botão 🔊 repete)
+e embaixo vêm **3 objetos grandes**. Só um combina: cada objeto diz em quais lugares é usado, então nunca aparece como
+errado num lugar onde também serve (o chinelo serve na praia, na piscina e no banheiro). Errou: o objeto treme, fica cinza
+e sai do jogo, e a voz pede para tentar de novo (sem punição). São 16 rodadas: todos os lugares e depois alguns de novo,
+com outros objetos. Pontos: 10 de primeira, 5 na segunda e 2 na terceira. O relatório mostra os acertos de primeira por
+lugar e o que a criança escolheu antes de acertar. Gravações opcionais: `audio/frases/lugar-<lugar>.mp3`.
+
+## Caminho na Malha (orientação espacial e coordenadas)
+
+Fica em **Psicopedagogia** (`js/malha.js`). Uma malha com colunas em letras (A, B, C...) e linhas numeradas **de baixo para
+cima**; o boneco parte da casa **S** e a ordem (escrita com setas e falada; 🔊 repete) manda andar: "Ande 4 casas para a
+direita. Depois ande 3 casas para cima." A criança **toca na casa** onde ele para. Depois da resposta, o boneco anda o
+caminho certo casa por casa, deixando o rastro. São **6 níveis** (10 caminhos por partida; acertou sobe, errou desce):
+um movimento e dois movimentos (malha 5 x 5), ida e volta e caminho longo (6 x 6), contas de mais e de menos (7 x 7) e
+contas de vezes e de dividir, como "2 × 2 casas" e "9 ÷ 3 casas" (8 x 8). O caminho nunca sai da malha. O toque errado é
+comparado com os erros comuns (trocar esquerda e direita, trocar cima e baixo, contar a casa de saída como passo, andar
+uma a mais, contar as linhas de cima para baixo, errar a conta, parar no meio) e o relatório separa cada um.
+
+## Jogo da Fila (raciocínio lógico e posição)
+
+Fica em **Psicopedagogia** (`js/fila.js`). As crianças da rodada (desenhos em SVG, de 3 a 6) aparecem lado a lado **com o
+nome**, e todas as **pistas** vêm juntas, numeradas e faladas: "Caio é o último da fila", "Elisa fica logo depois de Pedro",
+"Pedro está antes de Bia (pode ter gente no meio)", "Bia fica entre Iara e Caio". Para pensar, a criança **arrasta** as
+crianças (ou toca na criança e depois no lugar) para os lugares 1º, 2º, 3º... Depois toca na **fila certa** entre 3 filas
+desenhadas **sem nome**. O enigma sempre tem uma resposta só (o jogo confere todas as filas possíveis) e usa só as pistas
+necessárias. As duas filas erradas quebram uma pista cada: se errar, a pista que ficou para trás fica marcada e vai para o
+relatório (com a informação de que a fila montada estava certa ou errada). São **6 níveis** (8 filas por partida): fila
+de 3 só com primeiro, último e lugar N; fila de 3 com "logo depois"; fila de 4; fila de 4 com "antes" e "entre"; fila de 5
+e fila de 6 (com "não é o primeiro"). Começa com 3 crianças porque com 2 só existem 2 filas.
+
 ## Atenção à Forma (atenção seletiva e discriminação visual)
 
 Fica em **Psicopedagogia**, baseado na placa de pinos com cartas de modelo. No alto aparece uma **carta** com uma figura

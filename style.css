@@ -1976,6 +1976,165 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .blocos-svg.cai .bloco, .blocos-opcao, .blocos-opcao.certa, .blocos-opcao.errada { animation: none; }
 }
 
+/* ---------- Cada Coisa no Seu Lugar ---------- */
+/* progresso das rodadas: uma barra que enche (16 estrelas não cabem no celular) */
+.lugar-progresso { width: 100%; max-width: 640px; height: 12px; margin: 6px auto 0; border: 2px solid #13294b; border-radius: 999px;
+  background: #fff; overflow: hidden; }
+.lugar-progresso span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #ffb066, #f08a24); transition: width 0.5s ease; }
+.lugar-topo { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 640px; margin: 4px auto 0; }
+.lugar-topo .vistas-pergunta { margin: 0; }
+.lugar-ouvir { flex: none; width: 48px; height: 48px; border: 2.5px solid #b35f0c; border-radius: 14px; background: #ffb066; cursor: pointer;
+  font-size: 24px; box-shadow: 0 4px 0 #b35f0c; }
+.lugar-ouvir:active { transform: translateY(3px); box-shadow: none; }
+.lugar-ouvir:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+/* o lugar desenhado em cima, com o nome por baixo */
+.lugar-palco { position: relative; width: 100%; max-width: 560px; margin: 8px auto 0; }
+.lugar-cena { height: clamp(150px, 33dvh, 300px); border: 2.5px solid #13294b; border-radius: 20px; overflow: hidden;
+  box-shadow: 0 4px 0 rgba(19, 41, 75, 0.2); background: #e0f2fe; }
+.lugar-svg { display: block; width: 100%; height: 100%; animation: cores-nascer 0.4s ease-out both; }
+.lugar-nome { position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%); padding: 3px 16px; white-space: nowrap;
+  border: 2.5px solid #13294b; border-radius: 999px; background: #fff; font-family: 'Fredoka', sans-serif; font-weight: 700;
+  font-size: clamp(15px, 2.6dvh, 20px); color: #13294b; }
+/* os 3 objetos embaixo */
+/* alunos com deficiência intelectual: alvos grandes, figura enorme sobre um círculo claro e nome curto em letra grande */
+.lugar-opcoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 2vw, 16px); width: 100%; max-width: 640px; margin: 26px auto 0; }
+.lugar-opcao { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: clamp(130px, 26dvh, 230px);
+  padding: 10px 4px; border: 3px solid #13294b; border-radius: 22px; background: #fff; cursor: pointer; box-shadow: 0 5px 0 rgba(19, 41, 75, 0.25);
+  animation: cores-nascer 0.34s ease-out both; transition: transform 0.15s; }
+.lugar-fig { display: grid; place-items: center; width: clamp(78px, 17dvh, 150px); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fff, #fff1dc 70%); font-size: clamp(52px, 12dvh, 104px); line-height: 1; }
+.lugar-obj { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(15px, 2.8dvh, 22px); line-height: 1.15; color: #13294b; text-align: center; }
+@media (hover: hover) { .lugar-opcao:not(:disabled):hover { transform: translateY(-3px) scale(1.02); border-color: #f08a24; } }
+.lugar-opcao:active { transform: translateY(3px); box-shadow: none; }
+.lugar-opcao:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.lugar-opcao:disabled { cursor: default; }
+.lugar-opcao.certa { background: #dff5e7; border-color: var(--verde); border-width: 5px; box-shadow: 0 0 0 6px rgba(46, 158, 91, 0.25), 0 5px 0 #1d6b3d;
+  animation: cores-quique 0.45s ease-out; }
+.lugar-opcao.errada { background: #f1f5f9; border-color: #94a3b8; box-shadow: none; opacity: 0.4; filter: grayscale(1); animation: tremer 0.4s ease; }
+.lugar-opcao.apagada { opacity: 0.45; }
+@media (orientation: landscape) and (max-height: 560px) {
+  /* celular deitado: o lugar à esquerda e os objetos à direita */
+  #tela-lugar.ativa { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); grid-template-rows: auto auto auto 1fr auto;
+    column-gap: 12px; align-content: start; }
+  #tela-lugar > .barra { grid-column: 1 / -1; }
+  #tela-lugar > .lugar-progresso { grid-column: 1 / -1; }
+  #tela-lugar > .lugar-topo { grid-column: 2; grid-row: 3; }
+  #tela-lugar > .lugar-palco { grid-column: 1; grid-row: 3 / span 3; margin: 0; }
+  #tela-lugar .lugar-cena { height: calc(100dvh - 130px); min-height: 150px; }
+  #tela-lugar > .lugar-opcoes { grid-column: 2; grid-row: 4; margin: 8px 0 0; align-content: start; }
+  #tela-lugar .lugar-opcao { min-height: clamp(100px, 40dvh, 200px); }
+  #tela-lugar > #lugar-msg { grid-column: 2; grid-row: 5; min-height: 0; }
+}
+/* capa do cartão */
+.lugar-capa { position: relative; display: block; overflow: hidden; }
+.lugar-capa .lugar-svg { position: absolute; inset: 0; animation: none; }
+.lugar-capa-fig { position: absolute; left: 50%; top: 58%; transform: translate(-50%, -50%); font-size: 44px; }
+@media (prefers-reduced-motion: reduce) {
+  .lugar-svg, .lugar-opcao, .lugar-opcao.certa, .lugar-opcao.errada { animation: none; }
+}
+
+/* ---------- Jogo da Fila ---------- */
+/* as crianças da rodada, lado a lado e com o nome (dá para arrastar ou tocar) */
+.fila-turma { display: flex; justify-content: center; gap: clamp(4px, 1.5vw, 12px); width: 100%; max-width: 680px; margin: 6px auto 0; }
+.fila-pessoa { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 0 1 92px; min-width: 0; padding: 4px 2px 6px;
+  border: 2.5px solid #13294b; border-radius: 16px; background: #fff; cursor: grab; touch-action: none; box-shadow: 0 3px 0 rgba(19, 41, 75, 0.2);
+  transition: opacity 0.2s, transform 0.15s; }
+.fila-pessoa .crianca { width: 100%; max-width: 64px; height: auto; aspect-ratio: 60 / 110; max-height: clamp(70px, 13dvh, 118px); }
+.fila-nome { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(13px, 2.2dvh, 17px); color: #13294b; }
+.fila-pessoa.usada { opacity: 0.35; }
+.fila-pessoa.escolhida, .fila-vaga.escolhida { border-color: #f08a24; box-shadow: 0 0 0 4px rgba(240, 138, 36, 0.35); transform: translateY(-3px); }
+.fila-pistas li { align-items: flex-start; }
+.fila-num { flex: none; display: grid; place-items: center; width: 1.5em; height: 1.5em; border-radius: 50%; background: #13294b; color: #fff; font-size: 0.85em; }
+.fila-pistas li.quebrada { color: #b42318; background: #fde4e4; border-radius: 8px; }
+.fila-pistas li.quebrada .fila-num { background: var(--vermelho); }
+.fila-dica { margin: 8px auto 2px; font-size: clamp(12px, 2dvh, 15px); font-weight: 600; color: #475569; text-align: center; }
+/* os lugares da fila de montar: 1º, 2º, 3º... */
+.fila-vagas { display: flex; justify-content: center; gap: clamp(4px, 1.5vw, 12px); width: 100%; max-width: 680px; margin: 0 auto; }
+.fila-vaga { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 2px; flex: 0 1 92px; min-width: 0;
+  min-height: clamp(86px, 15dvh, 140px); padding: 4px 2px; border: 2.5px dashed #94a3b8; border-radius: 14px; background: #f8fafc; cursor: pointer; touch-action: none; }
+.fila-vaga b { font-family: 'Fredoka', sans-serif; font-size: clamp(13px, 2.2dvh, 17px); color: #13294b; }
+.fila-vaga.ocupada { border-style: solid; border-color: #13294b; background: #fff; cursor: grab; }
+.fila-vaga.sobre { border-color: #f08a24; background: #fff1dc; }
+.fila-vaga .crianca { width: 100%; max-width: 54px; height: auto; max-height: clamp(60px, 11dvh, 100px); }
+.fila-vazia { flex: 1; }
+.fila-arrastando { position: fixed; z-index: 50; width: 64px; transform: translate(-50%, -60%) rotate(-4deg); pointer-events: none; filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.3)); }
+.fila-arrastando .crianca { width: 100%; height: auto; display: block; }
+/* as 3 filas para escolher (sem nomes) */
+.fila-opcoes { display: grid; gap: 8px; width: 100%; max-width: 680px; margin: 10px auto 0; }
+.fila-opcoes[hidden] { display: none; }
+.fila-pergunta { margin: 0; text-align: center; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(15px, 2.6dvh, 20px); color: #13294b; }
+.fila-pergunta small { font-weight: 600; color: #475569; }
+.fila-opcao { display: flex; justify-content: center; gap: clamp(2px, 1vw, 10px); padding: 6px 4px; border: 2.5px solid #13294b; border-radius: 18px;
+  background: #fff; cursor: pointer; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.25); animation: cores-nascer 0.34s ease-out both; }
+.fila-lugar { display: flex; flex-direction: column; align-items: center; flex: 0 1 64px; min-width: 0; }
+.fila-lugar b { font-family: 'Fredoka', sans-serif; font-size: clamp(11px, 1.8dvh, 14px); color: #475569; }
+.fila-lugar .crianca { width: 100%; max-width: 52px; height: auto; max-height: clamp(56px, 10dvh, 96px); }
+.fila-opcao:active { transform: translateY(3px); box-shadow: none; }
+.fila-opcao:focus-visible, .fila-pessoa:focus-visible, .fila-vaga:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.fila-opcao:disabled { cursor: default; }
+.fila-opcao.certa { background: #dff5e7; border-color: var(--verde); box-shadow: 0 0 0 5px rgba(46, 158, 91, 0.25), 0 4px 0 #1d6b3d; animation: cores-quique 0.45s ease-out; }
+.fila-opcao.errada { background: #fde4e4; border-color: var(--vermelho); box-shadow: 0 4px 0 #8e1b1b; animation: tremer 0.4s ease; }
+.fila-opcao.apagada { opacity: 0.4; }
+/* capa do cartão */
+.fila-capa { position: relative; display: block; background: linear-gradient(#fff1f1, #fde0e0); }
+.fila-capa-linha { position: absolute; inset: 8px 6px 4px; display: flex; justify-content: center; align-items: flex-end; gap: 2px; }
+.fila-capa-linha .crianca { height: 100%; width: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .fila-opcao, .fila-opcao.certa, .fila-opcao.errada { animation: none; }
+}
+
+/* ---------- Caminho na Malha ---------- */
+/* a ordem do caminho: uma linha por movimento, com a seta e o número em destaque */
+.malha-pedido { display: flex; align-items: flex-start; gap: 10px; width: 100%; max-width: 640px; margin: 6px auto 0; }
+.malha-ordem { flex: 1; margin: 0; padding: 8px 12px; list-style: none; border: 2.5px solid #13294b; border-radius: 16px; background: #fff;
+  font-size: clamp(14px, 2.4dvh, 19px); font-weight: 600; line-height: 1.35; color: var(--texto); }
+.malha-ordem li { display: flex; align-items: center; gap: 8px; animation: cores-nascer 0.3s ease-out both; animation-delay: calc(var(--i, 0) * 90ms); }
+.malha-ordem li + li { margin-top: 2px; }
+.malha-saida { color: #475569; }
+.malha-seta { font-size: 1.3em; line-height: 1; }
+.malha-num, .malha-conta { display: inline-block; min-width: 1.6em; padding: 0 6px; border-radius: 8px; background: #fff1dc; color: #b35f0c; text-align: center; }
+.malha-conta { background: #e8f1ff; color: #1e4fa0; white-space: nowrap; }
+.malha-s { color: #1e88e5; }
+/* a malha: números das linhas à esquerda (de baixo para cima) e letras das colunas embaixo */
+.malha-quadro { display: grid; grid-template-columns: auto auto; justify-content: center; column-gap: 6px; row-gap: 4px; margin: 10px auto 0; }
+.malha-casas { position: relative; display: grid; grid-template-columns: repeat(var(--col, 6), 1fr); grid-template-rows: repeat(var(--lin, 6), 1fr);
+  width: min(calc(100vw - 64px), 46dvh, 520px); aspect-ratio: 1; border: 3px solid #1e64d2; border-radius: 6px; background: #1e64d2; gap: 2px; }
+.malha-linhas { display: grid; grid-template-rows: repeat(var(--lin, 6), 1fr); padding: 3px 0; }
+.malha-colunas { display: grid; grid-template-columns: repeat(var(--col, 6), 1fr); padding: 0 3px; }
+.malha-linhas span, .malha-colunas span { display: grid; place-items: center; font-family: 'Fredoka', sans-serif; font-weight: 700;
+  font-size: clamp(13px, 2.4dvh, 18px); color: #13294b; }
+.malha-casa { padding: 0; border: 0; background: #fff; cursor: pointer; font-family: 'Fredoka', sans-serif; font-weight: 700;
+  font-size: clamp(16px, 3.4dvh, 26px); color: #1e88e5; transition: background 0.15s; }
+@media (hover: hover) { .malha-casa:not(:disabled):hover { background: #fff1dc; } }
+.malha-casa:focus-visible { outline: 3px solid var(--amarelo); outline-offset: -3px; position: relative; z-index: 2; }
+.malha-casa:disabled { cursor: default; }
+/* o S fica no canto, para o boneco não esconder a letra */
+.malha-casa.saida { display: grid; place-items: start; padding: 2px 4px; background: #e8f1ff; font-size: clamp(11px, 1.8dvh, 15px); }
+.malha-casa.tocada-certa, .malha-casa.chegada { background: #dff5e7; box-shadow: inset 0 0 0 4px var(--verde); }
+.malha-casa.tocada-errada { background: #fde4e4; box-shadow: inset 0 0 0 4px var(--vermelho); animation: tremer 0.4s ease; }
+/* o rastro do caminho certo e o boneco por cima das casas (não recebem o toque) */
+.malha-rastro { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.malha-rastro polyline { fill: none; stroke: #f08a24; stroke-width: 0.14; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 0.28 0.18; }
+.malha-boneco { position: absolute; width: calc(100% / var(--col, 6)); transform: translate(-50%, -54%); pointer-events: none; text-align: center;
+  font-size: clamp(20px, calc(40dvh / var(--col, 6)), 48px); line-height: 1; transition: left 0.24s ease, top 0.24s ease;
+  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.25)); z-index: 3; }
+@media (orientation: landscape) and (max-height: 560px) {
+  /* celular deitado: a ordem à esquerda e a malha à direita */
+  #tela-malha.ativa { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto 1fr; column-gap: 12px; align-content: start; }
+  #tela-malha > .barra { grid-column: 1 / -1; }
+  #tela-malha > .malha-pedido { grid-column: 1; grid-row: 2; }
+  #tela-malha > #malha-msg { grid-column: 1; grid-row: 3; align-self: start; }
+  #tela-malha > .malha-quadro { grid-column: 2; grid-row: 2 / span 2; margin: 0; }
+  #tela-malha .malha-casas { width: min(calc(100dvh - 110px), 60vw); }
+}
+/* capa do cartão */
+.malha-capa { position: relative; display: block; padding: 8px; box-sizing: border-box; background: linear-gradient(#eef6ff, #dcebfb); }
+.malha-capa svg { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); }
+@media (prefers-reduced-motion: reduce) {
+  .malha-ordem li, .malha-casa.tocada-errada { animation: none; }
+  .malha-boneco { transition: none; }
+}
+
 /* ---------- Atenção à Forma ---------- */
 /* a carta: papel branco com os símbolos; chega girando e sai voando quando fica vazia */
 .simbolos-mesa { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 2px 0 8px; }
@@ -2641,7 +2800,14 @@ body.com-escola .topo .logo { border-radius: 50%; background: #fff; object-fit: 
 .policia-tiro:active { transform: translateY(3px); box-shadow: 0 2px 0 #8e1c1a, 0 0 0 3px #e53935; }
 #policia-tempo { white-space: nowrap; }
 /* ---------- tela inicial: vídeo de apresentação e Teste grátis ---------- */
-.inicio-video { max-width: 640px; margin: 14px auto 0; border-radius: 16px; overflow: hidden; box-shadow: var(--sombra); background: #000; }
+.inicio-video { position: relative; max-width: 640px; margin: 14px auto 0; border-radius: 16px; overflow: hidden; box-shadow: var(--sombra); background: #000; }
+/* vídeo começou mudo (o navegador bloqueou o som): um toque liga o som */
+.video-som { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 12px 22px; border: 3px solid #fff;
+  border-radius: 999px; background: rgba(19, 41, 75, 0.82); color: #fff; font-family: 'Fredoka', sans-serif; font-weight: 700;
+  font-size: clamp(16px, 2.6vw, 22px); cursor: pointer; animation: video-som-pulsa 1.6s ease-in-out infinite; }
+.video-som[hidden] { display: none; }
+@keyframes video-som-pulsa { 50% { transform: translate(-50%, -50%) scale(1.07); } }
+@media (prefers-reduced-motion: reduce) { .video-som { animation: none; } }
 .inicio-video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
 .btn-teste { display: block; margin: 16px auto 0; padding-left: 34px; padding-right: 34px; font-size: clamp(20px, 3vw, 26px); }
 /* WhatsApp flutuante: em todas as telas, acima da barra de baixo; some durante o jogo */
