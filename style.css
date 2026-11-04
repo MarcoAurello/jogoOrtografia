@@ -2033,6 +2033,16 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .lugar-svg, .lugar-opcao, .lugar-opcao.certa, .lugar-opcao.errada { animation: none; }
 }
 
+/* ---------- Metro, Centímetro e Milímetro ---------- */
+/* a trena com o pedaço cortado em vermelho (as respostas usam os botões do Quanto Tempo Passou?) */
+.fita-trena { width: 100%; max-width: 620px; margin: 10px auto 0; padding: 4px 6px; box-sizing: border-box; border: 2.5px solid #13294b; border-radius: 16px; background: #fff; }
+.fita-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.fita-rotulo { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 15px; fill: #13294b; }
+.fita-corte { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 13px; fill: #b42318; }
+.fita-sobra { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 13px; fill: #1d6b3d; }
+.fita-capa { position: relative; display: block; background: #fffbe6; }
+.fita-capa .fita-svg { position: absolute; left: 4%; top: 22%; width: 92%; }
+
 /* ---------- Quanto Tempo Passou? ---------- */
 .intervalo-frase { margin: 0; font-size: clamp(15px, 2.6dvh, 20px); font-weight: 600; line-height: 1.35; color: var(--texto); }
 /* os dois relógios digitais, como na folha (com o AM/PM do lado) */

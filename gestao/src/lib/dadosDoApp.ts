@@ -49,6 +49,7 @@ export const NOME_DO_JOGO: Record<string, string> = {
   flores: 'Flores do Dado',
   bichos: 'Memória dos Bichos',
   intervalo: 'Quanto Tempo Passou?',
+  fita: 'Metro, Centímetro e Milímetro',
   forma: 'Atenção à Forma', tabuada: 'Tetris da Tabuada', classes: 'Classes de Palavras', graficos: 'Jogo dos Gráficos',
 };
 export const nomeDoJogo = (id: string) => NOME_DO_JOGO[id] || id;

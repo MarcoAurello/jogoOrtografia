@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Quebra-Cabeça de Pixels. */
 
-import { $, embaralhar, sortear } from './util.js?v=186';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=186';
-import { SOM, tocar } from './som.js?v=186';
-import { mascote, mostrar, telaJogos } from './telas.js?v=186';
-import { escolherProfessorE } from './professor.js?v=186';
-import { segundos } from './luzes.js?v=186';
-import { fimDaMissao } from './relatorio.js?v=186';
+import { $, embaralhar, sortear } from './util.js?v=188';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=188';
+import { SOM, tocar } from './som.js?v=188';
+import { mascote, mostrar, telaJogos } from './telas.js?v=188';
+import { escolherProfessorE } from './professor.js?v=188';
+import { segundos } from './luzes.js?v=188';
+import { fimDaMissao } from './relatorio.js?v=188';
 
 // ---------- Quebra-Cabeça de Pixels ----------
 // Percepção visual, análise de partes e todo e orientação no plano (linhas e colunas numeradas). Em cima, o modelo em

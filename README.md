@@ -145,6 +145,15 @@ tolerância à frustração e dificuldades de aprendizagem em geral). Tem busca 
 **"Habilidade"**, com a quantidade de jogos em cada opção. As indicações ficam em `js/habilidades.js` (`INDICACOES` e
 `INDICADO_PARA`): jogo novo precisa da linha dele ali. São sugestões pedagógicas, não diagnóstico (a tela avisa).
 
+## Metro, Centímetro e Milímetro (medidas de comprimento)
+
+Fica em **Matemática** (`js/fita.js`). Uma **trena** amarela mostra a fita inteira ("3 m e 80 cm antes do corte"), a
+**tesoura** ✂️ corta um pedaço do fim (em vermelho, "Corte: 40 cm") e a pergunta é **quanto sobra**, numa unidade pedida
+(cm, mm ou "m e cm"), com **4 opções** e uma só certa. As erradas imitam os erros comuns: somar em vez de tirar, achar
+que 1 m tem 10 cm, achar que 1 cm tem 100 mm, confundir mm com cm no corte, esquecer os metros e errar a conta por pouco.
+Depois da resposta aparece a conversão e a conta, e a trena mostra a sobra. São **6 níveis** (10 cortes): tudo em cm;
+metros e cm; fita em "m e cm"; cm e mm; resposta em "m e cm"; e metro, centímetro e milímetro misturados.
+
 ## Quanto Tempo Passou? (medida de tempo com AM e PM)
 
 Fica em **Matemática** (`js/intervalo.js`). Uma frase do dia a dia ("A oficina começou às 09:15 AM e terminou às

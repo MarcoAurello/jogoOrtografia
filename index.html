@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=186">
+  <link rel="stylesheet" href="style.css?v=188">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -692,6 +692,38 @@
       </div>
       <div class="lugar-opcoes" id="lugar-opcoes"></div>
       <p class="cores-msg" id="lugar-msg" role="status"></p>
+    </section>
+
+    <!-- Metro, Centímetro e Milímetro: instruções -->
+    <section class="tela" id="tela-fita-menu">
+      <h2 class="subtitulo">📏 Metro, Centímetro e Milímetro</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-fita"></div>
+        <div class="balao balao-esq">
+          A <b>trena</b> mostra o tamanho da fita e a <b>tesoura</b> corta um pedaço. Quanto sobra? Escolha entre as 4 opções.
+          Lembre: <b>1 m = 100 cm</b> e <b>1 cm = 10 mm</b>. Passe tudo para a mesma unidade antes de fazer a conta! ✂️
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-fita-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="fita-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Metro, Centímetro e Milímetro: o jogo -->
+    <section class="tela tela-jogo" id="tela-fita" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="fita-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="fita-nivel"></span>
+        <span class="chuva-placar"><span id="fita-pontos">0</span> pts · <span id="fita-contador"></span></span>
+      </div>
+      <div class="lugar-topo">
+        <button class="lugar-ouvir" id="fita-ouvir" type="button" aria-label="Ouvir a pergunta">🔊</button>
+        <p class="intervalo-frase" id="fita-pergunta"></p>
+      </div>
+      <div class="fita-trena" id="fita-trena"></div>
+      <div class="intervalo-opcoes" id="fita-opcoes"></div>
+      <p class="cores-msg" id="fita-msg" role="status"></p>
     </section>
 
     <!-- Quanto Tempo Passou?: instruções -->
@@ -2706,6 +2738,11 @@
           <span class="jogo-card-nome">Peso Certo</span>
           <span class="jogo-card-texto">Equilibre a balança com os pesos!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-fita" type="button" data-tema="matematica" style="--c:#c99700">
+          <span class="jogo-card-capa fita-capa" id="fita-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Metro, Centímetro e Milímetro</span>
+          <span class="jogo-card-texto">Corte a fita: quanto sobra?</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-intervalo" type="button" data-tema="matematica" style="--c:#1e64d2">
           <span class="jogo-card-capa intervalo-capa" id="intervalo-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Quanto Tempo Passou?</span>
@@ -3066,9 +3103,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=186"></script>
-  <script src="dados.js?v=186"></script>
-  <script type="module" src="js/main.js?v=186"></script>
+  <script src="plenix.js?v=188"></script>
+  <script src="dados.js?v=188"></script>
+  <script type="module" src="js/main.js?v=188"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

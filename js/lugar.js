@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Cada Coisa no Seu Lugar. */
 
-import { $, embaralhar, sortear } from './util.js?v=186';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=186';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=186';
-import { mascote, mostrar, telaJogos } from './telas.js?v=186';
-import { escolherProfessorE } from './professor.js?v=186';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=186';
+import { $, embaralhar, sortear } from './util.js?v=188';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=188';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=188';
+import { mascote, mostrar, telaJogos } from './telas.js?v=188';
+import { escolherProfessorE } from './professor.js?v=188';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=188';
 
 // ---------- Cada Coisa no Seu Lugar ----------
 // Autonomia e vida diária: um ambiente aparece desenhado em cima (praia, banheiro, cozinha...) com a pergunta falada
