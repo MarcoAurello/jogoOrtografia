@@ -47,6 +47,7 @@ export const NOME_DO_JOGO: Record<string, string> = {
   cadeado: 'Chave e Cadeado',
   tatu: 'Caminho do Tatu',
   flores: 'Flores do Dado',
+  bichos: 'Memória dos Bichos',
   forma: 'Atenção à Forma', tabuada: 'Tetris da Tabuada', classes: 'Classes de Palavras', graficos: 'Jogo dos Gráficos',
 };
 export const nomeDoJogo = (id: string) => NOME_DO_JOGO[id] || id;

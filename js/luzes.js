@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Jogo do Reflexo (níveis 1 e 2: luzes e copos com bolinhas). */
 
-import { $, embaralhar, sortear } from './util.js?v=184';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=184';
-import { SOM, tocar } from './som.js?v=184';
-import { mascote, mostrar, telaJogos } from './telas.js?v=184';
-import { escolherProfessorE } from './professor.js?v=184';
-import { fimDaMissao } from './relatorio.js?v=184';
+import { $, embaralhar, sortear } from './util.js?v=185';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=185';
+import { SOM, tocar } from './som.js?v=185';
+import { mascote, mostrar, telaJogos } from './telas.js?v=185';
+import { escolherProfessorE } from './professor.js?v=185';
+import { fimDaMissao } from './relatorio.js?v=185';
 
 // ---------- Jogo do Reflexo ----------
 // Atenção, memória e reflexo. No alto, 4 lâmpadas, cada uma com uma cor e um som; embaixo, 4 botões das mesmas

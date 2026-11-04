@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=184">
+  <link rel="stylesheet" href="style.css?v=185">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -692,6 +692,41 @@
       </div>
       <div class="lugar-opcoes" id="lugar-opcoes"></div>
       <p class="cores-msg" id="lugar-msg" role="status"></p>
+    </section>
+
+    <!-- Memória dos Bichos: instruções -->
+    <section class="tela" id="tela-bichos-menu">
+      <h2 class="subtitulo">🐮 Memória dos Bichos</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-bichos"></div>
+        <div class="balao balao-esq">
+          Cada <b>símbolo</b> tem o seu <b>bicho</b>. Olhe a tabela e guarde os pares! Depois ela some e aparece um símbolo:
+          toque no bicho que estava com ele. Acertou tudo? A tabela ganha mais um par! 🧠
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-bichos-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="bichos-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Memória dos Bichos: o jogo -->
+    <section class="tela tela-jogo" id="tela-bichos" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="bichos-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="bichos-nivel"></span>
+        <span class="chuva-placar"><span id="bichos-pontos">0</span> pts · <span id="bichos-contador"></span></span>
+      </div>
+      <div class="bichos-tempo" id="bichos-tempo" hidden><span></span></div>
+      <div class="bichos-tabela" id="bichos-tabela"></div>
+      <button class="btn-grande bichos-decorei" id="bichos-decorei" type="button" hidden>Já decorei ▶</button>
+      <div class="bichos-pergunta" id="bichos-pergunta" hidden>
+        <p class="vistas-pergunta">Qual bicho estava com este símbolo?</p>
+        <div class="bichos-simbolo-grande" id="bichos-simbolo"></div>
+        <p class="bichos-qual" id="bichos-qual"></p>
+      </div>
+      <div class="bichos-opcoes" id="bichos-opcoes"></div>
+      <p class="cores-msg" id="bichos-msg" role="status"></p>
     </section>
 
     <!-- Flores do Dado: instruções -->
@@ -2795,6 +2830,11 @@
           <span class="jogo-card-nome">Cada Coisa no Seu Lugar</span>
           <span class="jogo-card-texto">O que a gente leva para a praia? E para a escola?</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-bichos" type="button" data-tema="psicopedagogia" style="--c:#2e9e5b">
+          <span class="jogo-card-capa bichos-capa" id="bichos-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Memória dos Bichos</span>
+          <span class="jogo-card-texto">Qual bicho estava com cada símbolo?</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-flores" type="button" data-tema="psicopedagogia" style="--c:#ec4899">
           <span class="jogo-card-capa flores-capa" id="flores-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Flores do Dado</span>
@@ -2989,9 +3029,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=184"></script>
-  <script src="dados.js?v=184"></script>
-  <script type="module" src="js/main.js?v=184"></script>
+  <script src="plenix.js?v=185"></script>
+  <script src="dados.js?v=185"></script>
+  <script type="module" src="js/main.js?v=185"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

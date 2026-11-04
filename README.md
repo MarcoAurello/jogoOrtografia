@@ -145,6 +145,15 @@ tolerância à frustração e dificuldades de aprendizagem em geral). Tem busca 
 **"Habilidade"**, com a quantidade de jogos em cada opção. As indicações ficam em `js/habilidades.js` (`INDICACOES` e
 `INDICADO_PARA`): jogo novo precisa da linha dele ali. São sugestões pedagógicas, não diagnóstico (a tela avisa).
 
+## Memória dos Bichos (memória de trabalho: pares)
+
+Fica em **Psicopedagogia** (`js/bichos.js`). Aparece uma tabela com **símbolos** (azuis, como na folha: espiral, sol,
+losango, espada, trevo, paus, seta, cruz, arco e flecha) e o **bicho** de cada um, por um tempo (2 s + 2,5 s por par, com
+barrinha e o botão "Já decorei"). A tabela some e vem um símbolo por vez: a criança toca no bicho que estava com ele
+(2 ou 3 perguntas por tabela). Começa com **2 pares**; acertou tudo, a próxima tabela tem **um par a mais** (até 9);
+errou, **um a menos**. No fim da rodada a tabela aparece de novo para conferir. O relatório guarda o bicho escolhido e de
+qual símbolo ele era (troca entre pares da mesma tabela) e até quantos pares a criança guardou.
+
 ## Flores do Dado (atenção seletiva e conferência)
 
 Fica em **Psicopedagogia** (`js/flores.js`). Em cima, a **legenda** (cada número do dado tem uma cor); embaixo, **4 flores**
