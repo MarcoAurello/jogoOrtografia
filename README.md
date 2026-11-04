@@ -145,6 +145,16 @@ tolerância à frustração e dificuldades de aprendizagem em geral). Tem busca 
 **"Habilidade"**, com a quantidade de jogos em cada opção. As indicações ficam em `js/habilidades.js` (`INDICACOES` e
 `INDICADO_PARA`): jogo novo precisa da linha dele ali. São sugestões pedagógicas, não diagnóstico (a tela avisa).
 
+## Quanto Tempo Passou? (medida de tempo com AM e PM)
+
+Fica em **Matemática** (`js/intervalo.js`). Uma frase do dia a dia ("A oficina começou às 09:15 AM e terminou às
+09:45 AM, no mesmo dia") com os **dois horários em relógio digital** (com AM/PM) e **4 opções** de tempo ("30 minutos",
+"1 hora e 20 minutos"). As erradas imitam os erros comuns: fazer a conta como número comum (10:15 − 9:40 = 75), esquecer
+o AM/PM ao passar do meio-dia ou da meia-noite, contar só os minutos, errar uma hora cheia e errar por 5 a 15 minutos.
+Depois da resposta aparece a conta passo a passo (minutos até a hora cheia + horas + minutos). São **6 níveis**
+(10 intervalos): na mesma hora, passando para a hora seguinte, horas e minutos, passando do meio-dia (AM → PM), minutos
+quebrados e passando da meia-noite (PM → AM, no dia seguinte).
+
 ## Memória dos Bichos (memória de trabalho: pares)
 
 Fica em **Psicopedagogia** (`js/bichos.js`). Aparece uma tabela com **símbolos** (azuis, como na folha: espiral, sol,

@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=185">
+  <link rel="stylesheet" href="style.css?v=186">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -692,6 +692,38 @@
       </div>
       <div class="lugar-opcoes" id="lugar-opcoes"></div>
       <p class="cores-msg" id="lugar-msg" role="status"></p>
+    </section>
+
+    <!-- Quanto Tempo Passou?: instruções -->
+    <section class="tela" id="tela-intervalo-menu">
+      <h2 class="subtitulo">⏱️ Quanto Tempo Passou?</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-intervalo"></div>
+        <div class="balao balao-esq">
+          Aparecem <b>dois horários</b>: quando começou e quando terminou. Quanto tempo se passou? Escolha entre as 4 opções.
+          Lembre: <b>AM</b> é antes do meio-dia, <b>PM</b> é depois, e <b>uma hora tem 60 minutos</b>! ⏰
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-intervalo-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="intervalo-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Quanto Tempo Passou?: o jogo -->
+    <section class="tela tela-jogo" id="tela-intervalo" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="intervalo-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="intervalo-nivel"></span>
+        <span class="chuva-placar"><span id="intervalo-pontos">0</span> pts · <span id="intervalo-contador"></span></span>
+      </div>
+      <div class="lugar-topo">
+        <button class="lugar-ouvir" id="intervalo-ouvir" type="button" aria-label="Ouvir a pergunta">🔊</button>
+        <p class="intervalo-frase" id="intervalo-frase"></p>
+      </div>
+      <div class="intervalo-horas" id="intervalo-horas"></div>
+      <div class="intervalo-opcoes" id="intervalo-opcoes"></div>
+      <p class="cores-msg" id="intervalo-msg" role="status"></p>
     </section>
 
     <!-- Memória dos Bichos: instruções -->
@@ -2674,6 +2706,11 @@
           <span class="jogo-card-nome">Peso Certo</span>
           <span class="jogo-card-texto">Equilibre a balança com os pesos!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-intervalo" type="button" data-tema="matematica" style="--c:#1e64d2">
+          <span class="jogo-card-capa intervalo-capa" id="intervalo-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Quanto Tempo Passou?</span>
+          <span class="jogo-card-texto">De um horário ao outro, com AM e PM!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-loja" type="button" data-tema="matematica" style="--c:#2e9e5b">
           <span class="jogo-card-capa loja-capa" id="loja-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Jogo da Loja</span>
@@ -3029,9 +3066,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=185"></script>
-  <script src="dados.js?v=185"></script>
-  <script type="module" src="js/main.js?v=185"></script>
+  <script src="plenix.js?v=186"></script>
+  <script src="dados.js?v=186"></script>
+  <script type="module" src="js/main.js?v=186"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

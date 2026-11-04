@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Caminho na Malha. */
 
-import { $, sortear } from './util.js?v=185';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=185';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=185';
-import { mascote, mostrar, telaJogos } from './telas.js?v=185';
-import { escolherProfessorE } from './professor.js?v=185';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=185';
+import { $, sortear } from './util.js?v=186';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=186';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=186';
+import { mascote, mostrar, telaJogos } from './telas.js?v=186';
+import { escolherProfessorE } from './professor.js?v=186';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=186';
 
 // ---------- Caminho na Malha ----------
 // Orientação espacial e coordenadas: uma malha com colunas em letras (A, B, C...) e linhas numeradas de baixo para
