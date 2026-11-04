@@ -150,8 +150,8 @@ tolerância à frustração e dificuldades de aprendizagem em geral). Tem busca 
 Fica em **Psicopedagogia** (`js/flores.js`). Em cima, a **legenda** (cada número do dado tem uma cor); embaixo, **4 flores**
 com números nas pétalas (podem se repetir), umas pétalas pintadas e outras em branco. A criança toca na única flor em que
 **toda pétala pintada** tem a cor certa do seu número. Cada errada tem um erro: uma pétala com a cor de outro número, duas
-cores trocadas ou, quando a legenda muda, a pintura com a **legenda antiga**. Do nível 3 em diante a legenda mostra só o
-dado (contar as bolinhas) e **muda a cada rodada** (ela pisca quando muda). Depois da resposta, as pétalas erradas ficam
+cores trocadas ou, quando a legenda muda, a pintura com a **legenda antiga**. A legenda mostra só o dado (contar as
+bolinhas, sem o número) e, do nível 3 em diante, **muda a cada rodada** (ela pisca quando muda). Depois da resposta, as pétalas erradas ficam
 marcadas de vermelho. São **6 níveis** (10 flores): 4 cores e 6 pétalas, 5 cores com pétalas em branco, 6 cores com a
 legenda que muda, a armadilha da legenda antiga, 9 e 10 pétalas. O relatório separa cada tipo de erro.
 

@@ -1,28 +1,28 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Flores do Dado. */
 
-import { $, embaralhar, sortear } from './util.js?v=183';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=183';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=183';
-import { mascote, mostrar, telaJogos } from './telas.js?v=183';
-import { escolherProfessorE } from './professor.js?v=183';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=183';
+import { $, embaralhar, sortear } from './util.js?v=184';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=184';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=184';
+import { mascote, mostrar, telaJogos } from './telas.js?v=184';
+import { escolherProfessorE } from './professor.js?v=184';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=184';
 
 // ---------- Flores do Dado ----------
 // Atenção seletiva, conferência e flexibilidade: em cima, a legenda (cada número do dado tem uma cor); embaixo, 4 flores
 // com números nas pétalas (podem se repetir), algumas pétalas pintadas e outras em branco. A criança toca na única flor
 // em que TODA pétala pintada tem a cor do seu número. As erradas têm um erro cada: uma pétala com a cor de outro número,
 // duas cores trocadas ou, quando a legenda muda, a pintura com a legenda ANTIGA (pega quem decorou em vez de conferir).
-// Do nível 3 em diante a legenda só mostra o dado (contar as bolinhas) e muda a cada rodada.
+// A legenda mostra só o dado (contar as bolinhas); do nível 3 em diante ela muda a cada rodada.
 // Depois da resposta, as pétalas erradas das outras flores ficam marcadas. Acertou: sobe um nível; errou: desce.
 const FLORES = { RODADAS: 10, NIVEL_MAX: 6, PAUSA: 2600 };
 const NIVEIS_FL = [
-  { cores: 4, petalas: 6, erradas: 2, brancas: 0, numero: true, muda: false, titulo: '4 cores, legenda com número' },
-  { cores: 5, petalas: 7, erradas: 2, brancas: 2, numero: true, muda: false, titulo: '5 cores, flores pintadas em parte' },
-  { cores: 6, petalas: 8, erradas: 1, brancas: 2, numero: false, muda: true, titulo: '6 cores, legenda só com o dado e que muda' },
-  { cores: 6, petalas: 8, erradas: 1, brancas: 3, numero: false, muda: true, antigo: true, titulo: 'Cuidado com a legenda antiga' },
-  { cores: 6, petalas: 9, erradas: 1, brancas: 3, numero: false, muda: true, antigo: true, titulo: '9 pétalas' },
-  { cores: 6, petalas: 10, erradas: 1, brancas: 4, numero: false, muda: true, antigo: true, titulo: '10 pétalas' },
+  { cores: 4, petalas: 6, erradas: 2, brancas: 0, muda: false, titulo: '4 cores' },
+  { cores: 5, petalas: 7, erradas: 2, brancas: 2, muda: false, titulo: '5 cores, flores pintadas em parte' },
+  { cores: 6, petalas: 8, erradas: 1, brancas: 2, muda: true, titulo: '6 cores, legenda que muda' },
+  { cores: 6, petalas: 8, erradas: 1, brancas: 3, muda: true, antigo: true, titulo: 'Cuidado com a legenda antiga' },
+  { cores: 6, petalas: 9, erradas: 1, brancas: 3, muda: true, antigo: true, titulo: '9 pétalas' },
+  { cores: 6, petalas: 10, erradas: 1, brancas: 4, muda: true, antigo: true, titulo: '10 pétalas' },
 ];
 const TIPOS_FL = NIVEIS_FL.map((c, i) => ({
   id: `flores${i + 1}`, titulo: `Nível ${i + 1}: ${c.titulo}`, icone: '🌼', cor: '#ec4899',
@@ -154,7 +154,8 @@ function proximaFlores() {
   jogo.rodada = { ...r, n: jogo.nivel, respondida: false, t0: performance.now() };
   hud();
   $('flores-legenda').innerHTML = Object.entries(r.legenda).map(([num, c]) => `<span class="flor-codigo">${dadoSVG(Number(num))}`
-    + `${r.cfg.numero ? `<b>${num}</b>` : ''}<span class="flor-igual">=</span><span class="flor-cor" style="background:${PALETA_FL[c][1]}"></span></span>`).join('');
+    // a legenda mostra só o dado (contar as bolinhas), em todos os níveis
+    + `<span class="flor-igual">=</span><span class="flor-cor" style="background:${PALETA_FL[c][1]}"></span></span>`).join('');
   $('flores-legenda').classList.remove('mudou'); void $('flores-legenda').offsetWidth;
   if (mudou) $('flores-legenda').classList.add('mudou');
   const caixa = $('flores-opcoes');

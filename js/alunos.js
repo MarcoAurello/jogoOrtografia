@@ -2,15 +2,15 @@
 /* Alunos e anamnese (Área do professor): os alunos da escola (com ou sem turma), o cadastro, a anamnese (presencial ou
    pelo link de 3 horas para a família) e os modelos de anamnese. Segue o padrão das telas de cadastro (js/popup.js). */
 
-import { $, seguro } from './util.js?v=183';
-import { SOM } from './som.js?v=183';
-import { api } from './api.js?v=183';
-import { parteProfessor, usuarioAtual } from './professor.js?v=183';
-import { abrirFicha } from './painel.js?v=183';
-import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=183';
-import { desenharPerguntas, desenharRespondida, lerRespostas, SUGERIDAS, TIPOS } from './anamnese-form.js?v=183';
-import { BANCO_ANAMNESE, NOMES_MODELOS } from './dados-anamnese.js?v=183';
-import { abrirPlanos } from './planos.js?v=183';
+import { $, seguro } from './util.js?v=184';
+import { SOM } from './som.js?v=184';
+import { api } from './api.js?v=184';
+import { parteProfessor, usuarioAtual } from './professor.js?v=184';
+import { abrirFicha } from './painel.js?v=184';
+import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=184';
+import { desenharPerguntas, desenharRespondida, lerRespostas, SUGERIDAS, TIPOS } from './anamnese-form.js?v=184';
+import { BANCO_ANAMNESE, NOMES_MODELOS } from './dados-anamnese.js?v=184';
+import { abrirPlanos } from './planos.js?v=184';
 
 // Quem vê e quem mexe (a API confere tudo de novo): a coordenação mexe em todos os alunos da escola; o professor VÊ os
 // alunos e as anamneses da escola, mas só mexe (cadastro, anamnese, ficha) nos alunos das turmas dele.

@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Caminho do Tatu. */
 
-import { $, embaralhar, sortear } from './util.js?v=183';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=183';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=183';
-import { mascote, mostrar, telaJogos } from './telas.js?v=183';
-import { escolherProfessorE } from './professor.js?v=183';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=183';
+import { $, embaralhar, sortear } from './util.js?v=184';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=184';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=184';
+import { mascote, mostrar, telaJogos } from './telas.js?v=184';
+import { escolherProfessorE } from './professor.js?v=184';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=184';
 
 // ---------- Caminho do Tatu ----------
 // Orientação espacial, sequência e memória de trabalho: o tatu está no ponto do canto de cima, à esquerda, de uma malha
