@@ -1,7 +1,7 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Popup do administrador (criar/editar escola, cadastrar usuário): abre por cima da lista e fecha sem perder o lugar. */
 
-import { $ } from './util.js?v=173';
+import { $ } from './util.js?v=175';
 
 // Fecha no ✕ e em Cancelar (botões passados em fechar), com Esc ou tocando fora do cartão. Enquanto está aberto, a
 // página atrás não rola. Ao fechar, o foco volta para o botão que abriu (quem usa teclado não se perde).

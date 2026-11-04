@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Copie Certo. */
 
-import { $, sortear } from './util.js?v=173';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=173';
-import { SOM, tocar } from './som.js?v=173';
-import { mascote, mostrar, telaJogos } from './telas.js?v=173';
-import { escolherProfessorE } from './professor.js?v=173';
-import { segundos } from './luzes.js?v=173';
-import { fimDaMissao } from './relatorio.js?v=173';
+import { $, sortear } from './util.js?v=175';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=175';
+import { SOM, tocar } from './som.js?v=175';
+import { mascote, mostrar, telaJogos } from './telas.js?v=175';
+import { escolherProfessorE } from './professor.js?v=175';
+import { segundos } from './luzes.js?v=175';
+import { fimDaMissao } from './relatorio.js?v=175';
 
 // ---------- Copie Certo ----------
 // Percepção visual, orientação espacial e atenção aos detalhes. Ao lado do quadro grande (4 × 4) aparece um modelo

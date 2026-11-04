@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=173">
+  <link rel="stylesheet" href="style.css?v=175">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -692,6 +692,37 @@
       </div>
       <div class="lugar-opcoes" id="lugar-opcoes"></div>
       <p class="cores-msg" id="lugar-msg" role="status"></p>
+    </section>
+
+    <!-- Cores da Borda: instruções -->
+    <section class="tela" id="tela-bordas-menu">
+      <h2 class="subtitulo">🎨 Cores da Borda</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-bordas"></div>
+        <div class="balao balao-esq">
+          O tabuleiro tem <b>cores nas bordas</b>. Vem uma <b>figura</b> com bolinhas: a de cima é a cor de cima, a da esquerda é a cor
+          da esquerda... Toque no <b>quadrado</b> que tem exatamente essas cores nas bordas! Cuidado: depois as cores <b>mudam de lugar</b>. 🧠
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-bordas-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="bordas-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Cores da Borda: o jogo -->
+    <section class="tela tela-jogo" id="tela-bordas" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="bordas-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="bordas-nivel"></span>
+        <span class="chuva-placar"><span id="bordas-pontos">0</span> pts · <span id="bordas-contador"></span></span>
+      </div>
+      <div class="bordas-pedido">
+        <div class="bordas-vez" id="bordas-vez" aria-live="polite"></div>
+        <div><p class="vistas-pergunta">Onde fica esta figura?</p><p class="bordas-falta" id="bordas-falta"></p></div>
+      </div>
+      <div class="bordas-tabuleiro" id="bordas-tabuleiro"></div>
+      <p class="cores-msg" id="bordas-msg" role="status"></p>
     </section>
 
     <!-- Palitos Sobrepostos: instruções -->
@@ -2678,6 +2709,11 @@
           <span class="jogo-card-nome">Cada Coisa no Seu Lugar</span>
           <span class="jogo-card-texto">O que a gente leva para a praia? E para a escola?</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-bordas" type="button" data-tema="psicopedagogia" style="--c:#e5731f">
+          <span class="jogo-card-capa bordas-capa" id="bordas-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Cores da Borda</span>
+          <span class="jogo-card-texto">Ache o quadrado com as cores da figura!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-palitos" type="button" data-tema="psicopedagogia" style="--c:#8e44ad">
           <span class="jogo-card-capa palitos-capa" id="palitos-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Palitos Sobrepostos</span>
@@ -2852,9 +2888,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=173"></script>
-  <script src="dados.js?v=173"></script>
-  <script type="module" src="js/main.js?v=173"></script>
+  <script src="plenix.js?v=175"></script>
+  <script src="dados.js?v=175"></script>
+  <script type="module" src="js/main.js?v=175"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

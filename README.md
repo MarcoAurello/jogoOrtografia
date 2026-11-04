@@ -136,6 +136,17 @@ relatório (com a informação de que a fila montada estava certa ou errada). S�
 de 3 só com primeiro, último e lugar N; fila de 3 com "logo depois"; fila de 4; fila de 4 com "antes" e "entre"; fila de 5
 e fila de 6 (com "não é o primeiro"). Começa com 3 crianças porque com 2 só existem 2 filas.
 
+## Cores da Borda (atenção e coordenação de linha e coluna)
+
+Fica em **Psicopedagogia** (`js/bordas.js`). Um tabuleiro com **cores nas bordas** (em cima e embaixo de cada coluna, à
+esquerda e à direita de cada linha). Entra **uma figura por vez**, com bolinhas em cruz (a de cima é a cor da borda de
+cima, e assim por diante), e a criança toca no **quadrado** cujas bordas têm exatamente essas cores; a figura fica nele.
+Errou: o quadrado treme, a dica diz se a linha ou a coluna estava certa e ela tenta de novo (depois de 2 erros, a linha
+e a coluna certas acendem). Do **nível 3** em diante, depois de cada figura as **colunas e linhas trocam de lugar** (as
+cores das bordas mudam); as figuras já postas vão junto. São **6 níveis** (6 tabuleiros de 4 figuras; sem erro sobe, com
+2 erros desce): 2 x 2 e 3 x 3 só com cima e esquerda, depois 3 x 3, 4 x 4, 4 x 5 e 4 x 6 com as quatro bordas.
+As cores não se repetem num mesmo lado (a resposta é única). O relatório separa erro de linha, de coluna e dos dois.
+
 ## Palitos Sobrepostos (percepção visual e controle inibitório)
 
 Fica em **Psicopedagogia** (`js/palitos.js`). De 3 a 6 palitos coloridos se cruzam, um por cima do outro (todos se cruzam,

@@ -2033,6 +2033,44 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .lugar-svg, .lugar-opcao, .lugar-opcao.certa, .lugar-opcao.errada { animation: none; }
 }
 
+/* ---------- Cores da Borda ---------- */
+.bordas-pedido { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; max-width: 560px; margin: 6px auto 0; }
+.bordas-pedido .vistas-pergunta { margin: 0; text-align: left; }
+.bordas-falta { margin: 2px 0 0; font-size: clamp(12px, 1.9dvh, 15px); font-weight: 600; color: #475569; }
+.bordas-vez { flex: none; width: clamp(64px, 12dvh, 104px); aspect-ratio: 1; padding: 4px; box-sizing: border-box; border: 3px solid #13294b; border-radius: 16px;
+  background: #fff; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.2); }
+.bordas-vez .bordas-figura { width: 100%; height: 100%; display: block; }
+.bordas-figura.entra { animation: cores-nascer 0.35s ease-out both; }
+/* o tabuleiro: tiras coloridas nas bordas e as casas brancas (a largura vem do JS, pela proporção do tabuleiro) */
+#tela-bordas { --bordas-alto: 52dvh; }
+.bordas-tabuleiro { display: grid; grid-template-columns: 0.35fr repeat(var(--col, 4), 1fr) 0.35fr; grid-template-rows: 0.35fr repeat(var(--lin, 4), 1fr) 0.35fr;
+  gap: 3px; margin: 10px auto 0; }
+.bordas-tira { border: 2px solid #13294b; border-radius: 6px; }
+.bordas-tabuleiro.mudou .bordas-tira { animation: bordas-muda 0.5s ease-out; }
+@keyframes bordas-muda { from { transform: scale(0.6); opacity: 0.3; } to { transform: none; opacity: 1; } }
+.bordas-casa { display: grid; place-items: center; padding: 3px; border: 2px solid #13294b; border-radius: 6px; background: #fff; cursor: pointer; }
+@media (hover: hover) { .bordas-casa:not(.ocupada):hover { background: #fff7ed; } }
+.bordas-casa:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 1px; }
+.bordas-casa.ocupada { cursor: default; background: #f8fafc; }
+.bordas-casa .bordas-figura { width: 100%; height: 100%; }
+.bordas-casa.certa { background: #dff5e7; box-shadow: inset 0 0 0 3px var(--verde); animation: cores-quique 0.45s ease-out; }
+.bordas-casa.treme { background: #fde4e4; animation: tremer 0.4s ease; }
+.bordas-casa.acesa:not(.ocupada) { background: #fff1dc; }
+@media (orientation: landscape) and (max-height: 560px) {
+  /* celular deitado: a figura à esquerda e o tabuleiro à direita */
+  #tela-bordas { --bordas-alto: calc(100dvh - 90px); }
+  #tela-bordas.ativa { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto 1fr; column-gap: 12px; align-content: start; }
+  #tela-bordas > .barra { grid-column: 1 / -1; }
+  #tela-bordas > .bordas-pedido { grid-column: 1; grid-row: 2; flex-direction: column; }
+  #tela-bordas > #bordas-msg { grid-column: 1; grid-row: 3; }
+  #tela-bordas > .bordas-tabuleiro { grid-column: 2; grid-row: 2 / span 2; margin: 0; }
+}
+.bordas-capa { position: relative; display: block; background: #fff7ed; }
+.bordas-capa svg { position: absolute; inset: 6%; width: 88%; height: 88%; }
+@media (prefers-reduced-motion: reduce) {
+  .bordas-figura.entra, .bordas-tabuleiro.mudou .bordas-tira, .bordas-casa.certa, .bordas-casa.treme { animation: none; }
+}
+
 /* ---------- Palitos Sobrepostos ---------- */
 .palitos-palco { position: relative; width: min(100%, 44dvh, 420px); aspect-ratio: 1; margin: 6px auto 0; border: 2.5px solid #13294b; border-radius: 20px;
   background: #fff; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.2); }
