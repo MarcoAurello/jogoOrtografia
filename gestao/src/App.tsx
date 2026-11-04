@@ -25,6 +25,7 @@ const AreaQuestionarios = lazy(() => import('./paginas/questionarios/AreaQuestio
 const Competicoes = lazy(() => import('./paginas/competicoes/Competicoes'));
 const Links = lazy(() => import('./paginas/links/Links'));
 const Ficha = lazy(() => import('./paginas/ficha/Ficha'));
+const Jogos = lazy(() => import('./paginas/jogos/Jogos'));
 import { ProvedorAvisos } from './components/Avisos';
 import { ProvedorConfirmar } from './components/Confirmar';
 import { CarregandoLista } from './components/EstadoLista';
@@ -43,6 +44,7 @@ const TELAS: Record<string, JSX.Element> = {
   '/questionarios': <AreaQuestionarios />,
   '/competicoes': <Competicoes />,
   '/links': <Links />,
+  '/jogos': <Jogos />,
 };
 
 function Carregando() {

@@ -136,6 +136,15 @@ relatório (com a informação de que a fila montada estava certa ou errada). S�
 de 3 só com primeiro, último e lugar N; fila de 3 com "logo depois"; fila de 4; fila de 4 com "antes" e "entre"; fila de 5
 e fila de 6 (com "não é o primeiro"). Começa com 3 crianças porque com 2 só existem 2 filas.
 
+## Aba Jogos da gestão (catálogo com indicações)
+
+Na gestão (`/gestao/jogos`, para todos os perfis) fica o **catálogo dos jogos**: o descritivo de cada um, as
+**habilidades** que trabalha e **para quem é indicado** (TDAH, dislexia, dificuldade de escrita, discalculia, TEA,
+deficiência intelectual, funções executivas, visoespacial e lateralidade, memória, linguagem, coordenação motora,
+tolerância à frustração e dificuldades de aprendizagem em geral). Tem busca e filtro **"Indicado para"** e
+**"Habilidade"**, com a quantidade de jogos em cada opção. As indicações ficam em `js/habilidades.js` (`INDICACOES` e
+`INDICADO_PARA`): jogo novo precisa da linha dele ali. São sugestões pedagógicas, não diagnóstico (a tela avisa).
+
 ## Caminho do Tatu (orientação espacial e sequência)
 
 Fica em **Psicopedagogia** (`js/tatu.js`). O **tatu** (desenho em SVG) está no ponto do canto de cima, à esquerda, de uma

@@ -12,6 +12,9 @@ interface ModuloHabilidades {
   NOME_HAB: Record<string, string>;
   JOGOS_HAB: Record<string, { h: string[]; r: string }>;
   CARTAO_DO_JOGO: Record<string, string>;
+  INDICACOES: Record<string, string>;
+  INDICADO_PARA: Record<string, string[]>;
+  NOME_DO_CARTAO_EXTERNO: Record<string, string>;
   jogosParaHabilidades: (h: string[]) => string[];
 }
 

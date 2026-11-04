@@ -22,6 +22,8 @@ export const ITENS_MENU: ItemMenu[] = [
   { caminho: '/questionarios', titulo: 'Questionários', icone: '📝', perfis: ESCOLA },
   { caminho: '/competicoes', titulo: 'Competições', icone: '🏆', perfis: ESCOLA },
   { caminho: '/links', titulo: 'Links', icone: '🔗', perfis: ESCOLA },
+  // o catálogo dos jogos vale para todos (não depende de escola)
+  { caminho: '/jogos', titulo: 'Jogos', icone: '🎮', perfis: ['admin', 'coordenacao', 'professor'] },
 ];
 
 export const itensDoPerfil = (perfil: Perfil) => ITENS_MENU.filter((i) => i.perfis.includes(perfil));

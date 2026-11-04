@@ -131,6 +131,77 @@ export const JOGOS_HAB = {
     r: 'Jogo de estratégia da colmeia: preveja a jogada do outro e não deixe sua abelha ser encurralada.' },
 };
 
+// Para quem cada jogo é indicado (a aba Jogos da gestão filtra por aqui). São sugestões pedagógicas para apoiar o
+// trabalho com as dificuldades mais comuns; não são diagnóstico nem tratamento.
+export const INDICACOES = {
+  tdah: 'TDAH (desatenção e impulsividade)',
+  dislexia: 'Dislexia e dificuldade de leitura',
+  escrita: 'Dificuldade de escrita (disortografia)',
+  discalculia: 'Discalculia e dificuldade em matemática',
+  tea: 'TEA (autismo)',
+  di: 'Deficiência intelectual',
+  executivas: 'Funções executivas (planejar e organizar)',
+  visoespacial: 'Dificuldade visoespacial e de lateralidade',
+  memoria: 'Dificuldade de memória',
+  linguagem: 'Atraso de linguagem',
+  motora: 'Dificuldade de coordenação motora',
+  emocional: 'Baixa tolerância à frustração',
+  aprendizagem: 'Dificuldades de aprendizagem em geral',
+};
+// id do cartão → indicações (as mais fortes primeiro)
+export const INDICADO_PARA = {
+  'btn-jogar': ['dislexia', 'escrita', 'aprendizagem'],
+  'btn-chuva': ['escrita', 'dislexia', 'tdah'],
+  'btn-classes': ['linguagem', 'escrita', 'aprendizagem'],
+  'btn-mat': ['discalculia', 'tdah', 'aprendizagem'],
+  'btn-tabuada': ['discalculia', 'tdah'],
+  'btn-graficos': ['discalculia', 'aprendizagem'],
+  'btn-tiro': ['discalculia', 'visoespacial'],
+  'btn-peso': ['discalculia', 'executivas'],
+  'btn-abc': ['dislexia', 'di', 'linguagem', 'aprendizagem'],
+  'btn-ingles': ['linguagem', 'memoria'],
+  'btn-luzes': ['memoria', 'tdah', 'tea'],
+  'btn-luzes2': ['memoria', 'tdah', 'motora'],
+  'btn-rotina': ['di', 'tea', 'executivas', 'linguagem'],
+  'btn-escondida': ['dislexia', 'tdah'],
+  'btn-copia': ['visoespacial', 'tdah', 'motora'],
+  'btn-barcos': ['visoespacial', 'tdah', 'discalculia'],
+  'btn-giro': ['visoespacial', 'memoria'],
+  'btn-hora': ['discalculia', 'di', 'aprendizagem'],
+  'btn-somando': ['memoria', 'discalculia'],
+  'btn-descobrir': ['discalculia', 'executivas'],
+  'btn-chaves': ['visoespacial', 'tdah'],
+  'btn-caminho': ['memoria', 'executivas', 'visoespacial'],
+  'btn-taxi': ['memoria', 'tdah', 'visoespacial'],
+  'btn-policia': ['tdah', 'executivas', 'emocional'],
+  'btn-pontos': ['memoria', 'visoespacial', 'motora'],
+  'btn-pixels': ['visoespacial', 'motora', 'executivas'],
+  'btn-fracoes': ['discalculia', 'aprendizagem'],
+  'btn-fichas': ['discalculia', 'executivas'],
+  'btn-cores': ['tdah', 'discalculia', 'visoespacial'],
+  'btn-lados': ['visoespacial', 'tdah'],
+  'btn-setas': ['tdah', 'executivas'],
+  'btn-vistas': ['visoespacial'],
+  'btn-dinos': ['memoria', 'tdah', 'tea'],
+  'btn-pilhas': ['executivas', 'emocional', 'tea'],
+  'btn-tatu': ['visoespacial', 'memoria', 'tdah', 'di'],
+  'btn-cadeado': ['tdah', 'visoespacial', 'di', 'tea'],
+  'btn-bordas': ['tdah', 'visoespacial', 'memoria'],
+  'btn-palitos': ['tdah', 'executivas', 'visoespacial'],
+  'btn-loja': ['discalculia', 'di', 'aprendizagem'],
+  'btn-fila': ['linguagem', 'executivas', 'memoria', 'di'],
+  'btn-malha': ['visoespacial', 'discalculia', 'memoria'],
+  'btn-lugar': ['di', 'tea', 'linguagem'],
+  'btn-blocos': ['visoespacial', 'discalculia'],
+  'btn-simbolos': ['tdah', 'visoespacial'],
+  'btn-psico': ['executivas', 'emocional', 'tdah'],
+  'btn-hive': ['tea', 'executivas', 'emocional'],
+};
+// os jogos de fora (abrem outro site), que não têm id de link
+export const NOME_DO_CARTAO_EXTERNO = {
+  'btn-abc': 'ABC da Tia Ana', 'btn-ingles': 'Desafio da Rotina (inglês)', 'btn-psico': 'Desafio das Peças', 'btn-hive': 'Hive',
+};
+
 // o jogo pelo id do link (?jogo=..., o mesmo do plano de objetivos e das competições) → o cartão da tela de jogos
 export const CARTAO_DO_JOGO = {
   ortografia: 'btn-jogar',
