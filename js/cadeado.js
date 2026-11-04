@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Chave e Cadeado. */
 
-import { $, embaralhar, sortear } from './util.js?v=179';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=179';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=179';
-import { mascote, mostrar, telaJogos } from './telas.js?v=179';
-import { escolherProfessorE } from './professor.js?v=179';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=179';
+import { $, embaralhar, sortear } from './util.js?v=181';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=181';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=181';
+import { mascote, mostrar, telaJogos } from './telas.js?v=181';
+import { escolherProfessorE } from './professor.js?v=181';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=181';
 
 // ---------- Chave e Cadeado ----------
 // Discriminação visual e atenção aos detalhes: cadeados numerados, cada um com o buraco da fechadura num formato de

@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Jogo da Hora. */
 
-import { $, embaralhar, sortear } from './util.js?v=179';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=179';
-import { SOM, tocar } from './som.js?v=179';
-import { mascote, mostrar, telaJogos } from './telas.js?v=179';
-import { escolherProfessorE } from './professor.js?v=179';
-import { segundos } from './luzes.js?v=179';
-import { fimDaMissao } from './relatorio.js?v=179';
+import { $, embaralhar, sortear } from './util.js?v=181';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=181';
+import { SOM, tocar } from './som.js?v=181';
+import { mascote, mostrar, telaJogos } from './telas.js?v=181';
+import { escolherProfessorE } from './professor.js?v=181';
+import { segundos } from './luzes.js?v=181';
+import { fimDaMissao } from './relatorio.js?v=181';
 
 // ---------- Jogo da Hora ----------
 // Ler as horas no relógio de ponteiros e no digital (orientação temporal). As rodadas alternam: aparece a hora

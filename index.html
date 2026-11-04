@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=179">
+  <link rel="stylesheet" href="style.css?v=181">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -692,6 +692,34 @@
       </div>
       <div class="lugar-opcoes" id="lugar-opcoes"></div>
       <p class="cores-msg" id="lugar-msg" role="status"></p>
+    </section>
+
+    <!-- Caminho do Tatu: instruções -->
+    <section class="tela" id="tela-tatu-menu">
+      <h2 class="subtitulo">🍎 Caminho do Tatu</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-tatu"></div>
+        <div class="balao balao-esq">
+          O <b>tatu</b> quer comer uma maçã! Em cima estão as <b>setas</b> do caminho: cada seta é <b>um passo</b> até o próximo
+          ponto. Siga as setas com o dedo ou com os olhos e toque na <b>maçã</b> onde o tatu vai parar. 🐾
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-tatu-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="tatu-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Caminho do Tatu: o jogo -->
+    <section class="tela tela-jogo" id="tela-tatu" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="tatu-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="tatu-nivel"></span>
+        <span class="chuva-placar"><span id="tatu-pontos">0</span> pts · <span id="tatu-contador"></span></span>
+      </div>
+      <div class="tatu-setas" id="tatu-setas" aria-label="Setas do caminho"></div>
+      <div class="tatu-malha" id="tatu-malha"></div>
+      <p class="cores-msg" id="tatu-msg" role="status"></p>
     </section>
 
     <!-- Chave e Cadeado: instruções -->
@@ -2738,6 +2766,11 @@
           <span class="jogo-card-nome">Cada Coisa no Seu Lugar</span>
           <span class="jogo-card-texto">O que a gente leva para a praia? E para a escola?</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-tatu" type="button" data-tema="psicopedagogia" style="--c:#e53935">
+          <span class="jogo-card-capa tatu-capa" id="tatu-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Caminho do Tatu</span>
+          <span class="jogo-card-texto">Siga as setas: em qual maçã o tatu para?</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-cadeado" type="button" data-tema="psicopedagogia" style="--c:#c99700">
           <span class="jogo-card-capa cadeado-capa" id="cadeado-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Chave e Cadeado</span>
@@ -2922,9 +2955,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=179"></script>
-  <script src="dados.js?v=179"></script>
-  <script type="module" src="js/main.js?v=179"></script>
+  <script src="plenix.js?v=181"></script>
+  <script src="dados.js?v=181"></script>
+  <script type="module" src="js/main.js?v=181"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

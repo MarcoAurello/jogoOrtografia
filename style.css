@@ -2033,6 +2033,31 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .lugar-svg, .lugar-opcao, .lugar-opcao.certa, .lugar-opcao.errada { animation: none; }
 }
 
+/* ---------- Caminho do Tatu ---------- */
+/* a fila de setas: cada seta num quadradinho tracejado, como na folha; a da vez acende quando o tatu anda */
+.tatu-setas { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; width: 100%; max-width: 640px; margin: 6px auto 0; }
+.tatu-seta { display: grid; place-items: center; width: clamp(30px, min(9vw, 6dvh), 48px); aspect-ratio: 1; border: 2px dashed #64748b; border-radius: 6px;
+  background: #fff; font-size: clamp(20px, min(6vw, 4dvh), 32px); font-weight: 700; line-height: 1; color: #13294b;
+  animation: cores-nascer 0.25s ease-out both; animation-delay: calc(var(--i) * 40ms); }
+.tatu-seta.acesa { border-style: solid; border-color: #f08a24; background: #fff1dc; color: #e53935; transform: scale(1.12); }
+.tatu-seta.feita { opacity: 0.45; }
+/* a malha: a largura segue a altura que sobra (o viewBox mantém a proporção) */
+.tatu-malha { width: 100%; max-width: 640px; margin: 8px auto 0; }
+.tatu-svg { display: block; width: auto; max-width: 100%; height: auto; max-height: calc(var(--livre, 100dvh) - 170px); margin: 0 auto; overflow: visible; }
+.tatu-maca { cursor: pointer; transition: transform 0.2s; }
+.tatu-maca:focus-visible { outline: none; }
+.tatu-maca:focus-visible path:first-of-type { stroke: var(--amarelo); stroke-width: 4; }
+.tatu-maca.certa path:first-of-type { stroke: var(--verde); stroke-width: 4; }
+.tatu-maca.errada { opacity: 0.4; }
+.tatu-rastro { stroke: #f08a24; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 7 5; }
+#tatu-bicho { transition: transform 0.28s ease; }
+.tatu-capa { position: relative; display: block; background: #fff7ed; }
+.tatu-capa svg { position: absolute; inset: 6%; width: 88%; height: 88%; }
+@media (prefers-reduced-motion: reduce) {
+  .tatu-seta { animation: none; }
+  #tatu-bicho { transition: none; }
+}
+
 /* ---------- Chave e Cadeado ---------- */
 /* os cadeados numerados em cima (o pedido fica em destaque) */
 .cad-cadeados { display: flex; justify-content: center; gap: 6px; width: 100%; max-width: 680px; margin: 6px auto 0; }

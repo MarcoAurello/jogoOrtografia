@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Jogo da Loja. */
 
-import { $, embaralhar, sortear } from './util.js?v=179';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=179';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=179';
-import { mascote, mostrar, telaJogos } from './telas.js?v=179';
-import { escolherProfessorE } from './professor.js?v=179';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=179';
+import { $, embaralhar, sortear } from './util.js?v=181';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=181';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=181';
+import { mascote, mostrar, telaJogos } from './telas.js?v=181';
+import { escolherProfessorE } from './professor.js?v=181';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=181';
 
 // ---------- Jogo da Loja ----------
 // Dinheiro no dia a dia (adição, multiplicação e troco): em cima, a tabela de preços da papelaria (figura e preço,

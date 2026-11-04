@@ -136,6 +136,16 @@ relatório (com a informação de que a fila montada estava certa ou errada). S�
 de 3 só com primeiro, último e lugar N; fila de 3 com "logo depois"; fila de 4; fila de 4 com "antes" e "entre"; fila de 5
 e fila de 6 (com "não é o primeiro"). Começa com 3 crianças porque com 2 só existem 2 filas.
 
+## Caminho do Tatu (orientação espacial e sequência)
+
+Fica em **Psicopedagogia** (`js/tatu.js`). O **tatu** (desenho em SVG) está no ponto do canto de cima, à esquerda, de uma
+malha de pontos; em cima aparece a **fila de setas** (cada seta é um passo até o ponto do lado) e embaixo, as **maçãs
+coloridas**. A criança segue as setas "de cabeça" e toca na maçã onde o tatu vai parar. Depois da resposta, o tatu anda o
+caminho passo a passo, com a seta da vez acesa e o rastro na malha. O caminho nunca sai da malha nem passa duas vezes
+pelo mesmo ponto. São **6 níveis** (10 caminhos; acertou sobe, errou desce): 2 ou 3 setas (malha 3 x 1), 3 ou 4, 5 ou 6
+com seta para a esquerda, 7 a 9, 10 a 12 e 13 a 15 setas (malha 9 x 7, maçãs só em colunas alternadas, como na folha).
+O relatório separa: trocou esquerda e direita, pulou uma seta, fez uma seta a mais e se perdeu no caminho.
+
 ## Chave e Cadeado (discriminação visual e atenção aos detalhes)
 
 Fica em **Psicopedagogia** (`js/cadeado.js`). Cadeados numerados, cada um com o **buraco da fechadura** num formato de
