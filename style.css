@@ -2075,6 +2075,26 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 .fila-opcao.certa { background: #dff5e7; border-color: var(--verde); box-shadow: 0 0 0 5px rgba(46, 158, 91, 0.25), 0 4px 0 #1d6b3d; animation: cores-quique 0.45s ease-out; }
 .fila-opcao.errada { background: #fde4e4; border-color: var(--vermelho); box-shadow: 0 4px 0 #8e1b1b; animation: tremer 0.4s ease; }
 .fila-opcao.apagada { opacity: 0.4; }
+/* tudo numa tela só, sem rolagem: crianças de cima pequenas e as 3 filas lado a lado, com desenhos menores */
+#tela-fila .fila-turma { margin-top: 4px; gap: 4px; }
+#tela-fila .fila-pessoa { flex-basis: 60px; padding: 2px 1px 3px; border-width: 2px; border-radius: 12px; }
+#tela-fila .fila-pessoa .crianca { max-width: 36px; max-height: clamp(42px, 7dvh, 66px); }
+#tela-fila .fila-nome { font-size: clamp(11px, 1.8dvh, 14px); }
+#tela-fila .malha-pedido { margin-top: 4px; }
+#tela-fila .malha-ordem { padding: 5px 10px; font-size: clamp(13px, 2.1dvh, 17px); }
+#tela-fila .lugar-ouvir { width: 40px; height: 40px; font-size: 20px; }
+#tela-fila .fila-dica { margin: 4px auto 2px; font-size: clamp(11px, 1.7dvh, 14px); }
+#tela-fila .fila-vagas { gap: 4px; }
+#tela-fila .fila-vaga { flex-basis: 60px; min-height: clamp(58px, 10dvh, 96px); padding: 2px 1px; border-radius: 12px; }
+#tela-fila .fila-vaga b { font-size: clamp(11px, 1.8dvh, 14px); }
+#tela-fila .fila-vaga .crianca { max-width: 32px; max-height: clamp(38px, 7dvh, 64px); }
+#tela-fila .fila-opcoes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
+#tela-fila .fila-pergunta { grid-column: 1 / -1; font-size: clamp(13px, 2.2dvh, 17px); }
+#tela-fila .fila-opcao { gap: 1px; padding: 4px 2px; border-radius: 14px; }
+#tela-fila .fila-lugar { flex: 1 1 0; }
+#tela-fila .fila-lugar b { font-size: clamp(9px, 1.4dvh, 12px); }
+#tela-fila .fila-lugar .crianca { max-width: 30px; max-height: clamp(30px, 7dvh, 58px); }
+#tela-fila .cores-msg { min-height: 2.4em; }
 /* capa do cartão */
 .fila-capa { position: relative; display: block; background: linear-gradient(#fff1f1, #fde0e0); }
 .fila-capa-linha { position: absolute; inset: 8px 6px 4px; display: flex; justify-content: center; align-items: flex-end; gap: 2px; }
