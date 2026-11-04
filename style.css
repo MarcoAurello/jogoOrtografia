@@ -2033,6 +2033,34 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .lugar-svg, .lugar-opcao, .lugar-opcao.certa, .lugar-opcao.errada { animation: none; }
 }
 
+/* ---------- Flores do Dado ---------- */
+/* a legenda: dado = cor (pisca quando muda) */
+.flores-legenda { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 10px; width: 100%; max-width: 640px; margin: 6px auto 0; padding: 6px 8px;
+  box-sizing: border-box; border: 2.5px solid #13294b; border-radius: 16px; background: #fff; }
+.flores-legenda.mudou { animation: flores-muda 0.9s ease-in-out 2; }
+@keyframes flores-muda { 50% { background: #fff1dc; border-color: #f08a24; } }
+.flor-codigo { display: inline-flex; align-items: center; gap: 4px; }
+.flor-dado { width: clamp(26px, min(7vw, 5dvh), 38px); height: auto; }
+.flor-codigo b { font-family: 'Fredoka', sans-serif; font-size: clamp(14px, 2.4dvh, 18px); color: #13294b; }
+.flor-igual { font-weight: 700; color: #475569; }
+.flor-cor { display: inline-block; width: clamp(22px, min(6vw, 4.4dvh), 34px); aspect-ratio: 1; border: 2px solid #13294b; border-radius: 6px; }
+/* as 4 flores, 2 por linha */
+.flores-opcoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; max-width: 520px; margin: 6px auto 0; }
+.flor-opcao { display: grid; place-items: center; padding: 4px; aspect-ratio: 1; max-height: calc((var(--livre, 100dvh) - 230px) / 2); justify-self: center; width: 100%;
+  border: 2.5px solid #13294b; border-radius: 18px; background: #fff; cursor: pointer; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.2); animation: cores-nascer 0.3s ease-out both; }
+.flor-svg { width: 100%; height: 100%; }
+.flor-opcao:active { transform: translateY(3px); box-shadow: none; }
+.flor-opcao:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.flor-opcao:disabled { cursor: default; }
+.flor-opcao.certa { background: #dff5e7; border-color: var(--verde); box-shadow: 0 0 0 5px rgba(46, 158, 91, 0.25), 0 4px 0 #1d6b3d; animation: cores-quique 0.45s ease-out; }
+.flor-opcao.errada { background: #fde4e4; border-color: var(--vermelho); box-shadow: 0 4px 0 #8e1b1b; animation: tremer 0.4s ease; }
+.flor-opcao.apagada { opacity: 0.5; }
+.flores-capa { position: relative; display: block; background: #fdf2f8; }
+.flores-capa .flor-svg { position: absolute; inset: 6%; width: 88%; height: 88%; }
+@media (prefers-reduced-motion: reduce) {
+  .flores-legenda.mudou, .flor-opcao, .flor-opcao.certa, .flor-opcao.errada { animation: none; }
+}
+
 /* ---------- Caminho do Tatu ---------- */
 /* a fila de setas: cada seta num quadradinho tracejado, como na folha; a da vez acende quando o tatu anda */
 .tatu-setas { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; width: 100%; max-width: 640px; margin: 6px auto 0; }

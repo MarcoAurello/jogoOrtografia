@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Turmas na Área do professor: criar turma (com código), cadastrar alunos (se quiser) e ver as últimas partidas. */
 
-import { $, seguro } from './util.js?v=182';
-import { SOM } from './som.js?v=182';
-import { api } from './api.js?v=182';
-import { parteProfessor, usuarioAtual } from './professor.js?v=182';
-import { abrirFicha, abrirPainelTurma } from './painel.js?v=182';
-import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=182';
+import { $, seguro } from './util.js?v=183';
+import { SOM } from './som.js?v=183';
+import { api } from './api.js?v=183';
+import { parteProfessor, usuarioAtual } from './professor.js?v=183';
+import { abrirFicha, abrirPainelTurma } from './painel.js?v=183';
+import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=183';
 
 // ---------- Turmas ----------
 // O professor cria a turma e fica ligado a ela; a coordenação cria e escolhe os professores. Cada turma tem um código:

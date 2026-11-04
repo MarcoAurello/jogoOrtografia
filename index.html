@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=182">
+  <link rel="stylesheet" href="style.css?v=183">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -692,6 +692,35 @@
       </div>
       <div class="lugar-opcoes" id="lugar-opcoes"></div>
       <p class="cores-msg" id="lugar-msg" role="status"></p>
+    </section>
+
+    <!-- Flores do Dado: instruções -->
+    <section class="tela" id="tela-flores-menu">
+      <h2 class="subtitulo">🌼 Flores do Dado</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-flores"></div>
+        <div class="balao balao-esq">
+          Em cima está a <b>legenda</b>: cada número do dado tem uma cor. Toque na <b>flor</b> em que todas as pétalas pintadas
+          têm a cor certa do seu número (pétala em branco não conta). Cuidado: a <b>legenda pode mudar</b>! 🌸
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-flores-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="flores-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Flores do Dado: o jogo -->
+    <section class="tela tela-jogo" id="tela-flores" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="flores-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="flores-nivel"></span>
+        <span class="chuva-placar"><span id="flores-pontos">0</span> pts · <span id="flores-contador"></span></span>
+      </div>
+      <div class="flores-legenda" id="flores-legenda" aria-label="Legenda das cores"></div>
+      <p class="vistas-pergunta">Qual flor está pintada certinho?</p>
+      <div class="flores-opcoes" id="flores-opcoes"></div>
+      <p class="cores-msg" id="flores-msg" role="status"></p>
     </section>
 
     <!-- Caminho do Tatu: instruções -->
@@ -2766,6 +2795,11 @@
           <span class="jogo-card-nome">Cada Coisa no Seu Lugar</span>
           <span class="jogo-card-texto">O que a gente leva para a praia? E para a escola?</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-flores" type="button" data-tema="psicopedagogia" style="--c:#ec4899">
+          <span class="jogo-card-capa flores-capa" id="flores-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Flores do Dado</span>
+          <span class="jogo-card-texto">Qual flor está pintada com as cores certas?</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-tatu" type="button" data-tema="psicopedagogia" style="--c:#e53935">
           <span class="jogo-card-capa tatu-capa" id="tatu-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Caminho do Tatu</span>
@@ -2955,9 +2989,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=182"></script>
-  <script src="dados.js?v=182"></script>
-  <script type="module" src="js/main.js?v=182"></script>
+  <script src="plenix.js?v=183"></script>
+  <script src="dados.js?v=183"></script>
+  <script type="module" src="js/main.js?v=183"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

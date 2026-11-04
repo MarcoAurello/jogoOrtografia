@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Jogo de Ortografia: níveis, missões e perguntas. */
 
-import { $, embaralhar, sortear } from './util.js?v=182';
-import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=182';
-import { falar, frase, SOM } from './som.js?v=182';
-import { mascote, mostrar, telaJogos } from './telas.js?v=182';
-import { escolherProfessorE } from './professor.js?v=182';
-import { fimDaMissao } from './relatorio.js?v=182';
+import { $, embaralhar, sortear } from './util.js?v=183';
+import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=183';
+import { falar, frase, SOM } from './som.js?v=183';
+import { mascote, mostrar, telaJogos } from './telas.js?v=183';
+import { escolherProfessorE } from './professor.js?v=183';
+import { fimDaMissao } from './relatorio.js?v=183';
 
 // missão especial com as palavras de todas as missões, misturadas
 // ---------- Níveis do Jogo de Ortografia ----------

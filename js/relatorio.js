@@ -1,53 +1,54 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Relatório do fim do jogo: textos, gráficos, envio por e-mail (com fila offline), confete e PDF. */
 
-import { registrarPartida } from './partidas.js?v=182';
-import { $, seguro, semHTML, sortear } from './util.js?v=182';
-import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=182';
-import { frase, SOM } from './som.js?v=182';
-import { mascote, mostrar } from './telas.js?v=182';
-import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=182';
-import { comecarMissao, telaMissoes } from './ortografia.js?v=182';
-import { comecarChuva, telaChuvaMenu } from './chuva.js?v=182';
-import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=182';
-import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=182';
-import { comecarPeso, telaPesoMenu } from './peso.js?v=182';
-import { comecarQuiz, telaQuizMenu } from './quiz.js?v=182';
-import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=182';
-import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=182';
-import { comecarFichas, telaFichasMenu } from './fichas.js?v=182';
-import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=182';
-import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=182';
-import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=182';
-import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=182';
-import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=182';
-import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=182';
-import { comecarDescobrir, DESCOBRIR, telaDescobrirMenu } from './descobrir.js?v=182';
-import { CHAVES, comecarChaves, telaChavesMenu } from './chaves.js?v=182';
-import { CAMINHO, comecarCaminho, comecarTaxi, telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=182';
-import { comecarPolicia, POLICIA, telaPoliciaMenu } from './policia.js?v=182';
-import { comecarPontos, PONTOS, telaPontosMenu } from './pontos.js?v=182';
-import { comecarPixels, PIXELS, telaPixelsMenu } from './pixels.js?v=182';
-import { comecarFracoes, FRACOES, telaFracoesMenu } from './fracoes.js?v=182';
-import { comecarCores, telaCoresMenu } from './cores.js?v=182';
-import { comecarLados, telaLadosMenu } from './lados.js?v=182';
-import { comecarSetas, telaSetasMenu } from './setas.js?v=182';
-import { comecarVistas, telaVistasMenu } from './vistas.js?v=182';
-import { comecarDinos, telaDinosMenu } from './dinos.js?v=182';
-import { comecarPilhas, PILHAS, telaPilhasMenu } from './pilhas.js?v=182';
-import { BLOCOS, comecarBlocos, telaBlocosMenu } from './blocos.js?v=182';
-import { comecarLugar, telaLugarMenu } from './lugar.js?v=182';
-import { comecarMalha, MALHA, telaMalhaMenu } from './malha.js?v=182';
-import { comecarFila, FILA, telaFilaMenu } from './fila.js?v=182';
-import { comecarLoja, LOJA, telaLojaMenu } from './loja.js?v=182';
-import { comecarPalitos, PALITOS, telaPalitosMenu } from './palitos.js?v=182';
-import { BORDAS, comecarBordas, telaBordasMenu } from './bordas.js?v=182';
-import { CADEADO, comecarCadeado, telaCadeadoMenu } from './cadeado.js?v=182';
-import { comecarTatu, TATU, telaTatuMenu } from './tatu.js?v=182';
-import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=182';
-import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=182';
-import { comecarClasses, telaClassesMenu } from './classes.js?v=182';
-import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=182';
+import { registrarPartida } from './partidas.js?v=183';
+import { $, seguro, semHTML, sortear } from './util.js?v=183';
+import { aluno, estrelasTexto, missao, resultados, salvarEstrelas } from './estado.js?v=183';
+import { frase, SOM } from './som.js?v=183';
+import { mascote, mostrar } from './telas.js?v=183';
+import { emailDoRelatorio, jogoDaMissao, listaEmails } from './professor.js?v=183';
+import { comecarMissao, telaMissoes } from './ortografia.js?v=183';
+import { comecarChuva, telaChuvaMenu } from './chuva.js?v=183';
+import { comecarMat, MAT, telaMatMenu } from './matematica.js?v=183';
+import { comecarTiro, telaTiroMenu, TIRO } from './tiro.js?v=183';
+import { comecarPeso, telaPesoMenu } from './peso.js?v=183';
+import { comecarQuiz, telaQuizMenu } from './quiz.js?v=183';
+import { comecarLuz, LUZ, telaLuzesMenu } from './luzes.js?v=183';
+import { comecarRotina, ROTINA, telaRotinaMenu } from './rotina.js?v=183';
+import { comecarFichas, telaFichasMenu } from './fichas.js?v=183';
+import { comecarEscondida, ESCONDIDA, telaEscondidaMenu } from './escondida.js?v=183';
+import { comecarCopia, COPIA, telaCopiaMenu } from './copia.js?v=183';
+import { BARCOS, comecarBarcos, telaBarcosMenu } from './barcos.js?v=183';
+import { comecarGiro, GIRO, telaGiroMenu } from './giro.js?v=183';
+import { comecarHora, HORA, telaHoraMenu } from './hora.js?v=183';
+import { comecarSomando, SOMANDO, telaSomandoMenu } from './somando.js?v=183';
+import { comecarDescobrir, DESCOBRIR, telaDescobrirMenu } from './descobrir.js?v=183';
+import { CHAVES, comecarChaves, telaChavesMenu } from './chaves.js?v=183';
+import { CAMINHO, comecarCaminho, comecarTaxi, telaCaminhoMenu, telaTaxiMenu } from './caminho.js?v=183';
+import { comecarPolicia, POLICIA, telaPoliciaMenu } from './policia.js?v=183';
+import { comecarPontos, PONTOS, telaPontosMenu } from './pontos.js?v=183';
+import { comecarPixels, PIXELS, telaPixelsMenu } from './pixels.js?v=183';
+import { comecarFracoes, FRACOES, telaFracoesMenu } from './fracoes.js?v=183';
+import { comecarCores, telaCoresMenu } from './cores.js?v=183';
+import { comecarLados, telaLadosMenu } from './lados.js?v=183';
+import { comecarSetas, telaSetasMenu } from './setas.js?v=183';
+import { comecarVistas, telaVistasMenu } from './vistas.js?v=183';
+import { comecarDinos, telaDinosMenu } from './dinos.js?v=183';
+import { comecarPilhas, PILHAS, telaPilhasMenu } from './pilhas.js?v=183';
+import { BLOCOS, comecarBlocos, telaBlocosMenu } from './blocos.js?v=183';
+import { comecarLugar, telaLugarMenu } from './lugar.js?v=183';
+import { comecarMalha, MALHA, telaMalhaMenu } from './malha.js?v=183';
+import { comecarFila, FILA, telaFilaMenu } from './fila.js?v=183';
+import { comecarLoja, LOJA, telaLojaMenu } from './loja.js?v=183';
+import { comecarPalitos, PALITOS, telaPalitosMenu } from './palitos.js?v=183';
+import { BORDAS, comecarBordas, telaBordasMenu } from './bordas.js?v=183';
+import { CADEADO, comecarCadeado, telaCadeadoMenu } from './cadeado.js?v=183';
+import { comecarTatu, TATU, telaTatuMenu } from './tatu.js?v=183';
+import { comecarFlores, FLORES, telaFloresMenu } from './flores.js?v=183';
+import { comecarSimbolos, telaSimbolosMenu } from './simbolos.js?v=183';
+import { comecarTabuada, telaTabuadaMenu } from './tabuada.js?v=183';
+import { comecarClasses, telaClassesMenu } from './classes.js?v=183';
+import { comecarGraficos, telaGraficosMenu } from './graficos.js?v=183';
 
 // ---------- Relatório de dificuldades ----------
 function montarRelatorio() {
@@ -94,6 +95,9 @@ function textosRelatorio(mis) {
   if (mis.simbolos) return { tipo: 'simbolos', assunto: 'Atenção seletiva e discriminação visual (forma e cor)', unidade: 'carta', revisar: 'Cartas para revisar',
     certo: 'Figura', tentou: 'Toques errados', tentouPdf: 'Toques errados', porRegra: 'Cartas sem erro por tamanho da figura',
     niveis: 'Nível em cada carta', atividade: 'Atividade', outras: '🃏 Atenção à Forma', tempos: 'Tempo para completar cada carta' };
+  if (mis.flores) return { tipo: 'flores', assunto: 'Atenção seletiva e conferência (flores do dado)', unidade: 'flor', revisar: 'Flores para revisar',
+    certo: 'Legenda da rodada', tentou: 'Você escolheu', tentouPdf: 'O aluno escolheu', porRegra: 'Acertos por nível',
+    niveis: 'Nível em cada flor', atividade: 'Atividade', outras: '🌼 Flores do Dado', tempos: 'Tempo para escolher cada flor' };
   if (mis.tatu) return { tipo: 'tatu', assunto: 'Orientação espacial e sequência (caminho do tatu)', unidade: 'caminho', revisar: 'Caminhos para revisar',
     certo: 'Maçã certa (e as setas)', tentou: 'Você tocou', tentouPdf: 'O aluno tocou', porRegra: 'Acertos por nível',
     niveis: 'Nível em cada caminho', atividade: 'Atividade', outras: '🍎 Caminho do Tatu', tempos: 'Tempo para achar a maçã de cada caminho' };
@@ -334,7 +338,7 @@ function graficosDoRelatorio(rel, mis) {
   const graficos = [{ c: graficoResultado(rel), alt: `Resultado: ${rel.dePrimeiraN} de ${rel.respondidas} certas de primeira` }];
   const tx = textosRelatorio(mis);
   if (rel.porRegra.length) graficos.push({ c: graficoPorRegra(rel, tx.porRegra), alt: tx.porRegra });
-  if (rel.niveis.length) graficos.push({ c: graficoNiveis(rel, tx.niveis, mis.pilhas ? PILHAS.NIVEL_MAX : mis.blocos ? BLOCOS.NIVEL_MAX : mis.malha ? MALHA.NIVEL_MAX : mis.fila ? FILA.NIVEL_MAX : mis.loja ? LOJA.NIVEL_MAX : mis.palitos ? PALITOS.NIVEL_MAX : mis.bordas ? BORDAS.NIVEL_MAX : mis.cadeado ? CADEADO.NIVEL_MAX : mis.tatu ? TATU.NIVEL_MAX : mis.fracoes ? FRACOES.NIVEL_MAX : mis.pixels ? PIXELS.NIVEL_MAX : mis.pontoAPonto ? PONTOS.NIVEL_MAX : mis.policia ? POLICIA.NIVEL_MAX : mis.caminho || mis.taxi ? CAMINHO.NIVEL_MAX : mis.chaves ? CHAVES.NIVEL_MAX : mis.descobrir ? DESCOBRIR.NIVEL_MAX : mis.somando ? SOMANDO.NIVEL_MAX : mis.hora ? HORA.NIVEL_MAX : mis.giro ? GIRO.NIVEL_MAX : mis.barcos ? BARCOS.NIVEL_MAX : mis.copia ? COPIA.NIVEL_MAX : mis.escondida ? ESCONDIDA.NIVEL_MAX : mis.rotina ? ROTINA.NIVEL_MAX : mis.luzes ? LUZ.NIVEL_MAX : mis.tiro ? TIRO.NIVEL_MAX : MAT.NIVEL_MAX), alt: tx.niveis, largo: true });
+  if (rel.niveis.length) graficos.push({ c: graficoNiveis(rel, tx.niveis, mis.pilhas ? PILHAS.NIVEL_MAX : mis.blocos ? BLOCOS.NIVEL_MAX : mis.malha ? MALHA.NIVEL_MAX : mis.fila ? FILA.NIVEL_MAX : mis.loja ? LOJA.NIVEL_MAX : mis.palitos ? PALITOS.NIVEL_MAX : mis.bordas ? BORDAS.NIVEL_MAX : mis.cadeado ? CADEADO.NIVEL_MAX : mis.tatu ? TATU.NIVEL_MAX : mis.flores ? FLORES.NIVEL_MAX : mis.fracoes ? FRACOES.NIVEL_MAX : mis.pixels ? PIXELS.NIVEL_MAX : mis.pontoAPonto ? PONTOS.NIVEL_MAX : mis.policia ? POLICIA.NIVEL_MAX : mis.caminho || mis.taxi ? CAMINHO.NIVEL_MAX : mis.chaves ? CHAVES.NIVEL_MAX : mis.descobrir ? DESCOBRIR.NIVEL_MAX : mis.somando ? SOMANDO.NIVEL_MAX : mis.hora ? HORA.NIVEL_MAX : mis.giro ? GIRO.NIVEL_MAX : mis.barcos ? BARCOS.NIVEL_MAX : mis.copia ? COPIA.NIVEL_MAX : mis.escondida ? ESCONDIDA.NIVEL_MAX : mis.rotina ? ROTINA.NIVEL_MAX : mis.luzes ? LUZ.NIVEL_MAX : mis.tiro ? TIRO.NIVEL_MAX : MAT.NIVEL_MAX), alt: tx.niveis, largo: true });
   if (rel.tempos.length && tx.tempos) graficos.push({ c: graficoTempos(rel, tx.tempos), alt: tx.tempos, largo: true });
   return graficos.map((x) => ({ url: x.c.toDataURL('image/png'), w: x.c.width, h: x.c.height, alt: x.alt, largo: !!x.largo }));
 }
@@ -342,7 +346,7 @@ function graficosDoRelatorio(rel, mis) {
 function desenharRelatorio(rel, estrelas) {
   const data = new Date().toLocaleDateString('pt-BR');
   const tx = textosRelatorio(missao);
-  const caixa = (s) => (missao.quiz || missao.fracoes || missao.pixels || missao.pontoAPonto || missao.policia || missao.caminho || missao.taxi || missao.chaves || missao.descobrir || missao.somando || missao.hora || missao.giro || missao.barcos || missao.copia || missao.rotina || missao.luzes || missao.fichas || missao.cores || missao.lados || missao.setas || missao.vistas || missao.dinos || missao.pilhas || missao.blocos || missao.lugar || missao.malha || missao.fila || missao.loja || missao.palitos || missao.bordas || missao.cadeado || missao.tatu || missao.simbolos || missao.tabuada || missao.classes || missao.graficos ? s : s.toUpperCase());   // palavras em caixa alta; frases e perguntas como estão
+  const caixa = (s) => (missao.quiz || missao.fracoes || missao.pixels || missao.pontoAPonto || missao.policia || missao.caminho || missao.taxi || missao.chaves || missao.descobrir || missao.somando || missao.hora || missao.giro || missao.barcos || missao.copia || missao.rotina || missao.luzes || missao.fichas || missao.cores || missao.lados || missao.setas || missao.vistas || missao.dinos || missao.pilhas || missao.blocos || missao.lugar || missao.malha || missao.fila || missao.loja || missao.palitos || missao.bordas || missao.cadeado || missao.tatu || missao.flores || missao.simbolos || missao.tabuada || missao.classes || missao.graficos ? s : s.toUpperCase());   // palavras em caixa alta; frases e perguntas como estão
   $('relatorio-info').innerHTML = `<b>Aluno:</b> ${seguro(aluno)} · <b>Data:</b> ${data} · <b>${tx.atividade}:</b> ${seguro(missao.titulo)}<br>`
     + `<b>Acertos de primeira:</b> ${rel.dePrimeiraN} de ${rel.respondidas} · <b>Estrelas:</b> ${estrelas} de 3`
     + (missao.extra ? `<br>${seguro(missao.extra)}` : '')
@@ -594,7 +598,7 @@ async function montarPDF() {
       y += 7;
     };
     cabecalho();
-    const caixa = (s) => (mis.quiz || mis.fracoes || mis.pixels || mis.pontoAPonto || mis.policia || mis.caminho || mis.taxi || mis.chaves || mis.descobrir || mis.somando || mis.hora || mis.giro || mis.barcos || mis.copia || mis.rotina || mis.luzes || mis.fichas || mis.cores || mis.lados || mis.setas || mis.vistas || mis.dinos || mis.pilhas || mis.blocos || mis.lugar || mis.malha || mis.fila || mis.loja || mis.palitos || mis.bordas || mis.cadeado || mis.tatu || mis.simbolos || mis.tabuada || mis.classes || mis.graficos ? s : s.toUpperCase());
+    const caixa = (s) => (mis.quiz || mis.fracoes || mis.pixels || mis.pontoAPonto || mis.policia || mis.caminho || mis.taxi || mis.chaves || mis.descobrir || mis.somando || mis.hora || mis.giro || mis.barcos || mis.copia || mis.rotina || mis.luzes || mis.fichas || mis.cores || mis.lados || mis.setas || mis.vistas || mis.dinos || mis.pilhas || mis.blocos || mis.lugar || mis.malha || mis.fila || mis.loja || mis.palitos || mis.bordas || mis.cadeado || mis.tatu || mis.flores || mis.simbolos || mis.tabuada || mis.classes || mis.graficos ? s : s.toUpperCase());
     rel.comErro.forEach((r, i) => {
       // textos longos (perguntas do questionário) quebram em várias linhas dentro da coluna
       doc.setFontSize(11);
@@ -628,8 +632,8 @@ async function baixarPDF() {
   pdf.doc.save(pdf.arquivo);
 }
 
-$('btn-repetir').onclick = () => (missao.quiz ? comecarQuiz(missao.quizId) : missao.fracoes ? comecarFracoes() : missao.pixels ? comecarPixels() : missao.pontoAPonto ? comecarPontos() : missao.policia ? comecarPolicia() : missao.caminho ? comecarCaminho() : missao.taxi ? comecarTaxi() : missao.chaves ? comecarChaves() : missao.descobrir ? comecarDescobrir() : missao.somando ? comecarSomando() : missao.hora ? comecarHora() : missao.giro ? comecarGiro() : missao.barcos ? comecarBarcos() : missao.copia ? comecarCopia() : missao.escondida ? comecarEscondida() : missao.setas ? comecarSetas() : missao.vistas ? comecarVistas() : missao.dinos ? comecarDinos() : missao.pilhas ? comecarPilhas() : missao.blocos ? comecarBlocos() : missao.lugar ? comecarLugar() : missao.malha ? comecarMalha() : missao.fila ? comecarFila() : missao.loja ? comecarLoja() : missao.palitos ? comecarPalitos() : missao.bordas ? comecarBordas() : missao.cadeado ? comecarCadeado() : missao.tatu ? comecarTatu() : missao.simbolos ? comecarSimbolos() : missao.tabuada ? comecarTabuada() : missao.classes ? comecarClasses() : missao.graficos ? comecarGraficos(missao.nivelGraficos) : missao.cores ? comecarCores() : missao.lados ? comecarLados() : missao.fichas ? comecarFichas() : missao.rotina ? comecarRotina() : missao.luzes ? comecarLuz() : missao.peso ? comecarPeso() : missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
-$('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.fracoes ? telaFracoesMenu() : missao.pixels ? telaPixelsMenu() : missao.pontoAPonto ? telaPontosMenu() : missao.policia ? telaPoliciaMenu() : missao.caminho ? telaCaminhoMenu() : missao.taxi ? telaTaxiMenu() : missao.chaves ? telaChavesMenu() : missao.descobrir ? telaDescobrirMenu() : missao.somando ? telaSomandoMenu() : missao.hora ? telaHoraMenu() : missao.giro ? telaGiroMenu() : missao.barcos ? telaBarcosMenu() : missao.copia ? telaCopiaMenu() : missao.escondida ? telaEscondidaMenu() : missao.setas ? telaSetasMenu() : missao.vistas ? telaVistasMenu() : missao.dinos ? telaDinosMenu() : missao.pilhas ? telaPilhasMenu() : missao.blocos ? telaBlocosMenu() : missao.lugar ? telaLugarMenu() : missao.malha ? telaMalhaMenu() : missao.fila ? telaFilaMenu() : missao.loja ? telaLojaMenu() : missao.palitos ? telaPalitosMenu() : missao.bordas ? telaBordasMenu() : missao.cadeado ? telaCadeadoMenu() : missao.tatu ? telaTatuMenu() : missao.simbolos ? telaSimbolosMenu() : missao.tabuada ? telaTabuadaMenu() : missao.classes ? telaClassesMenu() : missao.graficos ? telaGraficosMenu() : missao.cores ? telaCoresMenu() : missao.lados ? telaLadosMenu() : missao.fichas ? telaFichasMenu() : missao.rotina ? telaRotinaMenu() : missao.luzes ? telaLuzesMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
+$('btn-repetir').onclick = () => (missao.quiz ? comecarQuiz(missao.quizId) : missao.fracoes ? comecarFracoes() : missao.pixels ? comecarPixels() : missao.pontoAPonto ? comecarPontos() : missao.policia ? comecarPolicia() : missao.caminho ? comecarCaminho() : missao.taxi ? comecarTaxi() : missao.chaves ? comecarChaves() : missao.descobrir ? comecarDescobrir() : missao.somando ? comecarSomando() : missao.hora ? comecarHora() : missao.giro ? comecarGiro() : missao.barcos ? comecarBarcos() : missao.copia ? comecarCopia() : missao.escondida ? comecarEscondida() : missao.setas ? comecarSetas() : missao.vistas ? comecarVistas() : missao.dinos ? comecarDinos() : missao.pilhas ? comecarPilhas() : missao.blocos ? comecarBlocos() : missao.lugar ? comecarLugar() : missao.malha ? comecarMalha() : missao.fila ? comecarFila() : missao.loja ? comecarLoja() : missao.palitos ? comecarPalitos() : missao.bordas ? comecarBordas() : missao.cadeado ? comecarCadeado() : missao.tatu ? comecarTatu() : missao.flores ? comecarFlores() : missao.simbolos ? comecarSimbolos() : missao.tabuada ? comecarTabuada() : missao.classes ? comecarClasses() : missao.graficos ? comecarGraficos(missao.nivelGraficos) : missao.cores ? comecarCores() : missao.lados ? comecarLados() : missao.fichas ? comecarFichas() : missao.rotina ? comecarRotina() : missao.luzes ? comecarLuz() : missao.peso ? comecarPeso() : missao.tiro ? comecarTiro() : missao.matematica ? comecarMat() : missao.chuva ? comecarChuva() : comecarMissao());
+$('btn-outras').onclick = () => (missao.quiz ? telaQuizMenu() : missao.fracoes ? telaFracoesMenu() : missao.pixels ? telaPixelsMenu() : missao.pontoAPonto ? telaPontosMenu() : missao.policia ? telaPoliciaMenu() : missao.caminho ? telaCaminhoMenu() : missao.taxi ? telaTaxiMenu() : missao.chaves ? telaChavesMenu() : missao.descobrir ? telaDescobrirMenu() : missao.somando ? telaSomandoMenu() : missao.hora ? telaHoraMenu() : missao.giro ? telaGiroMenu() : missao.barcos ? telaBarcosMenu() : missao.copia ? telaCopiaMenu() : missao.escondida ? telaEscondidaMenu() : missao.setas ? telaSetasMenu() : missao.vistas ? telaVistasMenu() : missao.dinos ? telaDinosMenu() : missao.pilhas ? telaPilhasMenu() : missao.blocos ? telaBlocosMenu() : missao.lugar ? telaLugarMenu() : missao.malha ? telaMalhaMenu() : missao.fila ? telaFilaMenu() : missao.loja ? telaLojaMenu() : missao.palitos ? telaPalitosMenu() : missao.bordas ? telaBordasMenu() : missao.cadeado ? telaCadeadoMenu() : missao.tatu ? telaTatuMenu() : missao.flores ? telaFloresMenu() : missao.simbolos ? telaSimbolosMenu() : missao.tabuada ? telaTabuadaMenu() : missao.classes ? telaClassesMenu() : missao.graficos ? telaGraficosMenu() : missao.cores ? telaCoresMenu() : missao.lados ? telaLadosMenu() : missao.fichas ? telaFichasMenu() : missao.rotina ? telaRotinaMenu() : missao.luzes ? telaLuzesMenu() : missao.peso ? telaPesoMenu() : missao.tiro ? telaTiroMenu() : missao.matematica ? telaMatMenu() : missao.chuva ? telaChuvaMenu() : telaMissoes());
 $('btn-pdf').onclick = () => { baixarPDF().catch((e) => { console.error('PDF:', e); window.print(); }); };
 
 export { CHAVE_RELATORIO, definirUrlRelatorio, depoisDoFim, enviarFila, fimDaMissao, montarPDF, ultimoRelatorio, URL_PRINCIPAL, URL_RELATORIO };
