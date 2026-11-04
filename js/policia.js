@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Polícia e Ladrão. */
 
-import { $, embaralhar, sortear } from './util.js?v=168';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=168';
-import { SOM, tocar } from './som.js?v=168';
-import { mascote, mostrar, telaJogos } from './telas.js?v=168';
-import { escolherProfessorE } from './professor.js?v=168';
-import { segundos } from './luzes.js?v=168';
-import { fimDaMissao } from './relatorio.js?v=168';
+import { $, embaralhar, sortear } from './util.js?v=171';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=171';
+import { SOM, tocar } from './som.js?v=171';
+import { mascote, mostrar, telaJogos } from './telas.js?v=171';
+import { escolherProfessorE } from './professor.js?v=171';
+import { segundos } from './luzes.js?v=171';
+import { fimDaMissao } from './relatorio.js?v=171';
 
 // ---------- Polícia e Ladrão ----------
 // Controle inibitório e orientação espacial. Uma cidade pequena vista de cima (a tela acompanha a viatura). A criança

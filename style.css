@@ -2033,6 +2033,56 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .lugar-svg, .lugar-opcao, .lugar-opcao.certa, .lugar-opcao.errada { animation: none; }
 }
 
+/* ---------- Jogo da Loja ---------- */
+/* tabela de preços: figura e o preço do lado (3 por linha) */
+.loja-tabela { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; width: 100%; max-width: 680px; margin: 6px auto 0; }
+.loja-preco { display: flex; align-items: center; gap: 3px; padding: 3px 4px; border: 2px solid #1e64d2; border-radius: 10px; background: #fff; min-width: 0; }
+/* no celular estreito, a figura e o preço encolhem pela largura (o preço inteiro tem de caber: "R$ 12,00") */
+.loja-preco .loja-item { flex: none; width: clamp(24px, min(6vw, 6dvh), 46px); height: auto; }
+.loja-preco span { display: flex; flex-direction: column; min-width: 0; line-height: 1.1; }
+.loja-preco b { font-size: clamp(9px, min(2.6vw, 1.7dvh), 14px); color: #13294b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.loja-preco em { font-style: normal; font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(12px, min(3.7vw, 2.6dvh), 20px); color: #1e64d2; white-space: nowrap; }
+/* celular em pé: 2 por linha, com figura e preço maiores (sobra altura, falta largura) */
+@media (max-width: 520px) and (min-height: 600px) {
+  #tela-loja .loja-tabela { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #tela-loja .loja-preco { gap: 6px; padding: 4px 8px; }
+  #tela-loja .loja-preco .loja-item { width: clamp(30px, 5.5dvh, 46px); }
+  #tela-loja .loja-preco b { font-size: clamp(11px, 1.8dvh, 14px); }
+  #tela-loja .loja-preco em { font-size: clamp(16px, 2.8dvh, 22px); }
+}
+/* a compra: os itens desenhados quantas vezes foram comprados */
+.loja-compra { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 6px; width: 100%; max-width: 680px; margin: 8px auto 0;
+  padding: 6px; box-sizing: border-box; border: 2.5px dashed #2e9e5b; border-radius: 16px; background: #f0fbf3; }
+.loja-pacote { display: flex; align-items: center; gap: 2px; }
+.loja-qtd { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(16px, 3dvh, 24px); color: #1d6b3d; margin-right: 2px; }
+.loja-pacote .loja-item { width: clamp(34px, 7.5dvh, 60px); height: auto; }
+.loja-mais { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(18px, 3.2dvh, 26px); color: #1d6b3d; }
+.loja-pergunta { margin: 0; }
+.loja-pagou .loja-nota { width: clamp(44px, 9vw, 64px); vertical-align: middle; }
+/* as 3 respostas: as notas e moedas desenhadas e o valor embaixo */
+.loja-opcoes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; max-width: 680px; margin: 8px auto 0; }
+.loja-opcao { display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 4px; padding: 6px 4px; min-height: clamp(84px, 15dvh, 130px);
+  border: 2.5px solid #13294b; border-radius: 16px; background: #fff; cursor: pointer; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.25); animation: cores-nascer 0.34s ease-out both; }
+.loja-dinheiro { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 3px; }
+.loja-nota { width: clamp(40px, 11vw, 64px); height: auto; }
+.loja-moeda { width: clamp(18px, 5vw, 28px); height: auto; }
+.loja-valor { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(14px, 2.4dvh, 19px); color: #13294b; white-space: nowrap; }
+.loja-opcao:active { transform: translateY(3px); box-shadow: none; }
+.loja-opcao:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.loja-opcao:disabled { cursor: default; }
+.loja-opcao.certa { background: #dff5e7; border-color: var(--verde); box-shadow: 0 0 0 5px rgba(46, 158, 91, 0.25), 0 4px 0 #1d6b3d; animation: cores-quique 0.45s ease-out; }
+.loja-opcao.errada { background: #fde4e4; border-color: var(--vermelho); box-shadow: 0 4px 0 #8e1b1b; animation: tremer 0.4s ease; }
+.loja-opcao.apagada { opacity: 0.4; }
+/* capa do cartão */
+.loja-capa { position: relative; display: block; background: linear-gradient(#f0fbf3, #d9f2e1); }
+.loja-capa-linha { position: absolute; left: 8%; right: 8%; top: 10%; height: 55%; display: flex; justify-content: center; gap: 4%; }
+.loja-capa-linha .loja-item { height: 100%; width: auto; }
+.loja-capa-nota { position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%) rotate(-6deg); width: 42%; }
+.loja-capa-nota .loja-nota { width: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  .loja-opcao, .loja-opcao.certa, .loja-opcao.errada { animation: none; }
+}
+
 /* ---------- Jogo da Fila ---------- */
 /* as crianças da rodada, lado a lado e com o nome (dá para arrastar ou tocar) */
 .fila-turma { display: flex; justify-content: center; gap: clamp(4px, 1.5vw, 12px); width: 100%; max-width: 680px; margin: 6px auto 0; }

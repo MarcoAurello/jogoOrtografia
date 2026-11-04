@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=168">
+  <link rel="stylesheet" href="style.css?v=171">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -692,6 +692,39 @@
       </div>
       <div class="lugar-opcoes" id="lugar-opcoes"></div>
       <p class="cores-msg" id="lugar-msg" role="status"></p>
+    </section>
+
+    <!-- Jogo da Loja: instruções -->
+    <section class="tela" id="tela-loja-menu">
+      <h2 class="subtitulo">🛒 Jogo da Loja</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-loja"></div>
+        <div class="balao balao-esq">
+          Bem-vindo à <b>papelaria</b>! Em cima está a <b>tabela de preços</b>. Veja o que foi comprado e responda:
+          <b>quanto custa a compra</b>? Ou: pagou com uma nota, <b>qual é o troco</b>? Toque nas notas certas! 💰
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-loja-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="loja-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Jogo da Loja: o jogo -->
+    <section class="tela tela-jogo" id="tela-loja" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="loja-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="loja-nivel"></span>
+        <span class="chuva-placar"><span id="loja-pontos">0</span> pts · <span id="loja-contador"></span></span>
+      </div>
+      <div class="loja-tabela" id="loja-tabela" aria-label="Tabela de preços"></div>
+      <div class="loja-compra" id="loja-compra"></div>
+      <div class="lugar-topo">
+        <button class="lugar-ouvir" id="loja-ouvir" type="button" aria-label="Ouvir a pergunta">🔊</button>
+        <p class="vistas-pergunta loja-pergunta" id="loja-pergunta"></p>
+      </div>
+      <div class="loja-opcoes" id="loja-opcoes"></div>
+      <p class="cores-msg" id="loja-msg" role="status"></p>
     </section>
 
     <!-- Jogo da Fila: instruções -->
@@ -2457,6 +2490,11 @@
           <span class="jogo-card-nome">Peso Certo</span>
           <span class="jogo-card-texto">Equilibre a balança com os pesos!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-loja" type="button" data-tema="matematica" style="--c:#2e9e5b">
+          <span class="jogo-card-capa loja-capa" id="loja-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Jogo da Loja</span>
+          <span class="jogo-card-texto">Quanto custa a compra? E o troco?</span>
+        </button>
         <!-- jogo externo: abre o site da Tia Ana em outra aba -->
         <a class="jogo-card com-capa" id="btn-abc" href="https://abcdaana.vercel.app/" target="_blank" rel="noopener" data-tema="portugues psicopedagogia" style="--c:#c2185b">
           <img class="jogo-card-capa" src="assets/capa-abc-tia-ana.jpg" alt="" width="480" height="619">
@@ -2777,9 +2815,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=168"></script>
-  <script src="dados.js?v=168"></script>
-  <script type="module" src="js/main.js?v=168"></script>
+  <script src="plenix.js?v=171"></script>
+  <script src="dados.js?v=171"></script>
+  <script type="module" src="js/main.js?v=171"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

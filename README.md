@@ -136,6 +136,18 @@ relatório (com a informação de que a fila montada estava certa ou errada). S�
 de 3 só com primeiro, último e lugar N; fila de 3 com "logo depois"; fila de 4; fila de 4 com "antes" e "entre"; fila de 5
 e fila de 6 (com "não é o primeiro"). Começa com 3 crianças porque com 2 só existem 2 filas.
 
+## Jogo da Loja (dinheiro: valor da compra e troco)
+
+Fica em **Matemática** (`js/loja.js`). Em cima, a **tabela de preços** da papelaria (12 materiais desenhados em SVG:
+lápis, borracha, caneta, régua, caderno, cola, tesoura, apontador, giz de cera, estojo, livro e mochila), com a figura e o
+preço do lado; ela **muda a cada rodada**. No meio, o desenho da compra ("2 × lápis + 1 × borracha") e a pergunta, falada:
+**"Quanto custa a compra?"** ou **"João pagou com R$ 10,00. Qual é o troco?"**. As **3 respostas** vêm com o **desenho das
+notas e moedas** (moeda de 1 e notas de 2, 5, 10, 20 e 50, desenhos simplificados com a cor de cada nota) e o valor.
+As erradas imitam os erros comuns: somar os preços sem a quantidade, errar a conta por pouco e, no troco, responder o
+valor da compra. Depois da resposta aparece a conta inteira (2 × R$ 3,00 + 1 × R$ 4,00 = R$ 10,00; troco: ...).
+São **6 níveis** (10 compras): um item, dois itens, troco de R$ 10, quantidades até 3, troco de R$ 20 e troco de R$ 50
+com três itens.
+
 ## Atenção à Forma (atenção seletiva e discriminação visual)
 
 Fica em **Psicopedagogia**, baseado na placa de pinos com cartas de modelo. No alto aparece uma **carta** com uma figura
