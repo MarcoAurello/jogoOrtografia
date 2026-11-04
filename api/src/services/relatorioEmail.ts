@@ -30,6 +30,7 @@ const TEXTOS = {
   lateralidade: { assunto: 'Lateralidade e atenção (esquerda, direita, cima e baixo)', unidade: 'comando', revisar: 'Comandos para revisar', certo: 'Comando', tentou: 'O que aconteceu', porRegra: 'Acertos por tipo de comando', niveis: 'Nível em cada comando', nivelMax: 8 },
   setas: { assunto: 'Atenção e flexibilidade (setas e cores)', unidade: 'sequência', revisar: 'Sequências para revisar', certo: 'Setas e cores certas', tentou: 'O aluno escolheu', porRegra: 'Acertos por número de setas', niveis: 'Nível em cada sequência', nivelMax: 7 },
   vistas: { assunto: 'Percepção espacial (vista de lado e de cima)', unidade: 'pirâmide', revisar: 'Pirâmides para revisar', certo: 'Pirâmide (de baixo para cima)', tentou: 'O aluno escolheu', porRegra: 'Acertos por tipo de vista', niveis: 'Nível em cada pirâmide', nivelMax: 6 },
+  palitos: { assunto: 'Percepção visual e controle inibitório (palitos sobrepostos)', unidade: 'pergunta', revisar: 'Perguntas para revisar', certo: 'Palito certo (e a ordem)', tentou: 'O aluno escolheu', porRegra: 'Acertos por nível', niveis: 'Nível em cada pergunta', nivelMax: 6 },
   loja: { assunto: 'Dinheiro: valor da compra e troco (jogo da loja)', unidade: 'compra', revisar: 'Compras para revisar', certo: 'Compra e a conta certa', tentou: 'O aluno respondeu', porRegra: 'Acertos por nível', niveis: 'Nível em cada compra', nivelMax: 6 },
   fila: { assunto: 'Raciocínio lógico e posição (jogo da fila)', unidade: 'fila', revisar: 'Filas para revisar', certo: 'Fila certa (do 1º ao último)', tentou: 'O aluno escolheu', porRegra: 'Acertos por nível', niveis: 'Nível em cada fila', nivelMax: 6 },
   malha: { assunto: 'Orientação espacial e coordenadas (caminho na malha)', unidade: 'caminho', revisar: 'Caminhos para revisar', certo: 'Casa de chegada (e o caminho)', tentou: 'O aluno tocou', porRegra: 'Acertos por nível', niveis: 'Nível em cada caminho', nivelMax: 6 },
@@ -66,7 +67,7 @@ const TITULO_TEMPO: Record<string, string> = {
   chaves: 'Tempo para responder cada quadrado', caminho: 'Tempo para fazer cada caminho', taxi: 'Tempo para fazer cada caminho',
   policia: 'Tempo para prender cada ladrão', pontos: 'Tempo para desenhar cada modelo', pixels: 'Tempo para montar cada desenho',
   fracoes: 'Tempo para responder cada pedido', cores: 'Tempo para resolver cada conta', lateralidade: 'Tempo de resposta em cada comando',
-  setas: 'Tempo para responder cada sequência', vistas: 'Tempo para responder cada pirâmide', dinos: 'Tempo para escolher cada sequência', pilhas: 'Tempo para separar as cores em cada fase', blocos: 'Tempo para contar cada construção', lugar: 'Tempo para achar o objeto de cada lugar', malha: 'Tempo para achar a casa de chegada', fila: 'Tempo para escolher cada fila', loja: 'Tempo para responder cada compra',
+  setas: 'Tempo para responder cada sequência', vistas: 'Tempo para responder cada pirâmide', dinos: 'Tempo para escolher cada sequência', pilhas: 'Tempo para separar as cores em cada fase', blocos: 'Tempo para contar cada construção', lugar: 'Tempo para achar o objeto de cada lugar', malha: 'Tempo para achar a casa de chegada', fila: 'Tempo para escolher cada fila', loja: 'Tempo para responder cada compra', palitos: 'Tempo para responder cada pergunta',
   simbolos: 'Tempo para completar cada carta', tabuada: 'Tempo para estourar cada quadrado',
 };
 

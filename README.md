@@ -136,6 +136,16 @@ relatório (com a informação de que a fila montada estava certa ou errada). S�
 de 3 só com primeiro, último e lugar N; fila de 3 com "logo depois"; fila de 4; fila de 4 com "antes" e "entre"; fila de 5
 e fila de 6 (com "não é o primeiro"). Começa com 3 crianças porque com 2 só existem 2 filas.
 
+## Palitos Sobrepostos (percepção visual e controle inibitório)
+
+Fica em **Psicopedagogia** (`js/palitos.js`). De 3 a 6 palitos coloridos se cruzam, um por cima do outro (todos se cruzam,
+para a ordem ficar visível), e a pergunta é sobre a ordem: **"De cima para baixo, qual é o 3º palito?"** ou de baixo para
+cima. As **3 respostas** são palavras de cor escritas com **tinta de outra cor** (como no teste de Stroop): vale a palavra.
+Uma das erradas sempre vem com a tinta da cor certa (pega quem vai pela cor da letra); a outra é o palito do lado contrário
+da contagem ou o vizinho. Depois da resposta, cada palito ganha o número da contagem e o pedido pisca em dourado.
+São **6 níveis** (10 perguntas): 3 palitos (só o de cima e o de baixo), 3, 4, 5, 6 de cima para baixo e 6 dos dois lados.
+O relatório separa: foi pela cor da letra, contou do lado contrário e errou a posição.
+
 ## Jogo da Loja (dinheiro: valor da compra e troco)
 
 Fica em **Matemática** (`js/loja.js`). Em cima, a **tabela de preços** da papelaria (12 materiais desenhados em SVG:

@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Pizzaria das Frações. */
 
-import { $, embaralhar, sortear } from './util.js?v=171';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=171';
-import { SOM } from './som.js?v=171';
-import { mascote, mostrar, telaJogos } from './telas.js?v=171';
-import { escolherProfessorE } from './professor.js?v=171';
-import { segundos } from './luzes.js?v=171';
-import { fimDaMissao } from './relatorio.js?v=171';
+import { $, embaralhar, sortear } from './util.js?v=173';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=173';
+import { SOM } from './som.js?v=173';
+import { mascote, mostrar, telaJogos } from './telas.js?v=173';
+import { escolherProfessorE } from './professor.js?v=173';
+import { segundos } from './luzes.js?v=173';
+import { fimDaMissao } from './relatorio.js?v=173';
 
 // ---------- Pizzaria das Frações ----------
 // Fração como parte de um todo, em 6 fases (o nível sobe quando acerta e desce quando erra):

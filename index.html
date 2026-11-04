@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=171">
+  <link rel="stylesheet" href="style.css?v=173">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -692,6 +692,38 @@
       </div>
       <div class="lugar-opcoes" id="lugar-opcoes"></div>
       <p class="cores-msg" id="lugar-msg" role="status"></p>
+    </section>
+
+    <!-- Palitos Sobrepostos: instruções -->
+    <section class="tela" id="tela-palitos-menu">
+      <h2 class="subtitulo">🥢 Palitos Sobrepostos</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-palitos"></div>
+        <div class="balao balao-esq">
+          Os <b>palitos</b> estão um por cima do outro. Olhe bem quem passa por cima e responda: <b>de cima para baixo</b>
+          (ou <b>de baixo para cima</b>), qual é o palito pedido? Cuidado: nas respostas, vale a <b>palavra</b>, não a cor da letra! 🧠
+        </div>
+      </div>
+      <div class="acoes-menu">
+        <button class="btn-grande" id="btn-palitos-comecar" type="button">Começar ▶</button>
+        <button class="btn-sec" id="palitos-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Palitos Sobrepostos: o jogo -->
+    <section class="tela tela-jogo" id="tela-palitos" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="palitos-sair" type="button">← Sair</button>
+        <span class="barra-titulo" id="palitos-nivel"></span>
+        <span class="chuva-placar"><span id="palitos-pontos">0</span> pts · <span id="palitos-contador"></span></span>
+      </div>
+      <div class="palitos-palco" id="palitos-figura"></div>
+      <div class="lugar-topo">
+        <button class="lugar-ouvir" id="palitos-ouvir" type="button" aria-label="Ouvir a pergunta">🔊</button>
+        <p class="vistas-pergunta" id="palitos-pergunta"></p>
+      </div>
+      <div class="palitos-opcoes" id="palitos-opcoes"></div>
+      <p class="cores-msg" id="palitos-msg" role="status"></p>
     </section>
 
     <!-- Jogo da Loja: instruções -->
@@ -2646,6 +2678,11 @@
           <span class="jogo-card-nome">Cada Coisa no Seu Lugar</span>
           <span class="jogo-card-texto">O que a gente leva para a praia? E para a escola?</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-palitos" type="button" data-tema="psicopedagogia" style="--c:#8e44ad">
+          <span class="jogo-card-capa palitos-capa" id="palitos-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Palitos Sobrepostos</span>
+          <span class="jogo-card-texto">Quem está por cima? Leia a palavra, não a cor!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fila" type="button" data-tema="psicopedagogia" style="--c:#e5484d">
           <span class="jogo-card-capa fila-capa" id="fila-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Jogo da Fila</span>
@@ -2815,9 +2852,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=171"></script>
-  <script src="dados.js?v=171"></script>
-  <script type="module" src="js/main.js?v=171"></script>
+  <script src="plenix.js?v=173"></script>
+  <script src="dados.js?v=173"></script>
+  <script type="module" src="js/main.js?v=173"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

@@ -2033,6 +2033,41 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
   .lugar-svg, .lugar-opcao, .lugar-opcao.certa, .lugar-opcao.errada { animation: none; }
 }
 
+/* ---------- Palitos Sobrepostos ---------- */
+.palitos-palco { position: relative; width: min(100%, 44dvh, 420px); aspect-ratio: 1; margin: 6px auto 0; border: 2.5px solid #13294b; border-radius: 20px;
+  background: #fff; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.2); }
+.palitos-svg { position: absolute; inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); overflow: visible; }
+/* os palitos caem um por um, do de baixo para o de cima (a ordem da animação não entrega nada: todos caem rápido) */
+.palitos-svg.cai .palito { animation: cores-nascer 0.3s ease-out both; animation-delay: calc(var(--i) * 60ms); }
+.palito-brilho { animation: palito-pisca 0.9s ease-in-out 3; }
+@keyframes palito-pisca { 50% { stroke-opacity: 0.25; } }
+.palito-num { animation: cores-nascer 0.3s ease-out both; }
+/* as respostas: palavra grande, a tinta é de outra cor (vale a palavra) */
+.palitos-opcoes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; max-width: 640px; margin: 8px auto 0; }
+.palitos-opcao { padding: 14px 4px; border: 2.5px solid #13294b; border-radius: 16px; background: #fff; cursor: pointer;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: clamp(15px, min(4.6vw, 3.4dvh), 28px); letter-spacing: 0.5px;
+  box-shadow: 0 4px 0 rgba(19, 41, 75, 0.25); animation: cores-nascer 0.34s ease-out both; overflow-wrap: anywhere; }
+.palitos-opcao:active { transform: translateY(3px); box-shadow: none; }
+.palitos-opcao:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.palitos-opcao:disabled { cursor: default; }
+.palitos-opcao.certa { background: #dff5e7; border-color: var(--verde); box-shadow: 0 0 0 5px rgba(46, 158, 91, 0.25), 0 4px 0 #1d6b3d; animation: cores-quique 0.45s ease-out; }
+.palitos-opcao.errada { background: #fde4e4; border-color: var(--vermelho); box-shadow: 0 4px 0 #8e1b1b; animation: tremer 0.4s ease; }
+.palitos-opcao.apagada { opacity: 0.4; }
+@media (orientation: landscape) and (max-height: 560px) {
+  /* celular deitado: os palitos à esquerda e a pergunta e as respostas à direita */
+  #tela-palitos.ativa { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto auto 1fr; column-gap: 12px; align-content: start; }
+  #tela-palitos > .barra { grid-column: 1 / -1; }
+  #tela-palitos > .palitos-palco { grid-column: 1; grid-row: 2 / span 3; width: calc(100dvh - 90px); margin: 0; }
+  #tela-palitos > .lugar-topo { grid-column: 2; grid-row: 2; }
+  #tela-palitos > .palitos-opcoes { grid-column: 2; grid-row: 3; grid-template-columns: 1fr; }
+  #tela-palitos > #palitos-msg { grid-column: 2; grid-row: 4; }
+}
+.palitos-capa { position: relative; display: block; background: #fff; }
+.palitos-capa .palitos-svg { inset: 8%; width: 84%; height: 84%; }
+@media (prefers-reduced-motion: reduce) {
+  .palitos-svg.cai .palito, .palito-num, .palitos-opcao, .palitos-opcao.certa, .palitos-opcao.errada { animation: none; }
+}
+
 /* ---------- Jogo da Loja ---------- */
 /* tabela de preços: figura e o preço do lado (3 por linha) */
 .loja-tabela { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; width: 100%; max-width: 680px; margin: 6px auto 0; }
