@@ -41,9 +41,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=196">
+  <link rel="stylesheet" href="style.css?v=230">
 </head>
 <body>
+  <!-- abertura: a logo Games Pedagógicos enquanto o app carrega (some sozinha quando o app fica pronto, ou em 6 s
+       se algo falhar; nas páginas de escola não aparece, para não misturar com a marca dela) -->
+  <div class="splash" id="splash" aria-hidden="true">
+    <img src="assets/logo-games.webp" alt="" width="360" height="456">
+    <span class="splash-barra"></span>
+  </div>
   <!-- moldura de lápis, livros e estrelas -->
   <div class="moldura" id="moldura" aria-hidden="true"></div>
 
@@ -54,7 +60,7 @@
         <button class="btn-menu" id="btn-menu" type="button" aria-expanded="false" aria-controls="menu-app-lista">☰ <span>Menu</span></button>
         <div class="menu-app-lista" id="menu-app-lista" hidden>
           <button class="menu-item" id="btn-menu-inicio" type="button">🏠 Início</button>
-          <button class="menu-item" id="btn-menu-teste" type="button">🎁 Testar grátis</button>
+          <button class="menu-item" id="btn-menu-teste" type="button">🎮 Jogar grátis</button>
           <button class="menu-item" id="btn-menu-turma" type="button">🏫 Entrar na turma</button>
           <button class="menu-item" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
           <button class="menu-item" id="btn-trocar" type="button">👤 Trocar aluno</button>
@@ -94,7 +100,7 @@
     <!-- Entrar na turma (depois do nome): código → toca no nome → 3 figuras; as partidas ficam guardadas (js/entrada.js) -->
     <section class="tela" id="tela-turma">
       <h2 class="subtitulo">🏫 Entrar na turma</h2>
-      <p class="turma-explica">Digite o <b>código da turma</b> (o professor passa) e o seu nome: você vê as <b>competições</b> da turma
+      <p class="turma-explica" id="turma-explica">Digite o <b>código da turma</b> (o professor passa) e o seu nome: você vê as <b>competições</b> da turma
         e o professor acompanha todas as suas partidas.</p>
       <form class="cartao cartao-login entrada-turma" id="entrada-turma" autocomplete="off">
         <div id="turma-passo-codigo">
@@ -105,14 +111,14 @@
           <button class="btn-grande" type="submit">Continuar ▶</button>
         </div>
         <div id="turma-passo-nome" hidden>
-          <p class="turma-titulo" id="turma-nome-titulo"></p>
+          <p class="turma-titulo"><span id="turma-nome-titulo"></span>
+            <button class="btn-texto" id="btn-turma-trocar" type="button">trocar turma</button></p>
           <div class="turma-alunos" id="turma-alunos"></div>
           <label class="campo">
             <span id="turma-nome-rotulo">Digite o seu nome</span>
             <input type="text" id="turma-nome-digitado" maxlength="40" placeholder="Nome e sobrenome" autocomplete="off">
           </label>
           <button class="btn-grande" id="btn-turma-nome" type="button">Entrar ▶</button>
-          <button class="btn-sec btn-pequeno" id="btn-turma-trocar" type="button">Outra turma</button>
         </div>
         <p class="erro-login" id="erro-turma" role="alert"></p>
       </form>
@@ -123,7 +129,7 @@
 
     <!-- Testar grátis: cadastra o e-mail e recebe o relatório em PDF de cada jogo (js/testegratis.js) -->
     <section class="tela" id="tela-teste">
-      <h2 class="subtitulo">🎁 Testar grátis</h2>
+      <h2 class="subtitulo">🎮 Jogar grátis</h2>
       <form class="cartao cartao-login" id="form-teste" autocomplete="on">
         <p class="professor-ajuda">Jogue à vontade: no fim de <b>cada jogo</b>, o <b>relatório em PDF</b> (acertos, erros, tempo de resposta
           e o que revisar) chega no <b>seu e-mail</b>.</p>
@@ -150,6 +156,7 @@
 
     <!-- Início -->
     <section class="tela" id="tela-inicio">
+      <img class="logo-games-inicio" src="assets/logo-games.webp" alt="Games Pedagógicos" width="360" height="456">
       <h1 class="titulo">
         <span class="cor-amarelo">JOGOS</span>
         <span class="cor-azul">PSICOPEDAGÓGICOS</span>
@@ -164,7 +171,7 @@
         </video>
         <button class="video-som" id="video-som" type="button" hidden>🔊 Toque para ouvir</button>
       </div>
-      <button class="btn-grande btn-teste" id="btn-area-jogos" type="button">🎮 Teste grátis</button>
+      <button class="btn-grande btn-teste" id="btn-area-jogos" type="button">🎮 Jogar grátis</button>
       <button class="btn-sec btn-turma-inicio" id="btn-entrar-turma" type="button">🏫 Entrar com o código da turma</button>
       <p class="link-privacidade"><a href="privacidade.html">Política de privacidade</a></p>
     </section>
@@ -1279,7 +1286,7 @@
         <div class="davi-area" id="davi-comercio"></div>
         <div class="balao balao-esq">
           Você é o <b>comandante</b> de um navio cargueiro! Cada país <b>vende</b> (exporta) o que tem de sobra e
-          <b>compra</b> (importa) o que falta. Descubra quem vende o quê e monte as rotas de comércio do mundo. Acertou de
+          <b>compra</b> (importa) o que falta. Descubra quem vende o quê pelo mundo. Acertou de
           primeira? Ganha um <b>carimbo</b> no Passaporte! 🛂
         </div>
       </div>
@@ -1325,6 +1332,119 @@
       <p class="historia-arquivo-total" id="comercio-passaporte-total"></p>
       <div class="cm-passaporte" id="comercio-passaporte-lista"></div>
       <button class="btn-sec" id="comercio-passaporte-voltar" type="button">← Modos</button>
+    </section>
+
+    <!-- Cartógrafo do Vale: fases -->
+    <section class="tela" id="tela-cartografo-menu">
+      <h2 class="subtitulo">🧭 Cartógrafo do Vale</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-cartografo"></div>
+        <div class="balao balao-esq">
+          Você é o <b>cartógrafo</b> do Vale do Rio Claro! Ligue as <b>camadas</b> do mapa (relevo, água, vegetação),
+          use a <b>🔍 lupa</b> tocando no mapa e descubra o melhor lugar para cada missão. Cada descoberta vai para o seu
+          <b>Diário de campo</b>! 📓
+        </div>
+      </div>
+      <h3 class="historia-rotulo">Fases</h3>
+      <div class="grade-missoes" id="cg-fases"></div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-cg-diario" type="button">📓 Diário de campo <small id="cg-diario-qtd"></small></button>
+        <button class="btn-sec" id="cg-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Cartógrafo do Vale: a missão (mapa com as camadas, lupa, legenda e escolha) -->
+    <section class="tela tela-jogo" id="tela-cartografo" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="cg-sair" type="button">← Fases</button>
+        <span class="barra-titulo" id="cg-titulo"></span>
+        <span class="chuva-placar"><span id="cg-pontos">0</span> pts</span>
+      </div>
+      <div class="historia-status">
+        <span id="cg-progresso"></span>
+        <span class="historia-combo" id="cg-combo" aria-live="polite"></span>
+      </div>
+      <div class="cg-pergunta" id="cg-pergunta"></div>
+      <div class="cg-mapa-caixa">
+        <div class="cg-mapa" id="cg-mapa"></div>
+      </div>
+      <!-- logo abaixo do mapa: a lupa (o que tem no lugar tocado) e as mensagens, sem cobrir o mapa -->
+      <p class="cg-msg" id="cg-msg" role="status"></p>
+      <div class="cg-camadas" id="cg-camadas" aria-label="Camadas do mapa"></div>
+      <div class="cg-legenda" id="cg-legenda" aria-label="Legenda"></div>
+      <div class="cg-acao" id="cg-acao"></div>
+      <!-- acerto: a análise do território e a anotação no Diário de campo -->
+      <div class="historia-pergaminho-fundo" id="cg-analise" hidden>
+        <div class="cg-analise" role="dialog" aria-modal="true" aria-labelledby="cg-analise-titulo">
+          <h3 id="cg-analise-titulo"></h3>
+          <p class="cg-analise-camadas">Camadas cruzadas: <span id="cg-analise-camadas"></span></p>
+          <p class="cg-analise-texto" id="cg-analise-texto"></p>
+          <p class="cg-analise-diario" id="cg-analise-diario"></p>
+          <p class="historia-perg-extra" id="cg-analise-extra"></p>
+          <button class="btn-grande" id="btn-cg-continuar" type="button">Continuar ▶</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cartógrafo do Vale: Diário de campo (as descobertas, guardadas no aparelho) -->
+    <section class="tela" id="tela-cartografo-diario">
+      <h2 class="subtitulo">📓 Diário de campo</h2>
+      <div id="cg-diario-lista"></div>
+      <button class="btn-sec" id="cg-diario-voltar" type="button">← Fases</button>
+    </section>
+
+    <!-- Robô Bip: mundos -->
+    <section class="tela" id="tela-bip-menu">
+      <h2 class="subtitulo">🤖 Robô Bip</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-bip"></div>
+        <div class="balao balao-esq">
+          O <b>Bip</b> só faz o que está no <b>roteiro</b>! Toque nas peças para montar o programa e aperte
+          <b>⚡ Executar</b> para ver o robô obedecer. Leve o Bip até a <b>⭐ estrela</b> com poucos blocos! 🧩
+        </div>
+      </div>
+      <h3 class="historia-rotulo">Mundos</h3>
+      <div class="grade-missoes" id="bip-mundos"></div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-sec" id="bip-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Robô Bip: o nível (tabuleiro, roteiro, peças e executar) -->
+    <section class="tela tela-jogo" id="tela-bip" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="bip-sair" type="button">← Mundos</button>
+        <span class="barra-titulo" id="bip-titulo"></span>
+        <span class="chuva-placar bip-moedas" id="bip-moedas">🪙 0</span>
+      </div>
+      <p class="bip-objetivo" id="bip-objetivo"></p>
+      <div class="bip-tabuleiro" id="bip-tabuleiro"></div>
+      <p class="bip-msg" id="bip-msg" role="status"></p>
+      <div class="bip-painel">
+        <div class="bip-roteiro">
+          <div class="bip-roteiro-topo"><b>ROTEIRO</b><span id="bip-blocos"></span>
+            <button class="btn-texto" id="btn-bip-codigo" type="button">👀 Ver código</button></div>
+          <div class="bip-programa" id="bip-programa"></div>
+          <pre class="bip-texto" id="bip-texto" hidden></pre>
+        </div>
+        <div class="bip-pecas">
+          <div id="bip-paleta"></div>
+          <button class="bip-executar" id="btn-bip-executar" type="button">⚡ EXECUTAR</button>
+          <button class="btn-texto bip-limpar" id="btn-bip-limpar" type="button">🗑️ Limpar roteiro</button>
+        </div>
+      </div>
+      <!-- nível completo -->
+      <div class="historia-pergaminho-fundo" id="bip-vitoria" hidden>
+        <div class="bip-vitoria" role="dialog" aria-modal="true" aria-labelledby="bip-v-titulo">
+          <div class="bip-v-robo" aria-hidden="true">🤖⭐</div>
+          <h3 id="bip-v-titulo"></h3>
+          <div class="estrelas-fim bip-v-estrelas" id="bip-v-estrelas"></div>
+          <p class="bip-v-texto" id="bip-v-texto"></p>
+          <p class="historia-perg-extra" id="bip-v-pontos"></p>
+          <button class="btn-grande" id="btn-bip-proximo" type="button">Próximo nível ▶</button>
+          <button class="btn-texto" id="btn-bip-repetir-nivel" type="button">🔁 Tentar este nível de novo (para mais estrelas)</button>
+        </div>
+      </div>
     </section>
 
     <!-- Palavra Escondida: instruções -->
@@ -1590,6 +1710,7 @@
       <div class="cartao cartao-chuva" id="comp-lista">
         <p class="quiz-status" id="comp-status"></p>
         <button class="btn-grande" id="btn-comp-turma" type="button" hidden>🏫 Entrar com o código da turma</button>
+        <button class="btn-grande" id="btn-comp-jogos" type="button" hidden>🎮 Ver os jogos</button>
         <div class="lista-quiz" id="lista-comp"></div>
         <p class="erro-login" id="comp-erro" role="status"></p>
       </div>
@@ -1902,6 +2023,7 @@
       </div>
       <div class="cartao cartao-chuva">
         <p class="quiz-status" id="quiz-status"></p>
+        <button class="btn-grande" id="btn-quiz-jogos" type="button" hidden>🎮 Ver os jogos</button>
         <div class="lista-quiz" id="lista-quiz"></div>
       </div>
       <button class="btn-sec" id="quiz-voltar" type="button">← Início</button>
@@ -2774,26 +2896,37 @@
 
     <!-- Jogos: a lista, com o filtro por tema -->
     <section class="tela" id="tela-jogos">
-      <h2 class="subtitulo">🎮 Escolha um jogo</h2>
-      <!-- menu de categorias (cada opção mostra quantos jogos tem) -->
-      <label class="filtro-temas" id="filtro-temas">
-        <span class="filtro-rotulo">Categoria</span>
-        <select class="filtro-menu" id="filtro-tema" aria-label="Filtrar jogos por categoria">
-          <option value="todos">🎮 Todos os jogos</option>
-          <option value="portugues">📚 Português</option>
-          <option value="matematica">🔢 Matemática</option>
-          <option value="historia">📜 História</option>
-          <option value="geografia">🌎 Geografia</option>
-          <option value="ingles">🌎 Inglês</option>
-          <option value="psicopedagogia">🧠 Psicopedagogia</option>
-        </select>
-      </label>
-      <!-- tags das habilidades: escolha uma ou mais e ficam só os jogos que trabalham todas -->
-      <details class="hab-sanfona" id="hab-sanfona">
-        <summary class="filtro-rotulo">Escolher por habilidades <span id="hab-qtd"></span></summary>
-        <div class="filtro-habilidades" id="filtro-habilidades"></div>
-      </details>
-      <p class="jogos-nenhum" id="jogos-nenhum" hidden>Nenhum jogo desta categoria trabalha todas essas habilidades.</p>
+      <h2 class="subtitulo" id="jogos-titulo">🎮 Escolha um jogo</h2>
+      <!-- filtro igual ao da gestão (aba Jogos): busca, categoria, dificuldade da criança e habilidade, cada opção com a
+           contagem de jogos que ficam se ela for escolhida -->
+      <div class="filtro-jogos" role="search">
+        <label class="filtro-campo"><span class="filtro-rotulo">Categoria</span>
+          <select class="filtro-menu" id="filtro-tema">
+            <option value="todos">🎮 Todos os jogos</option>
+            <option value="portugues">📚 Português</option>
+            <option value="matematica">🔢 Matemática</option>
+            <option value="historia">📜 História</option>
+            <option value="geografia">🌎 Geografia</option>
+            <option value="programacao">🤖 Programação</option>
+            <option value="ingles">🗽 Inglês</option>
+            <option value="psicopedagogia">🧠 Psicopedagogia</option>
+          </select></label>
+        <!-- abaixo das categorias: a aba Filtros abre a busca, as dificuldades do jogador e as habilidades do jogo -->
+        <details class="filtro-mais" id="filtro-mais">
+          <summary class="filtro-mais-aba">🎚️ Filtros <span class="filtro-mais-qtd" id="filtros-qtd"></span></summary>
+          <div class="filtro-mais-conteudo">
+            <label class="filtro-campo"><span class="filtro-rotulo">Filtrar por dificuldades do jogador</span>
+              <select class="filtro-menu" id="filtro-indicacao"></select></label>
+            <label class="filtro-campo"><span class="filtro-rotulo">Filtrar por habilidades do jogo</span>
+              <select class="filtro-menu" id="filtro-habilidade"></select></label>
+            <label class="filtro-campo"><span class="filtro-rotulo">Buscar</span>
+              <input class="filtro-busca" id="jogos-busca" type="search" placeholder="🔎 Nome do jogo, habilidade ou dificuldade" autocomplete="off"></label>
+          </div>
+        </details>
+        <p class="filtro-resumo"><span id="jogos-mostrando" role="status"></span>
+          <button class="btn-sec btn-pequeno" id="jogos-limpar" type="button" hidden>✕ Limpar filtros</button></p>
+      </div>
+      <p class="jogos-nenhum" id="jogos-nenhum" hidden>Nenhum jogo com esses filtros. Tente outra opção ou limpe os filtros.</p>
       <div class="escolha-jogos">
         <button class="jogo-card com-capa" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
           <img class="jogo-card-capa larga inteira" src="assets/capa-ortografia.jpg" alt="" width="760" height="370">
@@ -2856,11 +2989,20 @@
           <span class="jogo-card-nome">Cronologia da História Brasileira</span>
           <span class="jogo-card-texto">Monte a linha do tempo do Brasil!</span>
         </button>
-        <!-- capa provisória (CSS): trocar por assets/capa-comercio.jpg quando a arte ficar pronta -->
         <button class="jogo-card com-capa" id="btn-comercio" type="button" data-tema="geografia" style="--c:#0277bd">
-          <span class="jogo-card-capa cm-capa" aria-hidden="true"><span>🚢</span><span>🌎</span><span>📦</span></span>
+          <img class="jogo-card-capa" src="assets/capa-comercio.jpg" alt="" width="736" height="552">
           <span class="jogo-card-nome">Conexão Global</span>
           <span class="jogo-card-texto">Quem vende e quem compra no mundo?</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-cartografo" type="button" data-tema="geografia" style="--c:#2e7d32">
+          <img class="jogo-card-capa" src="assets/capa-cartografo.jpg" alt="" width="736" height="552">
+          <span class="jogo-card-nome">Cartógrafo do Vale</span>
+          <span class="jogo-card-texto">Cruze as camadas do mapa e resolva as missões!</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-bip" type="button" data-tema="programacao" style="--c:#7e57c2">
+          <img class="jogo-card-capa" src="assets/capa-bip.jpg" alt="" width="736" height="552">
+          <span class="jogo-card-nome">Robô Bip</span>
+          <span class="jogo-card-texto">Monte o programa e guie o robô!</span>
         </button>
         <button class="jogo-card com-capa" id="btn-fita" type="button" data-tema="matematica" style="--c:#c99700">
           <span class="jogo-card-capa fita-capa" id="fita-capa" aria-hidden="true"></span>
@@ -3164,6 +3306,8 @@
         <h2 class="subtitulo" id="fim-titulo">Missão cumprida!</h2>
         <div class="estrelas-fim" id="fim-estrelas"></div>
         <p class="fim-texto" id="fim-texto"></p>
+        <!-- jogos com fases (Cronologia, Conexão Global): próxima fase, jogar de novo ou sair, sem precisar rolar -->
+        <div class="fim-acoes" id="fim-acoes" hidden></div>
         <div class="davi-area" id="davi-fim"></div>
       </div>
 
@@ -3223,13 +3367,13 @@
   </a>
 
   <footer class="credito">
-    <span>© <a class="credito-link" href="https://sitejodospedagogicos.vercel.app/" target="_blank" rel="noopener"><b>Pedagogia Gamificada</b></a> — Todos os direitos reservados</span>
+    <span><img class="credito-logo" src="assets/logo-games-mini.webp" alt="" width="96" height="122"> © <a class="credito-link" href="https://sitejodospedagogicos.vercel.app/" target="_blank" rel="noopener"><b>Pedagogia Gamificada</b></a> — Todos os direitos reservados</span>
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=196"></script>
-  <script src="dados.js?v=196"></script>
-  <script type="module" src="js/main.js?v=196"></script>
+  <script src="plenix.js?v=230"></script>
+  <script src="dados.js?v=230"></script>
+  <script type="module" src="js/main.js?v=230"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

@@ -121,7 +121,8 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
 .btn-grande {
   display: block;
   margin: 18px auto 0;
-  padding: 16px 44px;
+  padding: 12px 22px;
+  min-height: 48px;
   font-size: clamp(22px, 3.6vw, 30px);
   font-weight: 700;
   color: var(--branco);
@@ -137,7 +138,8 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
 .btn-sec {
   display: block;
   margin: 14px auto 0;
-  padding: 11px 24px;
+  padding: 9px 16px;
+  min-height: 44px;
   font-size: 18px;
   font-weight: 600;
   color: var(--primaria);
@@ -146,7 +148,7 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
   box-shadow: var(--sombra);
 }
 
-.btn-pequeno { margin: 0; padding: 8px 16px; font-size: 15px; }
+.btn-pequeno { margin: 0; padding: 7px 12px; font-size: 15px; }
 
 .linha-botoes {
   display: flex;
@@ -475,7 +477,7 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
   .titulo { font-size: clamp(30px, 10vw, 44px); margin: 2px 0 6px; }
   .davi-area.grande { width: 128px; }
   .balao { font-size: 16px; padding: 12px 14px; border-width: 3px; }
-  .btn-grande { padding: 13px 34px; font-size: 22px; margin-top: 12px; }
+  .btn-grande { padding: 11px 20px; font-size: 22px; margin-top: 12px; }
   .subtitulo { font-size: 26px; margin: 2px 0 10px; }
   .grade-missoes { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .missao { padding: 12px 6px 10px; border-radius: 18px; gap: 4px; }
@@ -508,7 +510,7 @@ button { font-family: 'Fredoka', 'Nunito', sans-serif; cursor: pointer; border: 
   .titulo { font-size: clamp(26px, 6vw, 40px); margin: 0 0 4px; }
   .davi-area.grande { width: 104px; }
   .balao { font-size: 15px; padding: 10px 14px; }
-  .btn-grande { padding: 10px 30px; font-size: 20px; margin-top: 8px; }
+  .btn-grande { padding: 9px 18px; font-size: 20px; margin-top: 8px; }
   .subtitulo { font-size: 24px; margin: 0 0 8px; }
   .grade-missoes { grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .missao { padding: 8px 6px; }
@@ -3113,7 +3115,7 @@ body.com-escola .topo .logo { border-radius: 50%; background: #fff; object-fit: 
 @keyframes video-som-pulsa { 50% { transform: translate(-50%, -50%) scale(1.07); } }
 @media (prefers-reduced-motion: reduce) { .video-som { animation: none; } }
 .inicio-video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
-.btn-teste { display: block; margin: 16px auto 0; padding-left: 34px; padding-right: 34px; font-size: clamp(20px, 3vw, 26px); }
+.btn-teste { display: block; margin: 16px auto 0; font-size: clamp(20px, 3vw, 26px); }
 /* WhatsApp flutuante: em todas as telas, acima da barra de baixo; some durante o jogo */
 .whats-flutuante { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 45;
   width: 60px; height: 60px; border-radius: 50%; background: #25d366; display: flex; align-items: center; justify-content: center;
@@ -3611,27 +3613,50 @@ body.an-publica { margin: 0; min-height: 100vh; background: #eef6f8; }
 .historia-status { display: flex; justify-content: space-between; align-items: center; min-height: 24px; padding: 0 4px;
   font-weight: 800; color: var(--primaria-escura); font-size: 15px; }
 .historia-combo { color: #d84315; animation: cores-quique 0.4s ease-out; }
-.tela-jogo > .historia-linha { flex: 1 1 0; min-height: 140px; }
-.historia-linha { display: flex; flex-direction: column; gap: 2px; padding: 6px; overflow: auto; overscroll-behavior: contain;
+.tela-jogo > .historia-linha { flex: 1 1 0; min-height: 120px; }
+/* celular: a linha do tempo em pé com um trilho à esquerda; os ＋ ficam em cima do trilho, entre um acontecimento
+   e outro, sem ocupar altura (antes eles cresciam e a linha precisava rolar) */
+.historia-linha { position: relative; display: flex; flex-direction: column; padding: 20px 8px 20px 50px; overflow-y: auto; overscroll-behavior: contain;
   border-radius: 16px; background: linear-gradient(180deg, #fbf3e6, #f3ead8); border: 2px solid #e6d6bb; }
-.historia-item { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 10px; border-radius: 12px;
-  background: #fff; border-left: 7px solid var(--c); box-shadow: 0 2px 0 rgba(11, 46, 102, 0.15); }
+.historia-linha::before { content: ''; position: absolute; left: 27px; top: 12px; bottom: 12px; width: 4px; border-radius: 2px; background: #d8c3a0; }
+.historia-gap { position: relative; flex: 0 0 6px; }
+.historia-item { position: relative; display: grid; grid-template-columns: auto auto 1fr; align-items: center; gap: 2px 8px; min-height: 42px;
+  padding: 4px 8px; border-radius: 10px; background: #fff; border-left: 6px solid var(--c); box-shadow: 0 2px 0 rgba(11, 46, 102, 0.15); }
 .historia-item.ancora { background: #fffaf0; }
 .historia-item.novo { animation: historia-entrar 0.5s ease-out; }
-.historia-ano { flex-shrink: 0; min-width: 52px; padding: 2px 8px; border-radius: 10px; background: var(--c); color: #fff;
-  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 17px; text-align: center; }
-.historia-ano small { display: block; font-size: 10px; font-weight: 600; line-height: 1; }
-.historia-item-icone { font-size: 24px; line-height: 1; }
-.historia-item-icone img, .historia-carta-icone img { width: 40px; height: 40px; object-fit: cover; border-radius: 8px; }
-.historia-item-titulo { font-weight: 800; font-size: 15px; color: #13294b; }
-/* os ＋ entre os acontecimentos: discretos até a criança escolher uma carta */
-.historia-slot { display: flex; align-items: center; justify-content: center; min-height: 22px; padding: 0; border: 0; background: none;
-  cursor: pointer; font: inherit; color: #a8916c; transition: min-height 0.15s; }
-.historia-slot span { display: flex; align-items: center; justify-content: center; width: 100%; height: 18px; border-radius: 10px;
-  border: 2px dashed transparent; font-weight: 800; font-size: 14px; }
-.historia-linha.escolhendo .historia-slot { min-height: 48px; }
-.historia-linha.escolhendo .historia-slot span { height: 40px; border-color: #c4a675; background: rgba(255, 255, 255, 0.6); color: #8d5a2b; font-size: 22px; }
-.historia-linha.escolhendo .historia-slot:hover span, .historia-slot.mira span { border-style: solid; border-color: var(--primaria); background: #e3f0ff; color: var(--primaria); transform: scale(1.03); }
+.historia-item-lado { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.historia-item-lado .historia-info { padding: 0 2px; font-size: 11px; }
+.historia-ano { flex-shrink: 0; min-width: 50px; padding: 1px 7px; border-radius: 9px; background: var(--c); color: #fff;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 16px; line-height: 1.25; text-align: center; }
+.historia-ano small { display: block; font-size: 9px; font-weight: 600; line-height: 1; }
+.historia-item-icone { font-size: 22px; line-height: 1; }
+.historia-item-icone img, .historia-carta-icone img { width: 36px; height: 36px; object-fit: cover; border-radius: 8px; }
+.historia-item-titulo { font-weight: 800; font-size: 14px; line-height: 1.18; color: #13294b; }
+/* não coube: sem os ícones e com letra menor */
+.historia-linha.compacta .historia-item-icone { display: none; }
+.historia-linha.compacta .historia-item { grid-template-columns: auto 1fr auto; min-height: 32px; padding: 3px 8px; }
+/* compacta: o "+ detalhes" sai de baixo do ano e vai para o fim da linha (cada acontecimento fica mais baixo) */
+.historia-linha.compacta .historia-item-lado { display: contents; }
+.historia-linha.compacta .historia-item-lado .historia-ano { order: 0; }
+.historia-linha.compacta .historia-item-titulo { order: 1; }
+.historia-linha.compacta .historia-item-lado .historia-info { order: 2; }
+.historia-linha.compacta .historia-item-titulo { font-size: 13px; }
+.historia-linha.compacta .historia-gap { flex-basis: 4px; }
+/* os ＋: pontinhos no trilho; viram botões redondos (com área de toque maior) quando a criança escolhe uma carta */
+.historia-slot { position: absolute; left: -21px; top: 50%; width: 12px; height: 12px; padding: 0; transform: translate(-50%, -50%);
+  border: 0; border-radius: 50%; background: #c4a675; cursor: pointer; font: inherit; z-index: 1; transition: width 0.15s, height 0.15s; }
+.historia-slot span { display: none; }
+.historia-slot::before { content: ''; position: absolute; inset: -12px -14px; }
+.historia-linha.escolhendo .historia-slot { width: 36px; height: 36px; background: #fff; border: 3px dashed #8d5a2b; color: #8d5a2b;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); animation: historia-pulsar 1.6s ease-in-out infinite; }
+.historia-linha.escolhendo .historia-slot span { display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; line-height: 1; }
+.historia-linha.escolhendo .historia-slot:hover, .historia-slot.mira { border-style: solid !important; border-color: var(--primaria) !important;
+  background: #e3f0ff !important; color: var(--primaria) !important; animation: none !important; transform: translate(-50%, -50%) scale(1.25); }
+/* a faixa entre dois acontecimentos acende junto com o ＋ escolhido no arrasto */
+.historia-gap:has(.historia-slot.mira)::after { content: ''; position: absolute; left: -6px; right: 0; top: 50%; height: 4px; margin-top: -2px;
+  border-radius: 2px; background: var(--primaria); }
+@keyframes historia-pulsar { 50% { box-shadow: 0 0 0 5px rgba(141, 90, 43, 0.25); } }
+.historia-era-chip { display: inline-block; margin: 2px 0 0 4px; padding: 0 8px; border-radius: 10px; background: var(--c); color: #fff; font-size: 0.9em; white-space: nowrap; }
 
 .historia-msg { min-height: 2.6em; margin: 6px 2px; text-align: center; font-weight: 700; font-size: clamp(14px, 2.1dvh, 16px); color: var(--primaria-escura); }
 .historia-msg.ok { color: #1d6b3d; }
@@ -3640,10 +3665,11 @@ body.an-publica { margin: 0; min-height: 100vh; background: #eef6f8; }
 .historia-msg-acao { display: block; font-size: 0.92em; opacity: 0.8; }
 .historia-doc-novo { display: inline-block; margin-left: 4px; padding: 1px 8px; border-radius: 10px; background: #fff3c4; color: #7a4a12; }
 
-.historia-mao { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.historia-mao { display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding: 8px 2px 4px; }
+.historia-mao > .historia-carta-caixa { flex: 0 0 min(31%, 120px); scroll-snap-align: start; }
 .historia-carta { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 92px; padding: 8px 6px;
   border: 3px solid var(--c); border-radius: 14px; background: #fff; font: inherit; cursor: grab;
-  box-shadow: 0 4px 0 rgba(11, 46, 102, 0.2); touch-action: none; user-select: none; -webkit-user-select: none;
+  box-shadow: 0 4px 0 rgba(11, 46, 102, 0.2); touch-action: pan-x; user-select: none; -webkit-user-select: none;
   animation: cores-nascer 0.34s ease-out both; }
 .historia-carta.selecionada { transform: translateY(-6px); background: #fff8e1; box-shadow: 0 0 0 4px #ffca28, 0 8px 0 rgba(11, 46, 102, 0.2); }
 .historia-carta.arrastando { opacity: 0.35; }
@@ -3660,18 +3686,25 @@ body.an-publica { margin: 0; min-height: 100vh; background: #eef6f8; }
 @keyframes historia-balanca { 20% { transform: translateX(-8px) rotate(-3deg); } 40% { transform: translateX(7px) rotate(3deg); }
   60% { transform: translateX(-5px) rotate(-2deg); } 80% { transform: translateX(4px); } }
 
-/* PC: a linha do tempo fica deitada, da esquerda (mais antigo) para a direita */
+/* PC: a linha do tempo fica deitada, da esquerda (mais antigo) para a direita, com o trilho embaixo */
 @media (min-width: 900px) {
-  .historia-linha { flex-direction: row; align-items: center; gap: 4px; padding: 14px 10px; }
-  .historia-item { flex-direction: column; flex-shrink: 0; width: 132px; min-height: 120px; justify-content: center; text-align: center;
-    border-left: 0; border-top: 7px solid var(--c); }
-  .historia-item-titulo { font-size: 14px; }
-  .historia-slot { flex-shrink: 0; min-height: 0; min-width: 22px; align-self: stretch; }
-  .historia-slot span { width: 18px; height: 100%; }
-  .historia-linha.escolhendo .historia-slot { min-height: 0; min-width: 52px; }
-  .historia-linha.escolhendo .historia-slot span { width: 48px; height: 100px; }
-  .historia-mao { grid-template-columns: repeat(5, minmax(0, 150px)); justify-content: center; }
-  .historia-carta { min-height: 110px; }
+  .historia-linha { flex-direction: row; align-items: stretch; padding: 14px 24px 34px; overflow-x: auto; overflow-y: hidden; }
+  .historia-linha::before { left: 12px; right: 12px; top: auto; bottom: 14px; width: auto; height: 4px; }
+  .historia-gap { flex: 0 0 10px; }
+  .historia-item { flex-shrink: 0; grid-template-columns: 1fr; justify-items: center; align-content: center; width: 132px; min-height: 120px;
+    text-align: center; border-left: 0; border-top: 6px solid var(--c); }
+  .historia-item-lado { display: contents; }
+  .historia-item-lado .historia-ano { order: 0; }
+  .historia-item-icone { order: 1; }
+  .historia-item-titulo { order: 2; }
+  .historia-item-lado .historia-info { order: 3; font-size: 12px; }
+  .historia-linha.compacta .historia-item-icone { display: block; }
+  .historia-linha.compacta .historia-item { grid-template-columns: 1fr; }
+  .historia-slot { left: 50%; top: auto; bottom: -22px; transform: translate(-50%, 50%); }
+  .historia-linha.escolhendo .historia-slot:hover, .historia-slot.mira { transform: translate(-50%, 50%) scale(1.25); }
+  .historia-gap:has(.historia-slot.mira)::after { left: 50%; right: auto; top: 0; bottom: -20px; width: 4px; height: auto; margin: 0 0 0 -2px; }
+  .historia-mao { display: grid; grid-template-columns: repeat(5, minmax(0, 150px)); justify-content: center; overflow: visible; }
+  .historia-carta { min-height: 110px; touch-action: none; }
   .historia-carta-titulo { font-size: 14px; }
 }
 
@@ -3838,3 +3871,394 @@ body.an-publica { margin: 0; min-height: 100vh; background: #eef6f8; }
   .cm-opcoes { grid-template-columns: repeat(4, 1fr); }
   .cm-mao { grid-template-columns: repeat(6, minmax(0, 150px)); justify-content: center; }
 }
+
+/* celular: o mapa do Conexão Global só onde ele informa algo; a mão da Alfândega numa fileira que desliza */
+@media (max-width: 899px) {
+  #tela-comercio[data-modo="quem"] > .cm-mapa, #tela-comercio[data-modo="porque"] > .cm-mapa, #tela-comercio[data-modo="vaievolta"] > .cm-mapa { display: none; }
+  #tela-comercio[data-modo="alfandega"] > .cm-mapa { height: clamp(80px, 15dvh, 150px); }
+  .cm-mao { display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding: 8px 2px 4px; }
+  .cm-mao > .historia-carta-caixa { flex: 0 0 min(31%, 120px); scroll-snap-align: start; }
+  .cm-carta { touch-action: pan-x; }
+}
+
+/* quem pediu menos movimento no aparelho: sem balanço, pulsos e entradas animadas nos dois jogos */
+@media (prefers-reduced-motion: reduce) {
+  .historia-carta, .historia-item.novo, .historia-carta.balanca, .historia-combo, .historia-pergaminho, .historia-linha.escolhendo .historia-slot,
+  .cm-carta, .cm-carta.balanca, .cm-opcao, .cm-opcao.errada, .cm-resposta.errada, .cm-pistas li, .cm-postal, .cm-porto-onda { animation: none !important; }
+}
+
+/* barra do topo dos dois jogos numa linha só (antes o título quebrava em 3 linhas e tomava a altura da linha do tempo) */
+#tela-historia > .barra, #tela-comercio > .barra { flex-wrap: nowrap; gap: 8px; padding: 6px 10px; }
+#tela-historia > .barra .barra-titulo, #tela-comercio > .barra .barra-titulo { flex: 1; min-width: 0; font-size: clamp(15px, 4vw, 20px);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#tela-historia > .barra .chuva-placar, #tela-comercio > .barra .chuva-placar { flex-shrink: 0; font-size: clamp(16px, 4.2vw, 22px); }
+@media (max-width: 899px) {
+  .historia-msg { min-height: 2.4em; margin: 4px 2px; font-size: 14px; line-height: 1.3; }
+  .historia-carta { min-height: 82px; padding: 6px 4px; }
+  .historia-carta-caixa > .historia-carta { padding-bottom: 26px; }
+  .historia-carta-icone { font-size: 24px; }
+  .historia-carta-caixa > .historia-info { bottom: 5px; }
+}
+/* celulares baixos (até 700 px de altura): linha do tempo mais justa e, na Alfândega, sem o mapa (o país já está no enunciado) */
+@media (max-width: 899px) and (max-height: 700px) {
+  .historia-linha { padding-top: 10px; padding-bottom: 10px; }
+  .historia-status { min-height: 18px; font-size: 13px; }
+  #tela-historia > .barra { margin-bottom: 4px; }
+  .historia-msg { margin: 3px 2px; }
+  .historia-mao { padding-top: 6px; }
+  .historia-msg { font-size: 13px; line-height: 1.25; min-height: 2.5em; }
+  .historia-carta { min-height: 70px; padding: 4px; gap: 2px; }
+  .historia-carta-icone { font-size: 20px; }
+  .historia-carta-titulo { font-size: 12px; }
+  .historia-carta-caixa > .historia-carta { padding-bottom: 22px; }
+  .historia-carta-caixa > .historia-info { bottom: 3px; }
+  .historia-linha.compacta .historia-item { min-height: 32px; padding: 2px 6px; }
+  .historia-linha.compacta .historia-gap { flex-basis: 3px; }
+  #tela-comercio[data-modo="alfandega"] > .cm-mapa { display: none; }
+}
+
+/* fim de fase (Cronologia e Conexão Global): as ações logo abaixo das estrelas */
+.fim-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 10px 0 4px; }
+.fim-acoes[hidden] { display: none; }
+.fim-acoes .btn-grande { flex: 1 1 100%; max-width: 460px; font-size: clamp(17px, 4.6vw, 22px); }
+@media (min-width: 700px) { .fim-acoes .btn-grande { flex: 0 1 auto; } }
+/* linha compacta: "por volta de 1550" vira "≈ 1550" numa linha só (o + detalhes explica por extenso) */
+.historia-linha.compacta .historia-ano small { display: none; }
+.historia-linha.compacta .historia-ano.aprox::before { content: '≈ '; }
+
+/* ---------- Filtro da tela de jogos (o mesmo da gestão): busca + 3 selects com contagem ---------- */
+.filtro-jogos { max-width: 980px; margin: 14px auto 0; padding: 12px; background: var(--branco); border: 2px solid #cfe6ea; border-radius: 16px; }
+.filtro-busca { width: 100%; min-height: 48px; padding: 10px 16px; border: 2px solid var(--primaria); border-radius: 999px;
+  font: 600 17px 'Nunito', sans-serif; color: var(--primaria-escura); background: var(--branco); }
+.filtro-busca:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.filtro-selects { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.filtro-campo { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.filtro-campo .filtro-rotulo { font-size: 15px; padding-left: 6px; }
+.filtro-campo .filtro-menu { width: 100%; font-size: 16px; text-overflow: ellipsis; }
+.filtro-menu.ativo { background-color: #e3f6f8; border-width: 3px; }
+.filtro-resumo { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 36px; margin: 8px 0 0; padding: 0 4px;
+  font-weight: 700; color: var(--cinza-texto, #5b6b80); }
+.filtro-resumo .btn-pequeno[hidden] { display: none; }
+@media (max-width: 760px) { .filtro-selects { grid-template-columns: 1fr; } }
+.filtro-jogos ~ .escolha-jogos { margin-top: 12px; }
+
+/* a aba Filtros, abaixo da Categoria */
+.filtro-jogos { max-width: 640px; }
+.filtro-mais { margin-top: 10px; border: 2px solid #cfe6ea; border-radius: 14px; background: #f7fcfd; }
+.filtro-mais.ligado { border-color: var(--primaria); }
+.filtro-mais-aba { display: flex; align-items: center; gap: 6px; min-height: 48px; padding: 6px 14px; cursor: pointer; list-style: none;
+  font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; color: var(--primaria-escura); }
+.filtro-mais-aba::-webkit-details-marker { display: none; }
+.filtro-mais-aba::after { content: '▾'; margin-left: auto; font-size: 20px; transition: transform 0.2s; }
+.filtro-mais[open] .filtro-mais-aba::after { transform: rotate(180deg); }
+.filtro-mais-qtd { color: var(--primaria); }
+.filtro-mais-conteudo { display: grid; gap: 10px; padding: 0 12px 12px; }
+
+/* ---------- Revisão de usabilidade das telas do app ---------- */
+/* entrada: os dois botões com a mesma largura e o link da privacidade com área de toque de verdade */
+#btn-area-jogos, #btn-entrar-turma { width: min(100%, 340px); justify-content: center; }
+.link-privacidade a { display: inline-block; padding: 12px 8px; }
+/* turma: "trocar turma" como link ao lado do nome da turma */
+.btn-texto { padding: 6px 4px; border: 0; background: none; font: inherit; font-weight: 800; color: var(--primaria); text-decoration: underline;
+  text-underline-offset: 3px; cursor: pointer; }
+.turma-titulo .btn-texto { display: inline-block; min-height: 32px; }
+/* teste grátis: select com a mesma altura dos campos e a caixa do aceite maior */
+#teste-perfil { min-height: 48px; font-size: 16px; }
+#teste-aceite { width: 26px; height: 26px; flex-shrink: 0; accent-color: var(--primaria); }
+/* estados vazios com o botão para seguir */
+#btn-comp-jogos, #btn-quiz-jogos { display: block; margin: 10px auto 0; }
+#btn-comp-jogos[hidden], #btn-quiz-jogos[hidden] { display: none; }
+/* WhatsApp: escondido para o aluno da turma; quando aparece, o fim da página tem espaço para ele não cobrir nada */
+body.sem-whats .whats-flutuante { display: none; }
+body:not(.sem-whats) .credito { padding-bottom: calc(150px + env(safe-area-inset-bottom)); }
+
+/* ---------- Logo Games Pedagógicos: abertura, carregamentos e destaque sutil ---------- */
+.splash { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+  background: radial-gradient(circle at 50% 42%, #ffffff 0%, #eaf5fb 70%); transition: opacity 0.45s, visibility 0.45s;
+  animation: splash-some 0.4s 6s forwards; }
+.splash img { width: min(48vw, 210px); height: auto; animation: splash-pulsar 1.5s ease-in-out infinite; }
+.splash-barra { position: relative; width: 132px; height: 6px; overflow: hidden; border-radius: 3px; background: #d4e8f2; }
+.splash-barra::after { content: ''; position: absolute; top: 0; bottom: 0; width: 45%; border-radius: 3px;
+  background: linear-gradient(90deg, #1e88e5, #43a047, #fbc02d); animation: splash-correr 1.1s ease-in-out infinite; }
+.splash.sai { opacity: 0; visibility: hidden; }
+html.escola-pendente .splash, body.com-escola .splash { display: none; }
+@keyframes splash-pulsar { 50% { transform: scale(1.05); filter: drop-shadow(0 0 16px rgba(255, 183, 0, 0.45)); } }
+@keyframes splash-correr { from { left: -45%; } to { left: 100%; } }
+@keyframes splash-some { to { opacity: 0; visibility: hidden; } }
+
+/* os outros carregamentos ("Buscando...", "Entrando..."): a logo pequena pulsando no lugar do reloginho */
+.carregando::before { width: 30px; height: 38px; border: 0; border-radius: 0; box-shadow: none;
+  background: url("assets/logo-games-mini.webp") center / contain no-repeat; animation: logo-carregando 1.1s ease-in-out infinite; }
+@keyframes logo-carregando { 0%, 100% { transform: scale(0.9) rotate(-6deg); } 50% { transform: scale(1.08) rotate(6deg); } }
+body.com-escola .carregando::before { background: none; border: 3px solid var(--primaria); border-top-color: transparent; border-radius: 50%;
+  width: 24px; height: 24px; animation: relogio-girar 0.9s linear infinite; }
+
+/* destaque sutil: a logo no alto da tela de entrada e, pequena, no rodapé */
+.logo-games-inicio { display: block; width: clamp(78px, 21vw, 116px); height: auto; margin: 0 auto 2px;
+  filter: drop-shadow(0 4px 10px rgba(2, 119, 189, 0.18)); }
+.credito-logo { width: 18px; height: auto; vertical-align: -5px; margin-right: 2px; }
+body.com-escola .logo-games-inicio, body.com-escola .credito-logo { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .splash img, .splash-barra::after, .carregando::before { animation: none; }
+}
+
+/* ---------- Cartógrafo do Vale ---------- */
+.cg-capa { display: flex; align-items: center; justify-content: space-evenly; font-size: clamp(28px, 6vw, 42px);
+  background: linear-gradient(180deg, #a1887f 0%, #ffb74d 35%, #ffe082 60%, #8bc34a 85%, #42a5f5 100%); }
+#tela-cartografo > .barra { flex-wrap: nowrap; gap: 8px; padding: 6px 10px; }
+#tela-cartografo > .barra .barra-titulo { flex: 1; min-width: 0; font-size: clamp(15px, 4vw, 20px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* a missão: título, pergunta curta e as camadas úteis */
+.cg-pergunta { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 14px; background: #fff;
+  border-left: 6px solid #2e7d32; box-shadow: 0 2px 0 rgba(11, 46, 102, 0.12); color: #13294b; font-size: clamp(13px, 1.9dvh, 15px); line-height: 1.3; }
+.cg-pergunta b { font-family: 'Fredoka', sans-serif; font-size: 1.12em; color: #1b5e20; }
+.cg-uteis { margin-top: 2px; font-size: 0.9em; font-weight: 700; color: #5b6b80; }
+.cg-uteis i { font-style: normal; padding: 0 6px; border-radius: 8px; background: #e8f5e9; color: #1b5e20; }
+
+/* o mapa: ocupa a altura que sobra; a lupa flutua por cima */
+.tela-jogo > .cg-mapa-caixa { flex: 1 1 0; min-height: 190px; }
+.cg-mapa-caixa { position: relative; margin-top: 6px; }
+.cg-mapa { height: 100%; display: flex; justify-content: center; }
+.cg-svg { height: 100%; max-width: 100%; border-radius: 12px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); touch-action: manipulation; }
+.cg-base { fill: #f4ecd8; }
+.cg-grade line { stroke: #d9cba8; stroke-width: 0.6; }
+.cg-camada { opacity: 0; transition: opacity 0.35s; pointer-events: none; }
+.cg-camada.ligada { opacity: 1; }
+.cg-svg.com-relevo .cg-camada[data-camada="vegetacao"].ligada { opacity: 0.62; }
+.cg-svg.sem-camada .cg-grade line { stroke: #c9b78e; }
+/* pontos A, B, C e trajetos */
+.cg-marca { fill: #fff; stroke: #13294b; stroke-width: 2.5; }
+.cg-marca-letra { font: 900 15px 'Fredoka', 'Nunito', sans-serif; fill: #13294b; text-anchor: middle; pointer-events: none; }
+.cg-ponto, .cg-rota { cursor: pointer; }
+.cg-ponto-toque { fill: rgba(255, 255, 255, 0.01); }
+.cg-ponto .cg-marca { animation: cg-chamar 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.cg-ponto.escolhida .cg-marca, .cg-rota.escolhida .cg-marca { fill: #ffca28; stroke-width: 3.5; animation: none; }
+.cg-ponto.errada, .cg-rota.errada { opacity: 0.35; pointer-events: none; }
+.cg-rota-linha { fill: none; stroke: #c62828; stroke-width: 5; stroke-dasharray: 10 6; stroke-linecap: round; stroke-linejoin: round; }
+.cg-rota-toque { fill: none; stroke: transparent; stroke-width: 22; }
+.cg-rota.escolhida .cg-rota-linha { stroke: #ff6f00; stroke-width: 6.5; stroke-dasharray: none; }
+.cg-acende { fill: rgba(255, 235, 59, 0.35); stroke: #ff6f00; stroke-width: 2.5; animation: cg-piscar 0.6s ease-in-out 3; }
+@keyframes cg-chamar { 50% { transform: scale(1.12); } }
+@keyframes cg-piscar { 50% { opacity: 0.2; } }
+/* elementos do mapa (convenção cartográfica): faixa com escala, título, fonte e rosa dos ventos */
+.cg-faixa { fill: #fffaf0; stroke: #d9cba8; stroke-width: 1; }
+.cg-escala .preta { fill: #263238; } .cg-escala .branca { fill: #fff; stroke: #263238; stroke-width: 1; }
+.cg-escala text { font: 700 8.5px 'Nunito', sans-serif; fill: #263238; }
+.cg-escala .cg-escala-texto { font-size: 8px; fill: #5b6b80; }
+.cg-titulo-mapa text { font: 800 12.5px 'Fredoka', 'Nunito', sans-serif; fill: #1b5e20; }
+.cg-titulo-mapa .cg-fonte { font: 600 8px 'Nunito', sans-serif; fill: #5b6b80; }
+.cg-rosa-fundo { fill: #fff; stroke: #90a4ae; stroke-width: 1; }
+.cg-rosa-norte { fill: #c62828; } .cg-rosa-sul { fill: #546e7a; }
+.cg-rosa text { font: 800 8px 'Nunito', sans-serif; fill: #37474f; } .cg-rosa .cg-rosa-n { fill: #c62828; font-size: 9.5px; }
+
+/* lupa */
+.cg-lupa { position: absolute; z-index: 5; display: flex; flex-direction: column; gap: 2px; max-width: 220px; padding: 8px 10px; border-radius: 12px;
+  background: #fff; border: 2px solid #13294b; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); font-size: 13px; font-weight: 700; color: #13294b;
+  pointer-events: none; animation: cores-nascer 0.2s ease-out; }
+.cg-lupa[hidden] { display: none; }
+.cg-lupa b { font-size: 12px; color: #5b6b80; }
+
+/* botões das camadas e a legenda curta (só das camadas ligadas) */
+.cg-camadas { display: flex; gap: 8px; margin-top: 8px; }
+.cg-camada-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 46px; padding: 6px 8px; border-radius: 12px;
+  border: 2px solid #90a4ae; background: #fff; font: inherit; font-weight: 800; font-size: 14px; color: #37474f; cursor: pointer; }
+.cg-camada-btn span { font-size: 20px; }
+.cg-camada-btn.util { border-color: #2e7d32; }
+.cg-camada-btn.ligada { background: #2e7d32; border-color: #1b5e20; color: #fff; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2); }
+.cg-camada-btn.util:not(.ligada) { animation: historia-pulsar 1.8s ease-in-out infinite; }
+.cg-legenda { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 8px; min-height: 20px; margin-top: 5px; font-size: 11.5px; font-weight: 700; line-height: 1.2; color: #37474f; }
+.cg-legenda .cg-amostra { width: 18px; height: 13px; }
+.cg-leg-item { display: inline-flex; align-items: center; gap: 4px; }
+.cg-amostra { width: 22px; height: 16px; flex-shrink: 0; }
+.cg-leg-vazia { color: #78909c; }
+/* restaurar a legenda: lacunas e fichas */
+.cg-lacuna { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 4px 10px; border: 2px dashed #8d6e63; border-radius: 10px;
+  background: #fffaf0; font: inherit; font-weight: 800; font-size: 13px; color: #6d4c41; cursor: pointer; }
+.cg-lacuna.feita { border-style: solid; border-color: #2e7d32; background: #e8f5e9; color: #1b5e20; cursor: default; }
+.cg-lacuna.balanca { animation: historia-balanca 0.5s; border-color: #e53935; }
+.cg-bandeja { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.cg-ficha { min-height: 44px; padding: 6px 12px; border: 2px solid #1565c0; border-radius: 22px; background: #fff; font: inherit; font-weight: 800;
+  font-size: 14px; color: #0b2e66; cursor: pointer; box-shadow: 0 3px 0 rgba(11, 46, 102, 0.2); }
+.cg-ficha.selecionada { background: #ffca28; border-color: #f57f17; transform: translateY(-3px); }
+.cg-msg { min-height: 2.4em; margin: 4px 2px; text-align: center; font-weight: 700; font-size: clamp(13px, 1.9dvh, 15px); line-height: 1.3; color: var(--primaria-escura); }
+.cg-msg.ok { color: #1d6b3d; } .cg-msg.erro { color: #b42318; }
+.cg-dica { display: block; margin-top: 2px; color: #7a4a12; }
+.cg-acao .cg-confirmar { margin: 2px auto 0; }
+
+/* análise do território: caderno de campo (folha pautada) */
+.cg-analise { width: min(100%, 480px); padding: 16px 18px 14px 26px; border-radius: 12px; color: #13294b; text-align: left;
+  background: repeating-linear-gradient(#fffef8 0 25px, #dbe8f5 25px 26px); border-left: 6px double #e57373;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35); animation: historia-desenrolar 0.4s ease-out; }
+.cg-analise h3 { margin: 0 0 6px; font-family: 'Fredoka', sans-serif; font-size: clamp(16px, 2.5dvh, 20px); color: #1b5e20; line-height: 1.2; }
+.cg-analise-camadas { margin: 0 0 6px; font-size: 13px; font-weight: 700; color: #5b6b80; }
+.cg-analise-camadas i { font-style: normal; padding: 0 6px; border-radius: 8px; background: #e8f5e9; color: #1b5e20; }
+.cg-analise-texto { margin: 0 0 8px; font-size: clamp(14px, 2.05dvh, 16px); line-height: 1.45; }
+.cg-analise-diario { margin: 0 0 8px; padding: 6px 10px; border-radius: 8px; background: #fff3c4; font-size: 14px; line-height: 1.35; }
+.cg-analise .btn-grande { display: block; margin: 6px auto 0; }
+#btn-cg-diario small { font-size: 0.65em; font-weight: 700; opacity: 0.85; }
+
+@media (min-width: 900px) {
+  .tela-jogo > .cg-mapa-caixa { min-height: 320px; }
+  .cg-camadas { max-width: 560px; margin-left: auto; margin-right: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cg-ponto .cg-marca, .cg-camada-btn.util:not(.ligada), .cg-acende, .cg-lupa, .cg-analise { animation: none !important; }
+  .cg-camada { transition: none; }
+}
+/* celular baixo: missão e botões mais justos para o mapa não ficar pequeno */
+@media (max-width: 899px) and (max-height: 700px) {
+  .cg-pergunta { padding: 6px 10px; font-size: 12.5px; }
+  .cg-uteis { display: none; }   /* os botões úteis já pulsam */
+  .cg-camada-btn { min-height: 42px; font-size: 13px; }
+  .cg-ficha { min-height: 40px; padding: 4px 10px; font-size: 13px; }
+  .tela-jogo > .cg-mapa-caixa { min-height: 150px; }
+  .cg-lacuna { min-height: 36px; padding: 3px 8px; font-size: 12.5px; }
+  .cg-bandeja { gap: 6px; }
+  .cg-msg { min-height: 0; margin: 3px 2px; }
+}
+
+/* Cartógrafo: mapa desenhado (manchas suaves), moldura, alvo da lupa e a faixa da lupa/mensagens */
+.cg-moldura { fill: none; stroke: #8d6e63; stroke-width: 2; }
+.cg-rotulo-agua { font: italic 700 10px Georgia, serif; fill: #0d47a1; opacity: 0.85; }
+.cg-alvo { fill: none; stroke: #d50000; stroke-width: 2.5; animation: cg-alvo 1.2s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.cg-alvo-meio { fill: #d50000; }
+@keyframes cg-alvo { from { transform: scale(0.6); opacity: 1; } to { transform: scale(1.5); opacity: 0.2; } }
+.cg-marca { fill: #fff; stroke: #c62828; stroke-width: 3; }
+.cg-ponto.escolhida .cg-marca, .cg-rota.escolhida .cg-marca { fill: #ffca28; stroke: #e65100; }
+.cg-msg { min-height: 2.6em; margin: 6px 0 0; padding: 6px 10px; border-radius: 10px; background: #fff; border: 2px solid #e0e7ec;
+  display: flex; align-items: center; justify-content: center; }
+.cg-msg.lupa { background: #fffde7; border-color: #f9a825; color: #3e2723; }
+.cg-msg.ok { background: #e8f5e9; border-color: #66bb6a; }
+.cg-msg.erro { background: #ffebee; border-color: #ef9a9a; flex-direction: column; }
+.cg-svg { border-radius: 12px; box-shadow: 0 3px 12px rgba(62, 39, 35, 0.25); }
+@media (prefers-reduced-motion: reduce) { .cg-alvo { animation: none; } }
+
+/* Cartógrafo: nomes dos lugares e 4 botões de camada (ícone em cima do nome, para caber no celular) */
+.cg-rotulo-lugar { font: 800 9.5px 'Nunito', sans-serif; fill: #263238; paint-order: stroke; stroke: #fff; stroke-width: 3px; }
+.cg-camadas:has(> :nth-child(4)) .cg-camada-btn { flex-direction: column; gap: 0; padding: 4px 2px; font-size: 12px; min-height: 50px; }
+.cg-camadas:has(> :nth-child(4)) .cg-camada-btn span { font-size: 19px; line-height: 1.1; }
+/* celular baixo: enquanto a explicação do erro está à vista, a legenda dá lugar a ela (volta no próximo toque) */
+@media (max-width: 899px) and (max-height: 700px) {
+  #tela-cartografo:has(.cg-msg.erro) .cg-legenda { display: none; }
+  .cg-msg { font-size: 12.5px; padding: 4px 8px; }
+}
+
+/* ---------- Robô Bip ---------- */
+.bip-capa { display: flex; align-items: center; justify-content: space-evenly; font-size: clamp(28px, 6vw, 42px);
+  background: linear-gradient(150deg, #b39ddb 0%, #7e57c2 50%, #4527a0 100%); }
+#tela-bip > .barra { flex-wrap: nowrap; gap: 8px; padding: 6px 10px; }
+#tela-bip > .barra .barra-titulo { flex: 1; min-width: 0; font-size: clamp(14px, 3.8vw, 19px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bip-moedas { flex-shrink: 0; font-size: clamp(15px, 4vw, 20px); }
+.bip-objetivo { margin: 4px 0 0; padding: 5px 10px; border-radius: 10px; background: #ede7f6; color: #311b92; font-weight: 800; font-size: clamp(13px, 1.9dvh, 15px); text-align: center; }
+
+/* tabuleiro isométrico */
+.tela-jogo > .bip-tabuleiro { flex: 0 0 auto; height: clamp(160px, 31dvh, 330px); }
+.bip-tabuleiro { display: flex; justify-content: center; margin-top: 4px; border-radius: 16px;
+  background: radial-gradient(ellipse at 50% 40%, #e8f5e9 0%, #d1e9f6 70%, #c5dcef 100%); }
+.bip-svg { height: 100%; max-width: 100%; }
+.bip-robo { transition: transform 0.32s ease-in-out; }
+.bip-robo.sem-anima { transition: none; }
+.bip-robo.bate #bip-sprite { animation: bip-bate 0.45s; }
+.bip-robo.pula #bip-sprite { animation: bip-pula 0.6s ease-out 2; }
+.bip-estrela { animation: bip-flutua 1.6s ease-in-out infinite; filter: drop-shadow(0 0 6px #ffeb3b); }
+.bip-brilho { animation: bip-pisca 1.6s ease-in-out infinite; }
+.bip-moeda-gira { animation: bip-flutua 1.3s ease-in-out infinite; }
+.bip-moeda.pega { opacity: 0; transform: translateY(-14px); transition: opacity 0.3s, transform 0.3s; }
+@keyframes bip-flutua { 50% { transform: translateY(-4px); } }
+@keyframes bip-pisca { 50% { opacity: 0.35; } }
+@keyframes bip-bate { 20% { transform: translateX(-5px) rotate(-8deg); } 40% { transform: translateX(5px) rotate(8deg); } 60% { transform: translateX(-3px); } }
+@keyframes bip-pula { 40% { transform: translateY(-16px); } }
+.bip-msg { min-height: 2.4em; margin: 4px 0 0; padding: 4px 10px; border-radius: 10px; background: #fff; border: 2px solid #e0e7ec;
+  display: block; text-align: center; font-weight: 700;
+  font-size: clamp(12.5px, 1.8dvh, 14.5px); line-height: 1.3; color: var(--primaria-escura); }
+.bip-msg.erro { background: #ffebee; border-color: #ef9a9a; color: #b71c1c; }
+.bip-msg.ok { background: #e8f5e9; border-color: #66bb6a; color: #1b5e20; }
+.bip-dica { display: block; margin-top: 2px; color: #7a4a12; }
+
+/* painel: roteiro à esquerda, peças e Executar à direita */
+.tela-jogo > .bip-painel { flex: 1 1 0; min-height: 190px; }
+.bip-painel { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 8px; margin-top: 6px; }
+.bip-roteiro { display: flex; flex-direction: column; min-height: 0; padding: 6px; border-radius: 14px; background: #fff; border: 2px solid #d1c4e9; }
+.bip-roteiro-topo { display: flex; align-items: center; gap: 6px; padding: 0 2px 4px; font-size: 12px; color: #5b6b80; }
+.bip-roteiro-topo b { font-family: 'Fredoka', sans-serif; font-size: 14px; color: #4527a0; }
+.bip-roteiro-topo .btn-texto { margin-left: auto; font-size: 12px; padding: 2px; }
+.bip-programa { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 3px; padding: 2px; }
+.bip-texto { flex: 1; min-height: 0; overflow: auto; margin: 0; padding: 8px; border-radius: 8px; background: #263238; color: #c5e1a5;
+  font: 600 12px/1.45 'Consolas', 'Courier New', monospace; white-space: pre; }
+.bip-texto[hidden], .bip-programa[hidden] { display: none; }
+.bip-dica-vazio { margin: 6px 0 0; text-align: center; font-size: 13px; color: #78909c; font-weight: 700; }
+
+/* blocos (estilo Scratch: cor por tipo, com o "dente" de encaixe embaixo) */
+.cat-movimento { --cor: #1e88e5; --cor-esc: #1565c0; --txt: #fff; }
+.cat-repeticao { --cor: #8e24aa; --cor-esc: #6a1b9a; --txt: #fff; }
+.cat-condicao { --cor: #f9a825; --cor-esc: #f57f17; --txt: #3e2723; }
+.bip-peca[data-peca="andar"], .bip-bloco.cat-movimento:has([data-toque]) { }
+.bip-bloco { position: relative; display: flex; align-items: center; gap: 4px; min-height: 36px; padding: 2px 4px 2px 2px; border-radius: 7px;
+  background: var(--cor); color: var(--txt); box-shadow: inset 0 -3px 0 var(--cor-esc); font-weight: 800; font-size: 13px; }
+.bip-bloco::after { content: ''; position: absolute; left: 22px; bottom: -5px; width: 16px; height: 6px; border-radius: 0 0 5px 5px; background: var(--cor-esc); z-index: 1; }
+.bip-num { flex-shrink: 0; min-width: 18px; text-align: center; font-size: 11px; opacity: 0.85; }
+.bip-bloco-corpo { flex: 1; display: flex; align-items: center; gap: 4px; min-height: 32px; padding: 0 2px; border: 0; background: none;
+  color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.bip-bloco-corpo span { font-size: 15px; }
+.bip-tira { flex-shrink: 0; width: 28px; height: 28px; border: 0; border-radius: 50%; background: rgba(0, 0, 0, 0.18); color: inherit;
+  font-size: 12px; font-weight: 900; cursor: pointer; }
+.bip-bloco.rodando { outline: 3px solid #ffeb3b; outline-offset: 1px; box-shadow: 0 0 12px 3px #ffeb3b; }
+/* repita / enquanto: um "C" que abraça os blocos de dentro */
+.bip-caixa { border-left: 10px solid var(--cor); border-radius: 8px; }
+.bip-caixa > .cabeca { border-radius: 0 7px 7px 0; margin-left: -10px; padding-left: 4px; flex-wrap: wrap; }
+.bip-caixa .cabeca .bip-bloco-corpo { flex: 0 0 auto; }
+.bip-dentro { display: flex; flex-direction: column; gap: 3px; padding: 6px 0 4px 6px; min-height: 22px; }
+.bip-fim { display: block; width: calc(100% + 10px); min-height: 18px; margin-left: -10px; padding: 0 0 0 8px; border: 0; border-radius: 0 0 7px 7px;
+  background: var(--cor); color: var(--txt); font: inherit; font-size: 10px; font-weight: 800; text-align: left; opacity: 0.9; cursor: pointer; }
+.bip-caixa.aberta { box-shadow: 0 0 0 2px #ffeb3b; }
+.bip-vezes { display: inline-flex; align-items: center; gap: 3px; padding: 1px 4px; border-radius: 12px; background: rgba(255, 255, 255, 0.25); }
+.bip-vezes button { width: 24px; height: 24px; border: 0; border-radius: 50%; background: #fff; color: var(--cor-esc); font: 900 16px/1 'Nunito', sans-serif; cursor: pointer; }
+.bip-vezes b { min-width: 14px; text-align: center; font-size: 15px; }
+.bip-cond { padding: 3px 8px; border: 0; border-radius: 12px; background: #fff8e1; color: #5d4037; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.bip-vazio { border: 2px dashed rgba(0, 0, 0, 0.2); border-radius: 6px; background: none; padding: 4px; font: inherit; font-size: 11px; color: #78909c; cursor: pointer; }
+.bip-encaixe { min-height: 24px; display: flex; align-items: center; padding: 0 8px; border: 2px dashed #7e57c2; border-radius: 7px; background: #f3e5f5;
+  color: #6a1b9a; font-size: 11px; font-weight: 800; animation: bip-pisca 1.4s ease-in-out infinite; }
+
+/* peças (paleta) */
+.bip-pecas { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+/* só as peças rolam (se precisar): o Executar fica sempre à vista */
+#bip-paleta { flex: 1 1 0; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; overscroll-behavior: contain; }
+.bip-executar { flex-shrink: 0; }
+.bip-grupo { display: flex; flex-direction: column; gap: 4px; padding: 5px; border-radius: 12px; background: #fff; border: 2px solid #e0e7ec; }
+.bip-grupo h5 { margin: 0; text-align: center; font: 800 11px 'Fredoka', sans-serif; letter-spacing: 1px; color: #5b6b80; }
+.bip-peca { position: relative; display: flex; align-items: center; gap: 5px; min-height: 40px; padding: 4px 8px; border: 0; border-radius: 8px;
+  background: var(--cor); color: var(--txt); box-shadow: inset 0 -3px 0 var(--cor-esc), 0 2px 0 rgba(0, 0, 0, 0.15); font: inherit;
+  font-weight: 800; font-size: 13px; text-align: left; cursor: pointer; line-height: 1.1; }
+.bip-peca span { font-size: 16px; }
+.bip-peca:active { transform: translateY(2px); }
+.bip-peca.novo { animation: historia-pulsar 1.4s ease-in-out infinite; outline: 3px solid #ffeb3b; }
+.bip-executar { min-height: 52px; border: 0; border-radius: 14px; background: linear-gradient(180deg, #66bb6a, #2e7d32); color: #fff;
+  font: 900 clamp(17px, 4.6vw, 22px) 'Fredoka', sans-serif; letter-spacing: 1px; box-shadow: 0 4px 0 #1b5e20; cursor: pointer; }
+.bip-executar:disabled { opacity: 0.5; cursor: default; }
+.bip-executar:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 #1b5e20; }
+#tela-bip.rodando .bip-executar { background: linear-gradient(180deg, #ef5350, #c62828); box-shadow: 0 4px 0 #8e0000; }
+#tela-bip.rodando .bip-peca, #tela-bip.rodando .bip-tira, #tela-bip.rodando .bip-vezes button { opacity: 0.5; pointer-events: none; }
+.bip-limpar { font-size: 12px; align-self: center; }
+
+/* nível completo */
+.bip-vitoria { width: min(100%, 420px); padding: 18px 18px 14px; border-radius: 20px; background: #fff; text-align: center; color: #13294b;
+  border: 4px solid #7e57c2; box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35); animation: historia-desenrolar 0.35s ease-out; }
+.bip-v-robo { font-size: 44px; line-height: 1; animation: bip-flutua 1.4s ease-in-out infinite; }
+.bip-vitoria h3 { margin: 6px 0 2px; font-family: 'Fredoka', sans-serif; font-size: 24px; color: #4527a0; }
+.bip-v-texto { display: flex; flex-direction: column; gap: 4px; margin: 8px 0; font-weight: 700; font-size: 14px; }
+.bip-v-ensina { margin-top: 4px; padding: 6px 10px; border-radius: 10px; background: #ede7f6; color: #311b92; font-weight: 700; }
+.bip-vitoria .btn-grande { display: block; margin: 6px auto 4px; }
+
+@media (min-width: 900px) {
+  .tela-jogo > .bip-tabuleiro { height: clamp(240px, 38dvh, 380px); }
+  .bip-painel { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bip-robo { transition: none; }
+  .bip-estrela, .bip-brilho, .bip-moeda-gira, .bip-encaixe, .bip-peca.novo, .bip-v-robo, .bip-robo.bate #bip-sprite, .bip-robo.pula #bip-sprite { animation: none !important; }
+}
+
+/* tela inicial: a logo Games Pedagógicos substitui o título e o slogan (nas páginas de escola, o título continua) */
+body:not(.com-escola) #tela-inicio .titulo, body:not(.com-escola) #tela-inicio .slogan { display: none; }
+body:not(.com-escola) #tela-inicio .logo-games-inicio { width: clamp(150px, 42vw, 230px); margin: 4px auto 10px; }

@@ -1,16 +1,16 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Competição: o professor cria para uma turma (jogo + hora de encerrar); o aluno entra com o código da turma e joga. */
 
-import { $, seguro } from './util.js?v=196';
-import { aluno, aoVoltarAoInicio } from './estado.js?v=196';
-import { api, lerTokenAluno } from './api.js?v=196';
-import { definirCompeticaoDaPartida } from './partidas.js?v=196';
-import { SOM } from './som.js?v=196';
-import { mostrar } from './telas.js?v=196';
-import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=196';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=196';
-import { comecarQuiz } from './quiz.js?v=196';
-import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=196';
+import { $, seguro } from './util.js?v=230';
+import { aluno, aoVoltarAoInicio } from './estado.js?v=230';
+import { api, lerTokenAluno } from './api.js?v=230';
+import { definirCompeticaoDaPartida } from './partidas.js?v=230';
+import { SOM } from './som.js?v=230';
+import { mostrar, telaJogos } from './telas.js?v=230';
+import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=230';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=230';
+import { comecarQuiz } from './quiz.js?v=230';
+import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=230';
 
 // ---------- Competição ----------
 // Cada competição é de uma turma. O aluno entra com o código da turma (js/entrada.js) e a aba Competição lista as
@@ -90,6 +90,7 @@ async function carregarCompeticoes() {
   $('comp-erro').textContent = '';
   const logado = !!(lerTokenAluno() && aluno);
   $('btn-comp-turma').hidden = logado;
+  $('btn-comp-jogos').hidden = true;
   if (!logado) {
     $('comp-status').classList.remove('carregando');
     $('comp-status').textContent = 'Para ver e jogar as competições, entre com o código da turma (o professor passa). 🏫';
@@ -103,6 +104,7 @@ async function carregarCompeticoes() {
     $('comp-status').textContent = lista.length ? `Oi, ${aluno}! Toque em Jogar numa competição aberta.`
       : 'A sua turma ainda não tem competição. Quando o professor criar uma, ela aparece aqui. 🏆';
     lista.forEach(conferirAtiva);
+    $('btn-comp-jogos').hidden = lista.some((c) => c.aberta);   // nada para jogar aqui: o caminho para os jogos
     for (const c of lista) {
       const item = document.createElement('div');
       item.className = `quiz-item comp-item${c.aberta ? '' : ' encerrada'}`;
@@ -376,5 +378,7 @@ function desenharCompeticoesProfessor() {
 
 // a partida guardada no banco leva a competição em que o aluno estava (js/partidas.js)
 definirCompeticaoDaPartida((mis) => (ehDaCompeticao(mis) && ativa ? `${ativa.codigo} · ${ativa.nome}` : ''));
+
+$('btn-comp-jogos').onclick = () => { SOM.clique(); telaJogos(); };
 
 export { telaCompeticao };

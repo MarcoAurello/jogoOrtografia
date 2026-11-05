@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Questionário da aula (lado do aluno). */
 
-import { $, embaralhar, seguro, sortear } from './util.js?v=196';
-import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=196';
-import { SOM } from './som.js?v=196';
-import { mascote, mostrar, telaInicio } from './telas.js?v=196';
-import { escolherProfessorE, gravarJSON, lerDoScript, lerJSON } from './professor.js?v=196';
-import { fimDaMissao, ultimoRelatorio, URL_RELATORIO } from './relatorio.js?v=196';
+import { $, embaralhar, seguro, sortear } from './util.js?v=230';
+import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=230';
+import { SOM } from './som.js?v=230';
+import { mascote, mostrar, telaInicio, telaJogos } from './telas.js?v=230';
+import { escolherProfessorE, gravarJSON, lerDoScript, lerJSON } from './professor.js?v=230';
+import { fimDaMissao, ultimoRelatorio, URL_RELATORIO } from './relatorio.js?v=230';
 
 // ---------- Questionário da aula (aluno) ----------
 // Os questionários vêm da planilha do professor (pelo script). Uma pergunta por vez, as respostas
@@ -28,6 +28,7 @@ async function telaQuizMenu() {
     const lista = QUIZ_DO_LINK ? todos.filter((q) => String(q.id) === QUIZ_DO_LINK) : todos;
     if (QUIZ_DO_LINK && !lista.length && !aviso) aviso = 'Este link não abre nenhum questionário: ele pode ter sido excluído. Peça um novo link ao professor.';
     $('quiz-status').textContent = aviso || (lista.length ? '' : 'O professor ainda não criou nenhum questionário.');
+    $('btn-quiz-jogos').hidden = carregando || !!lista.length || !!QUIZ_DO_LINK || !aluno;   // lista vazia: o caminho para os jogos
     $('quiz-status').classList.toggle('carregando', carregando);
     $('lista-quiz').innerHTML = '';
     for (const q of lista) {
@@ -126,5 +127,7 @@ $('btn-quiz-proxima').onclick = () => {
 
 $('quiz-voltar').onclick = telaInicio;
 $('quiz-sair').onclick = telaQuizMenu;
+
+$('btn-quiz-jogos').onclick = () => { SOM.clique(); telaJogos(); };
 
 export { CHAVE_QUIZ_LISTA, comecarQuiz, JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu };

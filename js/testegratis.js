@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Testar grátis: a pessoa cadastra o e-mail e recebe, no fim de cada jogo, o relatório em PDF. */
 
-import { $, seguro } from './util.js?v=196';
-import { SOM } from './som.js?v=196';
-import { aluno } from './estado.js?v=196';
-import { api, guardarTokenTeste, lerTokenTeste } from './api.js?v=196';
-import { entrarComoAluno, mostrar, telaJogos } from './telas.js?v=196';
-import { depoisDoFim, montarPDF } from './relatorio.js?v=196';
-import { parteProfessor } from './professor.js?v=196';
+import { $, seguro } from './util.js?v=230';
+import { SOM } from './som.js?v=230';
+import { aluno } from './estado.js?v=230';
+import { api, guardarTokenTeste, lerTokenTeste } from './api.js?v=230';
+import { entrarComoAluno, mostrar, telaJogos } from './telas.js?v=230';
+import { depoisDoFim, montarPDF } from './relatorio.js?v=230';
+import { parteProfessor } from './professor.js?v=230';
 
 // ---------- Testar grátis ----------
 // O botão "Teste grátis" do início (e o item do menu) abre o cadastro: nome, e-mail, quem é e o aceite (LGPD).

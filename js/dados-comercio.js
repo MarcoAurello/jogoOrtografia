@@ -280,13 +280,14 @@ export const PERGUNTAS_COMERCIO = [
     explica: 'Sem o canal, os navios entre Europa e Ásia precisariam dar a volta por todo o sul da África. Pelo Canal de Suez, a viagem fica milhares de quilômetros mais curta.' },
 ];
 
-// Os modos (fases): abrem em sequência. regra: texto do relatório do professor
+// Os modos (fases), todos abertos. regra: texto do relatório do professor. oculto: true esconde o modo do jogo
+// (o código continua; para voltar, é só tirar o oculto)
 export const MODOS_COMERCIO = [
   { id: 'alfandega', nome: 'Alfândega', icone: '🛃', descricao: 'Exporta ou importa?', cartas: 6,
     regra: 'Exportar é vender para outro país; importar é comprar de outro país. Cada país vende o que tem de sobra e compra o que lhe falta.' },
   { id: 'quem', nome: 'Quem sou eu?', icone: '🕵️', descricao: 'Descubra o país pelas pistas', cartas: 5,
     regra: 'O que um país exporta mostra seus recursos naturais e sua indústria: petróleo, minérios, alimentos ou tecnologia.' },
-  { id: 'rota', nome: 'Rota comercial', icone: '🚢', descricao: 'Quem vende o que falta?', cartas: 5,
+  { id: 'rota', nome: 'Rota comercial', icone: '🚢', descricao: 'Quem vende o que falta?', cartas: 5, oculto: true,
     regra: 'O comércio liga quem tem de sobra a quem precisa: o que um país importa, outro exporta.' },
   { id: 'porque', nome: 'Por quê?', icone: '🤔', descricao: 'Entenda o comércio', cartas: 5,
     regra: 'Localização, recursos naturais, clima e indústria explicam o que cada país compra e vende.' },

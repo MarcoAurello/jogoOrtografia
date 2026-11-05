@@ -3,12 +3,12 @@
    metas montados livremente, parceria família/escola, status), o PDF para o relatório e o plano de ação: as
    habilidades-alvo de cada objetivo sugerem os jogos, e o cronograma de sessões tem o prontuário de bordo. */
 
-import { $, seguro } from './util.js?v=196';
-import { SOM } from './som.js?v=196';
-import { api } from './api.js?v=196';
-import { JOGOS_DO_LINK, usuarioAtual } from './professor.js?v=196';
-import { criarPopup, ligarFiltro } from './popup.js?v=196';
-import { GRUPOS_HAB, NOME_HAB, jogosParaHabilidades } from './habilidades.js?v=196';
+import { $, seguro } from './util.js?v=230';
+import { SOM } from './som.js?v=230';
+import { api } from './api.js?v=230';
+import { JOGOS_DO_LINK, usuarioAtual } from './professor.js?v=230';
+import { criarPopup, ligarFiltro } from './popup.js?v=230';
+import { GRUPOS_HAB, NOME_HAB, jogosParaHabilidades } from './habilidades.js?v=230';
 
 const STATUS = { elaboracao: '📝 Em elaboração', ativo: '▶️ Ativo', concluido: '✅ Concluído' };
 const DIAS = [['seg', 'Seg'], ['ter', 'Ter'], ['qua', 'Qua'], ['qui', 'Qui'], ['sex', 'Sex'], ['sab', 'Sáb'], ['dom', 'Dom']];

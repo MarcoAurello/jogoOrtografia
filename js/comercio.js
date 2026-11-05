@@ -1,18 +1,18 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Conexão Global: importação e exportação entre os países. */
 
-import { $, embaralhar, sortear } from './util.js?v=196';
-import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=196';
-import { SOM, tocar } from './som.js?v=196';
-import { mascote, mostrar, telaJogos } from './telas.js?v=196';
-import { escolherProfessorE } from './professor.js?v=196';
-import { fimDaMissao } from './relatorio.js?v=196';
-import { CATEGORIAS, MODOS_COMERCIO, PAISES, PERGUNTAS_COMERCIO, PRODUTOS } from './dados-comercio.js?v=196';
-import { bandeira } from './bandeiras.js?v=196';
-import { animarNavio, desenharMapa } from './mapa-comercio.js?v=196';
+import { $, embaralhar, sortear } from './util.js?v=230';
+import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=230';
+import { SOM, tocar } from './som.js?v=230';
+import { mascote, mostrar, telaJogos } from './telas.js?v=230';
+import { escolherProfessorE } from './professor.js?v=230';
+import { fimDaMissao } from './relatorio.js?v=230';
+import { CATEGORIAS, MODOS_COMERCIO, PAISES, PERGUNTAS_COMERCIO, PRODUTOS } from './dados-comercio.js?v=230';
+import { bandeira } from './bandeiras.js?v=230';
+import { animarNavio, desenharMapa } from './mapa-comercio.js?v=230';
 
 // ---------- Conexão Global ----------
-// A criança é comandante de um navio cargueiro. Cinco modos, que abrem em sequência:
+// A criança é comandante de um navio cargueiro. Cinco modos, todos abertos desde o começo:
 // Alfândega (a carta "país + produto" vai para o contêiner EXPORTA ou IMPORTA), Quem sou eu? (pistas do que o país
 // vende → toca na bandeira certa), Rota comercial (um país precisa comprar um produto → escolhe quem vende; o navio
 // faz a viagem no mapa), Por quê? (pergunta comentada) e Vai e volta (os produtos que o país compra E vende).
@@ -23,6 +23,7 @@ const COMERCIO = { BASE: 100, SEM_DICA: 50, MAX_ERROS: 3 };
 const PAIS = Object.fromEntries(PAISES.map((p) => [p.id, p]));
 const MODO = Object.fromEntries(MODOS_COMERCIO.map((m) => [m.id, m]));
 let cm = null;   // a partida em andamento
+let ultimoModo = 0;   // para o Jogar de novo da tela de fim
 
 // ---------- Passaporte (no aparelho, separado por aluno) ----------
 const chavePassaporte = () => 'pleno-ortografia:comercio:' + (aluno || '').trim().toLowerCase();
@@ -53,16 +54,18 @@ function telaComercioMenu() {
   mascote('davi-comercio', 'oi');
   desenharMapa($('comercio-mapa-menu'), { paises: PAISES, destaques: [], nomes: false });
   const estrelas = lerEstrelas();
-  $('comercio-modos').innerHTML = MODOS_COMERCIO.map((m, k) => {
-    const aberto = k === 0 || (estrelas[`comercio-${MODOS_COMERCIO[k - 1].id}`] || 0) > 0;
+  // os modos visíveis (os marcados como oculto não aparecem), numerados na ordem em que aparecem
+  const visiveis = MODOS_COMERCIO.map((m, k) => ({ m, k })).filter(({ m }) => !m.oculto);
+  $('comercio-modos').innerHTML = visiveis.map(({ m, k }, pos) => {
+    const aberto = true;   // todos os modos abertos: o professor pode trabalhar qualquer um em aula
     return `<button class="missao${aberto ? '' : ' bloqueada'}" style="--c:#0277bd" data-modo="${k}" type="button"${aberto ? '' : ' disabled'}>
         <span class="missao-icone">${aberto ? m.icone : '🔒'}</span>
-        <span class="missao-titulo">${k < 4 ? `${k + 1}. ` : '⭐ '}${m.nome}</span>
+        <span class="missao-titulo">${m.id === 'vaievolta' ? '⭐ ' : `${pos + 1}. `}${m.nome}</span>
         <span class="missao-descricao">${m.descricao}</span>
         <span class="missao-estrelas">${aberto ? estrelasTexto(estrelas[`comercio-${m.id}`] || 0) : 'Termine o modo anterior'}</span>
       </button>`;
   }).join('');
-  $('comercio-carimbos').textContent = `🛂 ${lerPassaporte().length} de ${PAISES.length} carimbos`;
+  $('comercio-carimbos').textContent = `· ${lerPassaporte().length} de ${PAISES.length} carimbos`;
   mostrar('tela-comercio-menu');
 }
 $('comercio-modos').onclick = (e) => {
@@ -126,6 +129,7 @@ function montarVaiEVolta(n) {
 function comecarComercio(k = 0) {
   pararComercio();
   const modo = MODOS_COMERCIO[k];
+  ultimoModo = k;
   const fila = modo.id === 'alfandega' ? montarAlfandega() : modo.id === 'quem' ? montarQuem(modo.cartas)
     : modo.id === 'rota' ? montarRota(modo.cartas) : modo.id === 'porque' ? montarPorque(modo.cartas) : montarVaiEVolta(modo.cartas);
   definirMissao({ id: `comercio-${modo.id}`, comercio: true, icone: '🚢', cor: '#0277bd', titulo: `Conexão Global – ${modo.nome}` });
@@ -133,6 +137,8 @@ function comecarComercio(k = 0) {
   // alfândega: todas as cartas na mão ao mesmo tempo (fila = a mão); os outros modos: uma rodada por vez (idx)
   cm = { modo, k, fila, idx: 0, total: fila.length, feitas: 0, sel: null, tent: 0, errosDe: {}, combo: 0, pontos: 0,
     dePrimeira: 0, dicas: 0, sozinhas: 0, carimbos: 0, rotas: [], pistas: 1, rodando: true, lendo: false };
+  // o modo vai na tela: no celular, o mapa só aparece onde ele informa algo (a rota do navio e o país da Alfândega)
+  $('tela-comercio').dataset.modo = modo.id;
   mostrar('tela-comercio');
   msgComercio(modo.id === 'alfandega' ? 'Toque numa carta e depois no contêiner certo (ou arraste a carta).' : '');
   desenharComercio();
@@ -152,7 +158,7 @@ function desenharComercio() {
   if (!c) return;
   $('comercio-titulo').textContent = `${c.modo.icone} ${c.modo.nome}`;
   $('comercio-pontos').textContent = c.pontos;
-  $('comercio-progresso').textContent = `${c.feitas} de ${c.total}`;
+  $('comercio-progresso').textContent = `${c.modo.id === 'alfandega' ? 'Cartas' : 'Rodada'}: ${Math.min(c.feitas + (c.modo.id === 'alfandega' ? 0 : 1), c.total)} de ${c.total}`;
   const mult = multiplicador(c.combo);
   $('comercio-combo').textContent = mult > 1 ? `🔥 Combo x${mult}` : '';
   ({ alfandega: desenharAlfandega, quem: desenharQuem, rota: desenharRota, porque: desenharPorque, vaievolta: desenharVaiEVolta })[c.modo.id]();
@@ -405,7 +411,26 @@ function terminarComercio() {
   $('fim-titulo').textContent = c.dePrimeira === c.total ? 'Comandante de primeira! 🚢' : 'Viagem concluída! 🚢';
   $('fim-texto').textContent = `${aluno}, você acertou ${c.dePrimeira} de ${c.total} de primeira e fez ${c.pontos} pontos!`
     + (c.carimbos ? ` Ganhou ${c.carimbos} ${c.carimbos === 1 ? 'carimbo novo' : 'carimbos novos'} no Passaporte.` : '');
+  // logo abaixo das estrelas: o próximo modo, jogar de novo ou voltar aos modos, sem rolar a tela
+  // o próximo modo visível (pula os ocultos)
+  const kProximo = MODOS_COMERCIO.findIndex((m, k) => k > c.k && !m.oculto);
+  const proximo = kProximo >= 0 ? MODOS_COMERCIO[kProximo] : null;
+  $('fim-acoes').innerHTML = `
+    ${proximo ? `<button class="btn-grande" type="button" data-fim="proxima">▶ Próximo: ${proximo.icone} ${proximo.nome}</button>` : ''}
+    <button class="${proximo ? 'btn-sec' : 'btn-grande'}" type="button" data-fim="repetir">🔁 Jogar de novo</button>
+    <button class="btn-sec" type="button" data-fim="sair">☰ Escolher outro modo</button>`;
+  $('fim-acoes').onclick = (e) => {
+    const b = e.target.closest('[data-fim]');
+    if (!b) return;
+    SOM.clique();
+    if (b.dataset.fim === 'proxima') comecarComercio(kProximo);
+    else if (b.dataset.fim === 'repetir') comecarComercio(c.k);
+    else telaComercioMenu();
+  };
+  $('fim-acoes').hidden = false;
+  $('fim-acoes').querySelector('.btn-grande').focus({ preventScroll: true });
 }
+const repetirComercio = () => comecarComercio(ultimoModo);
 
 // ---------- Toques ----------
 let ignorarCliqueAte = 0;
@@ -530,4 +555,4 @@ $('btn-comercio-passaporte').onclick = () => { SOM.clique(); telaPassaporte(); }
 $('comercio-passaporte-voltar').onclick = () => { SOM.clique(); telaComercioMenu(); };
 $('comercio-sair').onclick = telaComercioMenu;
 
-export { comecarComercio, COMERCIO, pararComercio, telaComercioMenu };
+export { comecarComercio, COMERCIO, pararComercio, repetirComercio, telaComercioMenu };

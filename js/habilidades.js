@@ -51,8 +51,12 @@ export const JOGOS_HAB = {
     r: 'Leia os dados e descubra qual gráfico de pizza, barras, colunas ou linha está certo.' },
   'btn-historia': { h: ['memoria', 'logico', 'linguagem', 'planejamento'],
     r: 'Cartas da história do Brasil com o ano escondido: encaixe cada acontecimento no lugar certo da linha do tempo.' },
+  'btn-bip': { h: ['logico', 'planejamento', 'espacial', 'flexibilidade'],
+    r: 'Programação com blocos em português: monte o roteiro (sequência, repita, enquanto) e guie o robô até a estrela.' },
+  'btn-cartografo': { h: ['espacial', 'logico', 'decisao', 'percepcao'],
+    r: 'Leitura de mapas: ligue as camadas de relevo, água e vegetação, use a lupa e escolha o melhor lugar em cada missão.' },
   'btn-comercio': { h: ['logico', 'memoria', 'decisao', 'linguagem'],
-    r: 'Importação e exportação: descubra o que cada país vende e compra e monte as rotas de comércio do mundo.' },
+    r: 'Importação e exportação: descubra o que cada país vende e compra e por quê.' },
   'btn-tiro': { h: ['espacial', 'matematica', 'percepcao'],
     r: 'Estime o ângulo com o transferidor e derrube o míssil.' },
   'btn-peso': { h: ['matematica', 'planejamento', 'logico'],
@@ -172,6 +176,8 @@ export const INDICADO_PARA = {
   'btn-peso': ['discalculia', 'executivas'],
   'btn-historia': ['memoria', 'aprendizagem'],
   'btn-comercio': ['aprendizagem', 'executivas'],
+  'btn-cartografo': ['visoespacial', 'executivas', 'aprendizagem'],
+  'btn-bip': ['executivas', 'tdah', 'visoespacial'],
   'btn-abc': ['dislexia', 'di', 'linguagem', 'aprendizagem'],
   'btn-ingles': ['linguagem', 'memoria'],
   'btn-luzes': ['memoria', 'tdah', 'tea'],
@@ -270,6 +276,8 @@ export const CARTAO_DO_JOGO = {
   graficos: 'btn-graficos',
   historia: 'btn-historia',
   comercio: 'btn-comercio',
+  cartografo: 'btn-cartografo',
+  bip: 'btn-bip',
 };
 // as habilidades que um jogo trabalha (pelo id do link)
 export const habilidadesDoJogo = (jogo) => JOGOS_HAB[CARTAO_DO_JOGO[jogo]]?.h || [];

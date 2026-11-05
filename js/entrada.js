@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Entrar na turma: código da turma → toca no nome (ou digita) → as competições da turma. Sem senha. */
 
-import { $, seguro } from './util.js?v=196';
-import { SOM } from './som.js?v=196';
-import { api, guardarTokenAluno, lerTokenAluno } from './api.js?v=196';
-import { aoVoltarAoInicio } from './estado.js?v=196';
-import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio } from './telas.js?v=196';
-import { enviarPartidas } from './partidas.js?v=196';
-import { telaCompeticao } from './competicao.js?v=196';
+import { $, seguro } from './util.js?v=230';
+import { SOM } from './som.js?v=230';
+import { api, guardarTokenAluno, lerTokenAluno } from './api.js?v=230';
+import { aoVoltarAoInicio } from './estado.js?v=230';
+import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio, telaJogos } from './telas.js?v=230';
+import { enviarPartidas } from './partidas.js?v=230';
+import { telaCompeticao } from './competicao.js?v=230';
 
 // ---------- Entrada pela turma ----------
 // A entrada do app pede só o nome, como sempre (e com o link, o aluno abre qualquer jogo). Para as competições, o aluno
@@ -23,6 +23,9 @@ const erroTurma = (texto) => { $('erro-turma').textContent = texto; };
 function passo(qual) {
   $('turma-passo-codigo').hidden = qual !== 'codigo';
   $('turma-passo-nome').hidden = qual !== 'nome';
+  // a explicação de cima acompanha o passo (antes pedia o código mesmo na hora de tocar no nome)
+  $('turma-explica').innerHTML = qual === 'nome' ? 'Agora toque no <b>seu nome</b>. Se ele não estiver na lista, digite o nome e o sobrenome.'
+    : 'Digite o <b>código da turma</b> (o professor passa). Depois é só tocar no seu nome.';
   erroTurma('');
 }
 
@@ -56,13 +59,23 @@ async function entrar(corpo) {
     if (escolaAntes === null) escolaAntes = window.ESCOLA_ATUAL_ID || '';
     window.ESCOLA_ATUAL_ID = aluno.escola ? aluno.escola.id : '';
     erroTurma('');
-    entrarComoAluno(aluno.nome, telaCompeticao);
+    entrarComoAluno(aluno.nome, abrirDepoisDoLogin);
     enviarPartidas();   // se ficou alguma partida na fila esperando o login
   } catch (err) {
     erroTurma(err.message);
     mascote('davi-login', 'triste');
     SOM.errado();
   }
+}
+
+// depois de entrar: se a turma tem competição aberta, vai para ela; senão, direto para os jogos
+// (antes o aluno sempre caía na tela de competição, que ficava vazia e sem saída quando não havia nenhuma)
+async function abrirDepoisDoLogin() {
+  try {
+    const { lista } = await api('/sessions/aluno/competicoes', { comoAluno: true });
+    if (lista.some((c) => c.aberta)) { telaCompeticao(); return; }
+  } catch (e) { /* sem internet: segue para os jogos */ }
+  telaJogos();
 }
 
 // ---------- telas ----------
