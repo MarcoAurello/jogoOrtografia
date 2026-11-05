@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Quanto Tempo Passou? */
 
-import { $, embaralhar, sortear } from './util.js?v=188';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=188';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=188';
-import { mascote, mostrar, telaJogos } from './telas.js?v=188';
-import { escolherProfessorE } from './professor.js?v=188';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=188';
+import { $, embaralhar, sortear } from './util.js?v=196';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=196';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=196';
+import { mascote, mostrar, telaJogos } from './telas.js?v=196';
+import { escolherProfessorE } from './professor.js?v=196';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=196';
 
 // ---------- Quanto Tempo Passou? ----------
 // Medida de tempo (intervalo entre dois horários, com AM e PM): uma frase do dia a dia ("A oficina começou às 09:15 AM e

@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=188">
+  <link rel="stylesheet" href="style.css?v=196">
 </head>
 <body>
   <!-- moldura de lápis, livros e estrelas -->
@@ -1214,6 +1214,117 @@
       <div class="graficos-opcoes" id="graficos-opcoes"></div>
       <p class="cores-msg graficos-msg" id="graficos-msg" role="status"></p>
       <button class="btn-grande graficos-proxima" id="btn-graficos-proxima" type="button" hidden>Próxima ▶</button>
+    </section>
+
+    <!-- Cronologia da História Brasileira: eras e fases -->
+    <section class="tela" id="tela-historia-menu">
+      <h2 class="subtitulo">📜 Cronologia da História Brasileira</h2>
+      <img class="capa-jogo larga" src="assets/capa-historia.jpg" alt="Cartas da história do Brasil formando uma linha do tempo até Brasília" width="677" height="479">
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-historia"></div>
+        <div class="balao balao-esq">
+          Monte a <b>linha do tempo</b> do Brasil! Toque numa carta e depois no <b>＋</b> onde ela se encaixa (ou arraste).
+          O ano fica escondido até você acertar. Acertou de primeira? Ganha um <b>documento</b> para o Arquivo da Nação! 📜
+        </div>
+      </div>
+      <h3 class="historia-rotulo">Escolha a era</h3>
+      <div class="historia-eras" id="historia-eras"></div>
+      <h3 class="historia-rotulo">Fases</h3>
+      <div class="grade-missoes" id="historia-fases"></div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-historia-arquivo" type="button">📜 Arquivo da Nação</button>
+        <button class="btn-sec" id="historia-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Cronologia da História Brasileira: o jogo -->
+    <section class="tela tela-jogo" id="tela-historia" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="historia-sair" type="button">← Fases</button>
+        <span class="barra-titulo" id="historia-fase"></span>
+        <span class="chuva-placar"><span id="historia-pontos">0</span> pts</span>
+      </div>
+      <div class="historia-status">
+        <span id="historia-progresso"></span>
+        <span class="historia-combo" id="historia-combo" aria-live="polite"></span>
+      </div>
+      <div class="historia-linha" id="historia-linha" aria-label="Linha do tempo"></div>
+      <p class="historia-msg" id="historia-msg" role="status"></p>
+      <div class="historia-mao" id="historia-mao" aria-label="Suas cartas"></div>
+      <button class="btn-sec historia-dica" id="btn-historia-dica" type="button" hidden>📜 Consultar Arquivo</button>
+      <!-- carta no lugar certo: o pergaminho com a conjuntura da época -->
+      <div class="historia-pergaminho-fundo" id="historia-pergaminho" hidden>
+        <div class="historia-pergaminho" role="dialog" aria-modal="true" aria-labelledby="historia-perg-titulo">
+          <span class="historia-ano historia-perg-ano" id="historia-perg-ano"></span>
+          <h3 class="historia-perg-titulo" id="historia-perg-titulo"></h3>
+          <p class="historia-perg-texto" id="historia-perg-texto"></p>
+          <p class="historia-perg-extra" id="historia-perg-extra"></p>
+          <button class="btn-grande" id="btn-historia-continuar" type="button">Continuar ▶</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cronologia da História Brasileira: Arquivo da Nação (documentos desbloqueados, guardados no aparelho) -->
+    <section class="tela" id="tela-historia-arquivo">
+      <h2 class="subtitulo">📜 Arquivo da Nação</h2>
+      <p class="historia-arquivo-total" id="historia-arquivo-total"></p>
+      <div id="historia-arquivo-lista"></div>
+      <button class="btn-sec" id="historia-arquivo-voltar" type="button">← Fases</button>
+    </section>
+
+    <!-- Conexão Global: modos e mapa -->
+    <section class="tela" id="tela-comercio-menu">
+      <h2 class="subtitulo">🚢 Conexão Global</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-comercio"></div>
+        <div class="balao balao-esq">
+          Você é o <b>comandante</b> de um navio cargueiro! Cada país <b>vende</b> (exporta) o que tem de sobra e
+          <b>compra</b> (importa) o que falta. Descubra quem vende o quê e monte as rotas de comércio do mundo. Acertou de
+          primeira? Ganha um <b>carimbo</b> no Passaporte! 🛂
+        </div>
+      </div>
+      <div class="cm-mapa cm-mapa-menu" id="comercio-mapa-menu"></div>
+      <h3 class="historia-rotulo">Modos</h3>
+      <div class="grade-missoes" id="comercio-modos"></div>
+      <div class="linha-botoes acoes-menu">
+        <button class="btn-grande" id="btn-comercio-passaporte" type="button">🛂 Passaporte <small id="comercio-carimbos"></small></button>
+        <button class="btn-sec" id="comercio-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Conexão Global: o jogo -->
+    <section class="tela tela-jogo" id="tela-comercio" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="comercio-sair" type="button">← Modos</button>
+        <span class="barra-titulo" id="comercio-titulo"></span>
+        <span class="chuva-placar"><span id="comercio-pontos">0</span> pts</span>
+      </div>
+      <div class="historia-status">
+        <span id="comercio-progresso"></span>
+        <span class="historia-combo" id="comercio-combo" aria-live="polite"></span>
+      </div>
+      <div class="cm-mapa" id="comercio-mapa"></div>
+      <div class="cm-enunciado" id="comercio-enunciado"></div>
+      <p class="comercio-msg" id="comercio-msg" role="status"></p>
+      <div class="cm-area" id="comercio-area"></div>
+      <!-- acerto: o cartão-postal com o que aprender -->
+      <div class="historia-pergaminho-fundo" id="comercio-postal" hidden>
+        <div class="cm-postal" role="dialog" aria-modal="true" aria-labelledby="comercio-postal-titulo">
+          <div class="cm-postal-selo" id="comercio-postal-selo"></div>
+          <h3 class="cm-postal-titulo" id="comercio-postal-titulo"></h3>
+          <p class="cm-postal-texto" id="comercio-postal-texto"></p>
+          <p class="historia-perg-extra" id="comercio-postal-extra"></p>
+          <button class="btn-grande" id="btn-comercio-continuar" type="button">Continuar ▶</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conexão Global: Passaporte (carimbos dos países, guardados no aparelho) -->
+    <section class="tela" id="tela-comercio-passaporte">
+      <h2 class="subtitulo">🛂 Passaporte</h2>
+      <p class="historia-arquivo-total" id="comercio-passaporte-total"></p>
+      <div class="cm-passaporte" id="comercio-passaporte-lista"></div>
+      <button class="btn-sec" id="comercio-passaporte-voltar" type="button">← Modos</button>
     </section>
 
     <!-- Palavra Escondida: instruções -->
@@ -2671,6 +2782,8 @@
           <option value="todos">🎮 Todos os jogos</option>
           <option value="portugues">📚 Português</option>
           <option value="matematica">🔢 Matemática</option>
+          <option value="historia">📜 História</option>
+          <option value="geografia">🌎 Geografia</option>
           <option value="ingles">🌎 Inglês</option>
           <option value="psicopedagogia">🧠 Psicopedagogia</option>
         </select>
@@ -2737,6 +2850,17 @@
           <img class="jogo-card-capa larga" src="assets/capa-peso-certo.jpg" alt="" width="760" height="387">
           <span class="jogo-card-nome">Peso Certo</span>
           <span class="jogo-card-texto">Equilibre a balança com os pesos!</span>
+        </button>
+        <button class="jogo-card com-capa" id="btn-historia" type="button" data-tema="historia" style="--c:#8d5a2b">
+          <img class="jogo-card-capa" src="assets/capa-historia.jpg" alt="" width="677" height="479" style="object-position: center top">
+          <span class="jogo-card-nome">Cronologia da História Brasileira</span>
+          <span class="jogo-card-texto">Monte a linha do tempo do Brasil!</span>
+        </button>
+        <!-- capa provisória (CSS): trocar por assets/capa-comercio.jpg quando a arte ficar pronta -->
+        <button class="jogo-card com-capa" id="btn-comercio" type="button" data-tema="geografia" style="--c:#0277bd">
+          <span class="jogo-card-capa cm-capa" aria-hidden="true"><span>🚢</span><span>🌎</span><span>📦</span></span>
+          <span class="jogo-card-nome">Conexão Global</span>
+          <span class="jogo-card-texto">Quem vende e quem compra no mundo?</span>
         </button>
         <button class="jogo-card com-capa" id="btn-fita" type="button" data-tema="matematica" style="--c:#c99700">
           <span class="jogo-card-capa fita-capa" id="fita-capa" aria-hidden="true"></span>
@@ -3103,9 +3227,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=188"></script>
-  <script src="dados.js?v=188"></script>
-  <script type="module" src="js/main.js?v=188"></script>
+  <script src="plenix.js?v=196"></script>
+  <script src="dados.js?v=196"></script>
+  <script type="module" src="js/main.js?v=196"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

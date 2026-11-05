@@ -49,6 +49,10 @@ export const JOGOS_HAB = {
     r: 'Tetris da tabuada: ache o resultado certo e estoure os quadrados antes que cheguem ao topo.' },
   'btn-graficos': { h: ['matematica', 'logico', 'percepcao'],
     r: 'Leia os dados e descubra qual gráfico de pizza, barras, colunas ou linha está certo.' },
+  'btn-historia': { h: ['memoria', 'logico', 'linguagem', 'planejamento'],
+    r: 'Cartas da história do Brasil com o ano escondido: encaixe cada acontecimento no lugar certo da linha do tempo.' },
+  'btn-comercio': { h: ['logico', 'memoria', 'decisao', 'linguagem'],
+    r: 'Importação e exportação: descubra o que cada país vende e compra e monte as rotas de comércio do mundo.' },
   'btn-tiro': { h: ['espacial', 'matematica', 'percepcao'],
     r: 'Estime o ângulo com o transferidor e derrube o míssil.' },
   'btn-peso': { h: ['matematica', 'planejamento', 'logico'],
@@ -166,6 +170,8 @@ export const INDICADO_PARA = {
   'btn-graficos': ['discalculia', 'aprendizagem'],
   'btn-tiro': ['discalculia', 'visoespacial'],
   'btn-peso': ['discalculia', 'executivas'],
+  'btn-historia': ['memoria', 'aprendizagem'],
+  'btn-comercio': ['aprendizagem', 'executivas'],
   'btn-abc': ['dislexia', 'di', 'linguagem', 'aprendizagem'],
   'btn-ingles': ['linguagem', 'memoria'],
   'btn-luzes': ['memoria', 'tdah', 'tea'],
@@ -262,6 +268,8 @@ export const CARTAO_DO_JOGO = {
   tabuada: 'btn-tabuada',
   classes: 'btn-classes',
   graficos: 'btn-graficos',
+  historia: 'btn-historia',
+  comercio: 'btn-comercio',
 };
 // as habilidades que um jogo trabalha (pelo id do link)
 export const habilidadesDoJogo = (jogo) => JOGOS_HAB[CARTAO_DO_JOGO[jogo]]?.h || [];

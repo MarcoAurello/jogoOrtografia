@@ -3592,3 +3592,249 @@ body.an-publica { margin: 0; min-height: 100vh; background: #eef6f8; }
 .sessao-obj small { color: var(--cinza-texto, #64748b); font-weight: 600; }
 .sessao-escala .an-opcao { flex: 1 1 140px; }
 #form-sessao textarea { width: 100%; box-sizing: border-box; font-size: 16px; font-family: inherit; padding: 8px; border: 2px solid #dbeef1; border-radius: 10px; }
+
+/* ---------- Cronologia da História Brasileira ---------- */
+.historia-rotulo { margin: 14px 0 8px; font-family: 'Fredoka', sans-serif; font-size: 19px; color: var(--primaria-escura); }
+.historia-eras { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.historia-era { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 48px; padding: 10px 8px;
+  border: 3px solid var(--c); border-radius: 16px; background: var(--branco); color: var(--c); font: inherit; font-weight: 800; cursor: pointer; }
+.historia-era.ativa { background: var(--c); color: #fff; transform: scale(1.03); }
+.historia-era:disabled { opacity: 0.45; filter: grayscale(0.7); cursor: default; }
+.historia-era-icone { font-size: 28px; line-height: 1; }
+.historia-era-nome { font-size: 15px; text-align: center; }
+.historia-era small { font-size: 13px; font-weight: 700; opacity: 0.85; }
+.missao.bloqueada { opacity: 0.55; cursor: default; }
+.missao.bloqueada:hover { transform: none; }
+.missao.bloqueada .missao-estrelas { font-size: 13px; letter-spacing: 0; color: #5b6b80; }
+
+/* a partida: linha do tempo (rola por dentro) em cima, mensagem no meio, a mão embaixo */
+.historia-status { display: flex; justify-content: space-between; align-items: center; min-height: 24px; padding: 0 4px;
+  font-weight: 800; color: var(--primaria-escura); font-size: 15px; }
+.historia-combo { color: #d84315; animation: cores-quique 0.4s ease-out; }
+.tela-jogo > .historia-linha { flex: 1 1 0; min-height: 140px; }
+.historia-linha { display: flex; flex-direction: column; gap: 2px; padding: 6px; overflow: auto; overscroll-behavior: contain;
+  border-radius: 16px; background: linear-gradient(180deg, #fbf3e6, #f3ead8); border: 2px solid #e6d6bb; }
+.historia-item { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 10px; border-radius: 12px;
+  background: #fff; border-left: 7px solid var(--c); box-shadow: 0 2px 0 rgba(11, 46, 102, 0.15); }
+.historia-item.ancora { background: #fffaf0; }
+.historia-item.novo { animation: historia-entrar 0.5s ease-out; }
+.historia-ano { flex-shrink: 0; min-width: 52px; padding: 2px 8px; border-radius: 10px; background: var(--c); color: #fff;
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 17px; text-align: center; }
+.historia-ano small { display: block; font-size: 10px; font-weight: 600; line-height: 1; }
+.historia-item-icone { font-size: 24px; line-height: 1; }
+.historia-item-icone img, .historia-carta-icone img { width: 40px; height: 40px; object-fit: cover; border-radius: 8px; }
+.historia-item-titulo { font-weight: 800; font-size: 15px; color: #13294b; }
+/* os ＋ entre os acontecimentos: discretos até a criança escolher uma carta */
+.historia-slot { display: flex; align-items: center; justify-content: center; min-height: 22px; padding: 0; border: 0; background: none;
+  cursor: pointer; font: inherit; color: #a8916c; transition: min-height 0.15s; }
+.historia-slot span { display: flex; align-items: center; justify-content: center; width: 100%; height: 18px; border-radius: 10px;
+  border: 2px dashed transparent; font-weight: 800; font-size: 14px; }
+.historia-linha.escolhendo .historia-slot { min-height: 48px; }
+.historia-linha.escolhendo .historia-slot span { height: 40px; border-color: #c4a675; background: rgba(255, 255, 255, 0.6); color: #8d5a2b; font-size: 22px; }
+.historia-linha.escolhendo .historia-slot:hover span, .historia-slot.mira span { border-style: solid; border-color: var(--primaria); background: #e3f0ff; color: var(--primaria); transform: scale(1.03); }
+
+.historia-msg { min-height: 2.6em; margin: 6px 2px; text-align: center; font-weight: 700; font-size: clamp(14px, 2.1dvh, 16px); color: var(--primaria-escura); }
+.historia-msg.ok { color: #1d6b3d; }
+.historia-msg.erro { color: #b42318; }
+.historia-msg.dica { color: #7a4a12; }
+.historia-msg-acao { display: block; font-size: 0.92em; opacity: 0.8; }
+.historia-doc-novo { display: inline-block; margin-left: 4px; padding: 1px 8px; border-radius: 10px; background: #fff3c4; color: #7a4a12; }
+
+.historia-mao { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.historia-carta { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 92px; padding: 8px 6px;
+  border: 3px solid var(--c); border-radius: 14px; background: #fff; font: inherit; cursor: grab;
+  box-shadow: 0 4px 0 rgba(11, 46, 102, 0.2); touch-action: none; user-select: none; -webkit-user-select: none;
+  animation: cores-nascer 0.34s ease-out both; }
+.historia-carta.selecionada { transform: translateY(-6px); background: #fff8e1; box-shadow: 0 0 0 4px #ffca28, 0 8px 0 rgba(11, 46, 102, 0.2); }
+.historia-carta.arrastando { opacity: 0.35; }
+.historia-carta.balanca { animation: historia-balanca 0.5s ease-in-out; box-shadow: 0 0 0 5px var(--c), 0 0 18px 4px var(--c); }
+.historia-carta-icone { font-size: 28px; line-height: 1; }
+.historia-carta-titulo { font-weight: 800; font-size: 13px; line-height: 1.15; color: #13294b; text-align: center; }
+.historia-carta-ano { font-family: 'Fredoka', sans-serif; font-size: 12px; letter-spacing: 1px; color: #9a8a70; }
+/* a carta arrastada segue o dedo um pouco acima dele */
+.historia-fantasma { position: fixed; z-index: 1000; pointer-events: none; margin: 0; transform: rotate(-3deg) scale(1.06);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); animation: none; }
+.historia-dica { align-self: center; margin-top: 6px; }
+
+@keyframes historia-entrar { 0% { transform: scale(0.6); background: #fff3c4; } 60% { transform: scale(1.04); } 100% { transform: none; } }
+@keyframes historia-balanca { 20% { transform: translateX(-8px) rotate(-3deg); } 40% { transform: translateX(7px) rotate(3deg); }
+  60% { transform: translateX(-5px) rotate(-2deg); } 80% { transform: translateX(4px); } }
+
+/* PC: a linha do tempo fica deitada, da esquerda (mais antigo) para a direita */
+@media (min-width: 900px) {
+  .historia-linha { flex-direction: row; align-items: center; gap: 4px; padding: 14px 10px; }
+  .historia-item { flex-direction: column; flex-shrink: 0; width: 132px; min-height: 120px; justify-content: center; text-align: center;
+    border-left: 0; border-top: 7px solid var(--c); }
+  .historia-item-titulo { font-size: 14px; }
+  .historia-slot { flex-shrink: 0; min-height: 0; min-width: 22px; align-self: stretch; }
+  .historia-slot span { width: 18px; height: 100%; }
+  .historia-linha.escolhendo .historia-slot { min-height: 0; min-width: 52px; }
+  .historia-linha.escolhendo .historia-slot span { width: 48px; height: 100px; }
+  .historia-mao { grid-template-columns: repeat(5, minmax(0, 150px)); justify-content: center; }
+  .historia-carta { min-height: 110px; }
+  .historia-carta-titulo { font-size: 14px; }
+}
+
+/* Arquivo da Nação */
+.historia-arquivo-total { margin: 0 0 8px; text-align: center; font-weight: 800; color: var(--primaria-escura); }
+.historia-arquivo-era { margin: 14px 0 8px; padding-bottom: 4px; border-bottom: 4px solid var(--c); color: var(--c); font-family: 'Fredoka', sans-serif; }
+.historia-arquivo-era small { font-size: 0.7em; opacity: 0.8; }
+.historia-arquivo-grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.historia-doc { padding: 10px 12px; border-radius: 14px; background: #fffaf0; border: 2px solid #e6d6bb; border-left: 7px solid var(--c, #c4a675); }
+.historia-doc header { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; color: #13294b; }
+.historia-doc h4 { margin: 8px 0 4px; color: #7a4a12; font-size: 15px; }
+.historia-doc p { margin: 0 0 6px; font-size: 14px; line-height: 1.35; }
+.historia-doc small { font-size: 12px; color: #5b6b80; }
+.historia-doc.trancado { background: #f1f1f1; color: #777; border-left-color: #bbb; }
+/* pergaminho da conjuntura: abre por cima do jogo quando a carta vai para o lugar certo */
+.historia-pergaminho-fundo { position: fixed; inset: 0; z-index: 900; display: flex; align-items: center; justify-content: center;
+  padding: 16px; background: rgba(40, 24, 8, 0.55); }
+.historia-pergaminho-fundo[hidden] { display: none; }
+/* sem rolagem: o texto e os espaços encolhem com a altura da tela para tudo caber */
+.historia-pergaminho { position: relative; width: min(100%, 480px);
+  padding: clamp(18px, 3.5dvh, 30px) clamp(14px, 5vw, 22px) clamp(14px, 2.5dvh, 20px); text-align: center; color: #3e2a12; border-radius: 6px;
+  background: radial-gradient(ellipse at center, #fbf1d9 0%, #f1dfb4 70%, #e3c88f 100%);
+  box-shadow: inset 0 0 30px rgba(140, 95, 40, 0.35), 0 14px 32px rgba(0, 0, 0, 0.35);
+  animation: historia-desenrolar 0.45s ease-out; transform-origin: top center; }
+/* os rolos de cima e de baixo do pergaminho */
+.historia-pergaminho::before, .historia-pergaminho::after { content: ''; position: absolute; left: -8px; right: -8px; height: 16px; border-radius: 10px;
+  background: linear-gradient(180deg, #c99a5b, #8d5a2b 60%, #6e4320); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); }
+.historia-pergaminho::before { top: -6px; }
+.historia-pergaminho::after { bottom: -6px; }
+.historia-perg-ano { display: inline-block; font-size: clamp(16px, 2.4dvh, 20px); padding: 2px 14px; }
+.historia-perg-titulo { margin: clamp(4px, 1.2dvh, 10px) 0 clamp(4px, 1dvh, 8px); font-family: 'Fredoka', sans-serif; font-size: clamp(17px, 2.7dvh, 22px); line-height: 1.2; color: #5a3510; }
+.historia-perg-texto { margin: 0 0 clamp(6px, 1.4dvh, 12px); font-family: Georgia, 'Times New Roman', serif; font-size: clamp(14px, 2.05dvh, 17px); line-height: 1.42; text-align: left; }
+.historia-perg-extra { margin: 0 0 clamp(4px, 1.2dvh, 10px); font-weight: 700; font-size: clamp(13px, 1.9dvh, 15px); color: #1d6b3d; }
+.historia-perg-extra:empty { display: none; }
+.historia-pergaminho .btn-grande { margin-top: 4px; }
+@keyframes historia-desenrolar { from { transform: scaleY(0.2); opacity: 0; } to { transform: none; opacity: 1; } }
+/* "+ detalhes" (em vermelho, embaixo da carta): abre o pergaminho */
+.historia-carta-caixa { position: relative; display: flex; }
+.historia-carta-caixa > .historia-carta { flex: 1; min-width: 0; padding-bottom: 30px; }
+.historia-info { position: relative; padding: 2px 6px; border: 0; background: none; color: #c62828; cursor: pointer;
+  font: inherit; font-weight: 800; font-size: 13px; text-decoration: underline; text-underline-offset: 2px; }
+.historia-info:hover { color: #8e0000; }
+/* a área de toque é maior que o texto */
+.historia-info::before { content: ''; position: absolute; inset: -8px -4px; }
+.historia-carta-caixa > .historia-info { position: absolute; left: 50%; bottom: 7px; transform: translateX(-50%); white-space: nowrap; z-index: 2; }
+.historia-item-texto { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; }
+.historia-item-texto .historia-info { padding-left: 0; }
+@media (min-width: 900px) { .historia-item-texto { align-items: center; } .historia-item-texto .historia-info { padding-left: 6px; } }
+
+/* ---------- Conexão Global ---------- */
+.cm-capa { display: flex; align-items: center; justify-content: space-evenly; font-size: clamp(30px, 6vw, 44px);
+  background: linear-gradient(160deg, #4fc3f7 0%, #0277bd 60%, #01579b 100%); }
+.bandeira { display: block; width: 54px; height: 36px; border-radius: 3px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); }
+.bandeira.mini { display: inline-block; width: 24px; height: 16px; vertical-align: -3px; border-radius: 2px; }
+
+/* mapa-múndi */
+.cm-mapa { border-radius: 14px; overflow: hidden; border: 2px solid #b3d9ee; background: #cfeafa; }
+.cm-mapa-menu { margin: 10px 0 4px; }
+.cm-mapa-svg { display: block; width: 100%; height: 100%; }
+.tela-jogo > .cm-mapa { height: clamp(100px, 23dvh, 230px); }
+.cm-mar { fill: #cfeafa; }
+.cm-terras path { fill: #a5d6a7; stroke: #6fa874; stroke-width: 1.2; stroke-linejoin: round; }
+.cm-porto circle { fill: #ff7043; stroke: #fff; stroke-width: 1.6; }
+.cm-porto.destaque circle { fill: #e53935; }
+.cm-porto-onda { fill: none !important; stroke: #e53935 !important; stroke-width: 2.5 !important; animation: cm-onda 1.4s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.cm-porto text { font: 800 20px 'Nunito', Arial, sans-serif; fill: #0b2e66; paint-order: stroke; stroke: #fff; stroke-width: 4px; }
+.cm-rota { fill: none; stroke: #0277bd; stroke-width: 3; stroke-dasharray: 8 7; stroke-linecap: round; opacity: 0.85; }
+.cm-rota.nova { stroke: #e65100; stroke-width: 4; }
+.cm-navio { font-size: 34px; }
+@keyframes cm-onda { from { transform: scale(0.6); opacity: 1; } to { transform: scale(2.2); opacity: 0; } }
+
+/* enunciado e mensagens */
+.cm-enunciado { margin-top: 6px; text-align: center; color: #13294b; font-size: clamp(14px, 2.1dvh, 16px); }
+.cm-enunciado p { margin: 2px 0; }
+.cm-pais-linha { font-size: 1.15em; }
+.cm-pergunta { font-weight: 800; color: var(--primaria-escura); }
+.cm-pedido { font-size: 1.1em; font-weight: 700; }
+.cm-pistas { margin: 4px auto; padding-left: 1.4em; max-width: 520px; text-align: left; font-weight: 700; }
+.cm-pistas li { margin: 3px 0; animation: historia-entrar 0.4s ease-out; }
+.cm-mais-pista { margin-top: 4px; }
+.comercio-msg { min-height: 1.4em; margin: 4px 2px; text-align: center; font-weight: 700; font-size: clamp(14px, 2dvh, 16px); color: var(--primaria-escura); }
+.comercio-msg.ok { color: #1d6b3d; }
+.comercio-msg.erro { color: #b42318; }
+
+/* ícone do produto: o emoji num círculo com a cor da categoria */
+.cm-prod { display: inline-flex; align-items: center; justify-content: center; width: 1.7em; height: 1.7em; border-radius: 50%;
+  background: color-mix(in srgb, var(--c) 18%, #fff); box-shadow: inset 0 0 0 2px var(--c); vertical-align: middle; }
+.cm-prod img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+/* Alfândega: contêineres e cartas */
+.cm-conteineres { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.cm-conteiner { display: flex; flex-direction: column; align-items: center; gap: 1px; min-height: 76px; padding: 8px; border-radius: 12px;
+  border: 3px solid var(--c); color: #fff; font: inherit; cursor: pointer;
+  background: repeating-linear-gradient(90deg, var(--c) 0 14px, color-mix(in srgb, var(--c) 82%, #000) 14px 17px); }
+.cm-conteiner.exporta { --c: #2e7d32; }
+.cm-conteiner.importa { --c: #1565c0; }
+.cm-conteiner span { font-size: 24px; line-height: 1; }
+.cm-conteiner b { font-family: 'Fredoka', sans-serif; font-size: 18px; letter-spacing: 1px; }
+.cm-conteiner small { font-size: 12px; font-weight: 700; opacity: 0.9; }
+.cm-conteineres.escolhendo .cm-conteiner { box-shadow: 0 0 0 3px #ffca28; }
+.cm-conteiner.mira, .cm-conteineres.escolhendo .cm-conteiner:hover { transform: scale(1.04); box-shadow: 0 0 0 5px #ffca28; }
+.cm-mao { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; }
+.cm-carta { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 100px; padding: 6px 4px 30px;
+  border: 3px solid var(--c); border-radius: 14px; background: #fff; font: inherit; cursor: grab; touch-action: none; user-select: none;
+  -webkit-user-select: none; box-shadow: 0 4px 0 rgba(11, 46, 102, 0.2); animation: cores-nascer 0.34s ease-out both; }
+.cm-carta .cm-prod { font-size: 22px; }
+.cm-carta-pais { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800; color: #13294b; text-align: left; line-height: 1.1; }
+.cm-carta-nome { font-weight: 800; font-size: 13px; line-height: 1.15; color: #13294b; text-align: center; }
+.cm-carta.selecionada { transform: translateY(-6px); background: #fff8e1; box-shadow: 0 0 0 4px #ffca28, 0 8px 0 rgba(11, 46, 102, 0.2); }
+.cm-carta.arrastando { opacity: 0.35; }
+.cm-carta.balanca { animation: historia-balanca 0.5s ease-in-out; box-shadow: 0 0 0 5px #e53935; }
+
+/* Quem sou eu? e Rota: bandeiras para escolher */
+.cm-opcoes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.cm-opcao { display: flex; align-items: center; gap: 10px; min-height: 58px; padding: 8px 10px; border: 3px solid #0277bd; border-radius: 14px;
+  background: #fff; font: inherit; font-weight: 800; font-size: 15px; color: #13294b; cursor: pointer; text-align: left;
+  box-shadow: 0 4px 0 rgba(11, 46, 102, 0.2); animation: cores-nascer 0.34s ease-out both; }
+.cm-opcao .bandeira { flex-shrink: 0; width: 45px; height: 30px; }
+.cm-opcao:active { transform: translateY(3px); box-shadow: none; }
+.cm-opcao.errada, .cm-resposta.errada { opacity: 0.45; border-color: #e53935; text-decoration: line-through; animation: historia-balanca 0.5s; }
+
+/* Por quê? */
+.cm-respostas { display: grid; gap: 10px; }
+.cm-resposta { min-height: 52px; padding: 10px 14px; border: 3px solid #0277bd; border-radius: 14px; background: #fff; font: inherit;
+  font-weight: 700; font-size: 15px; color: #13294b; text-align: left; cursor: pointer; box-shadow: 0 4px 0 rgba(11, 46, 102, 0.2); }
+
+/* Vai e volta */
+.cm-produtos { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.cm-produto { position: relative; display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 6px 10px; border: 3px solid #b0bec5;
+  border-radius: 14px; background: #fff; font: inherit; font-weight: 800; font-size: 14px; color: #13294b; cursor: pointer; text-align: left; }
+.cm-produto .cm-prod { flex-shrink: 0; font-size: 20px; }
+.cm-produto.marcado { border-color: #e65100; background: #fff3e0; }
+.cm-produto i { position: absolute; top: -8px; right: -6px; font-style: normal; font-size: 18px; }
+.cm-conferir { display: block; margin: 10px auto 0; }
+
+/* o cartão-postal: borda de correio aéreo e a bandeira no selo */
+.cm-postal { position: relative; width: min(100%, 480px); padding: clamp(16px, 3dvh, 24px) clamp(14px, 5vw, 22px) clamp(14px, 2.5dvh, 20px);
+  border-radius: 10px; text-align: center; color: #13294b; background: #fffdf6;
+  border: 9px solid transparent; border-image: repeating-linear-gradient(45deg, #e53935 0 10px, #fff 10px 20px, #1e64d2 20px 30px, #fff 30px 40px) 9;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35); animation: historia-desenrolar 0.4s ease-out; }
+.cm-postal-selo { position: absolute; top: 8px; right: 8px; padding: 4px; background: #fff; border: 2px dashed #90a4ae; transform: rotate(6deg); }
+.cm-postal-selo .bandeira { width: 48px; height: 32px; }
+.cm-selo-icone { display: block; width: 48px; height: 32px; font-size: 26px; line-height: 32px; }
+.cm-postal-titulo { margin: 4px 64px 8px 0; text-align: left; font-family: 'Fredoka', sans-serif; font-size: clamp(17px, 2.6dvh, 21px); line-height: 1.2; color: #0b2e66; }
+.cm-postal-texto { margin: 0 0 clamp(6px, 1.4dvh, 12px); font-size: clamp(14px, 2.05dvh, 16px); line-height: 1.45; text-align: left; }
+
+/* Passaporte */
+.cm-passaporte { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 14px; }
+.cm-pagina { position: relative; padding: 12px; border-radius: 14px; background: #fdf7ec; border: 2px solid #d7c6a5; color: #13294b; }
+.cm-pagina header { display: flex; align-items: center; gap: 10px; }
+.cm-pagina header small { display: block; font-size: 12px; color: #5b6b80; }
+.cm-pagina h4 { margin: 8px 0 4px; font-size: 14px; }
+.cm-pagina p { margin: 6px 0; font-size: 14px; line-height: 1.35; }
+.cm-carimbo { margin-left: auto; padding: 2px 8px; border: 3px double #c62828; border-radius: 8px; color: #c62828; font-weight: 900; font-size: 12px; transform: rotate(-10deg); }
+.cm-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.cm-chip { padding: 2px 8px; border-radius: 12px; background: #fff; border: 1px solid #d7c6a5; font-size: 12px; font-weight: 700; }
+.cm-valores { color: #5b6b80; }
+.cm-curiosidade { font-weight: 700; color: #7a4a12; }
+.cm-pagina.trancada { filter: grayscale(1); opacity: 0.6; }
+#btn-comercio-passaporte small { font-size: 0.65em; font-weight: 700; opacity: 0.85; }
+
+@media (min-width: 900px) {
+  .tela-jogo > .cm-mapa { height: clamp(160px, 30dvh, 300px); }
+  .cm-opcoes { grid-template-columns: repeat(4, 1fr); }
+  .cm-mao { grid-template-columns: repeat(6, minmax(0, 150px)); justify-content: center; }
+}
