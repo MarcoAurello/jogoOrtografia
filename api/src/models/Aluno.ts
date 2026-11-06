@@ -9,6 +9,7 @@ import {
 import sequelize from "../config/connection";
 import Escola from "./Escola";
 import Turma from "./Turma";
+import type { VisivelFamilia } from "./Usuario";
 
 // as 9 figuras da senha (a ordem é a mesma do app: js/entrada.js)
 export const FIGURAS = 9;
@@ -38,12 +39,27 @@ class Aluno extends Model<
   declare observacoes: CreationOptional<string | null>;
   declare consentimento_em: CreationOptional<Date | null>;
   declare consentimento_por: CreationOptional<string | null>;
+  // exceção por aluno ao que a escola mostra para a família (null = segue a escola)
+  declare visivel_familia: CreationOptional<VisivelFamilia>;
+  // paciente sem turma do professor avulso (cadastrado pela família no link dele)
+  declare professor_id: CreationOptional<string | null>;
+  declare cadastro_origem: CreationOptional<"familia" | null>;   // familia: o responsável cadastrou (aguardando turma)
+  // o PIN de 4 números do aluno cadastrado pela família (só o hash); sem PIN, o aluno entra só com o nome
+  declare pin_hash: CreationOptional<string | null>;
+  // vai no token do aluno; trocar o PIN soma 1 e os logins lembrados daquele aluno param de valer
+  declare sessao_versao: CreationOptional<number>;
   declare created_at: CreationOptional<Date>;
   declare updated_at: CreationOptional<Date>;
 
   declare escola?: NonAttribute<Escola | null>;
   declare turma?: NonAttribute<Turma>;
   declare turmas?: NonAttribute<Turma[]>;
+
+  // nunca manda o hash do PIN (nem a antiga senha de figuras) para fora
+  toJSON() {
+    const { pin_hash: _pin, senha_figuras: _figuras, ...values } = this.get();
+    return values as Omit<InferAttributes<Aluno>, "pin_hash" | "senha_figuras">;
+  }
 }
 
 Aluno.init(
@@ -100,6 +116,11 @@ Aluno.init(
     observacoes: { type: DataTypes.TEXT, allowNull: true },
     consentimento_em: { type: DataTypes.DATE, allowNull: true },
     consentimento_por: { type: DataTypes.STRING(160), allowNull: true },
+    visivel_familia: { type: DataTypes.JSON, allowNull: true },
+    professor_id: { type: DataTypes.UUID, allowNull: true },
+    cadastro_origem: { type: DataTypes.STRING(20), allowNull: true },
+    pin_hash: { type: DataTypes.STRING(60), allowNull: true },
+    sessao_versao: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false

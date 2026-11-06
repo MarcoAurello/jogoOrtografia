@@ -5,7 +5,7 @@ import Usuario from "../models/Usuario";
 
 // endereços que já são do app (pastas e páginas) não podem virar escola
 export const RESERVADOS = new Set(["js", "assets", "icons", "audio", "vendor", "docs", "ferramentas", "manual", "privacidade",
-  "index", "jogoortografia", "ortografia", "api", "health", "gestao"]);
+  "index", "jogoortografia", "ortografia", "api", "health", "gestao", "cadastro"]);
 export const slugValido = (slug: string) => /^[A-Za-z0-9_-]{3,40}$/.test(slug) && !RESERVADOS.has(slug.toLowerCase());
 const corValida = (c: unknown) => typeof c === "string" && /^#[0-9a-f]{6}$/i.test(c);
 const LOGO_MAXIMO = 60000;   // data URL de até 240 px (o app já reduz a imagem antes de mandar)

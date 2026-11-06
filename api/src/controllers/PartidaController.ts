@@ -15,7 +15,9 @@ class PartidaController {
   // o fim de um jogo do aluno logado; o id vem do aparelho, então a mesma partida reenviada pela fila não duplica
   async store(req: Request, res: Response): Promise<Response> {
     const aluno = req.alunoLogado!;
-    const turmaId = req.alunoTurmaId!;   // a turma por onde o aluno entrou
+    // a turma por onde o aluno entrou; em casa, a turma de agora (ou nenhuma: paciente, aguardando turma, compra avulsa)
+    const turmaId = req.alunoTurmaId || null;
+    const local = req.alunoLocal === "casa" ? "casa" : "escola";   // vem do token, não do aparelho
     const b = req.body || {};
     const id = String(b.id || "");
     const jogo = String(b.jogo || "").slice(0, 30);
@@ -24,8 +26,9 @@ class PartidaController {
 
     // guardar a partida é configurável: só guarda se estiver ligado na escola, na turma e no aluno. Desligado, responde
     // ok (o app tira da fila e não tenta de novo) e diz em que nível está desligado.
-    const turma = await Turma.findByPk(turmaId, { include: [{ model: Escola, as: "escola" }] });
-    const desligado = turma?.escola?.salvar_partidas === false ? "escola" : turma?.salvar_partidas === false ? "turma"
+    const turma = turmaId ? await Turma.findByPk(turmaId, { include: [{ model: Escola, as: "escola" }] }) : null;
+    const escola = turma?.escola || aluno.escola;
+    const desligado = escola?.salvar_partidas === false ? "escola" : turma?.salvar_partidas === false ? "turma"
       : aluno.salvar_partidas === false ? "aluno" : "";
     if (desligado) return res.json({ ok: true, guardada: false, desligado });
 
@@ -40,7 +43,7 @@ class PartidaController {
         id, jogo, aluno_id: aluno.id, turma_id: turmaId, escola_id: aluno.escola_id,
         titulo: String(b.titulo || jogo).slice(0, 160), acertos, total, estrelas: inteiro(b.estrelas, 3),
         nivel_max: b.nivel_max == null ? null : inteiro(b.nivel_max, 100), duracao_s: b.duracao_s == null ? null : inteiro(b.duracao_s, 86400),
-        jogada_em: quando,
+        jogada_em: quando, local,
         detalhes: Array.isArray(b.detalhes) ? b.detalhes.slice(0, MAX_DETALHES) : null,
         resumo: { linhas: Array.isArray(b.resumo) ? b.resumo.slice(0, 20).map((l: unknown) => String(l).slice(0, 400)) : [],
           competicao: b.competicao ? String(b.competicao).slice(0, 60) : null }

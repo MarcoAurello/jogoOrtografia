@@ -8,6 +8,8 @@ import { alunosDaTurma, vincular } from "../services/acessoAluno";
 import Turma from "../models/Turma";
 import authConfig from "../config/auth";
 import { listarCompeticoes } from "../services/dados";
+import { conferirPinDoAluno } from "../services/pin";
+import { tokenDoAlunoNaTurma } from "../services/sessaoAluno";
 
 // teto de alunos por turma criados pelo nome digitado: quem tem o código não consegue encher a turma de nomes falsos
 const MAX_ALUNOS_NA_TURMA = 150;
@@ -87,6 +89,7 @@ class SessionController {
   // login do aluno: só o código da turma e o nome (sem senha). O aluno toca no nome dele (se o professor cadastrou a
   // turma) ou digita o nome: um nome novo entra na turma na hora, para as partidas dele ficarem no relatório do professor.
   // O mesmo nome (sem diferença de acentos e maiúsculas) é sempre o mesmo aluno.
+  // O aluno cadastrado pela família tem PIN: tocando no nome ou digitando, só entra com o PIN (5 erros travam alguns minutos).
   async aluno(req: Request, res: Response): Promise<Response> {
     try {
       const codigo = String(req.body.codigo || "").trim().toUpperCase();
@@ -112,13 +115,18 @@ class SessionController {
       }
       if (!aluno) return res.status(404).json({ message: "Não achei você nesta turma. Confira o código com o professor." });
 
+      if (aluno.pin_hash) {
+        const erro = await conferirPinDoAluno(aluno, req.body.pin);
+        if (erro) return res.status(erro.status).json(erro.corpo);
+      }
+
       aluno.ultimo_acesso = new Date();
       await aluno.save();
       aluno.turma = turma;
       aluno.escola = turma.escola || null;
-      // o login do aluno vale até ele voltar à tela inicial (o app apaga); o prazo é só uma garantia
-      const token = jwt.sign({ tipo: "aluno", turma: turma.id }, authConfig.secret, { subject: aluno.id, expiresIn: "12h" } as jwt.SignOptions);
-      return res.json({ token, aluno: alunoParaApp(aluno) });
+      // o avulso perde o login ao voltar à tela inicial (o app apaga); o cadastrado (com PIN) o app lembra até o fim do
+      // dia. O prazo do token (12 h) é a garantia (services/sessaoAluno.ts).
+      return res.json({ token: tokenDoAlunoNaTurma(aluno, turma.id), aluno: alunoParaApp(aluno, "escola") });
     } catch (error) {
       console.error("Erro no login do aluno:", error);
       return res.status(500).json({ message: "Erro ao entrar. Tente de novo." });
@@ -129,7 +137,9 @@ class SessionController {
   async alunoCompeticoes(req: Request, res: Response): Promise<Response> {
     try {
       const aluno = req.alunoLogado!;
-      const lista = await listarCompeticoes(aluno.escola_id, false, [req.alunoTurmaId!], true);
+      // em casa sem turma não há competição
+      if (!req.alunoTurmaId) return res.status(200).json({ ok: true, lista: [] });
+      const lista = await listarCompeticoes(aluno.escola_id, false, [req.alunoTurmaId], true);
       return res.status(200).json({ ok: true, lista });
     } catch (error) {
       console.error("Erro ao listar as competições da turma:", error);
@@ -139,15 +149,18 @@ class SessionController {
 
   // o aluno logado (o app confere ao abrir)
   async alunoEu(req: Request, res: Response): Promise<Response> {
-    return res.json({ aluno: alunoParaApp(req.alunoLogado!) });
+    return res.json({ aluno: alunoParaApp(req.alunoLogado!, req.alunoLocal || "escola") });
   }
 }
 
-const alunoParaApp = (aluno: Aluno) => ({
+// cadastrado: tem PIN (o app lembra o login dele); local: escola (pela turma) ou casa (pela conta do responsável)
+export const alunoParaApp = (aluno: Aluno, local: "escola" | "casa") => ({
   id: aluno.id,
   nome: aluno.nome,
   turma: aluno.turma ? { nome: aluno.turma.nome, codigo: aluno.turma.codigo } : null,
-  escola: aluno.escola ? aluno.escola.marca() : null
+  escola: aluno.escola ? aluno.escola.marca() : null,
+  cadastrado: !!aluno.pin_hash,
+  local
 });
 
 export default new SessionController();

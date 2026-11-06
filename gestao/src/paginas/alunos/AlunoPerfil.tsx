@@ -1,5 +1,5 @@
-// Página do aluno: quem é (com as ações) e quatro abas — Anamnese (preencher, link para a família e o histórico),
-// Observações, Plano de objetivos e Cadastro. A aba fica no endereço (?aba=plano), para voltar direto a ela.
+// Página do aluno: quem é (com as ações) e cinco abas — Anamnese (preencher, link para a família e o histórico),
+// Observações, Plano de objetivos, Família (responsáveis, recados e o que a família vê) e Cadastro. A aba fica no endereço (?aba=plano), para voltar direto a ela.
 import { useState } from 'react';
 import { Link as LinkRouter, useParams, useSearchParams } from 'react-router-dom';
 import {
@@ -25,10 +25,11 @@ import PopupAnamnese from './anamnese/PopupAnamnese';
 import { LerRespostas } from './anamnese/Perguntas';
 import AbaObservacoes from './AbaObservacoes';
 import AbaPlano from './plano/AbaPlano';
+import AbaFamilia from '../familia/AbaFamilia';
 import type { AlunoDaEscola, AnamneseDoAluno } from '../../types';
 
-type Aba = 'anamnese' | 'observacoes' | 'plano' | 'cadastro';
-const ABAS: Aba[] = ['anamnese', 'observacoes', 'plano', 'cadastro'];
+type Aba = 'anamnese' | 'observacoes' | 'plano' | 'familia' | 'cadastro';
+const ABAS: Aba[] = ['anamnese', 'observacoes', 'plano', 'familia', 'cadastro'];
 
 const STATUS_ANAMNESE = {
   respondida: { rotulo: 'Respondida', cor: 'success' as const },
@@ -102,12 +103,18 @@ export default function AlunoPerfil() {
         </Stack>
       </Box>
       {!pode && <Alert severity="info" sx={{ mb: 2 }}>Você vê este aluno, mas só edita os alunos das suas turmas.</Alert>}
+      {aluno.aguardando_turma && (
+        <Alert severity="info" sx={{ mb: 2 }} action={pode ? <Button color="inherit" onClick={() => setEditando(true)}>Escolher turma</Button> : undefined}>
+          Cadastrado pela família no link da escola. Coloque o aluno numa turma para ele entrar pelo código da turma.
+        </Alert>
+      )}
 
       <Tabs value={aba} onChange={(_, v) => setParametros({ aba: v }, { replace: true })} variant="scrollable" allowScrollButtonsMobile
         sx={{ mb: 2.5, borderBottom: 1, borderColor: 'divider', '& .MuiTab-root': { minHeight: 48, fontWeight: 700 } }}>
         <Tab value="anamnese" label={`Anamnese${respondidas.length ? ` (${respondidas.length})` : ''}`} />
         <Tab value="observacoes" label="Observações" />
         <Tab value="plano" label="Plano de objetivos" />
+        <Tab value="familia" label="Família" />
         <Tab value="cadastro" label="Cadastro" />
       </Tabs>
 
@@ -164,6 +171,7 @@ export default function AlunoPerfil() {
 
       {aba === 'observacoes' && <AbaObservacoes alunoId={aluno.id} nome={aluno.nome} podeEscrever={pode} />}
       {aba === 'plano' && <AbaPlano alunoId={aluno.id} />}
+      {aba === 'familia' && <AbaFamilia alunoId={aluno.id} nome={aluno.nome} pode={pode} />}
 
       {aba === 'cadastro' && (
         <Paper variant="outlined" sx={{ p: 2.5, borderRadius: 3, mb: 4 }}>

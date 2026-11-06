@@ -26,6 +26,10 @@ const Competicoes = lazy(() => import('./paginas/competicoes/Competicoes'));
 const Links = lazy(() => import('./paginas/links/Links'));
 const Ficha = lazy(() => import('./paginas/ficha/Ficha'));
 const Jogos = lazy(() => import('./paginas/jogos/Jogos'));
+const PaginaFamilia = lazy(() => import('./paginas/familia/PaginaFamilia'));
+// a área da família (perfil responsavel): moldura própria, sem o menu da gestão
+const LayoutFamilia = lazy(() => import('./paginas/familia/area/LayoutFamilia'));
+const AreaFamilia = lazy(() => import('./paginas/familia/area/AreaFamilia'));
 import { ProvedorAvisos } from './components/Avisos';
 import { ProvedorConfirmar } from './components/Confirmar';
 import { CarregandoLista } from './components/EstadoLista';
@@ -45,6 +49,7 @@ const TELAS: Record<string, JSX.Element> = {
   '/competicoes': <Competicoes />,
   '/links': <Links />,
   '/jogos': <Jogos />,
+  '/familias': <PaginaFamilia />,
 };
 
 function Carregando() {
@@ -77,6 +82,11 @@ function Rotas() {
         <ProvedorConfirmar>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/familia/*" element={<ExigeLogin><ExigePerfil perfis={['responsavel']}>
+              <Suspense fallback={<Carregando />}><LayoutFamilia /></Suspense>
+            </ExigePerfil></ExigeLogin>}>
+              <Route path="*" element={<Suspense fallback={<CarregandoLista />}><AreaFamilia /></Suspense>} />
+            </Route>
             <Route element={<ExigeLogin><Layout /></ExigeLogin>}>
               <Route index element={<Inicio />} />
               {ITENS_MENU.map((i) => (

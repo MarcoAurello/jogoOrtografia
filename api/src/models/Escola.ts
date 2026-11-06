@@ -25,6 +25,9 @@ class Escola extends Model<
   declare enviar_relatorios: CreationOptional<boolean>;
   // guardar as partidas dos alunos no banco (painel e ficha); o administrador desliga por escola
   declare salvar_partidas: CreationOptional<boolean>;
+  // o que a família vê (jogos, recados, plano, anamnese); null = padrão
+  declare aceita_cadastro_familia: CreationOptional<boolean>;   // a página /<escola>/cadastro está aberta
+  declare visivel_familia: CreationOptional<Partial<Record<"jogos" | "recados" | "plano" | "anamnese", boolean>> | null>;
   declare plano: CreationOptional<"teste" | "ativo">;
   declare teste_ate: Date | null;
   declare ativa: CreationOptional<boolean>;
@@ -103,6 +106,8 @@ Escola.init(
       allowNull: false,
       defaultValue: true
     },
+    visivel_familia: { type: DataTypes.JSON, allowNull: true },
+    aceita_cadastro_familia: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     plano: {
       type: DataTypes.ENUM("teste", "ativo"),
       allowNull: false,

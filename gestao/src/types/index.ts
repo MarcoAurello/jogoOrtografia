@@ -1,6 +1,6 @@
 // Tipos das respostas da API (api/src/controllers). Só os campos que a gestão usa.
 
-export type Perfil = 'admin' | 'coordenacao' | 'professor';
+export type Perfil = 'admin' | 'coordenacao' | 'professor' | 'responsavel';
 
 // a marca da escola (Escola.marca() na API): o "id" aqui é o endereço (slug), não o id do banco
 export interface MarcaEscola {
@@ -130,6 +130,7 @@ export interface AlunoDaEscola {
   pode_editar?: boolean;
   plano_ativo?: boolean;
   salvar_partidas?: boolean;
+  aguardando_turma?: boolean;   // cadastrado pela família no link da escola, ainda sem turma
   escola_id?: string | null;
   escola?: string;
 }
@@ -222,4 +223,81 @@ export interface TesteGratis {
   relatorios: number;
   ultimo_relatorio: string | null;
   created_at: string;
+}
+
+// ---------- família (os responsáveis, recados e o que a família vê) ----------
+export type RelatorioFamilia = 'jogos' | 'recados' | 'plano' | 'anamnese';
+export type ChavesFamilia = Record<RelatorioFamilia, boolean>;
+
+// GET /alunos/:id/responsaveis
+export interface ResponsaveisDoAluno {
+  responsaveis: { id: string; nome: string; email: string; parentesco: string | null; origem: string; consentimento_em: string | null; desde: string }[];
+  pode_desvincular: boolean;
+  pode_redefinir_senha: boolean;
+  pode_redefinir_pin: boolean;   // só aluno cadastrado (com PIN) e quem mexe no aluno
+}
+
+// GET /alunos/:id/recados
+export interface RecadoFamilia {
+  id: string;
+  texto: string;
+  autor_nome: string;
+  criado_em: string;
+  atualizado_em: string;
+  pode_editar: boolean;
+}
+
+// GET /alunos/:id/visivel-familia
+export interface VisivelFamiliaAluno {
+  excecao: Partial<ChavesFamilia>;
+  regra: ChavesFamilia;
+  efetivo: ChavesFamilia;
+  pode_mudar: boolean;
+}
+// ---------- área da família (/familia: o responsável e os filhos dele) ----------
+
+// GET /familia/filhos e /familia/filhos/:id: "relatorios" diz o que aparece (o que está desligado some da tela)
+export interface FilhoFamilia {
+  id: string;
+  nome: string;
+  nome_completo: string | null;
+  data_nascimento?: string | null;
+  parentesco: string | null;
+  escola: { nome: string; logo: string } | null;
+  tem_pin?: boolean;   // sem PIN o filho ainda não joga em casa ("Quem vai jogar?" no app)
+  relatorios: ChavesFamilia;
+}
+
+// GET /familia/filhos/:id/jogos (a ficha do aluno, sem as anotações da equipe, e as últimas partidas)
+export interface JogosDoFilho {
+  dias: number;
+  resumo: { partidas: number; acerto: number | null; minutos: number; ultima: string | null; primeira: string | null };
+  semanas: Semana[];
+  habilidades: { habilidade: string; acerto: number | null; respostas: number; antes: number | null; depois: number | null }[];
+  jogos: { jogo: string; titulo: string; partidas: number; acerto: number | null; nivel: number | null }[];
+  revisar: { certa: string; tipo: string; jogo: string; vezes: number; respostas: string[] }[];
+  ultimas: { id: string; jogo: string; titulo: string; acertos: number; total: number; estrelas: number | null; jogada_em: string; local: 'escola' | 'casa' | null }[];
+}
+
+// GET /familia/filhos/:id/planos (sem rascunhos nem as adequações da escola)
+export interface PlanoDaFamilia {
+  id: string;
+  profissional_nome: string;
+  ciclo: string | null;
+  foco: string | null;
+  status: StatusPlano;
+  objetivos: { area: string; descricao: string; jogos: string[]; prazo: string; dias: string[] }[];
+  orientacoes_familia: string | null;
+  criado_em: string;
+}
+
+// GET /familia/filhos/:id/anamneses (as que a família respondeu aparecem sempre)
+export interface AnamneseDaFamilia {
+  id: string;
+  titulo: string;
+  perguntas: PerguntaAnamnese[];
+  respostas: Record<string, unknown>;
+  da_familia: boolean;
+  respondida_por_nome: string | null;
+  respondida_em: string | null;
 }

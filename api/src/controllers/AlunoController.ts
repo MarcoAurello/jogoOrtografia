@@ -20,7 +20,10 @@ const dataValida = (v: unknown) => (/^\d{4}-\d{2}-\d{2}$/.test(String(v || "")) 
 const paraLista = (a: Aluno, turmas: { id: string; nome: string }[], anamneses: number, ultima: Date | null) => ({
   id: a.id, nome: a.nome, ativo: a.ativo, nome_completo: a.nome_completo, data_nascimento: a.data_nascimento,
   responsavel_nome: a.responsavel_nome, responsavel_contato: a.responsavel_contato, observacoes: a.observacoes,
-  consentimento_em: a.consentimento_em, turmas, anamneses, ultima_anamnese: ultima, salvar_partidas: a.salvar_partidas !== false
+  consentimento_em: a.consentimento_em, turmas, anamneses, ultima_anamnese: ultima, salvar_partidas: a.salvar_partidas !== false,
+  // cadastrado pela família no link da escola e ainda sem turma: a coordenação coloca numa turma (o paciente do
+  // professor avulso não precisa de turma)
+  aguardando_turma: a.cadastro_origem === "familia" && !!a.escola_id && !turmas.length
 });
 
 class AlunoController {
@@ -101,7 +104,7 @@ class AlunoController {
       return {
         ...paraLista(a, dele.map((t) => ({ id: t.id, nome: t.nome })), Number(porAluno.get(a.id)?.qtd || 0), porAluno.get(a.id)?.ultima || null),
         // o professor só mexe (cadastro, anamnese, ficha) nos alunos das turmas dele
-        pode_editar: eu.perfil !== "professor" || dele.some((t) => minhas.has(t.id)),
+        pode_editar: eu.perfil !== "professor" || dele.some((t) => minhas.has(t.id)) || a.professor_id === eu.id,
         observacoes: obsPorAluno.get(a.id) || 0,
         plano_ativo: comPlano.has(a.id),
         escola_id: a.escola_id, escola: escolas ? (a.escola_id && escolas.get(a.escola_id)) || "sem escola" : undefined

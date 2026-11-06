@@ -6,11 +6,17 @@ import Escola from "../models/Escola";
 // (teste grátis vencido ou escola desativada: tudo bloqueado, menos para o administrador).
 // O administrador pode "entrar" numa escola (cabeçalho X-Escola com o id dela): daí faz tudo como a coordenação
 // daquela escola (turmas, professores, competições...). Só nesta requisição: nada disso é gravado no usuário.
-export default async function carregarUsuarioLogado(
-  request: Request,
-  response: Response,
-  next: NextFunction
-) {
+// O responsável (família) é barrado aqui: as rotas dos profissionais nem chegam a olhar o aluno. As rotas que a família
+// usa (/familia, /sessions/eu, trocar a senha) usam carregarContaLogada, que deixa o responsável passar.
+export default function carregarUsuarioLogado(request: Request, response: Response, next: NextFunction) {
+  return carregar(request, response, next, false);
+}
+
+export function carregarContaLogada(request: Request, response: Response, next: NextFunction) {
+  return carregar(request, response, next, true);
+}
+
+async function carregar(request: Request, response: Response, next: NextFunction, aceitaResponsavel: boolean) {
   try {
     if (!request.userId || request.tokenTipo !== "usuario") {
       return response.status(401).json({ message: "Não autenticado." });
@@ -22,6 +28,10 @@ export default async function carregarUsuarioLogado(
 
     if (!usuario || !usuario.ativo) {
       return response.status(401).json({ message: "Usuário inválido ou inativo." });
+    }
+
+    if (usuario.perfil === "responsavel" && !aceitaResponsavel) {
+      return response.status(403).json({ message: "Esta área é da equipe da escola. A família acompanha pela área da família.", codigo: "area_da_familia" });
     }
 
     if (usuario.perfil !== "admin" && usuario.escola?.bloqueada) {

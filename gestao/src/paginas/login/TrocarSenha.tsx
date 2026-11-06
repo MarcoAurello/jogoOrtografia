@@ -4,11 +4,13 @@ import { Stack, TextField, Typography } from '@mui/material';
 import Popup from '../../components/Popup';
 import { api, mensagemDoErro } from '../../lib/api';
 import { useAuth } from '../../lib/auth';
+import { useAvisos } from '../../components/Avisos';
 
 const MINIMO = 8;
 
 export default function TrocarSenha({ aberto, obrigatoria, aoFechar }: { aberto: boolean; obrigatoria?: boolean; aoFechar: () => void }) {
   const { senhaTrocada } = useAuth();
+  const avisar = useAvisos();
   const [atual, setAtual] = useState('');
   const [nova, setNova] = useState('');
   const [nova2, setNova2] = useState('');
@@ -35,6 +37,7 @@ export default function TrocarSenha({ aberto, obrigatoria, aoFechar }: { aberto:
     try {
       await api('/usuarios/eu/senha', { metodo: 'PUT', corpo: { senhaAtual: atual, novaSenha: nova } });
       senhaTrocada();
+      avisar('Senha alterada ✔');
       aoFechar();
     } catch (e) {
       falhar('atual', mensagemDoErro(e));

@@ -4,8 +4,8 @@ import { UniqueConstraintError } from "sequelize";
 import Usuario, { Perfil } from "../models/Usuario";
 import Escola from "../models/Escola";
 
-const emailValido = (m: string) => /^[^\s@<>,;]+@[^\s@<>,;]+\.[a-z]{2,}$/i.test(m);
-const SENHA_MINIMA = 8;
+export const emailValido = (m: string) => /^[^\s@<>,;]+@[^\s@<>,;]+\.[a-z]{2,}$/i.test(m);
+export const SENHA_MINIMA = 8;
 
 // quem pode cadastrar quem: o administrador cadastra qualquer perfil em qualquer escola;
 // a coordenação cadastra coordenação e professores só da própria escola

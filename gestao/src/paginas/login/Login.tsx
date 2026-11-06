@@ -1,4 +1,5 @@
-// Entrar na gestão (administrador, coordenação e professor): e-mail e senha.
+// Entrar na gestão (administrador, coordenação e professor) e na área da família (responsável): e-mail e senha.
+// O responsável cai direto em /familia (o Layout da gestão manda para lá).
 // Vindo da página de uma escola (Área do professor em /colegioAurora → /gestao/login?escola=colegioAurora), o login
 // já aparece com o logo, o nome e as cores dela.
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
@@ -65,7 +66,7 @@ export default function Login() {
             <Box sx={{ textAlign: 'center' }}>
               <Box component="img" src={marca?.logo || '/assets/logo-pg-168.png'} alt=""
                 sx={{ width: 84, height: 84, objectFit: 'contain', mb: 1 }} />
-              <Typography variant="h4" component="h1" color="primary">{marca?.nome || 'Área do professor'}</Typography>
+              <Typography variant="h4" component="h1" color="primary">{marca?.nome || 'Games Pedagógicos'}</Typography>
               <Typography color="text.secondary">Entre com o seu e-mail e senha</Typography>
             </Box>
             <TextField label="E-mail" type="email" autoComplete="username" value={email} autoFocus inputMode="email"

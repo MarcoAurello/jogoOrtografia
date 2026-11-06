@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=230">
+  <link rel="stylesheet" href="style.css?v=235">
 </head>
 <body>
   <!-- abertura: a logo Games Pedagógicos enquanto o app carrega (some sozinha quando o app fica pronto, ou em 6 s
@@ -62,6 +62,7 @@
           <button class="menu-item" id="btn-menu-inicio" type="button">🏠 Início</button>
           <button class="menu-item" id="btn-menu-teste" type="button">🎮 Jogar grátis</button>
           <button class="menu-item" id="btn-menu-turma" type="button">🏫 Entrar na turma</button>
+          <button class="menu-item" id="btn-menu-casa" type="button">🏠 Jogar em casa</button>
           <button class="menu-item" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
           <button class="menu-item" id="btn-trocar" type="button">👤 Trocar aluno</button>
           <button class="menu-item" id="btn-professor" type="button">🧑‍🏫 Área do professor</button>
@@ -97,9 +98,11 @@
       </form>
     </section>
 
-    <!-- Entrar na turma (depois do nome): código → toca no nome → 3 figuras; as partidas ficam guardadas (js/entrada.js) -->
+    <!-- Entrar na turma: código → toca no nome (o aluno cadastrado pela família digita o PIN de 4 números); as partidas
+         ficam guardadas (js/entrada.js). A mesma tela serve para jogar em casa: "Quem vai jogar?" (os filhos da conta do
+         responsável) → o mesmo teclado do PIN -->
     <section class="tela" id="tela-turma">
-      <h2 class="subtitulo">🏫 Entrar na turma</h2>
+      <h2 class="subtitulo" id="turma-titulo-tela">🏫 Entrar na turma</h2>
       <p class="turma-explica" id="turma-explica">Digite o <b>código da turma</b> (o professor passa) e o seu nome: você vê as <b>competições</b> da turma
         e o professor acompanha todas as suas partidas.</p>
       <form class="cartao cartao-login entrada-turma" id="entrada-turma" autocomplete="off">
@@ -119,6 +122,31 @@
             <input type="text" id="turma-nome-digitado" maxlength="40" placeholder="Nome e sobrenome" autocomplete="off">
           </label>
           <button class="btn-grande" id="btn-turma-nome" type="button">Entrar ▶</button>
+        </div>
+        <!-- jogar em casa no aparelho do filho: o código da família (o responsável vê na área da família) fica guardado -->
+        <div id="turma-passo-familia" hidden>
+          <label class="campo">
+            <span>Código da família</span>
+            <input type="text" id="casa-codigo" class="comp-codigo-campo" maxlength="9" placeholder="Ex.: FAM-7K2PQ" autocapitalize="characters" spellcheck="false">
+          </label>
+          <button class="btn-grande" id="btn-casa-codigo" type="button">Continuar ▶</button>
+          <button class="btn-texto casa-conta" id="btn-casa-conta" type="button">Sou o adulto: entrar com a conta da família</button>
+        </div>
+        <div id="turma-passo-filhos" hidden>
+          <div class="casa-filhos" id="casa-filhos"></div>
+          <button class="btn-texto casa-conta" id="btn-casa-trocar-familia" type="button" hidden>outra família? trocar o código</button>
+        </div>
+        <div id="turma-passo-pin" hidden>
+          <p class="turma-titulo"><span id="turma-pin-titulo"></span>
+            <button class="btn-texto" id="btn-turma-pin-voltar" type="button">não sou eu</button></p>
+          <div class="pin-casas" id="pin-casas" aria-live="polite"></div>
+          <div class="pin-teclado" id="pin-teclado">
+            <button type="button" data-n="1">1</button><button type="button" data-n="2">2</button><button type="button" data-n="3">3</button>
+            <button type="button" data-n="4">4</button><button type="button" data-n="5">5</button><button type="button" data-n="6">6</button>
+            <button type="button" data-n="7">7</button><button type="button" data-n="8">8</button><button type="button" data-n="9">9</button>
+            <button type="button" class="pin-apagar" data-n="apagar" aria-label="Apagar">⌫</button><button type="button" data-n="0">0</button>
+            <button type="button" class="pin-ok" data-n="ok" aria-label="Entrar">✔</button>
+          </div>
         </div>
         <p class="erro-login" id="erro-turma" role="alert"></p>
       </form>
@@ -163,6 +191,12 @@
       </h1>
       <p class="escola-nome" hidden></p>
       <p class="slogan">Jogos com relatórios de desempenho</p>
+      <!-- o aluno cadastrado (com PIN) fica lembrado: pela turma até o fim do dia, em casa por 30 dias (js/entrada.js) -->
+      <div class="continuar-aluno" id="continuar-aluno" hidden>
+        <button class="btn-grande" id="btn-continuar-aluno" type="button">▶ Continuar como <span id="continuar-nome"></span></button>
+        <button class="btn-texto" id="btn-nao-sou-eu" type="button">Não sou eu / trocar de aluno</button>
+        <p class="erro-login" id="erro-continuar" role="alert"></p>
+      </div>
       <!-- a tela de entrada: o vídeo de apresentação começa sozinho e, embaixo, só o teste grátis e a entrada pela turma
            (o navegador só deixa começar com som depois de um toque; sem isso, começa mudo e aparece o botão de ouvir) -->
       <div class="inicio-video">
@@ -173,6 +207,7 @@
       </div>
       <button class="btn-grande btn-teste" id="btn-area-jogos" type="button">🎮 Jogar grátis</button>
       <button class="btn-sec btn-turma-inicio" id="btn-entrar-turma" type="button">🏫 Entrar com o código da turma</button>
+      <button class="btn-sec btn-turma-inicio" id="btn-entrar-casa" type="button">🏠 Jogar em casa (conta da família)</button>
       <p class="link-privacidade"><a href="privacidade.html">Política de privacidade</a></p>
     </section>
 
@@ -3371,9 +3406,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=230"></script>
-  <script src="dados.js?v=230"></script>
-  <script type="module" src="js/main.js?v=230"></script>
+  <script src="plenix.js?v=235"></script>
+  <script src="dados.js?v=235"></script>
+  <script type="module" src="js/main.js?v=235"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

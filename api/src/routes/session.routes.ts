@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import SessionController from '../controllers/SessionController';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
-import carregarUsuarioLogado from '../middlewares/carregarUsuarioLogado';
+import { carregarContaLogada } from '../middlewares/carregarUsuarioLogado';
 import carregarAlunoLogado from '../middlewares/carregarAlunoLogado';
 
 const sessionRoutes = Router();
 
 sessionRoutes.post('/', SessionController.store);
-sessionRoutes.get('/eu', ensureAuthenticated, carregarUsuarioLogado, SessionController.show);
+sessionRoutes.get('/eu', ensureAuthenticated, carregarContaLogada, SessionController.show);
 
 // aluno: código da turma + nome (sem senha) e as competições da turma dele
 sessionRoutes.post('/aluno', SessionController.aluno);

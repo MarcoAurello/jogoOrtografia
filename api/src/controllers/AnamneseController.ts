@@ -3,7 +3,7 @@ import { Op } from "sequelize";
 import Aluno from "../models/Aluno";
 import Escola from "../models/Escola";
 import { Anamnese, AnamneseModelo } from "../models/Anamnese";
-import { podeEditarAluno } from "../services/acessoAluno";
+import { alunoTemDono, podeEditarAluno } from "../services/acessoAluno";
 import { HORAS_DO_LINK, hashDoToken, novoToken, validarPerguntas, validarRespostas } from "../services/anamnese";
 
 // Anamnese: os modelos (questionários) e a aplicação a um aluno, presencial ou por um link de 3 horas para a família.
@@ -143,6 +143,8 @@ class AnamneseController {
 async function alunoEModelo(req: Request): Promise<{ aluno?: Aluno; modelo?: AnamneseModelo; erro?: [number, string] }> {
   const aluno = await Aluno.findByPk(req.params.id);
   if (!aluno || !(await podeEditarAluno(req.usuarioLogado!, aluno))) return { erro: [404, "Aluno não encontrado."] };
+  // aluno de compra avulsa (sem escola nem profissional) não tem anamnese: nem presencial, nem link para a família
+  if (!(await alunoTemDono(aluno))) return { erro: [400, "Este aluno é de compra avulsa (sem escola nem profissional): não tem anamnese."] };
   // o modelo é da escola do aluno (aluno de professor avulso: um modelo do próprio professor)
   const daEscola = aluno.escola_id ? { escola_id: aluno.escola_id } : { escola_id: { [Op.is]: null }, autor_id: req.usuarioLogado!.id };
   const modelo = await AnamneseModelo.findOne({ where: { id: String(req.body.modelo_id || ""), ativo: true, ...daEscola } });

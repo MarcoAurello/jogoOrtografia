@@ -14,7 +14,7 @@ export default function Inicio() {
       <Typography variant="h4" component="h1" sx={{ mb: 0.5 }}>Olá, {primeiroNome}!</Typography>
       <Typography color="text.secondary" sx={{ mb: 3 }}>O que você quer fazer hoje?</Typography>
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', lg: '1fr 1fr 1fr' } }}>
-        {itensDoPerfil(usuario.perfil).map((i) => (
+        {itensDoPerfil(usuario).map((i) => (
           <Card key={i.caminho} variant="outlined">
             <CardActionArea component={LinkRouter} to={i.caminho} sx={{ height: '100%' }}>
               <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

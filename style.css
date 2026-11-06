@@ -3514,6 +3514,44 @@ body.an-publica { margin: 0; min-height: 100vh; background: #eef6f8; }
 .an-publica-form, .an-publica-fim { background: #fff; }
 .an-publica-fim { text-align: center; }
 .an-publica-ok { font-size: 56px; margin: 0; }
+/* página de cadastro da família (cadastro.html): os filhos, cada um com a senha de figuras */
+.cf-titulo { margin: 22px 0 8px; font-family: 'Fredoka', sans-serif; font-size: 20px; color: var(--an-cor, var(--primaria)); }
+.cf-form .campo select { width: 100%; min-height: 48px; font-size: 16px; border-radius: 12px; border: 2px solid #cfd8dc; padding: 0 10px; background: #fff; }
+.cf-dica { margin: 4px 0 10px; font-size: 14px; color: #607d8b; }
+.cf-filho { border: 2px solid #e0e7ea; border-radius: 16px; padding: 10px 14px 14px; margin: 0 0 14px; }
+.cf-filho.faltando, .cf-form input.faltando, .an-consentimento.faltando { outline: 3px solid #e53935; outline-offset: 2px; }
+.cf-filho-titulo { display: flex; align-items: center; gap: 8px; padding: 0 6px; font-weight: 800; }
+.cf-tirar { border: 0; background: #eceff1; border-radius: 50%; width: 36px; height: 36px; font-size: 16px; cursor: pointer; }
+.cf-mais { width: 100%; margin: 0 0 6px; }
+.cf-resumo { text-align: left; font-size: 20px; line-height: 1.8; }
+.cf-pin input { letter-spacing: 8px; font-size: 22px; }
+/* entrada do aluno cadastrado: o PIN num teclado numérico grande (js/entrada.js) */
+.pin-casas { display: flex; justify-content: center; gap: 14px; margin: 6px 0 16px; }
+.pin-casa { width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--primaria); }
+.pin-casa.cheia { background: var(--primaria); }
+.pin-teclado { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 320px; margin: 0 auto; }
+.pin-teclado button { min-height: 68px; font-family: 'Fredoka', sans-serif; font-size: 30px; font-weight: 700; border-radius: 18px;
+  border: 2px solid #d5e3e8; background: #fff; color: #263238; cursor: pointer; touch-action: manipulation; }
+.pin-teclado button:active { transform: scale(0.95); background: #eef6f8; }
+.pin-teclado .pin-apagar { color: #c62828; }
+.pin-teclado .pin-ok { background: var(--primaria); border-color: var(--primaria); color: #fff; }
+/* jogar em casa: "Quem vai jogar?" com os filhos da conta do responsável, em cartões grandes (js/entrada.js) */
+.casa-filhos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 10px; }
+.casa-filho { display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 150px; padding: 14px 8px;
+  border: 3px solid #cfe6ea; border-radius: 20px; background: var(--branco); cursor: pointer; touch-action: manipulation;
+  font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 22px; color: var(--texto); }
+.casa-filho:active { transform: scale(0.96); border-color: var(--primaria); }
+.casa-filho:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 3px; }
+.casa-filho-letra { display: flex; align-items: center; justify-content: center; width: 72px; height: 72px; border-radius: 50%;
+  background: var(--primaria); color: #fff; font-size: 38px; font-weight: 700; }
+.casa-filho:disabled { cursor: default; opacity: 0.6; }
+.casa-filho small { font-family: inherit; font-size: 14px; font-weight: 500; color: #607d8b; }
+.casa-conta { display: block; margin: 10px auto 0; }
+.casa-conta[hidden] { display: none; }
+/* o aluno lembrado no início: "Continuar como <nome>" e "Não sou eu" */
+.continuar-aluno { margin: 16px auto 0; text-align: center; }
+.continuar-aluno[hidden] { display: none; }
+.continuar-aluno .btn-grande { display: block; margin: 0 auto 6px; font-size: clamp(20px, 3vw, 26px); }
 /* ---------- No computador, o app usa a largura da tela (no celular continua uma coluna) ---------- */
 @media (min-width: 900px) {
   .app { max-width: 1240px; }

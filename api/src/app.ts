@@ -51,6 +51,15 @@ app.use('/testes', rateLimit({ windowMs: 60 * 60 * 1000, limit: 20, standardHead
 // a página pública da anamnese (link da família): poucos pedidos por IP (o token já é impossível de adivinhar)
 app.use('/anamnese-publica', rateLimit({ windowMs: 60 * 1000, limit: 30, standardHeaders: true, legacyHeaders: false,
   message: { message: 'Muitos pedidos. Espere 1 minuto e tente de novo.' } }));
+// a página de cadastro da família: mesmo limite da página da anamnese (o token é longo, mas o aceite cria conta)
+for (const caminho of ['/cadastro-familia/publico']) {
+  app.use(caminho, rateLimit({ windowMs: 60 * 1000, limit: 30, standardHeaders: true, legacyHeaders: false,
+    message: { message: 'Muitas tentativas. Espere um minuto.' } }));
+}
+// o código da família (o filho joga no aparelho dele): conta só os pedidos que dão errado (código que não existe,
+// PIN errado), 20 por minuto por IP; o PIN ainda trava o aluno depois de 5 erros
+app.use('/familia-codigo', rateLimit({ windowMs: 60 * 1000, limit: 20, skipSuccessfulRequests: true, standardHeaders: true,
+  legacyHeaders: false, message: { message: 'Muitas tentativas. Espere 1 minuto e tente de novo.' } }));
 app.use('/sessions', limitadorLogin);
 app.use('/usuarios/eu/senha', limitadorLogin);
 

@@ -1,7 +1,7 @@
 // Moldura das telas logadas: barra de cima (escola, usuário, entrar/sair da escola) e o menu do perfil.
 // No PC o menu fica fixo à esquerda; no celular abre pelo botão ☰.
 import { useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
   Alert, AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText,
   Menu, MenuItem, Toolbar, Typography, useMediaQuery,
@@ -28,6 +28,8 @@ export default function Layout() {
   const [erroSairEscola, setErroSairEscola] = useState('');
 
   if (!usuario) return null;
+  // o responsável tem a área dele (/familia), sem o menu da gestão
+  if (usuario.perfil === 'responsavel') return <Navigate to="/familia" replace />;
   const adminNaEscola = !!usuario.adminNaEscola;
   const adminFora = usuario.perfil === 'admin';
 
@@ -43,7 +45,7 @@ export default function Layout() {
           <ListItemIcon sx={{ minWidth: 36, fontSize: 20 }}>🏠</ListItemIcon>
           <ListItemText primary="Início" />
         </ListItemButton>
-        {itensDoPerfil(usuario.perfil).map((i) => (
+        {itensDoPerfil(usuario).map((i) => (
           <ListItemButton key={i.caminho} component={NavLink} to={i.caminho} onClick={() => setMenuAberto(false)}
             selected={local.pathname.startsWith(i.caminho)}>
             <ListItemIcon sx={{ minWidth: 36, fontSize: 20 }}>{i.icone}</ListItemIcon>

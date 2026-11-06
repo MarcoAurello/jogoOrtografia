@@ -32,7 +32,7 @@ const SITUACOES: { valor: Situacao; rotulo: string }[] = [
   { valor: 'novo', rotulo: 'Ainda não entraram' },
   { valor: 'desativado', rotulo: 'Desativados' },
 ];
-const COR_DO_PERFIL: Record<Perfil, 'secondary' | 'primary' | 'default'> = { admin: 'secondary', coordenacao: 'primary', professor: 'default' };
+const COR_DO_PERFIL: Record<Perfil, 'secondary' | 'primary' | 'default'> = { admin: 'secondary', coordenacao: 'primary', professor: 'default', responsavel: 'default' };
 
 export default function Usuarios() {
   const { usuario: eu } = useAuth();

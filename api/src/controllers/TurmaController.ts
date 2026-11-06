@@ -10,7 +10,7 @@ import { codigoNovo, turmaDoUsuario } from "../services/acessoTurma";
 // professores que podem ser ligados à turma: os da mesma escola (e ativos)
 async function professoresValidos(ids: unknown, escolaId: string | null): Promise<string[]> {
   if (!Array.isArray(ids) || !ids.length) return [];
-  const lista = await Usuario.findAll({ where: { id: { [Op.in]: ids.map(String) }, escola_id: escolaId, ativo: true } });
+  const lista = await Usuario.findAll({ where: { id: { [Op.in]: ids.map(String) }, escola_id: escolaId, ativo: true, perfil: { [Op.ne]: "responsavel" } } });
   return lista.map((u) => u.id);
 }
 

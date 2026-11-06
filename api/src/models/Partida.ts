@@ -15,7 +15,7 @@ class Partida extends Model<
 > {
   declare id: string;
   declare escola_id: string | null;
-  declare turma_id: string;
+  declare turma_id: string | null;   // vazio: partida de casa de um aluno sem turma
   declare aluno_id: string;
   declare jogo: string;
   declare titulo: string;
@@ -27,6 +27,7 @@ class Partida extends Model<
   declare jogada_em: Date;
   declare detalhes: unknown;
   declare resumo: unknown;
+  declare local: CreationOptional<"escola" | "casa">;   // casa: pela conta do responsável
   declare created_at: CreationOptional<Date>;
 
   declare aluno?: NonAttribute<Aluno>;
@@ -36,7 +37,7 @@ Partida.init(
   {
     id: { type: DataTypes.UUID, allowNull: false, primaryKey: true },
     escola_id: { type: DataTypes.UUID, allowNull: true },
-    turma_id: { type: DataTypes.UUID, allowNull: false },
+    turma_id: { type: DataTypes.UUID, allowNull: true },
     aluno_id: { type: DataTypes.UUID, allowNull: false },
     jogo: { type: DataTypes.STRING(30), allowNull: false },
     titulo: { type: DataTypes.STRING(160), allowNull: false },
@@ -48,6 +49,7 @@ Partida.init(
     jogada_em: { type: DataTypes.DATE, allowNull: false },
     detalhes: { type: DataTypes.JSON, allowNull: true },
     resumo: { type: DataTypes.JSON, allowNull: true },
+    local: { type: DataTypes.STRING(10), allowNull: false, defaultValue: "escola" },
     created_at: { type: DataTypes.DATE, allowNull: false }
   },
   {
@@ -65,7 +67,7 @@ export const PartidaHabilidade = sequelize.define("PartidaHabilidade", {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   partida_id: { type: DataTypes.UUID, allowNull: false },
   aluno_id: { type: DataTypes.UUID, allowNull: false },
-  turma_id: { type: DataTypes.UUID, allowNull: false },
+  turma_id: { type: DataTypes.UUID, allowNull: true },
   habilidade: { type: DataTypes.STRING(30), allowNull: false },
   acertos: { type: DataTypes.INTEGER, allowNull: false },
   total: { type: DataTypes.INTEGER, allowNull: false },

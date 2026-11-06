@@ -49,6 +49,7 @@ export class Anamnese extends Model<InferAttributes<Anamnese>, InferCreationAttr
   declare token_hash: string | null;
   declare expira_em: Date | null;
   declare respondida_em: Date | null;
+  declare responsavel_id: CreationOptional<string | null>;   // o responsável que preencheu pela conta dele
   declare created_at: CreationOptional<Date>;
   declare updated_at: CreationOptional<Date>;
 }
@@ -67,5 +68,6 @@ Anamnese.init({
   token_hash: { type: DataTypes.STRING(64), allowNull: true },
   expira_em: { type: DataTypes.DATE, allowNull: true },
   respondida_em: { type: DataTypes.DATE, allowNull: true },
+  responsavel_id: { type: DataTypes.UUID, allowNull: true },
   ...datas
 }, opcoes("anamneses", "Anamnese"));

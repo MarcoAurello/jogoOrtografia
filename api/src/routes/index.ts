@@ -16,8 +16,9 @@ import AnamneseController from '../controllers/AnamneseController';
 import ObservacaoController from '../controllers/ObservacaoController';
 import PlanoController from '../controllers/PlanoController';
 import SessaoController from '../controllers/SessaoController';
+import FamiliaController from '../controllers/FamiliaController';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
-import carregarUsuarioLogado from '../middlewares/carregarUsuarioLogado';
+import carregarUsuarioLogado, { carregarContaLogada } from '../middlewares/carregarUsuarioLogado';
 import carregarAlunoLogado from '../middlewares/carregarAlunoLogado';
 import ensurePerfil from '../middlewares/ensurePerfil';
 
@@ -61,6 +62,44 @@ routes.delete('/sessoes/:id', ensureAuthenticated, carregarUsuarioLogado, Sessao
 routes.get('/anamnese-publica/:token', AnamneseController.publicaVer);
 routes.post('/anamnese-publica/:token', AnamneseController.publicaResponder);
 routes.get('/alunos/:id/ficha', ensureAuthenticated, carregarUsuarioLogado, PainelController.aluno);
+
+// família (docs/PLANO-FAMILIA.md): os responsáveis do aluno, recados para a família e o que a família vê
+routes.get('/alunos/:id/responsaveis', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.responsaveis);
+routes.delete('/alunos/:id/responsaveis/:responsavelId', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.desvincular);
+// a equipe redefine a senha do responsável (provisória) e o PIN do aluno cadastrado
+routes.put('/alunos/:id/responsaveis/:responsavelId/senha', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.redefinirSenhaDoResponsavel);
+routes.put('/alunos/:id/pin', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.redefinirPin);
+routes.get('/alunos/:id/recados', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.recados);
+routes.post('/alunos/:id/recados', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.criarRecado);
+routes.put('/recados/:id', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.atualizarRecado);
+routes.delete('/recados/:id', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.apagarRecado);
+routes.get('/visivel-familia', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.verChaves);
+routes.put('/visivel-familia', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.mudarChaves);
+routes.get('/alunos/:id/visivel-familia', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.verChavesDoAluno);
+routes.put('/alunos/:id/visivel-familia', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.mudarChavesDoAluno);
+// a página de cadastro da família (endereço fixo): /<escola>/cadastro e /cadastro/<apelido> do professor avulso;
+// a chave "aceitar cadastros" e o endereço ficam com a coordenação (ou o professor avulso)
+routes.get('/cadastro-familia/config', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.verCadastro);
+routes.put('/cadastro-familia/config', ensureAuthenticated, carregarUsuarioLogado, FamiliaController.mudarCadastro);
+routes.get('/cadastro-familia/publico/:tipo/:chave', FamiliaController.paginaCadastro);
+routes.post('/cadastro-familia/publico/:tipo/:chave', FamiliaController.cadastrar);
+// a área do responsável: só os filhos dele e só o que a escola deixa a família ver
+const responsavel = [ensureAuthenticated, carregarContaLogada, ensurePerfil('responsavel')];
+routes.get('/familia/filhos', ...responsavel, FamiliaController.filhos);
+routes.get('/familia/filhos/:id', ...responsavel, FamiliaController.filho);
+routes.put('/familia/filhos/:id', ...responsavel, FamiliaController.atualizarFilho);
+routes.put('/familia/filhos/:id/pin', ...responsavel, FamiliaController.trocarPin);
+// jogar em casa: o filho digita o PIN no aparelho do responsável e recebe o token de aluno (local = casa)
+routes.post('/familia/filhos/:id/entrar', ...responsavel, FamiliaController.entrarParaJogar);
+// o código da família: o responsável vê e gera outro; o aparelho do filho usa as rotas públicas (com limite por IP)
+routes.get('/familia/codigo', ...responsavel, FamiliaController.verCodigo);
+routes.post('/familia/codigo/novo', ...responsavel, FamiliaController.novoCodigo);
+routes.get('/familia-codigo/:codigo', FamiliaController.filhosPeloCodigo);
+routes.post('/familia-codigo/:codigo/entrar', FamiliaController.entrarPeloCodigo);
+routes.get('/familia/filhos/:id/jogos', ...responsavel, FamiliaController.jogos);
+routes.get('/familia/filhos/:id/recados', ...responsavel, FamiliaController.recadosDoFilho);
+routes.get('/familia/filhos/:id/planos', ...responsavel, FamiliaController.planosDoFilho);
+routes.get('/familia/filhos/:id/anamneses', ...responsavel, FamiliaController.anamnesesDoFilho);
 
 // teste grátis: cadastro do e-mail e o PDF de cada jogo por e-mail; a lista é só do administrador
 routes.post('/testes', TesteGratisController.store);

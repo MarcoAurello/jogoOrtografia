@@ -24,6 +24,7 @@ const SITUACOES: { valor: string; rotulo: string; testa: (a: AlunoDaEscola) => b
   { valor: 'todos', rotulo: 'Todos', testa: () => true },
 ];
 const SEM_TURMA = '__sem__';
+const AGUARDANDO = '__aguardando__';   // cadastrados pela família no link da escola, ainda sem turma
 
 export default function AlunosEscola() {
   const { usuario } = useAuth();
@@ -39,7 +40,7 @@ export default function AlunosEscola() {
 
   const todos = alunos || [];
   const base = useMemo(() => todos.filter((a) => (!busca || contem(`${a.nome} ${a.nome_completo || ''} ${a.responsavel_nome || ''}`, busca))
-    && (!turma || (turma === SEM_TURMA ? !a.turmas.length : a.turmas.some((t) => t.id === turma)))
+    && (!turma || (turma === SEM_TURMA ? !a.turmas.length : turma === AGUARDANDO ? !!a.aguardando_turma : a.turmas.some((t) => t.id === turma)))
     && (!escola || a.escola === escola)), [todos, busca, turma, escola]);
   const testa = SITUACOES.find((s) => s.valor === situacao)!.testa;
   const lista = base.filter(testa);
@@ -81,6 +82,7 @@ export default function AlunosEscola() {
                 { valor: '', rotulo: 'Todas as turmas' },
                 ...turmas.map(([id, nome]) => ({ valor: id, rotulo: nome, qtd: todos.filter((a) => a.turmas.some((t) => t.id === id) && testa(a)).length })),
                 { valor: SEM_TURMA, rotulo: 'Sem turma', qtd: todos.filter((a) => !a.turmas.length && testa(a)).length },
+                { valor: AGUARDANDO, rotulo: 'Aguardando turma (cadastro da família)', qtd: todos.filter((a) => a.aguardando_turma && testa(a)).length },
               ]} />
               <FiltroSelect rotulo="Mostrar" valor={situacao} aoMudar={setSituacao}
                 opcoes={SITUACOES.map((s) => ({ valor: s.valor, rotulo: s.rotulo, qtd: base.filter(s.testa).length }))} />
@@ -105,6 +107,7 @@ export default function AlunosEscola() {
                           {a.anamneses
                             ? <Chip size="small" color="success" variant="outlined" label={`✓ ${plural(a.anamneses, 'anamnese', 'anamneses')}`} />
                             : <Chip size="small" color="warning" variant="outlined" label="Sem anamnese" />}
+                          {a.aguardando_turma && <Chip size="small" color="info" label="Aguardando turma" />}
                           {a.plano_ativo && <Chip size="small" color="primary" variant="outlined" label="Plano ativo" />}
                           {obs > 0 && <Chip size="small" variant="outlined" label={plural(obs, 'observação', 'observações')} />}
                           {!a.ativo && <Chip size="small" label="Desativado" />}

@@ -48,10 +48,12 @@ async function api(caminho, { metodo = 'GET', corpo, comoAluno = false, comoTest
   let dados = {};
   try { dados = await r.json(); } catch (e) { /* resposta sem JSON */ }
   if (!r.ok) {
-    if (r.status === 401 && token) guardar(chave, '');   // token vencido ou desativado: pede o login de novo
+    // token vencido ou desativado: pede o login de novo (o "PIN errado" da entrada do aluno não tem nada a ver com o token)
+    if (r.status === 401 && token && !String(dados.codigo || '').startsWith('pin')) guardar(chave, '');
     const erro = new Error(dados.message || 'Não deu certo. Tente de novo.');
     erro.status = r.status;
     erro.codigo = dados.codigo || dados.erro || '';
+    erro.dados = dados;
     throw erro;
   }
   return dados;

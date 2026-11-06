@@ -19,7 +19,8 @@ if ($Nova -eq 0) { $Nova = $atual + 1 }
 $modulos = @(Get-ChildItem (Join-Path $raiz 'js') -Filter *.js | ForEach-Object { $_.FullName })
 # a página da família (link da anamnese) também carrega o style.css e os módulos
 $anamnese = Join-Path $raiz 'anamnese.html'
-foreach ($arquivo in @($html, $sw, $anamnese) + $modulos) {
+$cadastro = Join-Path $raiz 'cadastro.html'   # a página de cadastro da família
+foreach ($arquivo in @($html, $sw, $anamnese, $cadastro) + $modulos) {
   $texto = [IO.File]::ReadAllText($arquivo, $utf8)
   $texto = [regex]::Replace($texto, '(\.(css|js)\?v=)\d+', "`${1}$Nova")
   $texto = [regex]::Replace($texto, "(const VERSAO = 'ortografia-pleno-v)\d+'", "`${1}$Nova'")

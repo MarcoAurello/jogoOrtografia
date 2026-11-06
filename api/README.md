@@ -33,7 +33,7 @@ npm run dev               # http://localhost:3333
 |---|---|---|
 | `POST /sessions` | todos | login (e-mail + senha) → `{ token, usuario }` |
 | `GET /sessions/eu` | logado | quem está logado |
-| `PUT /usuarios/eu/senha` | logado | trocar a própria senha (obrigatório no primeiro acesso) |
+| `PUT /usuarios/eu/senha` | logado (todos os perfis, o responsável também) | trocar a própria senha (`{ senhaAtual, novaSenha }`, 8+ caracteres; obrigatório no primeiro acesso). Na gestão: menu da conta; na área da família: "Alterar a minha senha" |
 | `GET/POST /usuarios`, `PUT /usuarios/:id` | admin, coordenação | cadastrar, desativar e dar senha provisória |
 | `GET /escolas/:slug/marca` | público | nome, cores, logo e situação da escola |
 | `GET/POST /escolas`, `PUT /escolas/:id` | admin | criar e editar escolas, plano e teste grátis |
@@ -47,9 +47,9 @@ npm run dev               # http://localhost:3333
 | `POST /alunos/:id/anamneses` | quem mexe no aluno | anamnese presencial (exige o consentimento do responsável, LGPD) |
 | `POST /alunos/:id/anamneses/link`, `PUT /anamneses/:id/cancelar` | quem mexe no aluno | link para a família (3 horas, uma resposta; no banco fica só o hash do token) |
 | `GET/POST /anamnese-publica/:token` | público (com o token) | a página da família (`anamnese.html?t=`) |
-| `POST /sessions/aluno`, `GET /sessions/aluno` | aluno | login sem senha: código da turma + aluno da lista (`aluno_id`) ou nome digitado (nome novo entra na turma) |
-| `GET /sessions/aluno/competicoes` | aluno | as competições da turma do aluno logado |
-| `POST /partidas` | aluno | o fim de cada jogo (id do aparelho: reenviar não duplica) |
+| `POST /sessions/aluno`, `GET /sessions/aluno` | aluno | login sem senha: código da turma + aluno da lista (`aluno_id`) ou nome digitado (nome novo entra na turma). O aluno cadastrado pela família precisa do `pin`: sem ele → 401 `pin` (com `aluno`); errado → 401 `pin_errado` (`restantes`); 5 erros → 423 `pin_bloqueado` por 5 minutos. Token de 12 h com `sv` (a `sessao_versao` do aluno); a resposta traz `aluno.cadastrado` (tem PIN: o app lembra o login até o fim do dia) e `aluno.local` (`escola`). Trocar o PIN derruba os tokens antigos: 401 `sessao_trocada` |
+| `GET /sessions/aluno/competicoes` | aluno | as competições da turma do aluno logado (em casa sem turma: lista vazia) |
+| `POST /partidas` | aluno | o fim de cada jogo (id do aparelho: reenviar não duplica). `local` vem do token (`casa` na entrada pela conta do responsável), não do corpo; em casa vai com a turma de agora do aluno, ou sem turma |
 | `GET /turmas/:id/partidas` | quem vê a turma | as últimas partidas da turma |
 | `GET /turmas/:id/painel?dias=30` | quem vê a turma | painel: quem jogou, acerto, semanas, habilidades e as 3 maiores dificuldades |
 | `GET /alunos/:id/ficha?dias=30` | quem vê a turma | ficha: evolução por semana, habilidades (antes × depois), jogos e o que revisar |
@@ -61,6 +61,27 @@ npm run dev               # http://localhost:3333
 | `POST /planilha` | logado | gravações do professor: `adicionarEmail`, `salvarQuestionario`, `criarCompeticao`, `competicoesProfessor`, `encerrarCompeticao` (no banco) |
 | `POST /relatorios` | público | relatório de uma partida por e-mail: a API confere o destinatário e envia (com `EMAIL_VIA=smtp`, ela mesma, em `services/relatorioEmail.ts`; com `planilha`, pelo script do Google) |
 | `POST /admin/importar-planilha` | admin | traz da planilha para o banco: escolas, e-mails, questionários, competições e ranking (pode repetir) |
+| `GET /alunos/:id/responsaveis` | quem mexe no aluno | responsáveis ligados ao aluno |
+| `PUT /alunos/:id/pin` | quem edita o aluno (coordenação, admin, professor das turmas dele, professor avulso dono do paciente) | a escola redefine o PIN do aluno cadastrado (`{ pin, pin_confirmacao }`, mesmas regras; destrava). Responsável = 403 (usa `/familia/filhos/:id/pin`) |
+| `PUT /alunos/:id/responsaveis/:responsavelId/senha` | coordenação, admin, professor avulso dono (`podeDecidirFamilia`) | senha provisória para o responsável ligado ao aluno (`{ senha }`, 8+; a tela gera e mostra uma vez). A senha atual nunca aparece; marca `primeiro_login` e ele cria a própria no próximo acesso |
+| `DELETE /alunos/:id/responsaveis/:responsavelId` | coordenação, admin, professor avulso dono | tira o responsável do aluno (a conta continua) |
+| `GET/POST /alunos/:id/recados`, `PUT/DELETE /recados/:id` | ver: quem vê o aluno; escrever: quem mexe no aluno; corrigir/apagar: quem escreveu ou a coordenação | recados para a família (separados das observações internas) |
+| `GET/PUT /visivel-familia` | coordenação (admin dentro da escola), professor avulso | o que a família vê: `{ jogos, recados, plano, anamnese }` (true/false) |
+| `GET/PUT /alunos/:id/visivel-familia` | ver: quem vê o aluno; mudar: coordenação, admin, professor avulso dono | exceção na ficha do aluno (true/false sobrepõe; `null` volta à regra) → `{ excecao, regra, efetivo, pode_mudar }` |
+| `GET/PUT /cadastro-familia/config` | coordenação (admin dentro da escola), professor avulso | a página de cadastro da família: `{ aceita, caminho }` (`/<escola>/cadastro` ou `/cadastro/<apelido>`, gerado do nome); o PUT `{ aceita: true\|false }` abre ou fecha |
+| `GET /cadastro-familia/publico/escola/:slug`, `.../profissional/:apelido` | público | o que a página mostra: `{ tipo, aberta, escola, profissional }` |
+| `POST /cadastro-familia/publico/escola/:slug`, `.../profissional/:apelido` | público (página aberta) | `{ consentimento: true, nome, email, senha, parentesco?, filhos: [{ nome, nome_completo?, data_nascimento?, pin, pin_confirmacao }] }` (PIN de 4 números; recusa 0000, 1234, 4321...): cria a conta (ou usa a que já tem esse e-mail, se a senha confere) e os alunos — na escola sem turma (`aguardando_turma`), no professor avulso como pacientes (`alunos.professor_id`) → `{ token, usuario, alunos }` |
+| `GET /familia/filhos` | responsável | os filhos ligados à conta, `tem_pin` e quais relatórios aparecem para cada um |
+| `POST /familia/filhos/:id/entrar` | responsável | jogar em casa ("Quem vai jogar?" no app): `{ pin }` do filho → `{ token, aluno }` (token de aluno de 30 dias, `local: casa`, sem turma de entrada; vale enquanto o responsável estiver ativo e ligado ao filho). Mesmos erros do PIN da entrada pela turma (401 `pin`/`pin_errado`, 423 `pin_bloqueado`); sem PIN = 409 `sem_pin`; filho de outro = 403 |
+| `GET /familia/codigo`, `POST /familia/codigo/novo` | responsável | o código da família (`FAM-XXXXX`, nasce no primeiro pedido) e gerar outro: o antigo para de valer e os logins feitos com ele caem (401 `familia_trocada`). A equipe não vê o código |
+| `GET /familia-codigo/:codigo` | público (20 erros/min por IP) | o aparelho do filho, sem a conta do pai: `{ filhos: [{ id, nome }] }` (só o apelido; só ativos, com PIN e escola liberada). Aceita sem o `FAM-` e em minúsculas; código que não existe = 404 |
+| `POST /familia-codigo/:codigo/entrar` | público (mesmo limite) | `{ aluno_id, pin }` → `{ token, aluno }` (30 dias, `local: casa`, o token leva o código). Mesmos erros do PIN; aluno de outra família = 404 |
+| `PUT /familia/filhos/:id/pin` | responsável | troca o PIN do filho (`{ pin, pin_confirmacao }`), destrava se ele estava bloqueado e derruba os logins lembrados dele (`sessao_versao` + 1, também no `PUT /alunos/:id/pin`); PIN fácil (0000, 1234) ou os dois diferentes = 400; filho de outro = 403. Na tela: "Trocar PIN" em cada filho em `/gestao/familia` |
+| `GET/PUT /familia/filhos/:id` | responsável | dados do filho; o PUT corrige só `nome_completo` e `data_nascimento` |
+| `GET /familia/filhos/:id/jogos?dias=30` | responsável (chave `jogos`) | desempenho (a mesma ficha dos jogos, sem as anotações da equipe) e as últimas partidas (`local`: escola/casa) |
+| `GET /familia/filhos/:id/recados` | responsável (chave `recados`) | recados para a família |
+| `GET /familia/filhos/:id/planos` | responsável (chave `plano`) | planos ativos/concluídos (sem rascunho e sem as adequações da escola) |
+| `GET /familia/filhos/:id/anamneses` | responsável | as que a família respondeu (sempre) e as da equipe (chave `anamnese`) |
 
 ## Regras
 
@@ -77,6 +98,19 @@ npm run dev               # http://localhost:3333
 - **Anamnese:** modelos (`anamnese_modelos`) e as aplicadas (`anamneses`, com a cópia das perguntas do dia). Dado
   sensível de criança: só a equipe da escola vê, o consentimento do responsável fica registrado no aluno e nada
   disso vai nos e-mails dos relatórios.
+- **Família (perfil `responsavel`):** pai/mãe com login próprio (mesma tabela `usuarios`), ligado aos filhos em
+  `responsavel_alunos` (N:N, com parentesco, origem e consentimento). Entra pela página de cadastro da escola ou do professor
+  avulso. As rotas da equipe barram o responsável logo na entrada (`carregarUsuarioLogado` → 403 `area_da_familia`);
+  ele só usa `/familia/*`, `/sessions/eu` e a troca de senha (`carregarContaLogada`). Nunca vê observações internas
+  nem alunos que não são filhos dele (403). O que ele vê passa por `familiaPodeVer` (`services/acessoAluno.ts`):
+  exceção do aluno → chave de quem produziu (a escola do autor, ou o professor avulso autor; jogos: a escola do aluno
+  ou o professor avulso das turmas dele) → padrão (jogos e recados ligados, plano e anamnese desligados). Sem escola
+  nem profissional, a família vê tudo. As anamneses que a família respondeu aparecem sempre.
+  Página de cadastro de endereço fixo (`cadastro.html`, servida pelo nginx em `/<escola>/cadastro` e
+  `/cadastro/<apelido>`), aberta ou fechada pela chave `aceita_cadastro_familia` (começa desligada). Paciente sem turma do
+  professor avulso = `alunos.professor_id` (ele vê e edita). O aluno cadastrado pela família tem PIN de 4 números
+  (`alunos.pin_hash`, bcrypt; `services/pin.ts`); o aluno avulso continua sem senha. `alunos.senha_figuras` nunca foi
+  conferida e fica sem uso. Aluno sem escola nem profissional (compra avulsa) não tem anamnese (`alunoTemDono`).
 - **Competições:** cada uma é de uma turma (`competicoes.turma_id`); o aluno vê só as da turma dele. No ranking vale a
   maior nota de cada aluno; todas as partidas ficam no relatório do professor.
 - **Administrador dentro de uma escola:** com o cabeçalho `X-Escola: <id da escola>`, o administrador é tratado como a
