@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=235">
+  <link rel="stylesheet" href="style.css?v=241">
 </head>
 <body>
   <!-- abertura: a logo Games Pedagógicos enquanto o app carrega (some sozinha quando o app fica pronto, ou em 6 s
@@ -58,17 +58,31 @@
       <!-- menu suspenso ao lado da marca: instalar, trocar aluno, área do professor, manual e vídeo -->
       <div class="menu-app" id="menu-app">
         <button class="btn-menu" id="btn-menu" type="button" aria-expanded="false" aria-controls="menu-app-lista">☰ <span>Menu</span></button>
-        <div class="menu-app-lista" id="menu-app-lista" hidden>
+        <!-- menu lateral: todos os caminhos de entrada ficam aqui (a tela inicial só tem o "Jogar grátis"). O js/telas.js
+             leva o fundo e o painel para o fim do <body>, para cobrirem a tela toda -->
+        <div class="menu-app-fundo" id="menu-app-fundo" hidden></div>
+        <nav class="menu-app-lista" id="menu-app-lista" aria-label="Menu" hidden>
+          <div class="menu-app-cabeca">
+            <span class="menu-app-titulo">Menu</span>
+            <button class="menu-fechar" id="menu-fechar" type="button" aria-label="Fechar o menu">✕</button>
+          </div>
           <button class="menu-item" id="btn-menu-inicio" type="button">🏠 Início</button>
-          <button class="menu-item" id="btn-menu-teste" type="button">🎮 Jogar grátis</button>
-          <button class="menu-item" id="btn-menu-turma" type="button">🏫 Entrar na turma</button>
-          <button class="menu-item" id="btn-menu-casa" type="button">🏠 Jogar em casa</button>
-          <button class="menu-item" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
           <button class="menu-item" id="btn-trocar" type="button">👤 Trocar aluno</button>
-          <button class="menu-item" id="btn-professor" type="button">🧑‍🏫 Área do professor</button>
+          <p class="menu-grupo">Alunos</p>
+          <button class="menu-item" id="btn-menu-turma" type="button">🏫 Entrar com o código da turma</button>
+          <button class="menu-item" id="btn-menu-casa" type="button">🏡 Jogar em casa</button>
+          <button class="menu-item" id="btn-menu-teste" type="button">🎮 Jogar grátis</button>
+          <p class="menu-grupo">Escola, professor e família</p>
+          <button class="menu-item" id="btn-professor" type="button">🧑‍🏫 Login da escola / professor</button>
+          <button class="menu-item" id="btn-menu-familia" type="button">👨‍👩‍👧 Área da família (pais)</button>
+          <!-- só aparece no endereço de uma escola que aceita cadastro de famílias (js/entrada.js) -->
+          <a class="menu-item" id="btn-menu-cadastro-familia" href="#" hidden>✍️ Criar a conta da família</a>
+          <p class="menu-grupo">Ajuda</p>
+          <button class="menu-item" id="btn-instalar" type="button" hidden>📲 Instalar app</button>
           <a class="menu-item" href="manual.html">📘 Manual do usuário</a>
           <a class="menu-item" href="manual.html#video">▶️ Vídeo da plataforma</a>
-        </div>
+          <a class="menu-item" href="privacidade.html">🔒 Política de privacidade</a>
+        </nav>
       </div>
       <button class="btn-logo" id="btn-logo-inicio" type="button" aria-label="Ir para o início"><img class="logo" src="assets/logo-pg-168.png" alt="Pedagogia Gamificada"></button>
       <button class="btn-icone" id="btn-som" type="button" aria-label="Som ligado">🔊</button>
@@ -131,6 +145,7 @@
           </label>
           <button class="btn-grande" id="btn-casa-codigo" type="button">Continuar ▶</button>
           <button class="btn-texto casa-conta" id="btn-casa-conta" type="button">Sou o adulto: entrar com a conta da família</button>
+          <a class="btn-texto casa-conta" id="casa-cadastro" href="#" hidden>Ainda não tem conta? Criar a conta da família</a>
         </div>
         <div id="turma-passo-filhos" hidden>
           <div class="casa-filhos" id="casa-filhos"></div>
@@ -197,7 +212,8 @@
         <button class="btn-texto" id="btn-nao-sou-eu" type="button">Não sou eu / trocar de aluno</button>
         <p class="erro-login" id="erro-continuar" role="alert"></p>
       </div>
-      <!-- a tela de entrada: o vídeo de apresentação começa sozinho e, embaixo, só o teste grátis e a entrada pela turma
+      <!-- a tela de entrada: o vídeo de apresentação começa sozinho e, embaixo, só o "Jogar grátis"; as outras entradas
+           (turma, em casa, escola/professor, família) ficam no menu lateral
            (o navegador só deixa começar com som depois de um toque; sem isso, começa mudo e aparece o botão de ouvir) -->
       <div class="inicio-video">
         <video id="video-inicio" controls autoplay muted preload="auto" playsinline poster="assets/video/capa-video.jpg" width="1920" height="1080">
@@ -206,9 +222,9 @@
         <button class="video-som" id="video-som" type="button" hidden>🔊 Toque para ouvir</button>
       </div>
       <button class="btn-grande btn-teste" id="btn-area-jogos" type="button">🎮 Jogar grátis</button>
-      <button class="btn-sec btn-turma-inicio" id="btn-entrar-turma" type="button">🏫 Entrar com o código da turma</button>
-      <button class="btn-sec btn-turma-inicio" id="btn-entrar-casa" type="button">🏠 Jogar em casa (conta da família)</button>
-      <p class="link-privacidade"><a href="privacidade.html">Política de privacidade</a></p>
+      <!-- abre o menu lateral, onde ficam as outras entradas: código da turma, jogar em casa, escola/professor e família -->
+      <button class="btn-sec btn-outras-opcoes" id="btn-outras-opcoes" type="button" aria-controls="menu-app-lista">☰ Outras opções
+        <small>código da turma, jogar em casa, escola e família</small></button>
     </section>
 
     <!-- Chuva de Erros: escolha do que pegar e das palavras -->
@@ -2931,37 +2947,17 @@
 
     <!-- Jogos: a lista, com o filtro por tema -->
     <section class="tela" id="tela-jogos">
-      <h2 class="subtitulo" id="jogos-titulo">🎮 Escolha um jogo</h2>
-      <!-- filtro igual ao da gestão (aba Jogos): busca, categoria, dificuldade da criança e habilidade, cada opção com a
-           contagem de jogos que ficam se ela for escolhida -->
-      <div class="filtro-jogos" role="search">
-        <label class="filtro-campo"><span class="filtro-rotulo">Categoria</span>
-          <select class="filtro-menu" id="filtro-tema">
-            <option value="todos">🎮 Todos os jogos</option>
-            <option value="portugues">📚 Português</option>
-            <option value="matematica">🔢 Matemática</option>
-            <option value="historia">📜 História</option>
-            <option value="geografia">🌎 Geografia</option>
-            <option value="programacao">🤖 Programação</option>
-            <option value="ingles">🗽 Inglês</option>
-            <option value="psicopedagogia">🧠 Psicopedagogia</option>
-          </select></label>
-        <!-- abaixo das categorias: a aba Filtros abre a busca, as dificuldades do jogador e as habilidades do jogo -->
-        <details class="filtro-mais" id="filtro-mais">
-          <summary class="filtro-mais-aba">🎚️ Filtros <span class="filtro-mais-qtd" id="filtros-qtd"></span></summary>
-          <div class="filtro-mais-conteudo">
-            <label class="filtro-campo"><span class="filtro-rotulo">Filtrar por dificuldades do jogador</span>
-              <select class="filtro-menu" id="filtro-indicacao"></select></label>
-            <label class="filtro-campo"><span class="filtro-rotulo">Filtrar por habilidades do jogo</span>
-              <select class="filtro-menu" id="filtro-habilidade"></select></label>
-            <label class="filtro-campo"><span class="filtro-rotulo">Buscar</span>
-              <input class="filtro-busca" id="jogos-busca" type="search" placeholder="🔎 Nome do jogo, habilidade ou dificuldade" autocomplete="off"></label>
-          </div>
-        </details>
-        <p class="filtro-resumo"><span id="jogos-mostrando" role="status"></span>
-          <button class="btn-sec btn-pequeno" id="jogos-limpar" type="button" hidden>✕ Limpar filtros</button></p>
-      </div>
-      <p class="jogos-nenhum" id="jogos-nenhum" hidden>Nenhum jogo com esses filtros. Tente outra opção ou limpe os filtros.</p>
+      <!-- lista de jogos em grade de capas ("parque de jogos"), com um único filtro: a habilidade que a criança quer treinar.
+           Os botões são montados pelo js/telas.js a partir de js/habilidades.js -->
+      <section class="pergunta-hab" aria-labelledby="pergunta-hab-titulo">
+        <p class="jogos-ola" id="jogos-titulo">🎮 Escolha um jogo</p>
+        <h2 class="pergunta-hab-titulo" id="pergunta-hab-titulo">Qual habilidade você quer treinar agora?</h2>
+        <!-- as matérias (Português, Matemática, Geografia e História) numa linha própria, acima das habilidades -->
+        <div class="materias-botoes" id="materias-botoes" role="group" aria-label="Matérias"></div>
+        <div class="habilidades-botoes" id="habilidades-botoes" role="group" aria-labelledby="pergunta-hab-titulo"></div>
+        <button class="hab-mais" id="hab-mais" type="button" aria-expanded="false" aria-controls="habilidades-botoes">＋ Mais habilidades</button>
+      </section>
+      <p class="jogos-mostrando" id="jogos-mostrando" role="status"></p>
       <div class="escolha-jogos">
         <button class="jogo-card com-capa" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
           <img class="jogo-card-capa larga inteira" src="assets/capa-ortografia.jpg" alt="" width="760" height="370">
@@ -3406,9 +3402,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=235"></script>
-  <script src="dados.js?v=235"></script>
-  <script type="module" src="js/main.js?v=235"></script>
+  <script src="plenix.js?v=241"></script>
+  <script src="dados.js?v=241"></script>
+  <script type="module" src="js/main.js?v=241"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

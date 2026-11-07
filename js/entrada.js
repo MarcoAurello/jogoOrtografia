@@ -4,13 +4,14 @@
    Jogar em casa: pela conta do responsável, "Quem vai jogar?" → o filho digita o PIN no mesmo teclado.
    O aluno cadastrado fica lembrado no aparelho (o token, nunca o PIN): no início aparece "Continuar como <nome>". */
 
-import { $, seguro } from './util.js?v=235';
-import { SOM } from './som.js?v=235';
-import { api, guardarTokenAluno, lerToken, lerTokenAluno } from './api.js?v=235';
-import { aoVoltarAoInicio } from './estado.js?v=235';
-import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio, telaJogos } from './telas.js?v=235';
-import { enviarPartidas } from './partidas.js?v=235';
-import { telaCompeticao } from './competicao.js?v=235';
+import { $, seguro } from './util.js?v=241';
+import { SOM } from './som.js?v=241';
+import { api, guardarTokenAluno, lerToken, lerTokenAluno } from './api.js?v=241';
+import { aoVoltarAoInicio } from './estado.js?v=241';
+import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio, telaJogos } from './telas.js?v=241';
+import { enviarPartidas } from './partidas.js?v=241';
+import { telaCompeticao } from './competicao.js?v=241';
+import { enderecoDaEscola } from './escola.js?v=241';
 
 // ---------- Entrada pela turma ----------
 // A entrada do app pede só o nome, como sempre (e com o link, o aluno abre qualquer jogo). Para as competições, o aluno
@@ -158,7 +159,6 @@ function telaTurma() {
   passo('codigo');
   setTimeout(() => $('turma-codigo').focus(), 300);
 }
-$('btn-entrar-turma').onclick = () => { SOM.clique(); telaTurma(); };
 $('btn-menu-turma').onclick = () => { SOM.clique(); telaTurma(); };
 $('btn-comp-turma').onclick = () => { SOM.clique(); telaTurma(); };
 $('btn-turma-voltar').onclick = () => { SOM.clique(); telaInicio(); };
@@ -237,13 +237,27 @@ $('btn-casa-codigo').onclick = () => {
 $('btn-casa-trocar-familia').onclick = () => { SOM.clique(); esquecerFamilia(); pedirCodigoFamilia(''); };
 // o adulto entra pela gestão; depois do login ele cai na área da família, que tem o botão "Jogar"
 $('btn-casa-conta').onclick = () => { SOM.clique(); location.href = '/gestao/login'; };
+$('btn-menu-familia').onclick = () => { SOM.clique(); location.href = '/gestao/login'; };
+// "Criar a conta da família" (no menu e em "Jogar em casa"): só no endereço de uma escola que aceita cadastro de famílias.
+// Fora de uma escola não há para onde levar: o cadastro é pelo link que a escola ou o professor manda.
+(async () => {
+  const escola = enderecoDaEscola();
+  if (!escola) return;
+  try {
+    const pg = await api(`/cadastro-familia/publico/escola/${encodeURIComponent(escola)}`);
+    if (!pg.aberta) return;
+    for (const id of ['btn-menu-cadastro-familia', 'casa-cadastro']) {
+      $(id).href = `/${encodeURIComponent(escola)}/cadastro`;
+      $(id).hidden = false;
+    }
+  } catch (e) { /* escola sem página de cadastro ou sem internet: o link não aparece */ }
+})();
 $('casa-filhos').onclick = (e) => {
   const b = e.target.closest('.casa-filho');
   if (!b || b.disabled) return;
   SOM.clique();
   pedirPin({ filho: b.dataset.id }, { nome: b.dataset.nome }, '');
 };
-$('btn-entrar-casa').onclick = () => { SOM.clique(); telaCasa(); };
 $('btn-menu-casa').onclick = () => { SOM.clique(); telaCasa(); };
 
 // ---------- Lembrar o login do aluno cadastrado ----------

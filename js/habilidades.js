@@ -34,6 +34,34 @@ export const GRUPOS_HAB = [
   } },
 ];
 export const NOME_HAB = Object.assign({}, ...GRUPOS_HAB.map((g) => g.itens));
+// a mesma habilidade para o aluno, na lista de jogos ("Qual habilidade você quer treinar agora?"): ícone, nome curto em
+// linguagem de criança e cor. A cor só ajuda a diferenciar: o botão sempre tem ícone e texto (o nome técnico vai no resumo).
+export const HAB_CRIANCA = {
+  memoria: ['🧠', 'Lembrar', '#7b4fc9'],
+  planejamento: ['🗺️', 'Planejar', '#1e88e5'],
+  inibitorio: ['✋', 'Pensar antes de agir', '#e5484d'],
+  sustentada: ['🎯', 'Ficar concentrado', '#e5731f'],
+  alternada: ['🔀', 'Trocar de atenção', '#0a8f6a'],
+  seletiva: ['🔍', 'Achar o certo', '#c2185b'],
+  logico: ['🧩', 'Raciocinar', '#2b4a9a'],
+  percepcao: ['👀', 'Olhar com atenção', '#00838f'],
+  espacial: ['📐', 'Posição e espaço', '#2e7d32'],
+  decisao: ['🤔', 'Decidir', '#8d5a2b'],
+  velocidade: ['⚡', 'Pensar rápido', '#c99700'],
+  frustracao: ['💪', 'Não desistir', '#d84315'],
+  flexibilidade: ['🤸', 'Mudar o jeito', '#6a1b9a'],
+  colaboracao: ['🤝', 'Jogar junto', '#00897b'],
+  autoeficacia: ['⭐', 'Confiar em mim', '#ef6c00'],
+  empatia: ['❤️', 'Entender o outro', '#ad1457'],
+  teoriaMente: ['🕵️', 'Adivinhar o outro', '#4527a0'],
+  autocontrole: ['🧘', 'Ficar calmo', '#0277bd'],
+  motoraFina: ['✍️', 'Mãos firmes', '#558b2f'],
+  motoraGrossa: ['🏃', 'Corpo em movimento', '#33691e'],
+  linguagem: ['💬', 'Palavras', '#1565c0'],
+  fonologica: ['🔤', 'Sons das letras', '#283593'],
+  matematica: ['🔢', 'Números', '#e53935'],
+  lateralidade: ['↔️', 'Direita e esquerda', '#00695c'],
+};
 
 // id do cartão → habilidades (h) e resumo (r)
 export const JOGOS_HAB = {

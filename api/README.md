@@ -59,6 +59,8 @@ npm run dev               # http://localhost:3333
 | `GET /dados?acao=…&escola=` | público | e-mails dos relatórios, questionários, competições e ranking (as mesmas ações e respostas do antigo script) |
 | `POST /dados` | público | competição do aluno: `entrarCompeticao` e `resultadoCompeticao` |
 | `POST /planilha` | logado | gravações do professor: `adicionarEmail`, `salvarQuestionario`, `criarCompeticao`, `competicoesProfessor`, `encerrarCompeticao` (no banco) |
+| `GET /questionarios/ia` | professor, coordenação (admin com `X-Escola`) | a IA está configurada? `{ configurada, falsa, limite, usadasHoje, restantes }` |
+| `POST /questionarios/gerar-ia` | professor, coordenação (admin com `X-Escola`) | questões por IA: `{ arquivos: [base64 de JPG/PNG/WEBP/PDF] (até 6, 10 MB cada, 14 MB juntos), quantidade: 5\|10\|15 (padrão 10), dificuldade?: facil\|media\|dificil, materia?, tema?, serie? }` → `{ perguntas: [{ pergunta, certa, erradas[] }], provedor, restantes }` (o formato da planilha; nada é salvo: o professor revisa e salva com `salvarQuestionario`). Erros: 400 arquivo inválido, 413 grande demais, 429 `limite_diario`, 503 `ia_nao_configurada`, 422 sem conteúdo legível |
 | `POST /relatorios` | público | relatório de uma partida por e-mail: a API confere o destinatário e envia (com `EMAIL_VIA=smtp`, ela mesma, em `services/relatorioEmail.ts`; com `planilha`, pelo script do Google) |
 | `POST /admin/importar-planilha` | admin | traz da planilha para o banco: escolas, e-mails, questionários, competições e ranking (pode repetir) |
 | `GET /alunos/:id/responsaveis` | quem mexe no aluno | responsáveis ligados ao aluno |
@@ -125,3 +127,10 @@ npm run dev               # http://localhost:3333
 - **Dados da planilha (fase 4):** e-mails, questionários, competições e ranking ficam no banco, cada escola com os seus
   (sem escola = plataforma principal). Com `EMAIL_VIA=planilha`, o Apps Script ainda é o **carteiro**: envia os
   relatórios e o PDF do teste grátis pelo Gmail da conta dele (por HTTPS, em qualquer rede); com `smtp`, a planilha não é usada. Links antigos de questionário (id da aba) continuam abrindo.
+- **Questões por IA (`services/geradorQuestoes.ts`):** Google Gemini no plano grátis (`GEMINI_API_KEY`, modelo `GEMINI_MODELO`,
+  padrão gemini-3.5-flash) com JSON estrito (responseSchema), e Groq de reserva (`GROQ_API_KEY`): PDF pelo texto tirado no
+  servidor (`GROQ_MODELO`), foto só com modelo de visão (`GROQ_MODELO_VISAO`). Repete com pausas em 500/503 e troca sozinha
+  de modelo se o atual for aposentado (mesma ideia do gerenciadorReunioesIA). `IA_PRINCIPAL=groq` inverte a ordem.
+  A resposta é conferida no servidor (descarta incompletas e duplicadas). Os arquivos ficam só na memória da requisição
+  (nunca são gravados); cada geração que deu certo vai para a tabela `uso_ia` (quem, quando, provedor), que conta o
+  limite por pessoa por dia (`IA_LIMITE_DIARIO`, padrão 20). `IA_FALSA=1` devolve perguntas fixas (teste automático).

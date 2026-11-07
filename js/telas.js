@@ -1,61 +1,61 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Telas e navegação: moldura, mascote, troca de telas, encaixe na tela, login, menu do topo, barra inferior e filtro dos jogos. */
 
-import { $, embaralhar } from './util.js?v=235';
-import { lerTokenAluno } from './api.js?v=235';
-import { aluno, aoVoltarAoInicio, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=235';
-import { frase, pararVoz, SOM } from './som.js?v=235';
-import { escolherProfessorE, irParaGestao, JOGOS_DO_LINK } from './professor.js?v=235';
-import { pararChuva } from './chuva.js?v=235';
-import { pararMat } from './matematica.js?v=235';
-import { desenharTiro, pararTiro, tiro } from './tiro.js?v=235';
-import { pararPeso } from './peso.js?v=235';
-import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=235';
-import { pararLuz } from './luzes.js?v=235';
-import { pararRotina } from './rotina.js?v=235';
-import { pararFichas } from './fichas.js?v=235';
-import { pararEscondida } from './escondida.js?v=235';
-import { pararCopia } from './copia.js?v=235';
-import { pararBarcos } from './barcos.js?v=235';
-import { pararGiro } from './giro.js?v=235';
-import { pararHora } from './hora.js?v=235';
-import { pararSomando } from './somando.js?v=235';
-import { pararDescobrir } from './descobrir.js?v=235';
-import { pararChaves } from './chaves.js?v=235';
-import { pararCaminho } from './caminho.js?v=235';
-import { pararPolicia } from './policia.js?v=235';
-import { pararPontos } from './pontos.js?v=235';
-import { pararPixels } from './pixels.js?v=235';
-import { pararFracoes } from './fracoes.js?v=235';
-import { telaCompeticao } from './competicao.js?v=235';
-import { pararCores } from './cores.js?v=235';
-import { pararLados } from './lados.js?v=235';
-import { pararSetas } from './setas.js?v=235';
-import { pararVistas } from './vistas.js?v=235';
-import { pararDinos } from './dinos.js?v=235';
-import { pararPilhas } from './pilhas.js?v=235';
-import { pararBlocos } from './blocos.js?v=235';
-import { pararLugar } from './lugar.js?v=235';
-import { pararMalha } from './malha.js?v=235';
-import { pararFila } from './fila.js?v=235';
-import { pararLoja } from './loja.js?v=235';
-import { pararPalitos } from './palitos.js?v=235';
-import { pararBordas } from './bordas.js?v=235';
-import { pararCadeado } from './cadeado.js?v=235';
-import { pararTatu } from './tatu.js?v=235';
-import { pararFlores } from './flores.js?v=235';
-import { pararBichos } from './bichos.js?v=235';
-import { pararIntervalo } from './intervalo.js?v=235';
-import { pararFita } from './fita.js?v=235';
-import { pararSimbolos } from './simbolos.js?v=235';
-import { pararTabuada } from './tabuada.js?v=235';
-import { pararClasses } from './classes.js?v=235';
-import { pararGraficos } from './graficos.js?v=235';
-import { pararHistoria } from './historia.js?v=235';
-import { pararComercio } from './comercio.js?v=235';
-import { pararCartografo } from './cartografo.js?v=235';
-import { pararBip } from './bip.js?v=235';
-import { GRUPOS_HAB, INDICACOES, INDICADO_PARA, JOGOS_HAB, NOME_HAB } from './habilidades.js?v=235';
+import { $, embaralhar } from './util.js?v=241';
+import { lerTokenAluno } from './api.js?v=241';
+import { aluno, aoVoltarAoInicio, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=241';
+import { frase, pararVoz, SOM } from './som.js?v=241';
+import { escolherProfessorE, irParaGestao, JOGOS_DO_LINK } from './professor.js?v=241';
+import { pararChuva } from './chuva.js?v=241';
+import { pararMat } from './matematica.js?v=241';
+import { desenharTiro, pararTiro, tiro } from './tiro.js?v=241';
+import { pararPeso } from './peso.js?v=241';
+import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=241';
+import { pararLuz } from './luzes.js?v=241';
+import { pararRotina } from './rotina.js?v=241';
+import { pararFichas } from './fichas.js?v=241';
+import { pararEscondida } from './escondida.js?v=241';
+import { pararCopia } from './copia.js?v=241';
+import { pararBarcos } from './barcos.js?v=241';
+import { pararGiro } from './giro.js?v=241';
+import { pararHora } from './hora.js?v=241';
+import { pararSomando } from './somando.js?v=241';
+import { pararDescobrir } from './descobrir.js?v=241';
+import { pararChaves } from './chaves.js?v=241';
+import { pararCaminho } from './caminho.js?v=241';
+import { pararPolicia } from './policia.js?v=241';
+import { pararPontos } from './pontos.js?v=241';
+import { pararPixels } from './pixels.js?v=241';
+import { pararFracoes } from './fracoes.js?v=241';
+import { telaCompeticao } from './competicao.js?v=241';
+import { pararCores } from './cores.js?v=241';
+import { pararLados } from './lados.js?v=241';
+import { pararSetas } from './setas.js?v=241';
+import { pararVistas } from './vistas.js?v=241';
+import { pararDinos } from './dinos.js?v=241';
+import { pararPilhas } from './pilhas.js?v=241';
+import { pararBlocos } from './blocos.js?v=241';
+import { pararLugar } from './lugar.js?v=241';
+import { pararMalha } from './malha.js?v=241';
+import { pararFila } from './fila.js?v=241';
+import { pararLoja } from './loja.js?v=241';
+import { pararPalitos } from './palitos.js?v=241';
+import { pararBordas } from './bordas.js?v=241';
+import { pararCadeado } from './cadeado.js?v=241';
+import { pararTatu } from './tatu.js?v=241';
+import { pararFlores } from './flores.js?v=241';
+import { pararBichos } from './bichos.js?v=241';
+import { pararIntervalo } from './intervalo.js?v=241';
+import { pararFita } from './fita.js?v=241';
+import { pararSimbolos } from './simbolos.js?v=241';
+import { pararTabuada } from './tabuada.js?v=241';
+import { pararClasses } from './classes.js?v=241';
+import { pararGraficos } from './graficos.js?v=241';
+import { pararHistoria } from './historia.js?v=241';
+import { pararComercio } from './comercio.js?v=241';
+import { pararCartografo } from './cartografo.js?v=241';
+import { pararBip } from './bip.js?v=241';
+import { HAB_CRIANCA, JOGOS_HAB, NOME_HAB } from './habilidades.js?v=241';
 
 // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
 const ENFEITES = {
@@ -106,6 +106,8 @@ function encaixarTela() {
   const tela = document.querySelector('.tela.ativa');
   const emJogo = !!tela && tela.classList.contains('tela-jogo');
   document.body.classList.toggle('em-jogo', emJogo);
+  // na lista de jogos o fundo fica turquesa claro (da marca), de "parque de jogos", para as capas coloridas se destacarem
+  document.body.classList.toggle('na-lista-jogos', !!tela && tela.id === 'tela-jogos');
   // barra inferior: aparece depois do login e fora das partidas
   const barra = $('barra-inferior');
   // na tela de entrada (vídeo), antes de entrar, só os dois botões: teste grátis e código da turma
@@ -176,7 +178,7 @@ function telaLogin() {
 // sem aluno (não fez o teste grátis nem entrou pela turma): volta para a tela de entrada, que não pede mais o nome
 function telaJogos() {
   if (!aluno) return telaInicio();
-  $('jogos-titulo').textContent = `🎮 ${aluno.split(' ')[0]}, escolha um jogo`;
+  $('jogos-titulo').textContent = `👋 Oi, ${aluno.split(' ')[0]}!`;
   mostrar('tela-jogos');
 }
 
@@ -232,15 +234,26 @@ function entrarComoAluno(nome, depois = null) {
   frase('ola');   // apresentação gravada pelo Davi (se existir)
 }
 
-// menu suspenso do topo: abre e fecha no botão; fecha ao escolher um item, ao tocar fora ou com Esc
+// menu lateral: abre no ☰ e desliza da esquerda sobre um fundo escuro; fecha ao escolher um item, no ✕, ao tocar no
+// fundo ou com Esc. O fundo e o painel vão para o fim do <body>: dentro do topo (que tem transform e z-index) o
+// "position: fixed" não cobriria a tela toda nem ficaria por cima da barra de baixo
+document.body.append($('menu-app-fundo'), $('menu-app-lista'));
 const abrirMenu = (aberto) => {
+  const estava = !$('menu-app-lista').hidden;
   $('menu-app-lista').hidden = !aberto;
+  $('menu-app-fundo').hidden = !aberto;
   $('btn-menu').setAttribute('aria-expanded', String(aberto));
+  document.body.classList.toggle('menu-aberto', aberto);
+  if (aberto) $('menu-fechar').focus();
+  else if (estava) $('btn-menu').focus({ preventScroll: true });   // o foco volta para o ☰ (teclado e leitor de tela)
 };
 $('btn-menu').onclick = (e) => { e.stopPropagation(); abrirMenu($('menu-app-lista').hidden); };
 $('menu-app-lista').addEventListener('click', (e) => { if (e.target.closest('.menu-item')) abrirMenu(false); });
-document.addEventListener('click', (e) => { if (!e.target.closest('#menu-app')) abrirMenu(false); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirMenu(false); });
+$('menu-fechar').onclick = () => { SOM.clique(); abrirMenu(false); };
+// "Outras opções", embaixo do "Jogar grátis" na tela inicial: abre o mesmo menu
+$('btn-outras-opcoes').onclick = () => { SOM.clique(); abrirMenu(true); };
+$('menu-app-fundo').onclick = () => abrirMenu(false);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('menu-app-lista').hidden) abrirMenu(false); });
 
 function pararJogos() { pararFracoes(); pararPixels(); pararPontos(); pararPolicia(); pararCaminho(); pararChaves(); pararDescobrir(); pararSomando(); pararHora(); pararGiro(); pararBarcos(); pararCopia(); pararEscondida(); pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararSetas(); pararVistas(); pararDinos(); pararPilhas(); pararBlocos(); pararLugar(); pararMalha(); pararFila(); pararLoja(); pararPalitos(); pararBordas(); pararCadeado(); pararTatu(); pararFlores(); pararBichos(); pararIntervalo(); pararFita(); pararSimbolos(); pararTabuada(); pararClasses(); pararGraficos(); pararHistoria(); pararComercio(); pararCartografo(); pararBip(); pararVoz(); }
 const irParaInicio = () => { pararJogos(); $('escolha-prof').hidden = true; telaInicio(); };
@@ -276,95 +289,100 @@ $('btn-trocar').onclick = () => {
 // quem precisa saber que o aluno saiu (sem telas.js depender desses módulos)
 const aoTrocarAluno = [];
 
-// filtro dos jogos por categoria e por habilidades (ao abrir o app, todos os jogos aparecem)
-const cartoesDeJogo = embaralhar([...document.querySelectorAll('.escolha-jogos .jogo-card')]);
+// ---------- Lista de jogos: grade de capas e "Qual habilidade você quer treinar agora?" ----------
 // a cada vez que a página abre, os jogos aparecem numa ordem sorteada: jogos diferentes ficam no topo
-cartoesDeJogo.forEach((c) => c.parentElement.append(c));
+const listaDeJogos = document.querySelector('#tela-jogos .escolha-jogos');
+const cartoesDeJogo = embaralhar([...listaDeJogos.querySelectorAll('.jogo-card')]);
+listaDeJogos.append(...cartoesDeJogo);
 const habDoCartao = (c) => JOGOS_HAB[c.id]?.h || [];
-// os filtros escolhidos ficam guardados no aparelho: voltar à lista não perde o filtro (a busca não fica)
-const CHAVE_FILTRO = 'filtro-jogos';
-const filtroSalvo = (() => { try { return JSON.parse(localStorage.getItem(CHAVE_FILTRO)) || {}; } catch (e) { return {}; } })();
-// cada cartão ganha, à direita, o resumo e as tags das habilidades que o jogo trabalha
+// a capa ocupa o cartão inteiro e o nome fica sempre à vista embaixo (no tablet não existe "passar o mouse"); o resumo
+// do jogo vira a dica do mouse. ⭐ marca os jogos que mais treinam a habilidade escolhida; ↗, os que abrem outro site
 for (const c of cartoesDeJogo) {
-  const info = document.createElement('span');
-  info.className = 'jogo-card-info';
-  const texto = c.querySelector('.jogo-card-texto');
-  if (JOGOS_HAB[c.id]) texto.textContent = JOGOS_HAB[c.id].r + (c.tagName === 'A' ? ' ↗' : '');
-  const tags = document.createElement('span');
-  tags.className = 'jogo-card-tags';
-  tags.innerHTML = habDoCartao(c).map((h) => `<i data-hab="${h}">${NOME_HAB[h]}</i>`).join('');
-  info.append(texto, tags);
-  c.append(info);
+  if (JOGOS_HAB[c.id]) c.title = JOGOS_HAB[c.id].r;
+  c.insertAdjacentHTML('beforeend', '<span class="jogo-card-forte" aria-hidden="true" hidden>⭐</span>');
+  if (c.tagName === 'A') {
+    c.insertAdjacentHTML('beforeend', '<span class="jogo-card-externo" aria-hidden="true">↗</span>');
+    c.setAttribute('aria-label', `${c.querySelector('.jogo-card-nome').textContent} (abre outro site)`);
+  }
 }
 
-// ---------- Filtro (o mesmo da aba Jogos da gestão) ----------
-// Categoria sempre à vista; a aba Filtros abre as dificuldades do jogador, as habilidades do jogo e a busca. Cada opção
-// mostra quantos jogos ficam
-// se ela for escolhida, já contando a busca e os outros filtros; a que zeraria a lista fica apagada.
-const indDoCartao = (c) => INDICADO_PARA[c.id] || [];
-const semAcento = (t) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-const textoDoCartao = new Map(cartoesDeJogo.map((c) => [c, semAcento([c.querySelector('.jogo-card-nome').textContent, JOGOS_HAB[c.id]?.r || '',
-  ...habDoCartao(c).map((h) => NOME_HAB[h]), ...indDoCartao(c).map((i) => INDICACOES[i])].join(' '))]));
-const filtro = { busca: '', tema: 'todos', ind: '', hab: '' };
-const passa = (c, f) => (!f.busca || textoDoCartao.get(c).includes(semAcento(f.busca)))
-  && (f.tema === 'todos' || c.dataset.tema.split(' ').includes(f.tema))
-  && (!f.ind || indDoCartao(c).includes(f.ind))
-  && (!f.hab || habDoCartao(c).includes(f.hab));
-const contar = (mudanca) => cartoesDeJogo.filter((c) => passa(c, { ...filtro, ...mudanca })).length;
-// as opções: só as dificuldades e habilidades que algum jogo trabalha; as habilidades agrupadas como na gestão
-const indUsadas = Object.keys(INDICACOES).filter((i) => cartoesDeJogo.some((c) => indDoCartao(c).includes(i)));
-$('filtro-indicacao').innerHTML = '<option value="">Todas as dificuldades</option>'
-  + indUsadas.map((i) => `<option value="${i}">${INDICACOES[i]}</option>`).join('');
-const habUsadas = new Set(cartoesDeJogo.flatMap(habDoCartao));
-$('filtro-habilidade').innerHTML = '<option value="">Todas as habilidades</option>' + GRUPOS_HAB.map((g) => {
-  const ops = Object.entries(g.itens).filter(([h]) => habUsadas.has(h)).map(([h, nome]) => `<option value="${h}">${nome}</option>`).join('');
-  return ops && `<optgroup label="${g.nome}">${ops}</optgroup>`;
-}).join('');
-// cada select, a chave do filtro e o nome de cada opção sem a contagem
-const SELECTS = [['filtro-tema', 'tema'], ['filtro-indicacao', 'ind'], ['filtro-habilidade', 'hab']];
-const NOME_OPCAO = {};
-for (const [id] of SELECTS) for (const op of $(id).options) NOME_OPCAO[`${id}:${op.value}`] = op.textContent;
-
-function filtrarJogos() {
-  let n = 0;
-  for (const c of cartoesDeJogo) {
-    c.hidden = !passa(c, filtro);
-    if (!c.hidden) n++;
-    c.querySelectorAll('.jogo-card-tags i').forEach((i) => i.classList.toggle('escolhida', i.dataset.hab === filtro.hab));
-  }
-  for (const [id, chave] of SELECTS) {
-    for (const op of $(id).options) {
-      const qtd = contar({ [chave]: op.value });
-      op.textContent = `${NOME_OPCAO[`${id}:${op.value}`]} (${qtd})`;
-      op.disabled = !qtd && op.value !== filtro[chave];
-    }
-    $(id).value = filtro[chave];
-    $(id).classList.toggle('ativo', filtro[chave] !== (chave === 'tema' ? 'todos' : ''));
-  }
-  $('jogos-mostrando').textContent = n === cartoesDeJogo.length ? `${n} jogos` : `Mostrando ${n} de ${cartoesDeJogo.length} jogos`;
-  $('jogos-limpar').hidden = !(filtro.busca || filtro.tema !== 'todos' || filtro.ind || filtro.hab);
-  // a aba Filtros diz quantos dos filtros de dentro estão ligados
-  const ligados = [filtro.ind, filtro.hab, filtro.busca].filter(Boolean).length;
-  $('filtros-qtd').textContent = ligados ? `(${ligados})` : '';
-  $('filtro-mais').classList.toggle('ligado', ligados > 0);
-  $('jogos-nenhum').hidden = n > 0;
-  try { localStorage.setItem(CHAVE_FILTRO, JSON.stringify({ tema: filtro.tema, ind: filtro.ind, hab: filtro.hab })); } catch (e) { /* sem armazenamento */ }
-}
-for (const [id, chave] of SELECTS) $(id).onchange = () => { SOM.clique(); filtro[chave] = $(id).value; filtrarJogos(); };
-$('jogos-busca').oninput = () => { filtro.busca = $('jogos-busca').value.trim(); filtrarJogos(); };
-$('jogos-limpar').onclick = () => {
+// os botões: só as habilidades que algum jogo trabalha, as que têm mais jogos primeiro. As 10 primeiras ficam à vista e
+// o resto abre no "＋ Mais" (menos opções de cara cansa menos); com "Todos" e "Surpresa" são 12 botões, que fecham as
+// linhas no PC (6 por linha) e no celular (2 por linha)
+const HAB_A_VISTA = 10;
+const qtdDaHab = {};
+for (const c of cartoesDeJogo) for (const h of habDoCartao(c)) qtdDaHab[h] = (qtdDaHab[h] || 0) + 1;
+const habsDaLista = Object.keys(qtdDaHab).filter((h) => HAB_CRIANCA[h]).sort((a, b) => qtdDaHab[b] - qtdDaHab[a]);
+const botaoHab = (valor, [icone, nome, cor], extra = '') => `<button class="hab" type="button" data-hab="${valor}"`
+  + ` style="--h:${cor}" aria-pressed="false"${extra}><span class="hab-icone" aria-hidden="true">${icone}</span>`
+  + `<span class="hab-nome">${nome}</span><span class="hab-check" aria-hidden="true">✓</span></button>`;
+$('habilidades-botoes').innerHTML = botaoHab('', ['🌈', 'Todos os jogos', '#22364a'])
+  + habsDaLista.map((h, i) => botaoHab(h, HAB_CRIANCA[h], ` title="${NOME_HAB[h]} · ${qtdDaHab[h]} jogos"${i >= HAB_A_VISTA ? ' data-extra' : ''}`)).join('')
+  + '<button class="hab hab-surpresa" type="button" id="hab-surpresa"><span class="hab-icone" aria-hidden="true">🎲</span>'
+  + '<span class="hab-nome">Surpresa!</span></button>';
+// as matérias (pedido do Marco): uma linha própria acima das habilidades; filtram pela categoria do cartão (data-tema)
+const MATERIAS = { portugues: ['📚', 'Português', '#1565c0'], matematica: ['➗', 'Matemática', '#e53935'],
+  geografia: ['🌎', 'Geografia', '#2e7d32'], historia: ['📜', 'História', '#8d5a2b'] };
+const temaDoCartao = (c) => (c.dataset.tema || '').split(' ');
+$('materias-botoes').innerHTML = Object.entries(MATERIAS).map(([tema, dados]) => botaoHab(`tema:${tema}`, dados,
+  ` title="${cartoesDeJogo.filter((c) => temaDoCartao(c).includes(tema)).length} jogos"`)).join('');
+const habExtras = [...$('habilidades-botoes').querySelectorAll('[data-extra]')];
+habExtras.forEach((b) => { b.hidden = true; });
+$('hab-mais').hidden = !habExtras.length;
+$('hab-mais').onclick = () => {
   SOM.clique();
-  Object.assign(filtro, { busca: '', tema: 'todos', ind: '', hab: '' });
-  $('jogos-busca').value = '';
-  filtrarJogos();
+  const abrir = $('hab-mais').getAttribute('aria-expanded') !== 'true';
+  // fechando, a habilidade escolhida continua à vista mesmo se for uma das "a mais"
+  habExtras.forEach((b) => { b.hidden = !abrir && b.getAttribute('aria-pressed') !== 'true'; });
+  $('hab-mais').setAttribute('aria-expanded', String(abrir));
+  $('hab-mais').textContent = abrir ? '－ Menos habilidades' : '＋ Mais habilidades';
 };
-// o filtro guardado volta (se a opção ainda existir)
-const existe = (id, valor) => [...$(id).options].some((op) => op.value === valor);
-if (existe('filtro-tema', filtroSalvo.tema)) filtro.tema = filtroSalvo.tema;
-if (existe('filtro-indicacao', filtroSalvo.ind)) filtro.ind = filtroSalvo.ind;
-if (existe('filtro-habilidade', filtroSalvo.hab)) filtro.hab = filtroSalvo.hab;
-if (filtro.ind || filtro.hab) $('filtro-mais').open = true;   // com filtro guardado, a aba já aparece aberta
-$('filtro-mais').ontoggle = () => SOM.clique();
+
+// a escolha (habilidade ou "tema:<matéria>") vale enquanto o app está aberto (voltar de um jogo mantém); abrir o app de
+// novo mostra todos
+let habEscolhida = '';
+function filtrarJogos() {
+  // com uma matéria: os jogos dela, na ordem sorteada. Com uma habilidade: só os jogos que a treinam, primeiro os que a
+  // têm como foco principal (a primeira da lista dele)
+  const tema = habEscolhida.startsWith('tema:') ? habEscolhida.slice(5) : '';
+  const forca = (c) => (tema ? -1 : habDoCartao(c).indexOf(habEscolhida));
+  const lista = tema ? cartoesDeJogo.filter((c) => temaDoCartao(c).includes(tema))
+    : habEscolhida ? cartoesDeJogo.filter((c) => forca(c) >= 0).sort((a, b) => forca(a) - forca(b)) : cartoesDeJogo;
+  for (const c of cartoesDeJogo) {
+    c.hidden = !lista.includes(c);
+    c.classList.remove('sorteado');
+    c.querySelector('.jogo-card-forte').hidden = !(habEscolhida && forca(c) === 0);
+  }
+  listaDeJogos.append(...lista);
+  for (const b of document.querySelectorAll('#tela-jogos .hab[data-hab]')) b.setAttribute('aria-pressed', String(b.dataset.hab === habEscolhida));
+  listaDeJogos.classList.remove('entrando');
+  void listaDeJogos.offsetWidth;   // reinicia a animação de entrada das capas
+  listaDeJogos.classList.add('entrando');
+  const [icone, nome] = MATERIAS[tema] || HAB_CRIANCA[habEscolhida] || ['🌈', 'Todos os jogos'];
+  $('jogos-mostrando').innerHTML = `<b>${icone} ${nome}</b>: ${lista.length} jogos`
+    + (habEscolhida && !tema ? ` <span class="jogos-tecnico">(${NOME_HAB[habEscolhida]}) · ⭐ = treina mais essa habilidade</span>` : '');
+}
+
+// Surpresa: sorteia um dos jogos à vista e o destaca (não abre sozinho: a criança ainda decide se quer jogar)
+function sortearJogo() {
+  const visiveis = cartoesDeJogo.filter((c) => !c.hidden);
+  visiveis.forEach((c) => c.classList.remove('sorteado'));
+  const c = visiveis[Math.floor(Math.random() * visiveis.length)];
+  if (!c) return;
+  c.classList.add('sorteado');
+  c.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+  c.focus({ preventScroll: true });
+  $('jogos-mostrando').innerHTML = `<b>🎲 Que tal:</b> ${c.querySelector('.jogo-card-nome').textContent}? Toque na capa para jogar.`;
+}
+
+document.querySelector('#tela-jogos .pergunta-hab').addEventListener('click', (e) => {
+  const b = e.target.closest('.hab');
+  if (!b) return;
+  SOM.clique();
+  if (b.id === 'hab-surpresa') { sortearJogo(); return; }
+  habEscolhida = b.dataset.hab;
+  filtrarJogos();
+});
 filtrarJogos();
 $('btn-area-jogos').onclick = () => { SOM.clique(); telaJogos(); };
 

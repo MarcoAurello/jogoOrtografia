@@ -17,6 +17,7 @@ import ObservacaoController from '../controllers/ObservacaoController';
 import PlanoController from '../controllers/PlanoController';
 import SessaoController from '../controllers/SessaoController';
 import FamiliaController from '../controllers/FamiliaController';
+import IaQuestoesController from '../controllers/IaQuestoesController';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import carregarUsuarioLogado, { carregarContaLogada } from '../middlewares/carregarUsuarioLogado';
 import carregarAlunoLogado from '../middlewares/carregarAlunoLogado';
@@ -119,6 +120,10 @@ routes.post('/admin/importar-planilha', ensureAuthenticated, carregarUsuarioLoga
 
 // gravações do professor (e-mails, questionários, competições), no banco; o nome /planilha ficou do tempo da planilha
 routes.post('/planilha', ensureAuthenticated, carregarUsuarioLogado, ensurePerfil('professor', 'coordenacao', 'admin'), PlanilhaController.gravar);
+// questões por IA (fotos ou PDF de exercício → perguntas para revisar e salvar como questionário); o arquivo não é guardado.
+// O administrador usa de dentro de uma escola (X-Escola: vira a coordenação dela)
+routes.get('/questionarios/ia', ensureAuthenticated, carregarUsuarioLogado, ensurePerfil('professor', 'coordenacao'), IaQuestoesController.status);
+routes.post('/questionarios/gerar-ia', ensureAuthenticated, carregarUsuarioLogado, ensurePerfil('professor', 'coordenacao'), IaQuestoesController.gerar);
 
 // a página de uma escola com a marca dela (o nginx manda /<escola> para cá)
 routes.get('/pagina/:slug', PaginaController.show);

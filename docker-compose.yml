@@ -47,6 +47,15 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
       EMAIL_REMETENTE: ${EMAIL_REMETENTE:-Pedagogia Gamificada <nao-responda@pedagociagamificada.com.br>}
+      # questões por IA (fotos/PDF → questionário): chaves grátis do Gemini (principal) e do Groq (reserva); veja .env.example
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODELO: ${GEMINI_MODELO:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODELO: ${GROQ_MODELO:-}
+      GROQ_MODELO_VISAO: ${GROQ_MODELO_VISAO:-}
+      IA_PRINCIPAL: ${IA_PRINCIPAL:-gemini}
+      IA_LIMITE_DIARIO: ${IA_LIMITE_DIARIO:-20}
+      IA_FALSA: ${IA_FALSA:-0}
 
   # o app (nginx): arquivos estáticos, /api → api e /<escola> → página da escola montada pela api
   web:

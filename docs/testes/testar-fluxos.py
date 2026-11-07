@@ -846,6 +846,74 @@ s, r = chamar("/sessions/aluno", "POST", {"codigo": turma["codigo"], "nome": "Al
 confere("o aluno avulso continua entrando com o código da turma e o nome (sem PIN: o app não lembra o login)", s == 200 and bool(r.get("token"))
         and r["aluno"].get("cadastrado") is False)
 
+# ---------- 13. questões por IA: fotos/PDF do exercício → perguntas no formato da planilha (sem guardar o arquivo) ----------
+# O teste nunca chama o Gemini/Groq de verdade: com IA_FALSA=1 no .env a API devolve perguntas fixas (passando pela
+# mesma validação). Sem o modo falso, só as partes que não chegam à IA são testadas.
+print("13. Questões por IA")
+PNG = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+PDF = base64.b64encode(b"%PDF-1.4 1 0 obj<<>>endobj trailer<<>> %%EOF").decode()
+s, st = chamar("/questionarios/ia", token=prof)
+confere("a professora vê se a IA está configurada e quantas gerações restam hoje", s == 200 and "restantes" in st and "limite" in st, str(st))
+s, _ = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PNG]}, mae)
+confere("o responsável NÃO gera questões por IA", s == 403)
+s, r = chamar("/sessions/aluno", "POST", {"codigo": turma["codigo"], "nome": "Aluno IA"})
+s, _ = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PNG]}, r.get("token"))
+confere("o aluno NÃO gera questões por IA", s in (401, 403), s)
+s, _ = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PNG]}, adm)
+confere("o administrador fora de uma escola NÃO gera (só de dentro da escola)", s == 403)
+s, r = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [base64.b64encode(b"isto nao e imagem nem pdf").decode()]}, prof)
+confere("arquivo que não é foto nem PDF é recusado", s == 400 and r.get("codigo") == "arquivo_invalido", r.get("message", ""))
+s, r = chamar("/questionarios/gerar-ia", "POST", {"arquivos": []}, prof)
+confere("sem arquivo é recusado", s == 400)
+s, r = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PNG], "quantidade": 7}, prof)
+confere("quantidade fora de 5, 10 ou 15 é recusada", s == 400)
+s, r = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PNG] * 7}, prof)
+confere("mais de 6 arquivos é recusado", s == 400)
+if not st.get("falsa"):
+    print("  AVISO  IA_FALSA não está ligada no .env: a geração em si e o limite diário não foram testados")
+else:
+    s, r = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PNG], "materia": "Matemática", "tema": "Somas"}, prof)
+    qs = r.get("perguntas") or []
+    formato = all(isinstance(q.get("pergunta"), str) and q["pergunta"] and isinstance(q.get("certa"), str) and q["certa"]
+                  and isinstance(q.get("erradas"), list) and 1 <= len(q["erradas"]) <= 3 and q["certa"] not in q["erradas"] for q in qs)
+    confere("a foto vira 10 perguntas (padrão) no formato da planilha", s == 200 and len(qs) == 10 and formato, f"{len(qs)} perguntas")
+    confere("a validação descarta pergunta repetida e incompleta e tira a errada igual à certa",
+            len({q["pergunta"] for q in qs}) == len(qs) and not any(q["pergunta"] == "Incompleta?" for q in qs))
+    s, r = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PDF, PNG], "quantidade": 5, "dificuldade": "dificil"}, prof)
+    confere("PDF + foto com 5 perguntas", s == 200 and len(r.get("perguntas") or []) == 5)
+    s, r = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PNG], "dificuldade": "impossivel"}, prof)
+    confere("dificuldade inválida é recusada", s == 400)
+    s, st2 = chamar("/questionarios/ia", token=prof)
+    usadas = st2.get("usadasHoje", 0)
+    confere("cada geração conta no limite do dia", usadas == 2 and st2.get("restantes") == st2.get("limite", 0) - 2, str(st2))
+    for _ in range(max(0, st2.get("restantes", 0))):
+        chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PNG], "quantidade": 5}, prof)
+    s, r = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PNG]}, prof)
+    confere("passou do limite diário: recusa com mensagem clara", s == 429 and r.get("codigo") == "limite_diario", r.get("message", ""))
+    s, r = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PNG]}, coord)
+    confere("o limite é por pessoa: a coordenação ainda gera", s == 200)
+    s, _ = chamar("/questionarios/gerar-ia", "POST", {"arquivos": [PNG]}, adm, extra={"X-Escola": escola["id"]})
+    confere("o administrador dentro da escola gera", s == 200)
+
+# o questionário da IA vira competição e o aluno abre: o id novo (UUID) não pode sair cortado no "quiz:<id>"
+geradas = qs if st.get("falsa") else [{"pergunta": f"Pergunta {i}?", "certa": "sim", "erradas": ["não", "talvez", "nunca"]} for i in range(10)]
+s, r = chamar("/planilha", "POST", {"acao": "salvarQuestionario", "titulo": f"IA {sufixo}", "perguntas": geradas}, prof)
+quiz_ia = r.get("id", "")
+confere("o questionário da IA é salvo como os da planilha", r.get("ok") and len(quiz_ia) == 36)
+s, r = chamar("/planilha", "POST", {"acao": "criarCompeticao", "nome": "Competição da IA", "jogo": f"quiz:{quiz_ia}",
+                                    "jogoNome": f"Questionário: IA {sufixo}", "encerra": (agora + timedelta(hours=1)).isoformat(), "turma": turma["id"]}, prof)
+comp_ia = r.get("competicao", {})
+confere("competição com o questionário da IA guarda o id inteiro", r.get("ok") and comp_ia.get("jogo") == f"quiz:{quiz_ia}", comp_ia.get("jogo", ""))
+s, r = chamar("/sessions/aluno", "POST", {"codigo": turma["codigo"], "nome": "Aluno Quiz IA"})
+s, r = chamar("/sessions/aluno/competicoes", token=r.get("token"))
+vista = next((x for x in r.get("lista", []) if x["id"] == comp_ia.get("id")), {})
+confere("o aluno vê a competição do questionário", vista.get("jogo") == f"quiz:{quiz_ia}")
+s, r = chamar(f"/dados?acao=questionario&id={vista.get('jogo', 'quiz:')[5:]}&escola={slug}")
+confere("ao clicar, o questionário da competição abre com as perguntas", r.get("ok") and len(r["questionario"]["perguntas"]) == len(geradas))
+s, r = chamar("/dados", "POST", {"acao": "resultadoCompeticao", "escola": slug, "id": comp_ia.get("id"), "codigo": vista.get("codigo"),
+                                 "nome": "Aluno Quiz IA", "pontos": 800, "acertos": 8, "total": 10, "config": "Questionário"})
+confere("o aluno responde e entra no ranking", any(x.get("pontos") == 800 for x in r.get("ranking", [])))
+
 # ---------- fim: a escola de teste fica desativada ----------
 chamar(f"/turmas/{turma['id']}", "PUT", {"ativa": False}, prof)
 chamar(f"/escolas/{escola['id']}", "PUT", {"ativa": False}, adm)

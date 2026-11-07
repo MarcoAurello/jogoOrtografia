@@ -1,5 +1,6 @@
 // Novo questionário (página própria): o nome e as perguntas — cada uma com 1 resposta certa e até 3 erradas (no jogo
-// elas aparecem embaralhadas). As perguntas entram uma a uma ou de uma planilha (.xlsx ou .csv, como a planilha modelo).
+// elas aparecem embaralhadas). As perguntas entram uma a uma, de uma planilha (.xlsx ou .csv, como a planilha modelo)
+// ou geradas pela IA a partir de fotos/PDF do exercício (GerarComIA) — as duas caem na mesma revisão antes de salvar.
 // "Copiar de" (?de=<id>) abre com as perguntas de um questionário que já existe, para fazer uma versão nova.
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -10,13 +11,15 @@ import DownloadIcon from '@mui/icons-material/Download';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import Migalhas from '../../components/Migalhas';
 import { useAvisos } from '../../components/Avisos';
 import { useConfirmar } from '../../components/Confirmar';
 import { mensagemDoErro } from '../../lib/api';
 import { useAuth } from '../../lib/auth';
 import { gravar, lerDados } from '../../lib/dadosEscola';
-import { lerPlanilha, PerguntaQuiz } from './planilha';
+import { lerPlanilha, linhasParaPerguntas, PerguntaQuiz } from './planilha';
+import GerarComIA from './GerarComIA';
 
 const vazia = (): PerguntaQuiz => ({ pergunta: '', certa: '', erradas: ['', '', ''] });
 const completa = (q: PerguntaQuiz) => !!(q.pergunta.trim() && q.certa.trim() && q.erradas.some((e) => e.trim()));
@@ -35,6 +38,7 @@ export default function EditorQuestionario() {
   const [destaque, setDestaque] = useState<number | 'titulo' | null>(null);
   const [salvando, setSalvando] = useState(false);
   const [lendo, setLendo] = useState(false);
+  const [comIA, setComIA] = useState(false);
   const refArquivo = useRef<HTMLInputElement>(null);
   const refTitulo = useRef<HTMLInputElement>(null);
 
@@ -53,16 +57,31 @@ export default function EditorQuestionario() {
   const mudarErrada = (i: number, k: number, v: string) => mudar(i, { erradas: perguntas[i].erradas.map((e, j) => (j === k ? v : e)) });
   const mudou = !!titulo.trim() || perguntas.some((q) => !emBranco(q));
 
+  // as perguntas da planilha e as da IA entram do mesmo jeito: depois das que já estão escritas, para conferir e editar
+  const acrescentar = (lidas: PerguntaQuiz[], nome: string) => {
+    setPerguntas((ps) => [...ps!.filter((q) => !emBranco(q)), ...lidas.map((q) => ({ ...q, erradas: [...q.erradas, '', '', ''].slice(0, 3) }))]);
+    if (!titulo.trim()) setTitulo(nome.slice(0, 80));
+  };
+
   const importar = async (arquivo?: File) => {
     if (!arquivo) return;
     setLendo(true); setErro('');
     try {
       const lidas = await lerPlanilha(arquivo);
       if (!lidas.length) { setErro('Não achei perguntas na planilha. Use as colunas A pergunta, B certa, C a E erradas (como na planilha modelo).'); return; }
-      setPerguntas((ps) => [...ps!.filter((q) => !emBranco(q)), ...lidas.map((q) => ({ ...q, erradas: [...q.erradas, '', '', ''].slice(0, 3) }))]);
-      if (!titulo.trim()) setTitulo(arquivo.name.replace(/\.[^.]+$/, ''));
+      acrescentar(lidas, arquivo.name.replace(/\.[^.]+$/, ''));
       avisar(`${lidas.length} pergunta(s) lida(s) da planilha. Confira antes de salvar.`);
     } catch (e) { setErro(mensagemDoErro(e)); } finally { setLendo(false); }
+  };
+
+  // a IA devolve no formato da planilha; passa pela mesma leitura das linhas (A pergunta, B certa, C a E erradas).
+  // Vai com a linha de cabeçalho na frente: sem ela, uma 1ª pergunta com a palavra "pergunta" seria tomada por cabeçalho
+  const receberDaIA = (geradas: PerguntaQuiz[], nome: string) => {
+    const lidas = linhasParaPerguntas([['Pergunta', 'Resposta certa'], ...geradas.map((q) => [q.pergunta, q.certa, ...q.erradas])]);
+    if (!lidas.length) { setErro('A IA não devolveu perguntas completas. Tente outra foto.'); return; }
+    setErro('');
+    acrescentar(lidas, nome);
+    avisar(`${lidas.length} pergunta(s) criada(s) pela IA. Confira e ajuste antes de salvar.`);
   };
 
   const salvar = async () => {
@@ -109,6 +128,15 @@ export default function EditorQuestionario() {
         </Button>
         <input ref={refArquivo} type="file" hidden accept=".xlsx,.xls,.csv,.txt" onChange={(e) => { importar(e.target.files?.[0]); e.target.value = ''; }} />
       </Paper>
+
+      <Paper variant="outlined" sx={{ p: 2, borderRadius: 3, mb: 2.5, display: 'flex', gap: 1.5, alignItems: 'center', flexWrap: 'wrap', borderColor: 'primary.light' }}>
+        <Box sx={{ flex: 1, minWidth: 220 }}>
+          <Typography fontWeight={800}>Tem o exercício no papel ou em PDF?</Typography>
+          <Typography variant="body2" color="text.secondary">Fotografe as páginas (ou mande o PDF) e a IA cria as perguntas para você conferir.</Typography>
+        </Box>
+        <Button variant="contained" startIcon={<AutoAwesomeIcon />} onClick={() => setComIA(true)}>Gerar com IA (foto ou PDF)</Button>
+      </Paper>
+      <GerarComIA aberto={comIA} aoFechar={() => setComIA(false)} aoGerar={receberDaIA} />
 
       <Stack spacing={1.5}>
         {perguntas.map((q, i) => (

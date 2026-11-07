@@ -86,7 +86,7 @@ Competicao.init({
   turma_id: { type: DataTypes.UUID, allowNull: true },   // a turma da competição (o aluno entra com o código da turma)
   codigo: { type: DataTypes.STRING(8), allowNull: false },
   nome: { type: DataTypes.STRING(60), allowNull: false },
-  jogo: { type: DataTypes.STRING(40), allowNull: false },
+  jogo: { type: DataTypes.STRING(80), allowNull: false },
   jogo_nome: { type: DataTypes.STRING(60), allowNull: false },
   email: { type: DataTypes.STRING(120), allowNull: true },
   encerra_em: { type: DataTypes.DATE, allowNull: false },

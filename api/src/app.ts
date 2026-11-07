@@ -21,6 +21,7 @@ const origensPermitidas = (process.env.FRONTEND_URL || 'http://localhost:8080')
 app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 app.use(cors({ origin: origensPermitidas }));
 app.use('/testes/relatorio', express.json({ limit: '2mb' }));   // o PDF do relatório (base64)
+app.use('/questionarios/gerar-ia', express.json({ limit: '20mb' }));   // fotos/PDF do exercício para a IA (base64, até 14 MB)
 app.use(express.json({ limit: '500kb' }));   // o logo da escola (até ~60 KB) e as rodadas de uma partida
 
 // Login é o alvo óbvio de força bruta: bloqueia só quem passar de 10 tentativas ERRADAS em 1 minuto

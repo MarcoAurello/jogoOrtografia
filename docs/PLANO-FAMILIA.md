@@ -135,7 +135,9 @@ Fora deste plano: quiz gerado por IA (será pago, fica para depois).
 - "Esqueci a senha": não existe para nenhum perfil (só a coordenação/admin define senha provisória para a equipe).
   O responsável não tem quem redefina a senha dele: falta um "esqueci a senha" por e-mail.
 - Fase 5 (Mercado Pago): planos mensal/anual/os dois, valor de cada um e teste grátis para a família.
-- Quiz por IA (pago): quando fazer e quanto cobrar.
+- IA de questões: feita com Gemini gratuito (ver `docs/plano-sistema-com-login.md`, fase 7); falta decidir quanto cobrar das escolas.
+- Área da família pedir a senha do pai de novo quando a criança joga pelo celular dele (hoje a conta fica aberta).
+- Item "Quero para minha escola" no menu do app (WhatsApp ou site).
 - Riscos de segurança conhecidos (detalhes em "Para depois"): senha do responsável entre donos diferentes e
   bloqueio do PIN não atômico — decidir quando corrigir.
 

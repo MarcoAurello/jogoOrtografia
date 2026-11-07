@@ -99,7 +99,7 @@ async function acharCompeticao(escopo: Escopo, id: unknown) {
 
 // a competição é de uma turma (turmaId, já conferido por quem chama: a pessoa enxerga a turma)
 export async function criarCompeticao(escopo: Escopo, autorId: string | null, d: Record<string, unknown>, turmaId: string | null) {
-  const nome = texto(d.nome, 60), jogo = texto(d.jogo, 30), jogoNome = texto(d.jogoNome, 60);
+  const nome = texto(d.nome, 60), jogo = texto(d.jogo, 80), jogoNome = texto(d.jogoNome, 60);
   const encerra = new Date(String(d.encerra));
   if (!jogo) throw erro("jogo");
   if (Number.isNaN(encerra.getTime()) || encerra.getTime() <= Date.now()) throw erro("hora");

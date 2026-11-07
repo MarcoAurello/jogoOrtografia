@@ -62,7 +62,10 @@ celular / tablet / PC  ──►  nginx (Dokploy, HTTPS)
 | **Administrador** (plataforma) | e-mail + senha (+ código no e-mail, opcional) | cria e edita escolas, planos e teste grátis; vê números gerais |
 | **Coordenação** (escola) | e-mail + senha | cadastra professores e turmas da escola; vê todas as turmas |
 | **Professor** | e-mail + senha (ou "Entrar com Google", fase 5) | as suas turmas e alunos, questionários, competições, painel de evolução |
-| **Aluno** | **código da turma → toca no nome → senha de figuras** (ex.: 🐶🍎⭐) | joga; vê as próprias estrelas e o ranking |
+| **Aluno avulso** | **código da turma → nome** (sem senha; perde o login ao voltar ao início) | joga; vê as próprias estrelas e o ranking |
+| **Aluno cadastrado** (06/11/2026) | código da turma → nome → **PIN de 4 números**; ou em casa pelo **código da família** (FAM-XXXXX) → nome → PIN | joga na escola e em casa; o aparelho lembra o login (até o fim do dia pela turma, 30 dias em casa) |
+| **Responsável** (pai/mãe, 06/11/2026) | e-mail + senha; conta criada pela página de cadastro da escola ou da psicopedagoga | vê os filhos (jogos, recados, plano, anamnese — o que a escola liberar); troca a própria senha e o PIN do filho |
+| **Professor avulso / psicopedagoga** | e-mail + senha, sem escola | os pacientes dele (alunos sem turma), com as mesmas ferramentas da escola |
 | **Visitante** (teste grátis) | sem login | joga sem guardar o histórico (como hoje) |
 
 Detalhes do login do aluno:
@@ -219,6 +222,9 @@ Cada fase vai para o ar sozinha, sem parar o app de hoje.
 | **3. Painel** | painel da turma, ficha do aluno, gráficos por habilidade, PDF | o professor vê a evolução de um aluno em 4 semanas de partidas | G |
 | **4. Migração** ✅ (Apps Script fica só como carteiro dos e-mails) | questionários, competições e ranking na API; script que copia a planilha para o banco; desligar o Apps Script | nenhuma tela chama mais o Apps Script | M |
 | **5. Extras** | planos e teste grátis com data, "Entrar com Google", avisos por e-mail (ex.: "turma sem jogar há 7 dias") | — | P a M |
+| **6. Família** ✅ (06/11/2026, no ar na versão 235) | responsável, cadastro público, área da família, aluno com PIN, jogar em casa, código da família — detalhes em `docs/PLANO-FAMILIA.md` | o pai cadastra o filho pelo link da escola, acompanha os relatórios e o filho joga em casa | G |
+| **7. IA de questões** ✅ no localhost (sem commit) | foto ou PDF → Gemini (grátis) com Groq de reserva → perguntas no formato da planilha → revisão → questionário | o professor gera um questionário a partir de uma foto e os alunos jogam na competição | M |
+| **8. Lista de jogos estilo Friv** ✅ no localhost (sem commit, versão 241) | grade de capas + "Qual habilidade você quer treinar agora?"; tela inicial com Jogar grátis + ☰ Outras opções; menu lateral | o aluno escolhe a habilidade e acha o jogo na grade, no celular e no PC | M |
 
 **Convivência durante a transição:** uma configuração por escola (`usa_api: sim/não`). As escolas migram uma de cada vez. Enquanto isso, quem ainda está no Apps Script continua funcionando como hoje.
 
@@ -239,3 +245,32 @@ Cada fase vai para o ar sozinha, sem parar o app de hoje.
 6. **Teste grátis:** quantos dias, e o que fica bloqueado depois (painel? número de alunos?).
 
 Com essas respostas, a fase 1 começa por: `docker-compose.yml`, estrutura da `api/`, tabelas `escolas` e `usuarios`, rotas de login e a tela de login do professor.
+
+---
+
+## 12. Situação em 06/11/2026
+
+**No ar (versão 235):** fases 1 a 6 — inclusive a família (responsável, cadastro público por escola/psicopedagoga,
+área da família, aluno cadastrado com PIN, jogar em casa e código da família).
+
+**Pronto no localhost, sem commit:**
+- **IA de questões** (fase 7): botão "✨ Gerar com IA (foto ou PDF)" em Questionários; Gemini no plano gratuito
+  (`gemini-2.5-flash`) com Groq de reserva, igual ao sistema de reuniões; arquivo não é guardado; limite diário por
+  usuário; uso registrado (`uso_ia`). Em produção precisa de `GEMINI_API_KEY` (e `GROQ_API_KEY`) no Dokploy e
+  `IA_FALSA` desligado.
+- **Correção da competição de questionário**: o código do questionário (36 caracteres) era cortado em 30 e o aluno
+  não conseguia abrir o questionário da competição. Afeta a produção — publicar junto com a IA.
+- **Lista de jogos estilo Friv** (fase 8): grade de capas e filtro só por habilidade; tela inicial com o vídeo,
+  "🎮 Jogar grátis" e "☰ Outras opções"; menu lateral com Alunos (código da turma, jogar em casa, jogar grátis),
+  Escola/professor/família (login, área da família, criar a conta da família) e Ajuda (instalar, manual, vídeo,
+  privacidade).
+
+**Pendências** (detalhes em `docs/PLANO-FAMILIA.md`):
+- "Esqueci a senha" por e-mail na tela de login (não existe para nenhum perfil).
+- Compra avulsa para a família com o Mercado Pago — decidir planos, valor e teste grátis.
+- Cobrança da IA de questões para as escolas.
+- Riscos de segurança conhecidos, não tratados por decisão: senha do responsável com filhos em donos diferentes;
+  bloqueio do PIN não atômico.
+- Área da família pedir a senha do pai de novo quando a criança joga pelo celular dele.
+- Item "Quero para minha escola" no menu (WhatsApp ou site).
+- `CLAUDE.md`: a regra "aluno perde o login ao voltar ao início" vale só para o aluno avulso.
