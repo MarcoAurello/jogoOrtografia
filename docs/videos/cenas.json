@@ -1,0 +1,23 @@
+{
+  "voz": "pt-BR-FranciscaNeural",
+  "ritmo": "+0%",
+  "cenas": [
+    {"n": 1, "rotulo": "", "texto": "Olá! Este é o painel de gestão dos Jogos Pedagógicos, feito para escolas e para profissionais da psicopedagogia acompanharem o desenvolvimento de cada criança."},
+    {"n": 2, "rotulo": "Mais de 50 jogos, cada um com as habilidades que trabalha", "texto": "Cada jogo trabalha habilidades importantes para aprender: memória de trabalho, atenção, controle inibitório, raciocínio lógico, percepção visual, consciência fonológica, linguagem e matemática, além de habilidades socioemocionais, como tolerância à frustração e flexibilidade."},
+    {"n": 3, "rotulo": "Escola Municipal Cecília Meireles", "texto": "Enquanto a criança brinca, o sistema registra como ela se sai em cada habilidade. Assim, a escola percebe cedo os sinais de dificuldade, antes que eles prejudiquem o aprendizado."},
+    {"n": 4, "rotulo": "Turmas · código de entrada", "texto": "Tudo começa pelas turmas. Cada turma tem um código curto: com ele, os alunos entram nos jogos, na escola ou em casa."},
+    {"n": 5, "rotulo": "Painel da turma · Profª Mariana Costa", "texto": "No painel da turma, a professora Mariana vê quem jogou, a taxa de acerto, a evolução por semana e as habilidades em que a turma mais precisa de apoio."},
+    {"n": 6, "rotulo": "Ficha do aluno · Miguel Ferreira", "texto": "Na ficha de cada aluno, como a do Miguel, aparecem as habilidades que ele já domina e as que pedem mais atenção, como a atenção sustentada. Um sinal assim merece um olhar mais cuidadoso da equipe."},
+    {"n": 7, "rotulo": "Anamnese · com o consentimento do responsável", "texto": "A anamnese completa essa visão: ela pode ser feita presencialmente ou por um link enviado à família, sempre com o consentimento do responsável."},
+    {"n": 8, "rotulo": "Plano de objetivos e sessões", "texto": "Com essas informações, a equipe monta o plano de objetivos, com metas, prazos e os jogos que mais trabalham cada habilidade. As sessões ficam registradas, e a evolução aparece no painel."},
+    {"n": 9, "rotulo": "Novidade · questionários com inteligência artificial", "texto": "E aqui está uma das grandes novidades: a inteligência artificial ajuda o professor a criar questionários em segundos, sobre qualquer conteúdo da sala de aula."},
+    {"n": 10, "rotulo": "Foto do livro, do exercício ou do quadro · ou um PDF", "texto": "Basta tirar uma foto da página do livro, de um exercício ou do quadro, ou enviar um PDF. A professora Renata escolhe quantas perguntas quer e o ano da turma."},
+    {"n": 11, "rotulo": "A IA cria as perguntas com base só no material enviado", "texto": "Em poucos segundos, a IA lê o material e cria as perguntas, cada uma com a resposta certa e as alternativas erradas, tudo em português e só com base no conteúdo enviado."},
+    {"n": 12, "rotulo": "O professor revisa, ajusta e salva", "texto": "O professor continua no comando: revisa, corrige o que quiser e só então salva. O que levaria uma tarde inteira fica pronto em poucos minutos."},
+    {"n": 13, "rotulo": "Competição · Quiz da Primeira Guerra — 5º ano A", "texto": "Esse questionário pode virar uma competição: a turma joga valendo pontos, e o ranking guarda a melhor nota de cada aluno. A aula fica muito mais animada."},
+    {"n": 14, "rotulo": "Família · link de cadastro e o que os pais acompanham", "texto": "A família também participa: a escola envia o link de cadastro e escolhe o que os pais podem acompanhar, como jogos, recados, metas ou anamnese."},
+    {"n": 15, "rotulo": "Área da família · Carla Souza, mãe da Ana Clara", "texto": "Em casa, a Carla acompanha a evolução da Ana Clara, lê os recados da escola, e a filha continua treinando com o mesmo PIN."},
+    {"n": 16, "rotulo": "Espaço Aprender · Psicopedagoga Juliana Rocha", "texto": "Para a psicopedagogia, a profissional tem o próprio espaço, com os pacientes, a anamnese, o plano e o link de cadastro das famílias."},
+    {"n": 17, "rotulo": "", "texto": "Jogos Pedagógicos: inteligência artificial a favor do professor, e escola, família e criança juntas, descobrindo cedo e trabalhando cada habilidade, brincando."}
+  ]
+}

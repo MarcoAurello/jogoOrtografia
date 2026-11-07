@@ -16,3 +16,6 @@ TESTE-GESTAO.md
 
 # variáveis da produção (VPS), com as senhas: ficam só no computador
 .env.producao
+
+# vídeos: arquivos temporários da gravação e da montagem (docs/videos/*.py refazem)
+docs/videos/tmp/

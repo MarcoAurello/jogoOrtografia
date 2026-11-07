@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Pilhas de Cores. */
 
-import { $, embaralhar, sortear } from './util.js?v=242';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=242';
-import { SOM, tocar } from './som.js?v=242';
-import { mascote, mostrar, telaJogos } from './telas.js?v=242';
-import { escolherProfessorE } from './professor.js?v=242';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=242';
+import { $, embaralhar, sortear } from './util.js?v=244';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=244';
+import { SOM, tocar } from './som.js?v=244';
+import { mascote, mostrar, telaJogos } from './telas.js?v=244';
+import { escolherProfessorE } from './professor.js?v=244';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=244';
 
 // ---------- Pilhas de Cores ----------
 // Planejamento e funções executivas (parecido com a Torre de Hanói). São 4 cores: três com 5 bolinhas e uma com 4,

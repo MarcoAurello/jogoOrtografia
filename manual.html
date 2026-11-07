@@ -115,8 +115,9 @@
       color: var(--branco); background: var(--primaria); border-radius: 999px; padding: 8px 22px; }
 
     @media (max-width: 720px) {
-      html { scroll-padding-top: 64px; }
-      .abas { gap: 6px; padding: 8px 10px; }
+      /* com 7 partes, as abas ocupam 2 ou 3 linhas no celular: ficam só no topo, sem prender e cobrir a tela */
+      html { scroll-padding-top: 12px; }
+      .abas { position: static; gap: 6px; padding: 8px 10px; }
       .abas a { font-size: 14px; padding: 4px 10px; }
       .passo { grid-template-columns: 1fr; }
       .passo .print { max-width: 280px; margin: 0 auto; }
@@ -154,12 +155,17 @@
   <header class="topo">
     <img class="logo" src="assets/logo-pg-168.png" alt="Pedagogia Gamificada" width="84" height="84">
     <h1>📘 Manual do usuário</h1>
-    <p>Jogos Psicopedagógicos: jogos com relatórios de desempenho. Aqui você aprende a usar a Área do professor (turmas, painel, anamnese, questionários e competições) e a jogar cada jogo.</p>
+    <p>Jogos Psicopedagógicos: jogos com relatórios de desempenho. Aqui você aprende a usar a área da escola (turmas, painel,
+      anamnese, questionários com IA e competições), a ligar a família à escola, a área dos pais, como o aluno entra e cada jogo.</p>
   </header>
 
   <nav class="abas" aria-label="Partes do manual">
     <a href="#video-gestao">▶️ Vídeos</a>
-    <a href="#professor">🧑‍🏫 Professor</a>
+    <a href="#professor">🧑‍🏫 Escola</a>
+    <a href="#familia-escola">👨‍👩‍👧 Família</a>
+    <a href="#pais">🏡 Pais</a>
+    <a href="#psicopedagoga">🧠 Psicopedagoga</a>
+    <a href="#aluno">🎒 Aluno</a>
     <a href="#jogos">🎮 Jogos</a>
     <a href="./">← Voltar</a>
   </nav>
@@ -174,16 +180,6 @@
       </button>
       <p>Em 3 minutos: como os jogos ajudam a perceber cedo os sinais de dificuldade, a anamnese e o plano de objetivos,
         os questionários criados com inteligência artificial a partir de uma foto, as competições e a área da família.</p>
-    </section>
-
-    <!-- vídeo de apresentação (2 min 23 s) -->
-    <section class="video" id="video">
-      <h2>▶️ Assista o vídeo da plataforma</h2>
-      <video controls preload="none" playsinline poster="assets/video/capa-video.jpg" width="1920" height="1080">
-        <source src="assets/video/jogos-educacionais.mp4" type="video/mp4">
-        Seu navegador não conseguiu abrir o vídeo.
-      </video>
-      <p>Em pouco mais de 2 minutos: as telas, a Área do professor e para que serve cada jogo.</p>
     </section>
 
     <!-- ================= PARTE 1: PROFESSOR E COORDENAÇÃO (gestão, /gestao) ================= -->
@@ -201,12 +197,18 @@
       <div class="passo">
         <div>
           <span class="passo-num">1</span>
-          <h4>Abra a Área do professor</h4>
-          <p>Na barra de baixo do app, toque em <span class="botao">👤 Professor</span>. Ou, no topo, toque em
-            <span class="botao">☰ Menu</span> e escolha <span class="botao">🧑‍🏫 Área do professor</span>.</p>
-          <p>No mesmo menu ficam também <b>Instalar app</b>, <b>Trocar aluno</b>, o <b>Manual do usuário</b> e o <b>Vídeo da plataforma</b>.</p>
+          <h4>Abra o menu e toque em "Login da escola / professor"</h4>
+          <p>A tela inicial do app tem o vídeo, o botão <span class="botao">🎮 Jogar grátis</span> e o <span class="botao">☰ Outras opções</span>.
+            Toque em <span class="botao">☰ Outras opções</span> (ou no <span class="botao">☰</span> do canto de cima): abre o <b>menu lateral</b>, em três partes:</p>
+          <ul>
+            <li><b>Alunos</b>: entrar com o código da turma, jogar em casa e jogar grátis;</li>
+            <li><b>Escola, professor e família</b>: <span class="botao">🧑‍🏫 Login da escola / professor</span>, a <b>Área da família (pais)</b>
+              e, no endereço de uma escola que aceita, <b>Criar a conta da família</b>;</li>
+            <li><b>Ajuda</b>: instalar o app, este manual, o vídeo e a política de privacidade.</li>
+          </ul>
+          <p class="dica">💡 Use o endereço da sua escola (ex.: <i>gamespedagogicos.store/suaEscola</i>): o app abre com o nome e a marca dela.</p>
         </div>
-        <img class="print" src="assets/manual/p01-inicio.jpg" alt="Menu aberto no topo do app com a opção Área do professor" width="400" height="820" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/p15-menu-lateral.jpg" alt="Menu lateral do app com os grupos Alunos, Escola, professor e família, e Ajuda" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <div class="passo">
@@ -229,11 +231,12 @@
           <ul>
             <li><b>🎒 Turmas</b>: as turmas, o código de entrada, os alunos, o painel.</li>
             <li><b>📋 Alunos e anamnese</b>: cadastro, anamnese, observações e plano de objetivos.</li>
-            <li><b>📝 Questionários</b>, <b>🏆 Competições</b>, <b>🔗 Links</b> e <b>✉️ E-mails</b> dos relatórios.</li>
-            <li>Só a coordenação: <b>👥 Usuários</b> e os <b>🗂️ Modelos de anamnese</b> da escola.</li>
+            <li><b>📝 Questionários</b> (também gerados com IA), <b>🏆 Competições</b>, <b>🔗 Links</b> e <b>✉️ E-mails</b> dos relatórios.</li>
+            <li>Só a coordenação: <b>👥 Usuários</b>, os <b>🗂️ Modelos de anamnese</b> e a <b>👨‍👩‍👧 Família</b> (o cadastro dos pais e o que eles veem).</li>
+            <li><b>🎮 Ir para os jogos</b> volta ao app.</li>
           </ul>
         </div>
-        <img class="print" src="assets/manual/ge02-inicio.jpg" alt="Início da área do professor com os atalhos de cada parte" width="400" height="820" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/ge27-inicio.jpg" alt="Menu da área da escola com Turmas, Alunos e anamnese, Questionários, Família e os outros itens" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <h3 class="grupo">🎒 Turmas e alunos</h3>
@@ -278,15 +281,16 @@
           <span class="passo-num">7</span>
           <h4>Como o aluno entra pela turma</h4>
           <ol>
-            <li>Na tela inicial do app, toca em <span class="botao">🏫 Entrar com o código da turma</span>.</li>
+            <li>Na tela inicial do app, toca em <span class="botao">☰ Outras opções</span> e em <span class="botao">🏫 Entrar com o código da turma</span>.</li>
             <li>Digita o <b>código</b> que você passou e toca em <span class="botao">Continuar ▶</span>.</li>
-            <li>Toca no <b>nome dele</b> (ou digita, se não estiver na lista). Não precisa de senha.</li>
+            <li>Toca no <b>nome dele</b> (ou digita, se não estiver na lista). O aluno da lista da turma <b>não precisa de senha</b>;
+              o aluno que a <b>família cadastrou</b> digita o <b>PIN de 4 números</b>.</li>
           </ol>
           <p>Pronto: as partidas dele vão para o <b>painel da turma</b> e para a <b>ficha</b>, e ele vê as <b>competições da turma</b>.
             Quando ele volta para a tela inicial, sai da turma, e o próximo aluno pode entrar no mesmo tablet.</p>
-          <p class="aviso">✔ O aluno também pode jogar só digitando o nome, sem o código: o relatório vai por e-mail, mas a partida não fica no painel.</p>
+          <p class="aviso">✔ O passo a passo do aluno, com o PIN e o jogar em casa, está na parte <a href="#aluno">🎒 Para o aluno</a>.</p>
         </div>
-        <img class="print" src="assets/manual/a02-nomes-turma.jpg" alt="Tela Entrar na turma com os nomes dos alunos para tocar" width="400" height="820" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/a04-nomes-turma.jpg" alt="Tela Entrar na turma com os nomes dos alunos para tocar" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <h3 class="grupo">📊 Acompanhar a turma e cada aluno</h3>
@@ -340,7 +344,7 @@
         <div>
           <span class="passo-num">11</span>
           <h4>A página do aluno</h4>
-          <p>Toque num aluno. A página tem as abas <b>Anamnese</b>, <b>Observações</b>, <b>Plano de objetivos</b> e <b>Cadastro</b>,
+          <p>Toque num aluno. A página tem as abas <b>Anamnese</b>, <b>Observações</b>, <b>Plano de objetivos</b>, <b>Família</b> e <b>Cadastro</b>,
             e os botões <span class="botao">Ficha</span> e <span class="botao">Editar</span> no topo.</p>
           <p>Na aba Anamnese há duas formas de aplicar: <b>Preencher agora</b> e <b>Mandar link para a família</b>. Embaixo fica o histórico.</p>
         </div>
@@ -421,6 +425,25 @@
       <div class="passo">
         <div>
           <span class="passo-num">17</span>
+          <h4>✨ Gere as perguntas com IA (foto ou PDF)</h4>
+          <p>No questionário novo, toque em <span class="botao">✨ Gerar com IA (foto ou PDF)</span>:</p>
+          <ol>
+            <li><span class="botao">Tirar foto</span> da página do livro, do exercício ou do quadro; <span class="botao">Da galeria</span>
+              (várias de uma vez) ou <span class="botao">PDF</span> (até 10 MB). Dá para juntar até 6 arquivos.</li>
+            <li>Escolha <b>quantas perguntas</b> (5, 10 ou 15), a <b>dificuldade</b> e, se quiser, a matéria, o ano/série e o tema.</li>
+            <li>Toque em <span class="botao">Gerar 10 perguntas</span>. Elas aparecem no editor: <b>revise</b>, corrija o que precisar e
+              toque em <span class="botao">Salvar questionário</span>.</li>
+          </ol>
+          <p class="aviso">✔ Foto com <b>boa luz</b> e a <b>página inteira</b> dá perguntas melhores. A foto não fica guardada.</p>
+          <p class="dica">⚠️ <b>Não fotografe nomes nem dados de alunos</b>: o conteúdo enviado passa pelo serviço de IA. Há um <b>limite de gerações por dia</b>;
+            a janela mostra quantas ainda restam hoje (amanhã libera de novo).</p>
+        </div>
+        <img class="print" src="assets/manual/ge33-ia-popup.jpg" alt="Janela Gerar perguntas com IA com Tirar foto, Da galeria, PDF e a quantidade de perguntas" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">18</span>
           <h4>Mande o link para a turma</h4>
           <p>Na lista, toque em <span class="botao">Copiar link</span> (ou, no <span class="botao">⋮</span>, mande direto pelo WhatsApp).
             Cole no grupo da turma, no e-mail ou no mural da escola. <span class="botao">Ver</span> mostra as perguntas com a resposta certa.</p>
@@ -431,7 +454,7 @@
 
       <div class="passo">
         <div>
-          <span class="passo-num">18</span>
+          <span class="passo-num">19</span>
           <h4>O aluno abre o link e responde</h4>
           <p>Pelo link, o aluno digita o primeiro nome, escolhe o professor e o questionário <b>abre direto</b>, sem passar pelos outros jogos.
             Ele toca na resposta que acha certa e vê na hora se acertou. No fim, o relatório vai para o seu e-mail.</p>
@@ -444,7 +467,7 @@
 
       <div class="passo roxo">
         <div>
-          <span class="passo-num">19</span>
+          <span class="passo-num">20</span>
           <h4>Crie uma competição para a turma</h4>
           <p>Em <b>Competições</b>, toque em <span class="botao">＋ Nova competição</span>. Escolha a <b>turma</b>, o <b>jogo</b> ou um dos
             <b>questionários</b>, o <b>dia e a hora de encerrar</b> e, se quiser, quem recebe o relatório. O nome é opcional (vazio: usa o nome do jogo).</p>
@@ -455,7 +478,7 @@
 
       <div class="passo roxo">
         <div>
-          <span class="passo-num">20</span>
+          <span class="passo-num">21</span>
           <h4>Convide a turma e acompanhe o ranking</h4>
           <p>No cartão da competição: <span class="botao">Convite</span> copia a mensagem com o código da turma para o WhatsApp;
             <span class="botao">Ranking</span> mostra 🥇🥈🥉, os pontos e os acertos. No <span class="botao">⋮</span>, <b>Encerrar agora</b> fecha antes da hora.</p>
@@ -466,7 +489,7 @@
 
       <div class="passo roxo">
         <div>
-          <span class="passo-num">21</span>
+          <span class="passo-num">22</span>
           <h4>O que o aluno vê</h4>
           <p>O jogo abre direto. No fim de cada partida, os pontos vão para o <b>ranking</b>, com a posição do aluno.
             Ele pode jogar de novo: vale a <b>melhor partida</b>. No empate, ganha quem acertou mais e, depois, quem fez a pontuação primeiro.</p>
@@ -481,7 +504,7 @@
 
       <div class="passo">
         <div>
-          <span class="passo-num">22</span>
+          <span class="passo-num">23</span>
           <h4>Quem recebe os relatórios</h4>
           <p>Em <b>E-mails</b>, toque em <span class="botao">＋ Novo e-mail</span>: o <b>nome que os alunos veem</b> e o e-mail.
             A partir daí, os alunos podem escolher essa pessoa para receber o relatório.</p>
@@ -492,7 +515,7 @@
 
       <div class="passo">
         <div>
-          <span class="passo-num">23</span>
+          <span class="passo-num">24</span>
           <h4>O aluno escolhe para quem vai o relatório</h4>
           <p>Antes de abrir um jogo (ou o questionário), o aluno escolhe <b>para quem vai o relatório</b> e toca em
             <span class="botao">Continuar ▶</span>. No fim da partida, o relatório chega no e-mail do professor escolhido, com os acertos,
@@ -506,7 +529,7 @@
 
       <div class="passo">
         <div>
-          <span class="passo-num">24</span>
+          <span class="passo-num">25</span>
           <h4>Copie o link de um jogo</h4>
           <p>Em <b>Links</b>, busque o jogo e toque em copiar (ou no WhatsApp). O link já abre com a <b>marca da sua escola</b> e o
             <b>jogo abre direto</b>: o aluno digita o nome, escolhe o professor e joga.</p>
@@ -519,7 +542,7 @@
 
       <div class="passo roxo">
         <div>
-          <span class="passo-num">25</span>
+          <span class="passo-num">26</span>
           <h4>Cadastre os professores</h4>
           <p>Em <b>Usuários</b>, toque em <span class="botao">＋ Novo usuário</span>: nome, e-mail e perfil (Professor ou Coordenação).
             O sistema cria uma <b>senha provisória</b> e mostra a <b>mensagem pronta</b> para mandar à pessoa.</p>
@@ -530,7 +553,7 @@
 
       <div class="passo roxo">
         <div>
-          <span class="passo-num">26</span>
+          <span class="passo-num">27</span>
           <h4>Monte os modelos de anamnese</h4>
           <p>Em <b>Modelos de anamnese</b>, toque em <span class="botao">＋ Novo modelo</span> e em <span class="botao">Abrir o banco de perguntas</span>:
             são as perguntas de <b>5 modelos de anamnese psicopedagógica</b>, organizadas por assunto. Marque as que quiser (ou <b>Marcar todas</b> de um assunto).</p>
@@ -541,7 +564,7 @@
 
       <div class="passo roxo">
         <div>
-          <span class="passo-num">27</span>
+          <span class="passo-num">28</span>
           <h4>Guardar as partidas: por turma e por aluno</h4>
           <p>Ao <b>editar uma turma</b> ou <b>um aluno</b>, a coordenação pode desligar <b>Guardar as partidas</b>. Desligado, as partidas daquela
             turma (ou daquele aluno) não vão para o painel nem para a ficha. O ranking das competições continua.</p>
@@ -551,11 +574,263 @@
       </div>
     </section>
 
+    <!-- ================= PARTE 2: FAMÍLIA (para a escola e a psicopedagoga) ================= -->
+    <section class="parte" id="familia-escola">
+      <h2>👨‍👩‍👧 Família: ligar os pais à escola</h2>
+      <p class="intro">A família cria a própria conta num <b>link fixo da escola</b>, cadastra os filhos e passa a acompanhar os jogos,
+        os recados e o que a escola liberar. A escola decide <b>o que a família vê</b>. Quem cuida disso é a <b>coordenação</b>
+        (e a psicopedagoga, com os pacientes dela); o professor da turma vê a família do aluno e escreve recados.</p>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">1</span>
+          <h4>Divulgue o link de cadastro</h4>
+          <p>No menu, toque em <b>👨‍👩‍👧 Família</b>. Em <b>Página de cadastro</b> fica o endereço da escola
+            (ex.: <i>gamespedagogicos.store/suaEscola/cadastro</i>). Ele é <b>sempre o mesmo</b>: pode ir no bilhete, no grupo ou no site.</p>
+          <ul>
+            <li><span class="botao">Copiar</span>, <span class="botao">WhatsApp</span> ou <span class="botao">Enviar…</span>;</li>
+            <li>o <b>QR Code</b>, para imprimir no bilhete ou num cartaz.</li>
+          </ul>
+          <p>A chave <b>Aceitar cadastros de famílias</b> abre ou fecha a página. Fechada, quem tem o endereço não consegue se cadastrar.</p>
+        </div>
+        <img class="print" src="assets/manual/ge28-familia-menu.jpg" alt="Tela Família com o endereço de cadastro, os botões Copiar, WhatsApp e Enviar e o QR Code" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">2</span>
+          <h4>Escolha o que a família vê</h4>
+          <p>Mais abaixo, em <b>O que a família vê</b>, ligue ou desligue para todas as famílias da escola:</p>
+          <ul>
+            <li><b>Jogos e desempenho</b>: as partidas, o acerto e a evolução;</li>
+            <li><b>Recados para a família</b>;</li>
+            <li><b>Plano de objetivos</b>: os objetivos, os jogos indicados e as orientações para casa (sem rascunhos nem as adequações da escola);</li>
+            <li><b>Anamnese</b>: só as respostas que a própria família deu.</li>
+          </ul>
+          <p>Padrão: jogos e recados ligados; plano e anamnese desligados.</p>
+          <p class="aviso">✔ As <b>observações</b> da equipe nunca aparecem para a família.</p>
+        </div>
+        <img class="print" src="assets/manual/ge29-familia-ve.jpg" alt="Chaves de O que a família vê: jogos, recados, plano e anamnese" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">3</span>
+          <h4>Coloque na turma quem a família cadastrou</h4>
+          <p>O aluno cadastrado pela família entra na escola <b>aguardando turma</b>. Em <b>Alunos e anamnese</b>, no filtro
+            <b>Turma</b>, escolha <b>Aguardando turma (cadastro da família)</b> para ver só esses.</p>
+          <p>Abra o aluno e toque em <span class="botao">Escolher turma</span>. Depois disso ele já entra pelo <b>código da turma</b>, com o PIN que a família criou.</p>
+          <p class="dica">💡 A autorização do responsável (LGPD) já fica registrada no cadastro feito pela família.</p>
+        </div>
+        <img class="print" src="assets/manual/ge31-aguardando.jpg" alt="Página do aluno cadastrado pela família com o aviso e o botão Escolher turma" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">4</span>
+          <h4>A aba Família do aluno</h4>
+          <p>Na página do aluno, a aba <b>Família</b> mostra:</p>
+          <ul>
+            <li><b>Responsáveis</b>: quem acompanha o aluno, com a data da autorização. A 🔑 dá uma <b>senha provisória</b> ao responsável que esqueceu a dele;
+              o outro ícone tira o responsável do aluno;</li>
+            <li><span class="botao">🔢 Redefinir PIN</span>: quando o aluno esquece o PIN (ou errou 5 vezes e ficou travado);</li>
+            <li><b>Recados para a família</b>: toque em <span class="botao">＋ Novo recado</span>. A família lê na área dela.
+              Para anotações da equipe, use as <b>Observações</b>;</li>
+            <li><b>O que a família vê deste aluno</b>: uma <b>exceção</b> só para este aluno (ex.: liberar o plano só para ele).</li>
+          </ul>
+        </div>
+        <img class="print" src="assets/manual/ge30-aluno-familia.jpg" alt="Aba Família do aluno com os responsáveis, Redefinir PIN e os recados" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+    </section>
+
+    <!-- ================= PARTE 3: PAIS (responsável) ================= -->
+    <section class="parte" id="pais">
+      <h2>🏡 Para os pais e responsáveis</h2>
+      <p class="intro">Com a conta da família você acompanha os jogos do seu filho, lê os recados da escola e deixa ele jogar em casa
+        (as partidas de casa também chegam para a escola). Funciona no celular e no computador.</p>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">1</span>
+          <h4>Crie a conta da família</h4>
+          <p>Abra o <b>link de cadastro</b> que a escola mandou (ou, no app da escola, <span class="botao">☰</span> →
+            <span class="botao">✍️ Criar a conta da família</span>).</p>
+          <ol>
+            <li><b>Seus dados</b>: nome, e-mail e uma senha (8 ou mais letras e números);</li>
+            <li><b>Seus filhos</b>: como cada um é chamado na turma e um <b>PIN de 4 números</b> para ele entrar;</li>
+            <li>a <b>autorização</b> (LGPD) e <span class="botao">Cadastrar</span>.</li>
+          </ol>
+          <p>Depois a escola coloca cada filho na turma.</p>
+          <p class="dica">💡 Já tem conta? Use o mesmo e-mail e a mesma senha: os filhos novos entram na conta que você já tem.</p>
+        </div>
+        <img class="print" src="assets/manual/f01-cadastro.jpg" alt="Página Cadastro da família com os dados do responsável e dos filhos" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">2</span>
+          <h4>Entre na área da família</h4>
+          <p>No app, toque em <span class="botao">☰</span> → <span class="botao">👨‍👩‍👧 Área da família (pais)</span> e entre com o e-mail e a senha.
+            Aparecem os seus filhos, cada um com <span class="botao">Acompanhar</span>, <span class="botao">🎮 Jogar</span> e <span class="botao">🔢 Trocar PIN</span>.</p>
+          <p>Para <b>trocar a sua senha</b> ou sair, toque no ícone da conta, no canto de cima.</p>
+          <p class="dica">💡 Esqueceu a senha? Peça à escola: ela dá uma senha provisória e você cria uma nova ao entrar.</p>
+        </div>
+        <img class="print" src="assets/manual/f02-filhos.jpg" alt="Área da família com o filho, os botões Acompanhar, Jogar e Trocar PIN e o código da família" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">3</span>
+          <h4>Acompanhe o seu filho</h4>
+          <p>Em <span class="botao">Acompanhar</span>, as abas mostram o que a escola liberou:</p>
+          <ul>
+            <li><b>🎮 Jogos</b>: partidas, acerto, tempo jogando e a evolução por semana (7 dias a 12 meses);</li>
+            <li><b>💬 Recados</b> da escola;</li>
+            <li><b>🎯 Plano</b>: os objetivos, os jogos indicados e as orientações para casa;</li>
+            <li><b>📋 Anamnese</b>: as respostas que a família deu.</li>
+          </ul>
+          <p>Se o seu filho esquecer o PIN, toque em <span class="botao">🔢 Trocar PIN</span> e digite o novo duas vezes.</p>
+        </div>
+        <img class="print" src="assets/manual/f03-filho.jpg" alt="Página do filho na área da família com as abas Jogos, Recados, Plano e Anamnese" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo roxo">
+        <div>
+          <span class="passo-num">4</span>
+          <h4>Jogar em casa</h4>
+          <p><b>No seu aparelho:</b> toque em <span class="botao">🎮 Jogar (Quem vai jogar?)</span>, escolha o filho e ele digita o PIN.</p>
+          <p><b>No aparelho do seu filho:</b> em <b>📱 Jogar no aparelho do seu filho</b> fica o <b>código da família</b> (ex.: <i>FAM-7K2PQ</i>),
+            com <span class="botao">Copiar</span> e <span class="botao">WhatsApp</span>. No celular ou tablet dele, abra os jogos, toque em
+            <span class="botao">☰</span> → <span class="botao">🏡 Jogar em casa</span> e digite o código (só na primeira vez).
+            Depois ele só toca no nome e digita o PIN.</p>
+          <p class="dica">💡 <b>Gerar outro código</b> faz o código antigo parar de funcionar em todos os aparelhos (útil se ele foi parar com quem não devia).</p>
+        </div>
+        <img class="print" src="assets/manual/f04-recados.jpg" alt="Aba Recados na área da família com um recado da professora" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+    </section>
+
+    <!-- ================= PARTE 4: PSICOPEDAGOGA (professor avulso) ================= -->
+    <section class="parte" id="psicopedagoga">
+      <h2>🧠 Para a psicopedagoga (consultório)</h2>
+      <p class="intro">A psicopedagoga (ou o professor particular) tem uma conta <b>sem escola</b>: os alunos são os <b>pacientes dela</b>,
+        e só ela os vê. Ela usa as <b>mesmas ferramentas</b> da escola.</p>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">1</span>
+          <h4>As mesmas ferramentas, para os seus pacientes</h4>
+          <ul>
+            <li><b>Alunos e anamnese</b>: cadastro do paciente, <b>anamnese</b> (na hora ou pelo link da família), <b>observações</b> e <b>plano de objetivos</b> com PDF;</li>
+            <li>a <b>ficha</b> com o desempenho nos jogos;</li>
+            <li><b>Turmas</b> (ex.: um grupo de reforço), <b>questionários</b> com IA, <b>competições</b> e <b>modelos de anamnese</b> próprios.</li>
+          </ul>
+          <p>O passo a passo de cada tela é o mesmo da parte <a href="#professor">🧑‍🏫 Escola</a>.</p>
+        </div>
+        <img class="print" src="assets/manual/ps01-inicio.jpg" alt="Início da área da psicopedagoga com Turmas, Alunos e anamnese e os outros atalhos" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">2</span>
+          <h4>O seu link de cadastro para as famílias</h4>
+          <p>Em <b>👨‍👩‍👧 Família</b> fica o <b>seu</b> endereço: <i>gamespedagogicos.store/cadastro/seuApelido</i>, com Copiar, WhatsApp e QR Code.
+            A família se cadastra por ele e os filhos já aparecem como <b>seus pacientes</b> (não precisam de turma).</p>
+          <p>A aba <b>Família</b> de cada paciente, a escolha do que a família vê, o PIN e os recados funcionam como na parte
+            <a href="#familia-escola">👨‍👩‍👧 Família</a>. Quem decide é você.</p>
+        </div>
+        <img class="print" src="assets/manual/ps02-cadastro.jpg" alt="Tela Família da psicopedagoga com o endereço de cadastro próprio" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+    </section>
+
+    <!-- ================= PARTE 5: ALUNO ================= -->
+    <section class="parte" id="aluno">
+      <h2>🎒 Para o aluno</h2>
+      <p class="intro">O aluno entra pela <b>turma</b> (na escola) ou pelo <b>código da família</b> (em casa). Assim as partidas ficam
+        guardadas e o professor e a família acompanham.</p>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">1</span>
+          <h4>A tela inicial</h4>
+          <p>Abra o endereço da escola. Na tela inicial:</p>
+          <ul>
+            <li><span class="botao">🎮 Jogar grátis</span>: para conhecer. A pessoa deixa o nome e o e-mail e recebe o relatório em PDF de cada jogo;</li>
+            <li><span class="botao">☰ Outras opções</span>: <b>🏫 Entrar com o código da turma</b> e <b>🏡 Jogar em casa</b>.</li>
+          </ul>
+        </div>
+        <img class="print" src="assets/manual/p14-inicio-app.jpg" alt="Tela inicial do app com o vídeo, Jogar grátis e Outras opções" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">2</span>
+          <h4>Entrar pela turma</h4>
+          <ol>
+            <li>Toque em <span class="botao">🏫 Entrar com o código da turma</span>, digite o código que o professor passou e toque em <span class="botao">Continuar ▶</span>.</li>
+            <li>Toque no <b>seu nome</b>. Se ele não estiver na lista, digite o nome e o sobrenome.</li>
+          </ol>
+          <p>O aluno que só está na lista da turma entra direto, <b>sem senha</b>.</p>
+        </div>
+        <img class="print" src="assets/manual/a03-codigo-turma.jpg" alt="Tela Entrar na turma com o campo do código da turma" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">3</span>
+          <h4>Aluno cadastrado: o PIN</h4>
+          <p>O aluno que a <b>família cadastrou</b> digita o <b>PIN de 4 números</b> no teclado grande e toca em <span class="botao">✔</span>.
+            Tocou no nome errado? <span class="botao">não sou eu</span> volta para a lista.</p>
+          <p class="dica">💡 5 erros seguidos travam o PIN por 5 minutos. Esqueceu? A família troca na área dela, ou a escola usa <b>Redefinir PIN</b>.</p>
+        </div>
+        <img class="print" src="assets/manual/a05-pin.jpg" alt="Teclado numérico para o aluno digitar o PIN" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">4</span>
+          <h4>"Continuar como"</h4>
+          <p>O aparelho <b>lembra</b> o aluno cadastrado (pela turma, até o fim do dia; em casa, por 30 dias). Na tela inicial aparece
+            <span class="botao">▶ Continuar como Ana Clara Souza</span>: é só tocar.</p>
+          <p>Em aparelho de outra pessoa, ou para trocar de aluno, toque em <span class="botao">Não sou eu / trocar de aluno</span>.</p>
+        </div>
+        <img class="print" src="assets/manual/a06-continuar.jpg" alt="Tela inicial com o botão Continuar como e o Não sou eu" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">5</span>
+          <h4>Jogar em casa</h4>
+          <ol>
+            <li>Toque em <span class="botao">☰ Outras opções</span> → <span class="botao">🏡 Jogar em casa</span>.</li>
+            <li>Na primeira vez, digite o <b>código da família</b> (o adulto vê na área da família) e toque em <span class="botao">Continuar ▶</span>.</li>
+            <li>Em <b>Quem vai jogar?</b>, toque no seu nome e digite o PIN.</li>
+          </ol>
+          <p>O adulto também pode tocar em <b>Sou o adulto: entrar com a conta da família</b>.</p>
+        </div>
+        <img class="print" src="assets/manual/a08-quem-joga.jpg" alt="Tela Quem vai jogar? com o nome do filho para tocar" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+
+      <div class="passo">
+        <div>
+          <span class="passo-num">6</span>
+          <h4>Escolher o jogo</h4>
+          <p>Os jogos aparecem em <b>grade</b>, com a pergunta <b>Qual habilidade você quer treinar agora?</b></p>
+          <ul>
+            <li>toque numa <b>matéria</b> (Português, Matemática, Geografia, História) ou numa <b>habilidade</b> (Raciocinar, Lembrar, Planejar, Pensar rápido…);</li>
+            <li><span class="botao">＋ Mais habilidades</span> mostra as outras; <span class="botao">Todos os jogos</span> volta para a lista completa;</li>
+            <li><span class="botao">🎲 Surpresa!</span> sorteia um jogo.</li>
+          </ul>
+          <p>As <b>competições</b> e os <b>questionários</b> da turma ficam nas abas da barra de baixo.</p>
+        </div>
+        <img class="print" src="assets/manual/g25-lista-habilidades.jpg" alt="Lista de jogos com a pergunta Qual habilidade você quer treinar agora e os botões de matéria e habilidade" width="400" height="820" loading="lazy" decoding="async">
+      </div>
+    </section>
+
     <!-- ================= PARTE 2: JOGOS ================= -->
     <section class="parte" id="jogos">
       <h2>🎮 Os jogos</h2>
-      <p class="intro">São mais de 30 jogos de <b>Português</b>, <b>Matemática</b>, <b>Inglês</b> e <b>Psicopedagogia</b>. Na tela inicial,
-        o aluno toca em <b>🎮 Jogos</b> e o menu <b>Categoria</b>, no alto, filtra por matéria.</p>
+      <p class="intro">São mais de 30 jogos de <b>Português</b>, <b>Matemática</b>, <b>Geografia</b>, <b>História</b>, <b>Inglês</b> e
+        <b>Psicopedagogia</b>. Na lista de jogos, o aluno escolhe a matéria ou a <b>habilidade que quer treinar</b> (ou toca em <b>Surpresa!</b>).</p>
 
       <h3 class="grupo">Por que jogar</h3>
       <div class="beneficios">
@@ -588,14 +863,16 @@
           <h4>Como o aluno começa</h4>
           <p><b>Pela turma</b> (as partidas ficam no painel e na ficha):</p>
           <ol>
-            <li>Toca em <span class="botao">🏫 Entrar com o código da turma</span>, digita o código e toca no nome dele.</li>
-            <li>Toca em <b>🎮 Jogos</b> e escolhe um jogo.</li>
+            <li>Toca em <span class="botao">☰ Outras opções</span> → <span class="botao">🏫 Entrar com o código da turma</span>, digita o código e toca no nome dele
+              (o aluno cadastrado pela família digita o PIN).</li>
+            <li>Na lista de jogos, escolhe a matéria ou a habilidade e toca num jogo.</li>
             <li>Escolhe <b>para quem vai o relatório</b> e joga. No fim, vê como foi.</li>
           </ol>
-          <p><b>Só com o nome</b> (para um teste rápido): digita o primeiro nome e toca em <span class="botao">Entrar ▶</span>. O relatório vai por e-mail, mas a partida não fica no painel.</p>
+          <p><b>Em casa</b>: <span class="botao">🏡 Jogar em casa</span> com o código da família (veja <a href="#aluno">🎒 Para o aluno</a>).</p>
+          <p><b>Para conhecer</b>: <span class="botao">🎮 Jogar grátis</span>, com o nome e o e-mail, que recebe o relatório em PDF de cada jogo.</p>
           <p class="dica">💡 Os jogos com <b>↗</b> no cartão são de outros sites: abrem em outra aba e têm o próprio relatório, que não vem para o e-mail cadastrado aqui.</p>
         </div>
-        <img class="print" src="assets/manual/g00-lista.jpg" alt="Tela Escolha um jogo com o menu Categoria e os cartões dos jogos" width="400" height="711" loading="lazy" decoding="async">
+        <img class="print" src="assets/manual/g25-lista-habilidades.jpg" alt="Lista de jogos com a pergunta Qual habilidade você quer treinar agora" width="400" height="820" loading="lazy" decoding="async">
       </div>
 
       <!-- Jogo de Ortografia -->

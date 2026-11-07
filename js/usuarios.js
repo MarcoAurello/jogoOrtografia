@@ -1,11 +1,11 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Usuários: o administrador e a coordenação cadastram quem entra na Área do professor (pela API). */
 
-import { $, seguro } from './util.js?v=242';
-import { SOM } from './som.js?v=242';
-import { api } from './api.js?v=242';
-import { parteProfessor, usuarioAtual } from './professor.js?v=242';
-import { criarPopup, ligarFiltro } from './popup.js?v=242';
+import { $, seguro } from './util.js?v=244';
+import { SOM } from './som.js?v=244';
+import { api } from './api.js?v=244';
+import { parteProfessor, usuarioAtual } from './professor.js?v=244';
+import { criarPopup, ligarFiltro } from './popup.js?v=244';
 
 // ---------- Usuários ----------
 // O administrador cadastra coordenação, professores (com escola ou avulsos) e outros administradores; a coordenação
