@@ -77,6 +77,8 @@
     .yt-capa, .yt-player { position: relative; display: block; width: 100%; max-width: 230px; aspect-ratio: 9 / 16; border-radius: 16px; overflow: hidden;
       border: 3px solid var(--texto); background: #000; box-shadow: 0 4px 0 rgba(19, 41, 75, 0.12); }
     .yt-capa { padding: 0; cursor: pointer; }
+    /* vídeo deitado (16:9), como o da gestão no topo do manual */
+    .yt-capa.larga, .yt-player.larga { max-width: 900px; aspect-ratio: 16 / 9; margin: 0 auto; border-radius: 18px; }
     .yt-capa img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.25s; }
     .yt-capa:hover img { transform: scale(1.04); }
     .yt-play { position: absolute; left: 50%; top: 50%; width: 64px; height: 46px; transform: translate(-50%, -50%); border-radius: 14px;
@@ -156,13 +158,24 @@
   </header>
 
   <nav class="abas" aria-label="Partes do manual">
-    <a href="#video">▶️ Vídeo</a>
+    <a href="#video-gestao">▶️ Vídeos</a>
     <a href="#professor">🧑‍🏫 Professor</a>
     <a href="#jogos">🎮 Jogos</a>
     <a href="./">← Voltar</a>
   </nav>
 
   <main>
+    <!-- vídeo da área de gestão (3 min 21 s, no YouTube): turmas, painel, anamnese, plano, IA nos questionários e família -->
+    <section class="video" id="video-gestao">
+      <h2>🧑‍🏫 Conheça a área de gestão</h2>
+      <button class="yt-capa larga" type="button" data-video="Po1L_m7XyQw" aria-label="Assistir o vídeo da área de gestão">
+        <img src="assets/video/capa-gestao.jpg" alt="" width="1920" height="1080" loading="lazy" decoding="async">
+        <span class="yt-play" aria-hidden="true"></span>
+      </button>
+      <p>Em 3 minutos: como os jogos ajudam a perceber cedo os sinais de dificuldade, a anamnese e o plano de objetivos,
+        os questionários criados com inteligência artificial a partir de uma foto, as competições e a área da família.</p>
+    </section>
+
     <!-- vídeo de apresentação (2 min 23 s) -->
     <section class="video" id="video">
       <h2>▶️ Assista o vídeo da plataforma</h2>
@@ -1577,7 +1590,7 @@
     document.querySelectorAll('.yt-capa').forEach((b) => {
       b.onclick = () => {
         const caixa = document.createElement('div');
-        caixa.className = 'yt-player';
+        caixa.className = b.classList.contains('larga') ? 'yt-player larga' : 'yt-player';
         const f = document.createElement('iframe');
         f.src = `https://www.youtube-nocookie.com/embed/${b.dataset.video}?autoplay=1&rel=0&playsinline=1`;
         f.title = b.getAttribute('aria-label');

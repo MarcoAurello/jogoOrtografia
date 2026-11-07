@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Cartógrafo do Vale: cruzar as camadas do mapa (relevo, água, vegetação) para resolver missões. */
 
-import { $, embaralhar } from './util.js?v=241';
-import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=241';
-import { SOM, tocar } from './som.js?v=241';
-import { mascote, mostrar, telaJogos } from './telas.js?v=241';
-import { escolherProfessorE } from './professor.js?v=241';
-import { fimDaMissao } from './relatorio.js?v=241';
-import { CAMADAS, CELULAS, COLUNAS, ESTRADAS, FASES_CARTOGRAFO, LINHAS, LUGARES, NIVEIS, RIO, USOS, celula } from './dados-cartografo.js?v=241';
+import { $, embaralhar } from './util.js?v=242';
+import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=242';
+import { SOM, tocar } from './som.js?v=242';
+import { mascote, mostrar, telaJogos } from './telas.js?v=242';
+import { escolherProfessorE } from './professor.js?v=242';
+import { fimDaMissao } from './relatorio.js?v=242';
+import { CAMADAS, CELULAS, COLUNAS, ESTRADAS, FASES_CARTOGRAFO, LINHAS, LUGARES, NIVEIS, RIO, USOS, celula } from './dados-cartografo.js?v=242';
 
 // ---------- Cartógrafo do Vale ----------
 // O aluno é o cartógrafo do Vale do Rio Claro (um território fictício). Cada missão pede uma decisão (onde fica a
