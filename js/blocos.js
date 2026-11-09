@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Conte os Blocos. */
 
-import { $, embaralhar, sortear } from './util.js?v=253';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=253';
-import { SOM, tocar } from './som.js?v=253';
-import { mascote, mostrar, telaJogos } from './telas.js?v=253';
-import { escolherProfessorE } from './professor.js?v=253';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=253';
+import { $, embaralhar, sortear } from './util.js?v=255';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=255';
+import { SOM, tocar } from './som.js?v=255';
+import { mascote, mostrar, telaJogos } from './telas.js?v=255';
+import { escolherProfessorE } from './professor.js?v=255';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=255';
 
 // ---------- Conte os Blocos ----------
 // Visão espacial e contagem: uma construção de cubos aparece em perspectiva (isométrica) e a pergunta é

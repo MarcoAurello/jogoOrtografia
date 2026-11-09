@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=253">
+  <link rel="stylesheet" href="style.css?v=255">
 </head>
 <body>
   <!-- abertura: a logo Games Pedagógicos enquanto o app carrega (some sozinha quando o app fica pronto, ou em 6 s
@@ -194,38 +194,8 @@
         <p class="erro-login" id="erro-teste" role="alert"></p>
         <button class="btn-grande" type="submit">Começar o teste ▶</button>
         <p class="teste-atual" id="teste-atual" hidden></p>
-        <button class="btn-sec" id="btn-teste-voltar" type="button">← Início</button>
+        <button class="btn-sec" id="btn-teste-voltar" type="button">← Jogos</button>
       </form>
-    </section>
-
-    <!-- Início -->
-    <section class="tela" id="tela-inicio">
-      <img class="logo-games-inicio" src="assets/logo-games.webp" alt="Games Pedagógicos" width="360" height="456">
-      <h1 class="titulo">
-        <span class="cor-amarelo">JOGOS</span>
-        <span class="cor-azul">PSICOPEDAGÓGICOS</span>
-      </h1>
-      <p class="escola-nome" hidden></p>
-      <p class="slogan">Jogos com relatórios de desempenho</p>
-      <!-- o aluno cadastrado (com PIN) fica lembrado: pela turma até o fim do dia, em casa por 30 dias (js/entrada.js) -->
-      <div class="continuar-aluno" id="continuar-aluno" hidden>
-        <button class="btn-grande" id="btn-continuar-aluno" type="button">▶ Continuar como <span id="continuar-nome"></span></button>
-        <button class="btn-texto" id="btn-nao-sou-eu" type="button">Não sou eu / trocar de aluno</button>
-        <p class="erro-login" id="erro-continuar" role="alert"></p>
-      </div>
-      <!-- a tela de entrada: o vídeo de apresentação começa sozinho e, embaixo, só o "Jogar grátis"; as outras entradas
-           (turma, em casa, escola/professor, família) ficam no menu lateral
-           (o navegador só deixa começar com som depois de um toque; sem isso, começa mudo e aparece o botão de ouvir) -->
-      <div class="inicio-video">
-        <video id="video-inicio" controls autoplay muted preload="auto" playsinline poster="assets/video/capa-gestao.jpg" width="1920" height="1080">
-          <source src="assets/video/gestao-jogos-pedagogicos.mp4" type="video/mp4">
-        </video>
-        <button class="video-som" id="video-som" type="button" hidden>🔊 Toque para ouvir</button>
-      </div>
-      <button class="btn-grande btn-teste" id="btn-area-jogos" type="button">🎮 Jogar grátis</button>
-      <!-- abre o menu lateral, onde ficam as outras entradas: código da turma, jogar em casa, escola/professor e família -->
-      <button class="btn-sec btn-outras-opcoes" id="btn-outras-opcoes" type="button" aria-controls="menu-app-lista">☰ Outras opções
-        <small>código da turma, jogar em casa, escola e família</small></button>
     </section>
 
     <!-- Chuva de Erros: escolha do que pegar e das palavras -->
@@ -1163,6 +1133,47 @@
       </div>
       <div class="simbolos-tabuleiro" id="simbolos-tabuleiro" aria-label="Tabuleiro"></div>
       <p class="cores-msg" id="simbolos-msg" role="status"></p>
+    </section>
+
+    <!-- Universo dos Conjuntos: escolher o cenário -->
+    <section class="tela" id="tela-conjuntos-menu">
+      <h2 class="subtitulo">🔵 Universo dos Conjuntos</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-conjuntos"></div>
+        <div class="balao balao-esq">
+          Cada <b>conjunto</b> tem uma <b>regra</b>. Um objeto pertence ao conjunto quando atende à regra, e o mesmo objeto
+          pode estar em <b>vários</b> conjuntos! Toque nos objetos certos e aperte <b>Conferir</b>. Escolha o cenário: 🔍
+        </div>
+      </div>
+      <div class="grade-missoes" id="conj-cenarios"></div>
+      <div class="acoes-menu">
+        <button class="btn-sec" id="conjuntos-voltar" type="button">← Jogos</button>
+      </div>
+    </section>
+
+    <!-- Universo dos Conjuntos: a missão (conjuntos, pergunta, cenário com os objetos e os botões) -->
+    <section class="tela tela-jogo" id="tela-conjuntos" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="conjuntos-sair" type="button">← Cenários</button>
+        <span class="barra-titulo" id="conj-titulo"></span>
+        <span class="chuva-placar"><span id="conj-pontos">0</span> pts</span>
+      </div>
+      <div class="conj-legenda-linha">
+        <div class="conj-legenda" id="conj-legenda"></div>
+        <button class="conj-regras" id="btn-conj-regras" type="button" aria-label="Ver as regras dos conjuntos">📖 Regras</button>
+      </div>
+      <div class="conj-pergunta" id="conj-pergunta" role="status"></div>
+      <div class="conj-cena" id="conj-cena" aria-label="Objetos do cenário"></div>
+      <p class="cores-msg conj-msg" id="conj-msg" role="status"></p>
+      <div class="conj-acoes" id="conj-acoes"></div>
+      <div class="historia-pergaminho-fundo" id="conj-grupos" hidden>
+        <div class="conj-grupos" role="dialog" aria-modal="true" aria-labelledby="conj-grupos-titulo">
+          <h3 id="conj-grupos-titulo"></h3>
+          <p class="conj-grupos-sub">Leia a regra de cada conjunto. Você pode rever no botão 📖.</p>
+          <ul class="conj-grupos-lista" id="conj-grupos-lista"></ul>
+          <button class="btn-grande" id="btn-conj-grupos-ok" type="button">Entendi, vamos lá ▶</button>
+        </div>
+      </div>
     </section>
 
     <!-- Tetris da Tabuada: instruções -->
@@ -3016,6 +3027,15 @@
 
     <!-- Jogos: a lista, com o filtro por tema -->
     <section class="tela" id="tela-jogos">
+      <!-- a lista de jogos é a tela inicial do sistema (o vídeo da gestão está no manual). Nas páginas de escola, o nome
+           da escola aparece em cima; o aluno lembrado no aparelho (com PIN: pela turma até o fim do dia, em casa por
+           30 dias, js/entrada.js) continua de onde parou -->
+      <p class="escola-nome" hidden></p>
+      <div class="continuar-aluno" id="continuar-aluno" hidden>
+        <button class="btn-grande" id="btn-continuar-aluno" type="button">▶ Continuar como <span id="continuar-nome"></span></button>
+        <button class="btn-texto" id="btn-nao-sou-eu" type="button">Não sou eu / trocar de aluno</button>
+        <p class="erro-login" id="erro-continuar" role="alert"></p>
+      </div>
       <!-- lista de jogos em grade de capas ("parque de jogos"), com um único filtro: a habilidade que a criança quer treinar.
            Os botões são montados pelo js/telas.js a partir de js/habilidades.js -->
       <section class="pergunta-hab" aria-labelledby="pergunta-hab-titulo">
@@ -3220,6 +3240,11 @@
           <span class="jogo-card-nome">Pizzaria das Frações</span>
           <span class="jogo-card-texto">Maçãs, pizzas e fatias: aprenda frações!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-conjuntos" type="button" data-tema="matematica" style="--c:#1e64d2">
+          <span class="jogo-card-capa conjuntos-capa" id="conjuntos-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Universo dos Conjuntos</span>
+          <span class="jogo-card-texto">∈, ∪ e ∩ com objetos da praia, da escola e mais!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
           <span class="jogo-card-nome">Fichas Coloridas</span>
@@ -3337,7 +3362,6 @@
           <span class="jogo-card-texto">Não deixe sua abelha ser encurralada! ↗</span>
         </a>
       </div>
-      <button class="btn-sec" id="jogos-voltar" type="button">← Início</button>
     </section>
 
     <!-- Ajuda para instalar quando o navegador não abre a instalação sozinho -->
@@ -3475,9 +3499,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=253"></script>
-  <script src="dados.js?v=253"></script>
-  <script type="module" src="js/main.js?v=253"></script>
+  <script src="plenix.js?v=255"></script>
+  <script src="dados.js?v=255"></script>
+  <script type="module" src="js/main.js?v=255"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

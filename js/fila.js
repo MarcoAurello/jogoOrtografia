@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Jogo da Fila. */
 
-import { $, embaralhar, sortear } from './util.js?v=253';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=253';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=253';
-import { mascote, mostrar, telaJogos } from './telas.js?v=253';
-import { escolherProfessorE } from './professor.js?v=253';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=253';
+import { $, embaralhar, sortear } from './util.js?v=255';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=255';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=255';
+import { mascote, mostrar, telaJogos } from './telas.js?v=255';
+import { escolherProfessorE } from './professor.js?v=255';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=255';
 
 // ---------- Jogo da Fila ----------
 // Raciocínio lógico e linguagem de posição: as crianças da fila aparecem com o nome e as pistas vêm uma por vez

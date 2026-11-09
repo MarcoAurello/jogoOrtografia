@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Painel do professor: a turma inteira numa tela e a ficha de cada aluno (evolução, habilidades, antes × depois), com PDF. */
 
-import { $, seguro } from './util.js?v=253';
-import { SOM } from './som.js?v=253';
-import { api } from './api.js?v=253';
-import { parteProfessor } from './professor.js?v=253';
-import { NOME_HAB } from './habilidades.js?v=253';
-import { desenharRespondida, textoDaResposta } from './anamnese-form.js?v=253';
+import { $, seguro } from './util.js?v=255';
+import { SOM } from './som.js?v=255';
+import { api } from './api.js?v=255';
+import { parteProfessor } from './professor.js?v=255';
+import { NOME_HAB } from './habilidades.js?v=255';
+import { desenharRespondida, textoDaResposta } from './anamnese-form.js?v=255';
 const CATEGORIAS_OBS = { evolucao: '📈 Evolução', aprendizagem: '📚 Aprendizagem', comportamento: '🙂 Comportamento', social: '🤝 Relacionamento', familia: '👪 Família', saude: '🩺 Saúde', outro: '📝 Outro' };
 
 // ---------- Painel ----------

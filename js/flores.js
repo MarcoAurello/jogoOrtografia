@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Flores do Dado. */
 
-import { $, embaralhar, sortear } from './util.js?v=253';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=253';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=253';
-import { mascote, mostrar, telaJogos } from './telas.js?v=253';
-import { escolherProfessorE } from './professor.js?v=253';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=253';
+import { $, embaralhar, sortear } from './util.js?v=255';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=255';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=255';
+import { mascote, mostrar, telaJogos } from './telas.js?v=255';
+import { escolherProfessorE } from './professor.js?v=255';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=255';
 
 // ---------- Flores do Dado ----------
 // Atenção seletiva, conferência e flexibilidade: em cima, a legenda (cada número do dado tem uma cor); embaixo, 4 flores

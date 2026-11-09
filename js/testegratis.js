@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Testar grátis: a pessoa cadastra o e-mail e recebe, no fim de cada jogo, o relatório em PDF. */
 
-import { $, seguro } from './util.js?v=253';
-import { SOM } from './som.js?v=253';
-import { aluno } from './estado.js?v=253';
-import { api, guardarTokenTeste, lerTokenTeste } from './api.js?v=253';
-import { entrarComoAluno, mostrar, telaJogos } from './telas.js?v=253';
-import { depoisDoFim, montarPDF } from './relatorio.js?v=253';
-import { parteProfessor } from './professor.js?v=253';
+import { $, seguro } from './util.js?v=255';
+import { SOM } from './som.js?v=255';
+import { aluno } from './estado.js?v=255';
+import { api, guardarTokenTeste, lerTokenTeste } from './api.js?v=255';
+import { entrarComoAluno, mostrar, telaJogos } from './telas.js?v=255';
+import { depoisDoFim, montarPDF } from './relatorio.js?v=255';
+import { parteProfessor } from './professor.js?v=255';
 
 // ---------- Testar grátis ----------
 // O botão "Teste grátis" do início (e o item do menu) abre o cadastro: nome, e-mail, quem é e o aceite (LGPD).
@@ -48,14 +48,31 @@ $('btn-teste-voltar').onclick = () => { SOM.clique(); $('btn-menu-inicio').click
 
 // a tela do nome saiu: quem testa grátis joga com o primeiro nome do cadastro (aparece nos relatórios)
 // (entrarComoAluno também segue o link do professor, se a pessoa veio por um)
+// Se a pessoa tocou num jogo antes de se cadastrar, ele abre logo depois do cadastro.
+let jogoPendente = null;   // o cartão do jogo tocado antes do cadastro
 function irParaOsJogos() {
-  if (aluno) { telaJogos(); return; }
-  entrarComoAluno((lerTeste()?.nome || $('teste-nome').value || 'Visitante').trim().split(/\s+/)[0], telaJogos);
+  const abrir = () => {
+    telaJogos();
+    const cartao = jogoPendente && document.getElementById(jogoPendente);
+    jogoPendente = null;
+    if (cartao) cartao.click();
+  };
+  if (aluno) { abrir(); return; }
+  entrarComoAluno((lerTeste()?.nome || $('teste-nome').value || 'Visitante').trim().split(/\s+/)[0], abrir);
 }
 
-// "Teste grátis" do início: primeiro o cadastro; depois, direto para os jogos
-$('btn-area-jogos').onclick = () => { SOM.clique(); if (lerTokenTeste()) irParaOsJogos(); else telaTeste(); };
-$('btn-menu-teste').onclick = () => { SOM.clique(); telaTeste(); };
+// a lista de jogos é a tela inicial: sem aluno (sem teste grátis, turma, casa ou família), tocar num jogo abre o cadastro
+// do "Jogar grátis" (quem já se cadastrou neste aparelho entra direto). Os jogos de fora (links ↗) abrem normalmente.
+$('tela-jogos').addEventListener('click', (e) => {
+  const cartao = e.target.closest('button.jogo-card');
+  if (!cartao || aluno) return;
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  SOM.clique();
+  jogoPendente = cartao.id;
+  if (lerTokenTeste()) irParaOsJogos(); else telaTeste();
+}, true);
+$('btn-menu-teste').onclick = () => { SOM.clique(); jogoPendente = null; telaTeste(); };
 
 // no fim de cada jogo: o PDF do relatório vai para o e-mail cadastrado (o aviso aparece na tela do fim)
 depoisDoFim.push(async ({ rel, missao }) => {

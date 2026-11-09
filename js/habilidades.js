@@ -82,6 +82,8 @@ export const JOGOS_HAB = {
     r: 'Leia os dados e descubra qual gráfico de pizza, barras, colunas ou linha está certo.' },
   'btn-historia': { h: ['memoria', 'logico', 'linguagem'],
     r: 'Cartas da história do Brasil com o ano escondido: encaixe cada acontecimento no lugar certo da linha do tempo.' },
+  'btn-conjuntos': { h: ['matematica', 'logico', 'seletiva', 'flexibilidade'],
+    r: 'Conjuntos com objetos da praia, da escola, da cozinha, dos esportes e do parque: pertence (∈), não pertence (∉), união (∪), interseção (∩) e diferença.' },
   'btn-bip': { h: ['logico', 'planejamento', 'espacial', 'flexibilidade'],
     r: 'Programação com blocos em português: monte o roteiro (sequência, repita, enquanto) e guie o robô até a estrela.' },
   'btn-cartografo': { h: ['espacial', 'logico', 'decisao', 'percepcao'],
@@ -209,6 +211,7 @@ export const INDICADO_PARA = {
   'btn-comercio': ['aprendizagem', 'executivas'],
   'btn-cartografo': ['visoespacial', 'executivas', 'aprendizagem'],
   'btn-bip': ['executivas', 'tdah', 'visoespacial'],
+  'btn-conjuntos': ['discalculia', 'aprendizagem', 'executivas'],
   'btn-abc': ['dislexia', 'di', 'linguagem', 'aprendizagem'],
   'btn-ingles': ['linguagem', 'memoria'],
   'btn-luzes': ['memoria', 'tdah', 'tea'],
@@ -309,6 +312,7 @@ export const CARTAO_DO_JOGO = {
   comercio: 'btn-comercio',
   cartografo: 'btn-cartografo',
   bip: 'btn-bip',
+  conjuntos: 'btn-conjuntos',
 };
 // as habilidades que um jogo trabalha (pelo id do link)
 export const habilidadesDoJogo = (jogo) => JOGOS_HAB[CARTAO_DO_JOGO[jogo]]?.h || [];

@@ -55,5 +55,6 @@ export const NOME_DO_JOGO: Record<string, string> = {
   comercio: 'Conexão Global',
   cartografo: 'Cartógrafo do Vale',
   bip: 'Robô Bip',
+  conjuntos: 'Universo dos Conjuntos',
 };
 export const nomeDoJogo = (id: string) => NOME_DO_JOGO[id] || id;
