@@ -2,16 +2,16 @@
 /* Competição: o professor cria para uma turma (jogo + hora de encerrar); o aluno entra com o código da turma e joga.
    Qualquer pessoa, até sem login, também cria uma (vale 24 h): manda o link /?comp=<código> e cada um entra com um apelido. */
 
-import { $, seguro } from './util.js?v=252';
-import { aluno, aoVoltarAoInicio, definirAluno } from './estado.js?v=252';
-import { api, lerTokenAluno } from './api.js?v=252';
-import { definirCompeticaoDaPartida } from './partidas.js?v=252';
-import { SOM } from './som.js?v=252';
-import { mostrar, telaJogos } from './telas.js?v=252';
-import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=252';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=252';
-import { comecarQuiz } from './quiz.js?v=252';
-import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=252';
+import { $, seguro } from './util.js?v=253';
+import { aluno, aoVoltarAoInicio, definirAluno } from './estado.js?v=253';
+import { api, lerTokenAluno } from './api.js?v=253';
+import { definirCompeticaoDaPartida } from './partidas.js?v=253';
+import { SOM } from './som.js?v=253';
+import { mostrar, telaJogos } from './telas.js?v=253';
+import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=253';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=253';
+import { comecarQuiz } from './quiz.js?v=253';
+import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=253';
 
 // ---------- Competição ----------
 // Cada competição é de uma turma. O aluno entra com o código da turma (js/entrada.js) e a aba Competição lista as
@@ -429,6 +429,8 @@ async function compartilharLink(nome, jogoNome, link) {
 }
 
 // popup de criar (js/popup.js): jogo e nome; depois de criar, o link aparece no próprio popup
+// o popup vai para o fim do <body>: dentro do <main> (z-index 1) ele ficava por baixo do rodapé, que cobria a lista de jogos
+document.body.append($('cp-modal'));
 const popupCriar = criarPopup('cp-modal', { fechar: ['btn-cp-fechar', 'btn-cp-cancelar', 'btn-cp-criada-fechar'] });
 let criada = null;
 function abrirCriar(quemAbriu = null) {

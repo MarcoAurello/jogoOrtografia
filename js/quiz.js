@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Questionário da aula (lado do aluno). */
 
-import { $, embaralhar, seguro, sortear } from './util.js?v=252';
-import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=252';
-import { SOM } from './som.js?v=252';
-import { mascote, mostrar, telaInicio, telaJogos } from './telas.js?v=252';
-import { escolherProfessorE, gravarJSON, lerDoScript, lerJSON } from './professor.js?v=252';
-import { fimDaMissao, ultimoRelatorio, URL_RELATORIO } from './relatorio.js?v=252';
+import { $, embaralhar, seguro, sortear } from './util.js?v=253';
+import { aluno, definirMissao, definirResultados, resultados } from './estado.js?v=253';
+import { SOM } from './som.js?v=253';
+import { mascote, mostrar, telaInicio, telaJogos } from './telas.js?v=253';
+import { escolherProfessorE, gravarJSON, lerDoScript, lerJSON } from './professor.js?v=253';
+import { fimDaMissao, ultimoRelatorio, URL_RELATORIO } from './relatorio.js?v=253';
 
 // ---------- Questionário da aula (aluno) ----------
 // Os questionários vêm da planilha do professor (pelo script). Uma pergunta por vez, as respostas
