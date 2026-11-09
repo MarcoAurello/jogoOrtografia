@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=255">
+  <link rel="stylesheet" href="style.css?v=256">
 </head>
 <body>
   <!-- abertura: a logo Games Pedagógicos enquanto o app carrega (some sozinha quando o app fica pronto, ou em 6 s
@@ -1135,45 +1135,39 @@
       <p class="cores-msg" id="simbolos-msg" role="status"></p>
     </section>
 
-    <!-- Universo dos Conjuntos: escolher o cenário -->
+    <!-- Universo dos Conjuntos: o mapa das fases -->
     <section class="tela" id="tela-conjuntos-menu">
       <h2 class="subtitulo">🔵 Universo dos Conjuntos</h2>
       <div class="cena cena-regra">
         <div class="davi-area" id="davi-conjuntos"></div>
         <div class="balao balao-esq">
-          Cada <b>conjunto</b> tem uma <b>regra</b>. Um objeto pertence ao conjunto quando atende à regra, e o mesmo objeto
-          pode estar em <b>vários</b> conjuntos! Toque nos objetos certos e aperte <b>Conferir</b>. Escolha o cenário: 🔍
+          Cada <b>círculo</b> é um conjunto com uma <b>regra</b>. Os objetos chegam um por vez: toque no lugar certo do
+          <b>diagrama</b>! Acerte em sequência para ganhar <b>🔥 combo</b> e bater o seu <b>recorde</b>.
         </div>
       </div>
-      <div class="grade-missoes" id="conj-cenarios"></div>
+      <div class="grade-missoes" id="conj-fases"></div>
       <div class="acoes-menu">
         <button class="btn-sec" id="conjuntos-voltar" type="button">← Jogos</button>
       </div>
     </section>
 
-    <!-- Universo dos Conjuntos: a missão (conjuntos, pergunta, cenário com os objetos e os botões) -->
+    <!-- Universo dos Conjuntos: a rodada (objeto da vez, regras, diagrama de Venn e respostas) -->
     <section class="tela tela-jogo" id="tela-conjuntos" data-girar="nao">
       <div class="barra">
-        <button class="btn-sec btn-pequeno" id="conjuntos-sair" type="button">← Cenários</button>
+        <button class="btn-sec btn-pequeno" id="conjuntos-sair" type="button">← Fases</button>
         <span class="barra-titulo" id="conj-titulo"></span>
         <span class="chuva-placar"><span id="conj-pontos">0</span> pts</span>
       </div>
-      <div class="conj-legenda-linha">
-        <div class="conj-legenda" id="conj-legenda"></div>
-        <button class="conj-regras" id="btn-conj-regras" type="button" aria-label="Ver as regras dos conjuntos">📖 Regras</button>
+      <div class="conj-hud">
+        <span class="conj-progresso" id="conj-progresso" aria-hidden="true"></span>
+        <span class="conj-combo" id="conj-combo" role="status" hidden></span>
       </div>
-      <div class="conj-pergunta" id="conj-pergunta" role="status"></div>
-      <div class="conj-cena" id="conj-cena" aria-label="Objetos do cenário"></div>
+      <p class="conj-instrucao" id="conj-instrucao"></p>
+      <div class="conj-esteira" id="conj-esteira"></div>
+      <div class="conj-legenda" id="conj-legenda"></div>
+      <svg class="conj-diagrama" id="conj-diagrama" viewBox="0 0 360 240" role="img" aria-label="Diagrama de Venn: toque no lugar do objeto"></svg>
       <p class="cores-msg conj-msg" id="conj-msg" role="status"></p>
       <div class="conj-acoes" id="conj-acoes"></div>
-      <div class="historia-pergaminho-fundo" id="conj-grupos" hidden>
-        <div class="conj-grupos" role="dialog" aria-modal="true" aria-labelledby="conj-grupos-titulo">
-          <h3 id="conj-grupos-titulo"></h3>
-          <p class="conj-grupos-sub">Leia a regra de cada conjunto. Você pode rever no botão 📖.</p>
-          <ul class="conj-grupos-lista" id="conj-grupos-lista"></ul>
-          <button class="btn-grande" id="btn-conj-grupos-ok" type="button">Entendi, vamos lá ▶</button>
-        </div>
-      </div>
     </section>
 
     <!-- Tetris da Tabuada: instruções -->
@@ -3243,7 +3237,7 @@
         <button class="jogo-card com-capa" id="btn-conjuntos" type="button" data-tema="matematica" style="--c:#1e64d2">
           <span class="jogo-card-capa conjuntos-capa" id="conjuntos-capa" aria-hidden="true"></span>
           <span class="jogo-card-nome">Universo dos Conjuntos</span>
-          <span class="jogo-card-texto">∈, ∪ e ∩ com objetos da praia, da escola e mais!</span>
+          <span class="jogo-card-texto">Coloque cada objeto no lugar certo do diagrama!</span>
         </button>
         <button class="jogo-card com-capa" id="btn-fichas" type="button" data-tema="matematica psicopedagogia" style="--c:#e53935">
           <img class="jogo-card-capa" src="assets/capa-fichas.jpg" alt="" width="368" height="300" style="object-position: center">
@@ -3499,9 +3493,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=255"></script>
-  <script src="dados.js?v=255"></script>
-  <script type="module" src="js/main.js?v=255"></script>
+  <script src="plenix.js?v=256"></script>
+  <script src="dados.js?v=256"></script>
+  <script type="module" src="js/main.js?v=256"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

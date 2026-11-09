@@ -83,7 +83,7 @@ export const JOGOS_HAB = {
   'btn-historia': { h: ['memoria', 'logico', 'linguagem'],
     r: 'Cartas da história do Brasil com o ano escondido: encaixe cada acontecimento no lugar certo da linha do tempo.' },
   'btn-conjuntos': { h: ['matematica', 'logico', 'seletiva', 'flexibilidade'],
-    r: 'Conjuntos com objetos da praia, da escola, da cozinha, dos esportes e do parque: pertence (∈), não pertence (∉), união (∪), interseção (∩) e diferença.' },
+    r: 'Diagrama de Venn: coloque cada objeto no lugar certo (∈, ∉, ∩), responda ∪, ∩ e − e descubra a regra secreta.' },
   'btn-bip': { h: ['logico', 'planejamento', 'espacial', 'flexibilidade'],
     r: 'Programação com blocos em português: monte o roteiro (sequência, repita, enquanto) e guie o robô até a estrela.' },
   'btn-cartografo': { h: ['espacial', 'logico', 'decisao', 'percepcao'],
