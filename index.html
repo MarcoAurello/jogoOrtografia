@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=244">
+  <link rel="stylesheet" href="style.css?v=246">
 </head>
 <body>
   <!-- abertura: a logo Games Pedagógicos enquanto o app carrega (some sozinha quando o app fica pronto, ou em 6 s
@@ -2955,9 +2955,13 @@
         <!-- as matérias (Português, Matemática, Geografia e História) numa linha própria, acima das habilidades -->
         <div class="materias-botoes" id="materias-botoes" role="group" aria-label="Matérias"></div>
         <div class="habilidades-botoes" id="habilidades-botoes" role="group" aria-labelledby="pergunta-hab-titulo"></div>
-        <button class="hab-mais" id="hab-mais" type="button" aria-expanded="false" aria-controls="habilidades-botoes">＋ Mais habilidades</button>
+        <button class="hab-mais" id="hab-mais" type="button" aria-expanded="false" aria-controls="habilidades-botoes">Ver todas as habilidades</button>
       </section>
-      <p class="jogos-mostrando" id="jogos-mostrando" role="status"></p>
+      <!-- o que está filtrado, logo acima da grade: ao escolher, a tela rola até aqui (no celular os botões ocupam a tela) -->
+      <div class="jogos-escolha" id="jogos-escolha">
+        <p class="jogos-mostrando" id="jogos-mostrando" role="status"></p>
+        <button class="jogos-limpar" id="jogos-limpar" type="button" hidden>✕ Ver todos</button>
+      </div>
       <div class="escolha-jogos">
         <button class="jogo-card com-capa" id="btn-jogar" type="button" data-tema="portugues" style="--c:#1565c0">
           <img class="jogo-card-capa larga inteira" src="assets/capa-ortografia.jpg" alt="" width="760" height="370">
@@ -3402,9 +3406,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=244"></script>
-  <script src="dados.js?v=244"></script>
-  <script type="module" src="js/main.js?v=244"></script>
+  <script src="plenix.js?v=246"></script>
+  <script src="dados.js?v=246"></script>
+  <script type="module" src="js/main.js?v=246"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

@@ -3249,7 +3249,16 @@ body.na-lista-jogos {
   color: var(--primaria-escura); font: 700 16px 'Fredoka', sans-serif; border: 2px solid var(--primaria); }
 .hab-mais[hidden] { display: none; }
 .hab-mais:hover, .hab-mais:focus-visible { background: #e3f6f8; }
-.jogos-mostrando { margin: 18px 0 10px; font: 700 17px 'Nunito', sans-serif; color: #22364a; }
+.jogos-escolha { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 18px 0 10px; }
+/* com filtro: a linha vira uma faixa branca com borda amarela, para ficar claro que a lista embaixo está filtrada */
+.jogos-escolha.filtrando { padding: 8px 8px 8px 14px; background: #fff; border: 3px solid #f9c62b; border-radius: 16px;
+  box-shadow: 0 3px 0 rgba(19, 90, 104, 0.18); }
+.jogos-mostrando { flex: 1; margin: 0; font: 700 17px 'Nunito', sans-serif; color: #22364a; }
+.jogos-escolha.filtrando .jogos-tecnico { display: block; }
+.jogos-limpar { flex: none; min-height: 48px; padding: 8px 14px; border-radius: 99px; background: var(--primaria-escura); color: #fff;
+  font: 700 16px 'Fredoka', sans-serif; }
+.jogos-limpar[hidden] { display: none; }
+.jogos-limpar:focus-visible { outline: 3px solid #f9c62b; outline-offset: 2px; }
 .jogos-tecnico { font-weight: 600; font-size: 14px; color: #4a6274; }
 
 /* a grade: densa, quadrada, quase sem texto */
@@ -3291,7 +3300,14 @@ body.na-lista-jogos #jogos-voltar { margin-top: 18px; }
 
 /* celular: 2 capas por linha (pedido do Marco: capas maiores para o dedo da criança) e botões de habilidade em 2 colunas, mais baixos (toque continua >= 48 px), sem rolar para o lado */
 @media (max-width: 600px) {
-  .habilidades-botoes, .materias-botoes { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .habilidades-botoes { grid-template-columns: 1fr 1fr; gap: 8px; }
+  /* as 4 matérias numa linha só: ícone em cima e o nome embaixo, para sobrar tela para a grade */
+  .materias-botoes { gap: 6px; margin-bottom: 10px; }
+  .materias-botoes .hab { flex-direction: column; justify-content: center; gap: 2px; min-height: 64px; padding: 6px 2px 4px;
+    text-align: center; }
+  .materias-botoes .hab-icone { width: 30px; height: 30px; font-size: 17px; }
+  .materias-botoes .hab-nome { font-size: 12px; }
+  .pergunta-hab-titulo { font-size: 22px; margin-bottom: 10px; }
   .hab { min-height: 50px; padding: 4px 8px 4px 5px; }
   .hab-icone { width: 34px; height: 34px; font-size: 19px; }
   .hab-nome { font-size: 15px; }
