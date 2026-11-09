@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=246">
+  <link rel="stylesheet" href="style.css?v=252">
 </head>
 <body>
   <!-- abertura: a logo Games Pedagógicos enquanto o app carrega (some sozinha quando o app fica pronto, ou em 6 s
@@ -72,6 +72,7 @@
           <button class="menu-item" id="btn-menu-turma" type="button">🏫 Entrar com o código da turma</button>
           <button class="menu-item" id="btn-menu-casa" type="button">🏡 Jogar em casa</button>
           <button class="menu-item" id="btn-menu-teste" type="button">🎮 Jogar grátis</button>
+          <button class="menu-item" id="btn-menu-comp-amigos" type="button">🏆 Criar competição</button>
           <p class="menu-grupo">Escola, professor e família</p>
           <button class="menu-item" id="btn-professor" type="button">🧑‍🏫 Login da escola / professor</button>
           <button class="menu-item" id="btn-menu-familia" type="button">👨‍👩‍👧 Área da família (pais)</button>
@@ -1765,13 +1766,81 @@
         <div class="lista-quiz" id="lista-comp"></div>
         <p class="erro-login" id="comp-erro" role="status"></p>
       </div>
+      <!-- qualquer pessoa, até sem login, cria uma competição (popup cp-modal): js/competicao.js -->
+      <button class="btn-sec cp-atalho" id="btn-comp-amigos" type="button">＋ Criar competição
+        <small>sem login: mande o link e cada um entra com um apelido</small></button>
+      <!-- quem abre o link de uma competição criada sem login (/?comp=<código>): só o apelido -->
+      <div class="cartao cartao-chuva cp-cartao" id="comp-link" hidden>
+        <h3 class="chuva-pergunta" id="comp-link-titulo">🏆 Competição</h3>
+        <p class="quiz-status" id="comp-link-info"></p>
+        <form id="form-comp-apelido" class="cp-form" autocomplete="off" novalidate>
+          <label class="campo campo-jogo"><span>Seu apelido</span>
+            <input id="comp-apelido" maxlength="16" autocapitalize="words" placeholder="Ex.: Raio Azul"></label>
+          <small class="cp-dica">Só o apelido aparece no ranking para todos. Não use o nome completo nem telefone.</small>
+          <p class="erro-login" id="comp-apelido-erro" role="alert"></p>
+          <button class="btn-grande" type="submit">Entrar na competição ▶</button>
+          <button class="btn-sec" id="btn-comp-ver-ranking" type="button">🏆 Só ver o ranking</button>
+        </form>
+        <div class="linha-botoes" id="comp-link-acabou" hidden>
+          <button class="btn-grande" id="btn-comp-criar-nova" type="button">＋ Criar uma nova</button>
+          <button class="btn-sec" id="btn-comp-link-jogos" type="button">🎮 Ver os jogos</button>
+        </div>
+      </div>
       <div class="cartao cartao-chuva" id="comp-ranking" hidden>
         <h3 class="chuva-pergunta" id="comp-ranking-titulo">🏆 Ranking</h3>
         <p class="quiz-status" id="comp-ranking-info"></p>
+        <!-- competição criada sem login: o link para chamar mais gente -->
+        <div class="cp-link" id="comp-ranking-link" hidden>
+          <input id="comp-ranking-link-campo" readonly aria-label="Link da competição">
+          <button class="btn-sec" id="btn-comp-ranking-copiar" type="button">📋 Copiar link</button>
+          <button class="btn-sec" id="btn-comp-ranking-compartilhar" type="button" hidden>📤 Compartilhar</button>
+        </div>
+        <p class="aviso-ok cp-aviso" id="comp-ranking-aviso" role="status"></p>
         <ol class="ranking" id="comp-ranking-lista"></ol>
         <div class="linha-botoes"><button class="btn-sec" id="comp-ranking-voltar" type="button">← Competições</button></div>
       </div>
     </section>
+
+    <!-- popup: qualquer pessoa (até sem login) cria uma competição e pega o link /?comp=<código>, que vale 24 h
+         (fora das telas, para abrir de qualquer lugar: menu, aba Competição). js/competicao.js -->
+    <div class="adm-popup" id="cp-modal" hidden>
+      <div class="cartao adm-popup-cartao cp-modal-cartao" role="dialog" aria-modal="true" aria-labelledby="cp-modal-titulo">
+        <div class="adm-popup-topo">
+          <h3 class="chuva-pergunta" id="cp-modal-titulo">🏆 Criar competição</h3>
+          <button class="adm-popup-fechar" id="btn-cp-fechar" type="button" aria-label="Fechar">✕</button>
+        </div>
+        <form id="form-cp-criar" class="cp-form" autocomplete="off" novalidate>
+          <p class="cp-explica">Escolha um jogo, crie e mande o link para os amigos ou a turma. Cada um entra só com um
+            <b>apelido</b>, sem cadastro, e todos veem o ranking ao vivo. Em <b>24 horas</b> a competição acaba e tudo é apagado.</p>
+          <label class="campo campo-jogo"><span>Jogo</span>
+            <select id="cp-jogo" required></select></label>
+          <label class="campo campo-jogo"><span>Nome da competição</span>
+            <input id="cp-nome" maxlength="40" placeholder="Ex.: Desafio da família"></label>
+          <div class="cp-minhas" id="cp-minhas" hidden>
+            <p class="cp-minhas-titulo">Suas competições abertas neste aparelho</p>
+            <div class="lista-quiz" id="cp-minhas-lista"></div>
+          </div>
+          <div class="adm-popup-botoes">
+            <p class="erro-login adm-popup-aviso" id="cp-criar-erro" role="status" aria-live="polite"></p>
+            <button class="btn-sec" id="btn-cp-cancelar" type="button">Cancelar</button>
+            <button class="btn-grande" type="submit">🔗 Criar e pegar o link</button>
+          </div>
+        </form>
+        <div class="cp-criada" id="cp-criada" hidden>
+          <p class="cp-explica">✔ <b id="cp-criada-nome"></b> criada! Mande o link para quem vai jogar (vale por 24 horas).</p>
+          <div class="cp-link">
+            <input id="cp-criada-link" readonly aria-label="Link da competição">
+            <button class="btn-sec" id="btn-cp-criada-copiar" type="button">📋 Copiar link</button>
+            <button class="btn-sec" id="btn-cp-criada-compartilhar" type="button" hidden>📤 Compartilhar</button>
+          </div>
+          <p class="aviso-ok cp-aviso" id="cp-criada-aviso" role="status"></p>
+          <div class="adm-popup-botoes">
+            <button class="btn-sec" id="btn-cp-criada-fechar" type="button">Fechar</button>
+            <button class="btn-grande" id="btn-cp-criada-abrir" type="button">Abrir a competição ▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Descobrindo o Peso: instruções -->
     <section class="tela" id="tela-descobrir-menu">
@@ -3406,9 +3475,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=246"></script>
-  <script src="dados.js?v=246"></script>
-  <script type="module" src="js/main.js?v=246"></script>
+  <script src="plenix.js?v=252"></script>
+  <script src="dados.js?v=252"></script>
+  <script type="module" src="js/main.js?v=252"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

@@ -3,6 +3,7 @@ import sequelize from "../config/connection";
 import Escola from "../models/Escola";
 import Turma from "../models/Turma";
 import { Competicao, Destinatario, Participacao, Pergunta, Questionario } from "../models/Dados";
+import { problemaDoApelido } from "./apelido";
 
 // Fase 4: as mesmas operações que o script do Google fazia na planilha (ferramentas/relatorio-email.gs), agora no banco,
 // com as mesmas regras e as mesmas respostas (o app só trocou o endereço). Cada escola tem os seus dados (escopo);
@@ -84,17 +85,35 @@ const LETRAS_DO_CODIGO = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";   // sem 0/O e 1/I,
 // nome do aluno como chave: sem acentos, sem diferença de maiúsculas e de espaços
 const chaveDoNome = (n: unknown) => texto(n, 40).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
+// semLogin: criada sem login (vale 24 h); o código dela está no próprio link, então vai sempre junto.
+// agora: a hora do servidor, para o app contar o tempo que falta sem depender do relógio do aparelho
 const paraApp = (c: Competicao, comCodigo: boolean) => ({
   id: c.id, nome: c.nome, jogo: c.jogo, jogoNome: c.jogo_nome, email: c.email || "", turmaId: c.turma_id || "",
   criada: c.created_at.toISOString(), encerra: c.encerra_em.toISOString(), aberta: Date.now() < c.encerra_em.getTime(),
-  ...(comCodigo ? { codigo: c.codigo } : {})
+  semLogin: !!c.apagar_em, agora: new Date().toISOString(),
+  ...(comCodigo || c.apagar_em ? { codigo: c.codigo } : {})
 });
 
+// as criadas sem login não são de escola nenhuma: abrem de qualquer endereço (o link pode ser aberto na página de uma
+// escola). Passou da hora de apagar: apaga na hora (com o ranking, em cascata) e responde como se não existisse.
+async function semLoginVencida(c: Competicao) {
+  if (!c.apagar_em || c.apagar_em.getTime() > Date.now()) return false;
+  await c.destroy();
+  return true;
+}
 async function acharCompeticao(escopo: Escopo, id: unknown) {
   const s = texto(id, 40);
-  const c = await Competicao.findOne({ where: { ...doEscopo(escopo), [Op.or]: [{ id: s }, { id_planilha: s }] } });
-  if (!c) throw erro("competicao");
+  const c = await Competicao.findOne({ where: { [Op.and]: [{ [Op.or]: [{ id: s }, { id_planilha: s }] },
+    { [Op.or]: [doEscopo(escopo), { apagar_em: { [Op.ne]: null } }] }] } });
+  if (!c || await semLoginVencida(c)) throw erro("competicao");
   return c;
+}
+
+async function codigoNovo() {
+  let codigo: string;
+  do { codigo = Array.from({ length: 5 }, () => LETRAS_DO_CODIGO[Math.floor(Math.random() * LETRAS_DO_CODIGO.length)]).join(""); }
+  while (await Competicao.findOne({ where: { codigo } }));
+  return codigo;
 }
 
 // a competição é de uma turma (turmaId, já conferido por quem chama: a pessoa enxerga a turma)
@@ -104,12 +123,33 @@ export async function criarCompeticao(escopo: Escopo, autorId: string | null, d:
   if (!jogo) throw erro("jogo");
   if (Number.isNaN(encerra.getTime()) || encerra.getTime() <= Date.now()) throw erro("hora");
   const email = texto(d.email, 120).toLowerCase();
-  let codigo: string;
-  do { codigo = Array.from({ length: 5 }, () => LETRAS_DO_CODIGO[Math.floor(Math.random() * LETRAS_DO_CODIGO.length)]).join(""); }
-  while (await Competicao.findOne({ where: { codigo } }));
+  const codigo = await codigoNovo();
   const c = await Competicao.create({ escola_id: escopo, autor_id: autorId, turma_id: turmaId, codigo, nome: nome || jogoNome, jogo, jogo_nome: jogoNome,
     email: emailValido(email) ? email : null, encerra_em: encerra, id_planilha: null });
   return paraApp(c, true);
+}
+
+// criada sem login (qualquer pessoa): sem escola, sem turma e sem e-mail; encerra e é apagada 24 h depois.
+// nome e jogo já conferidos pelo DadosController (nome filtrado, jogo no formato da lista do app)
+export const HORAS_SEM_LOGIN = 24;
+export async function criarCompeticaoSemLogin(nome: string, jogo: string, jogoNome: string) {
+  const fim = new Date(Date.now() + HORAS_SEM_LOGIN * 3600 * 1000);
+  const c = await Competicao.create({ escola_id: null, autor_id: null, turma_id: null, codigo: await codigoNovo(), nome, jogo,
+    jogo_nome: jogoNome, email: null, encerra_em: fim, apagar_em: fim, id_planilha: null });
+  return paraApp(c, true);
+}
+
+// o link /?comp=<código> de uma competição criada sem login
+export async function competicaoSemLogin(codigo: unknown) {
+  const s = texto(codigo, 8).toUpperCase();
+  const c = /^[A-Z0-9]{4,8}$/.test(s) ? await Competicao.findOne({ where: { codigo: s, apagar_em: { [Op.ne]: null } } }) : null;
+  if (!c || await semLoginVencida(c)) throw erro("competicao");
+  return paraApp(c, true);
+}
+
+// apaga as criadas sem login que passaram de 24 h (o ranking vai junto, pela chave estrangeira em cascata)
+export async function apagarCompeticoesSemLogin() {
+  return Competicao.destroy({ where: { apagar_em: { [Op.lte]: new Date() } } });
 }
 
 // para os alunos: as abertas e as que encerraram há menos de 3 dias; para o professor: as dos últimos 30 dias.
@@ -117,7 +157,7 @@ export async function criarCompeticao(escopo: Escopo, autorId: string | null, d:
 // comCodigo: o código interno da competição (o aluno logado pela turma também recebe, para mandar a pontuação)
 export async function listarCompeticoes(escopo: Escopo, doProfessor: boolean, turmas: string[] | null = null, comCodigo = doProfessor) {
   const limite = new Date(Date.now() - (doProfessor ? 30 : 3) * 24 * 3600 * 1000);
-  const cs = await Competicao.findAll({ where: { ...doEscopo(escopo), encerra_em: { [Op.gte]: limite },
+  const cs = await Competicao.findAll({ where: { ...doEscopo(escopo), apagar_em: null, encerra_em: { [Op.gte]: limite },
     ...(turmas ? { turma_id: { [Op.in]: turmas } } : {}) } });
   const turmasDelas = new Map((await Turma.findAll({ where: { id: { [Op.in]: cs.map((c) => c.turma_id).filter(Boolean) as string[] } }, attributes: ["id", "nome", "codigo"] }))
     .map((x) => [x.id, x]));
@@ -143,10 +183,15 @@ async function conferirCodigo(escopo: Escopo, id: unknown, codigo: unknown) {
   return c;
 }
 
-export async function entrarCompeticao(escopo: Escopo, id: unknown, codigo: unknown) {
+// nome: na criada sem login, o apelido (filtrado: é pública e pode ter criança)
+export async function entrarCompeticao(escopo: Escopo, id: unknown, codigo: unknown, nome: unknown = "") {
   const c = await conferirCodigo(escopo, id, codigo);
   const app = paraApp(c, false);
   if (!app.aberta) throw erro("encerrada");
+  if (c.apagar_em) {
+    const problema = problemaDoApelido(texto(nome, 30));
+    if (problema) throw new Error(problema);
+  }
   return app;
 }
 
@@ -155,7 +200,7 @@ export async function guardarResultado(escopo: Escopo, d: Record<string, unknown
   const c = await conferirCodigo(escopo, d.id, d.codigo);
   if (Date.now() > c.encerra_em.getTime() + MINUTOS_DE_FOLGA * 60 * 1000) throw erro("encerrada");
   const nome = texto(d.nome, 40);
-  if (!nome) throw erro("nome");
+  if (!nome || (c.apagar_em && problemaDoApelido(nome))) throw erro("nome");
   await registrarParticipacao(c.id, nome, numero(d.pontos, 1000000), numero(d.acertos, 10000), numero(d.total, 10000), texto(d.config, 120), 1, new Date());
   return rankingDaCompeticao(escopo, c.id);
 }

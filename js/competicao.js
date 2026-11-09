@@ -1,16 +1,17 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
-/* Competição: o professor cria para uma turma (jogo + hora de encerrar); o aluno entra com o código da turma e joga. */
+/* Competição: o professor cria para uma turma (jogo + hora de encerrar); o aluno entra com o código da turma e joga.
+   Qualquer pessoa, até sem login, também cria uma (vale 24 h): manda o link /?comp=<código> e cada um entra com um apelido. */
 
-import { $, seguro } from './util.js?v=246';
-import { aluno, aoVoltarAoInicio } from './estado.js?v=246';
-import { api, lerTokenAluno } from './api.js?v=246';
-import { definirCompeticaoDaPartida } from './partidas.js?v=246';
-import { SOM } from './som.js?v=246';
-import { mostrar, telaJogos } from './telas.js?v=246';
-import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=246';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=246';
-import { comecarQuiz } from './quiz.js?v=246';
-import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=246';
+import { $, seguro } from './util.js?v=252';
+import { aluno, aoVoltarAoInicio, definirAluno } from './estado.js?v=252';
+import { api, lerTokenAluno } from './api.js?v=252';
+import { definirCompeticaoDaPartida } from './partidas.js?v=252';
+import { SOM } from './som.js?v=252';
+import { mostrar, telaJogos } from './telas.js?v=252';
+import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=252';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=252';
+import { comecarQuiz } from './quiz.js?v=252';
+import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=252';
 
 // ---------- Competição ----------
 // Cada competição é de uma turma. O aluno entra com o código da turma (js/entrada.js) e a aba Competição lista as
@@ -63,6 +64,8 @@ function conferirAtiva(c) {
 function parteCompeticao(qual) {
   $('comp-lista').hidden = qual !== 'lista';
   $('comp-ranking').hidden = qual !== 'ranking';
+  $('comp-link').hidden = qual !== 'link';
+  $('btn-comp-amigos').hidden = qual !== 'lista';   // "＋ Criar competição" só embaixo da lista
   if (qual !== 'ranking') { rankingAberto = null; clearInterval(relogioRanking); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -140,6 +143,7 @@ async function carregarCompeticoes() {
 
 function jogarCompeticao() {
   if (!ativa) return;
+  if (!aluno && ativa.aluno) definirAluno(ativa.aluno);   // entrou pelo link só com o apelido: é o nome do relatório
   if (ativa.jogo.startsWith('quiz:')) { comecarQuiz(ativa.jogo.slice(5)); return; }
   const jogo = JOGOS_DO_LINK[ativa.jogo];
   if (!jogo) { $('comp-erro').textContent = 'Este jogo não existe nesta versão do app. Atualize o app.'; return; }
@@ -192,13 +196,23 @@ async function atualizarRanking() {
     conferirAtiva(c);
     $('comp-ranking-titulo').textContent = `🏆 ${c.nome}`;
     $('comp-ranking-info').textContent = `🎮 ${c.jogoNome} · ${pessoas(new Set(ranking.map((r) => chaveNome(r.nome))).size)} · `
-      + (c.aberta ? `aberta até ${horaTexto(c.encerra)} (atualiza sozinho)` : `encerrou ${diaTexto(c.encerra)} às ${horaTexto(c.encerra)}`);
+      + (c.aberta ? `aberta até ${horaTexto(c.encerra)}${diaTexto(c.encerra) === 'hoje' ? '' : ` de ${diaTexto(c.encerra)}`}`
+        + (c.semLogin ? ` (⏳ faltam ${tempoQueFalta(c)})` : '') + ' · atualiza sozinho'
+        : `encerrou ${diaTexto(c.encerra)} às ${horaTexto(c.encerra)}`);
+    $('comp-ranking-link').hidden = !c.semLogin;
+    if (c.semLogin) {
+      $('comp-ranking-link-campo').value = linkDaCompeticao(c.codigo);
+      $('btn-comp-ranking-compartilhar').hidden = !navigator.share;
+    }
     desenharRanking(ranking, $('comp-ranking-lista'), ativa && ativa.id === id ? ativa.aluno : '');
   } catch (e) {
-    if (rankingAberto === id) $('comp-ranking-info').textContent = 'Sem internet: não deu para buscar o ranking.';
+    if (rankingAberto !== id) return;
+    if (String(e && e.message) === 'competicao' && ativa && ativa.id === id && ativa.semLogin) { mostrarAcabou(); return; }   // passou das 24 h
+    $('comp-ranking-info').textContent = 'Sem internet: não deu para buscar o ranking.';
   }
 }
 $('comp-ranking-voltar').onclick = () => { SOM.clique(); parteCompeticao('lista'); carregarCompeticoes(); };
+$('comp-ranking-aviso').textContent = '';
 
 // ---------- fim de cada partida: manda a pontuação, se o jogo for o da competição ----------
 // os pontos são os do placar do jogo; os jogos sem placar (e os questionários) contam 10 pontos por acerto de primeira
@@ -376,9 +390,178 @@ function desenharCompeticoesProfessor() {
 }
 
 
+// ---------- Competição criada sem login (qualquer pessoa): popup de criar e o link /?comp=<código> ----------
+// É a mesma competição de sempre, sem escola e sem turma: vale 24 h e depois a API apaga a competição e o ranking.
+// Quem abre o link digita só um apelido (é pública e pode ter criança: nada de nome completo); a API filtra o apelido.
+const CHAVE_CRIADAS = 'pleno-ortografia:comp-criadas';   // as que foram criadas neste aparelho: [{ codigo, nome, jogoNome, encerra }]
+const linkDaCompeticao = (codigo) => `${location.origin}/?comp=${codigo}`;
+// "23 h 12 min" pela hora do servidor (o relógio do aparelho pode estar errado)
+function tempoQueFalta(c) {
+  const ms = new Date(c.encerra) - new Date(c.agora || Date.now());
+  if (!(ms > 0)) return '0 min';
+  const min = Math.floor(ms / 60000), h = Math.floor(min / 60);
+  return h ? `${h} h ${String(min % 60).padStart(2, '0')} min` : `${min} min`;
+}
+function lerCriadas() {
+  try { return (JSON.parse(localStorage.getItem(CHAVE_CRIADAS)) || []).filter((c) => new Date(c.encerra) > new Date()); }
+  catch (e) { return []; }
+}
+function guardarCriada(c) {
+  const lista = [{ codigo: c.codigo, nome: c.nome, jogoNome: c.jogoNome, encerra: c.encerra }, ...lerCriadas().filter((x) => x.codigo !== c.codigo)];
+  try { localStorage.setItem(CHAVE_CRIADAS, JSON.stringify(lista.slice(0, 10))); } catch (e) { /* sem armazenamento */ }
+}
+// o endereço mostra o link da competição (recarregar volta para ela); quando ela acaba, volta ao normal
+function enderecoDaCompeticao(codigo) {
+  const busca = new URLSearchParams(location.search);
+  if (codigo) busca.set('comp', codigo); else busca.delete('comp');
+  const q = busca.toString();
+  history.replaceState(null, '', `${location.pathname}${q ? `?${q}` : ''}`);
+}
+async function copiarLink(campo, aviso) {
+  SOM.clique();
+  try { await navigator.clipboard.writeText($(campo).value); $(aviso).textContent = 'Link copiado! Cole no WhatsApp ou onde quiser. ✔'; }
+  catch (e) { $(campo).select(); $(aviso).textContent = 'Selecionei o link: copie e mande para quem vai jogar.'; }
+}
+async function compartilharLink(nome, jogoNome, link) {
+  SOM.clique();
+  try { await navigator.share({ title: nome, text: `Vem jogar comigo a competição "${nome}" (${jogoNome})! Entre com um apelido:`, url: link }); }
+  catch (e) { /* a pessoa desistiu de compartilhar */ }
+}
+
+// popup de criar (js/popup.js): jogo e nome; depois de criar, o link aparece no próprio popup
+const popupCriar = criarPopup('cp-modal', { fechar: ['btn-cp-fechar', 'btn-cp-cancelar', 'btn-cp-criada-fechar'] });
+let criada = null;
+function abrirCriar(quemAbriu = null) {
+  const escolhido = $('cp-jogo').value;
+  const jogos = Object.entries(JOGOS_DO_LINK).sort((a, b) => a[1].nome.localeCompare(b[1].nome, 'pt-BR'));
+  $('cp-jogo').innerHTML = '<option value="">Escolha o jogo…</option>' + jogos.map(([id, j]) => `<option value="${id}">${seguro(j.nome)}</option>`).join('');
+  $('cp-jogo').value = escolhido;
+  $('cp-criar-erro').textContent = '';
+  $('form-cp-criar').hidden = false;
+  $('cp-criada').hidden = true;
+  criada = null;
+  const minhas = lerCriadas();
+  $('cp-minhas').hidden = !minhas.length;
+  $('cp-minhas-lista').innerHTML = '';
+  for (const c of minhas) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'quiz-item comp-item';
+    b.innerHTML = `<span class="comp-item-texto"><span class="quiz-item-nome">${seguro(c.nome)}</span>
+      <span class="quiz-item-qtd">🎮 ${seguro(c.jogoNome)} · ⏳ faltam ${tempoQueFalta(c)}</span></span><span class="quiz-link">Abrir ▶</span>`;
+    b.onclick = () => { SOM.clique(); popupCriar.fechar(); abrirCompDoLink(c.codigo); };
+    $('cp-minhas-lista').append(b);
+  }
+  popupCriar.abrir(quemAbriu, 'cp-jogo');
+}
+$('form-cp-criar').onsubmit = async (ev) => {
+  ev.preventDefault();
+  const jogo = $('cp-jogo').value;
+  const nome = $('cp-nome').value.trim();
+  if (!jogo) { $('cp-criar-erro').textContent = ERROS.jogo; SOM.errado(); return; }
+  if (nome.length < 3) { $('cp-criar-erro').textContent = 'Dê um nome para a competição (pelo menos 3 letras).'; SOM.errado(); $('cp-nome').focus(); return; }
+  $('cp-criar-erro').textContent = 'Criando…';
+  try {
+    const { competicao: c } = await gravarNoScript({ acao: 'criarCompeticaoSemLogin', nome, jogo, jogoNome: JOGOS_DO_LINK[jogo].nome });
+    SOM.certo();
+    criada = c;
+    guardarCriada(c);
+    $('cp-nome').value = '';
+    $('cp-criar-erro').textContent = '';
+    $('cp-criada-nome').textContent = c.nome;
+    $('cp-criada-link').value = linkDaCompeticao(c.codigo);
+    $('cp-criada-aviso').textContent = '';
+    $('btn-cp-criada-compartilhar').hidden = !navigator.share;
+    $('form-cp-criar').hidden = true;
+    $('cp-criada').hidden = false;
+    setTimeout(() => $('btn-cp-criada-copiar').focus({ preventScroll: true }), 50);
+  } catch (err) {
+    const m = String(err && err.message);
+    $('cp-criar-erro').textContent = ERROS[m] || (m.length > 15 ? m : 'Não deu para criar (sem internet?). Tente de novo.');
+    SOM.errado();
+  }
+};
+$('btn-cp-criada-copiar').onclick = () => copiarLink('cp-criada-link', 'cp-criada-aviso');
+$('btn-cp-criada-compartilhar').onclick = () => { if (criada) compartilharLink(criada.nome, criada.jogoNome, $('cp-criada-link').value); };
+$('btn-cp-criada-abrir').onclick = () => { SOM.clique(); const c = criada; popupCriar.fechar(); if (c) abrirCompDoLink(c.codigo); };
+$('btn-comp-ranking-copiar').onclick = () => copiarLink('comp-ranking-link-campo', 'comp-ranking-aviso');
+$('btn-comp-ranking-compartilhar').onclick = () => {
+  const titulo = $('comp-ranking-titulo').textContent.replace(/^🏆\s*/, '');
+  compartilharLink(titulo, ativa && ativa.jogoNome ? ativa.jogoNome : '', $('comp-ranking-link-campo').value);
+};
+for (const id of ['btn-comp-amigos', 'btn-comp-criar-nova']) $(id).onclick = (ev) => { SOM.clique(); abrirCriar(ev.currentTarget); };
+// o menu fecha ao tocar no item e devolve o foco ao ☰: o popup abre depois disso
+$('btn-menu-comp-amigos').onclick = () => { SOM.clique(); setTimeout(() => abrirCriar($('btn-menu')), 0); };
+$('btn-comp-link-jogos').onclick = () => { SOM.clique(); telaJogos(); };
+
+// o link /?comp=<código>: mostra a competição e pede só o apelido (quem já entrou neste aparelho vai direto ao ranking)
+let doLink = null;
+async function abrirCompDoLink(codigo = new URLSearchParams(location.search).get('comp')) {
+  if (!/^[A-Za-z0-9]{4,8}$/.test(codigo || '')) return;
+  codigo = codigo.toUpperCase();
+  enderecoDaCompeticao(codigo);
+  mostrar('tela-competicao');
+  desenharAtiva();
+  parteCompeticao('link');
+  doLink = null;
+  $('comp-link-titulo').textContent = '🏆 Competição';
+  $('comp-link-info').textContent = 'Abrindo a competição…';
+  $('form-comp-apelido').hidden = true;
+  $('comp-link-acabou').hidden = true;
+  try {
+    const { competicao: c } = await lerDoScript('competicaoSemLogin', `&codigo=${encodeURIComponent(codigo)}`);
+    doLink = c;
+    if (ativa && ativa.id === c.id) { abrirRanking(c.id); return; }
+    $('comp-link-titulo').textContent = `🏆 ${c.nome}`;
+    $('comp-link-info').textContent = c.aberta
+      ? `🎮 ${c.jogoNome} · ⏳ faltam ${tempoQueFalta(c)}. Digite um apelido para entrar e jogar: vale a sua melhor partida.`
+      : `🎮 ${c.jogoNome} · esta competição já encerrou. Veja o ranking.`;
+    $('form-comp-apelido').hidden = false;
+    $('comp-apelido-erro').textContent = '';
+    $('comp-apelido').disabled = !c.aberta;
+    $('form-comp-apelido').querySelector('[type=submit]').hidden = !c.aberta;
+    if (c.aberta) setTimeout(() => $('comp-apelido').focus({ preventScroll: true }), 300);
+  } catch (e) {
+    if (String(e && e.message) === 'competicao') mostrarAcabou();
+    else $('comp-link-info').textContent = 'Sem internet: não deu para abrir a competição. Tente de novo quando a conexão voltar.';
+  }
+}
+function mostrarAcabou() {
+  mostrar('tela-competicao');
+  parteCompeticao('link');
+  if (ativa && ativa.semLogin) guardarAtiva(null);
+  desenharAtiva();
+  enderecoDaCompeticao('');
+  $('comp-link-titulo').textContent = '⏰ Esta competição acabou';
+  $('comp-link-info').textContent = 'As competições criadas sem login duram 24 horas. Depois disso, o link para de funcionar e os apelidos e pontos são apagados.';
+  $('form-comp-apelido').hidden = true;
+  $('comp-link-acabou').hidden = false;
+}
+$('form-comp-apelido').onsubmit = async (ev) => {
+  ev.preventDefault();
+  if (!doLink) return;
+  const apelido = $('comp-apelido').value.trim();
+  if (apelido.length < 2) { $('comp-apelido-erro').textContent = 'Digite um apelido com pelo menos 2 letras.'; SOM.errado(); return; }
+  $('comp-apelido-erro').textContent = 'Entrando…';
+  try {
+    const { competicao: c } = await gravarNoScript({ acao: 'entrarCompeticao', id: doLink.id, codigo: doLink.codigo, nome: apelido });
+    SOM.certo();
+    $('comp-apelido').value = '';
+    guardarAtiva({ ...doLink, ...c, codigo: doLink.codigo, aluno: apelido });
+    desenharAtiva();
+    abrirRanking(doLink.id);
+  } catch (err) {
+    const m = String(err && err.message);
+    if (m === 'competicao') { mostrarAcabou(); return; }
+    $('comp-apelido-erro').textContent = ERROS[m] || (m.length > 15 ? m : 'Não deu para entrar (sem internet?). Tente de novo.');
+    SOM.errado();
+  }
+};
+$('btn-comp-ver-ranking').onclick = () => { SOM.clique(); if (doLink) abrirRanking(doLink.id); };
+
 // a partida guardada no banco leva a competição em que o aluno estava (js/partidas.js)
 definirCompeticaoDaPartida((mis) => (ehDaCompeticao(mis) && ativa ? `${ativa.codigo} · ${ativa.nome}` : ''));
 
 $('btn-comp-jogos').onclick = () => { SOM.clique(); telaJogos(); };
 
-export { telaCompeticao };
+export { abrirCompDoLink, telaCompeticao };

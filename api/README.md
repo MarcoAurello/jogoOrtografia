@@ -56,8 +56,8 @@ npm run dev               # http://localhost:3333
 | `POST /testes` | público | teste grátis: nome, e-mail, perfil e aceite → token (o mesmo e-mail reaproveita o cadastro) |
 | `POST /testes/relatorio` | teste grátis | o PDF do relatório de um jogo, mandado por e-mail (até 30 por dia) |
 | `GET /testes` | admin | quem se cadastrou no teste grátis |
-| `GET /dados?acao=…&escola=` | público | e-mails dos relatórios, questionários, competições e ranking (as mesmas ações e respostas do antigo script) |
-| `POST /dados` | público | competição do aluno: `entrarCompeticao` e `resultadoCompeticao` |
+| `GET /dados?acao=…&escola=` | público | e-mails dos relatórios, questionários, competições e ranking (as mesmas ações e respostas do antigo script); `acao=competicaoSemLogin&codigo=` abre o link de uma competição criada sem login |
+| `POST /dados` | público | competição do aluno: `entrarCompeticao` e `resultadoCompeticao`; `criarCompeticaoSemLogin` (`nome`, `jogo`, `jogoNome`): qualquer pessoa cria, link `/?comp=<codigo>`, dura 24 h e depois é apagada com o ranking (20 por hora por IP; o apelido de quem joga é filtrado) |
 | `POST /planilha` | logado | gravações do professor: `adicionarEmail`, `salvarQuestionario`, `criarCompeticao`, `competicoesProfessor`, `encerrarCompeticao` (no banco) |
 | `GET /questionarios/ia` | professor, coordenação (admin com `X-Escola`) | a IA está configurada? `{ configurada, falsa, limite, usadasHoje, restantes }` |
 | `POST /questionarios/gerar-ia` | professor, coordenação (admin com `X-Escola`) | questões por IA: `{ arquivos: [base64 de JPG/PNG/WEBP/PDF] (até 6, 10 MB cada, 14 MB juntos), quantidade: 5\|10\|15 (padrão 10), dificuldade?: facil\|media\|dificil, materia?, tema?, serie? }` → `{ perguntas: [{ pergunta, certa, erradas[] }], provedor, restantes }` (o formato da planilha; nada é salvo: o professor revisa e salva com `salvarQuestionario`). Erros: 400 arquivo inválido, 413 grande demais, 429 `limite_diario`, 503 `ia_nao_configurada`, 422 sem conteúdo legível |

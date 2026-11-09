@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Metro, Centímetro e Milímetro. */
 
-import { $, embaralhar, sortear } from './util.js?v=246';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=246';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=246';
-import { mascote, mostrar, telaJogos } from './telas.js?v=246';
-import { escolherProfessorE } from './professor.js?v=246';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=246';
+import { $, embaralhar, sortear } from './util.js?v=252';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=252';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=252';
+import { mascote, mostrar, telaJogos } from './telas.js?v=252';
+import { escolherProfessorE } from './professor.js?v=252';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=252';
 
 // ---------- Metro, Centímetro e Milímetro ----------
 // Medidas de comprimento e conversão: uma trena mostra a fita inteira ("3 m e 80 cm"); a tesoura corta um pedaço do fim

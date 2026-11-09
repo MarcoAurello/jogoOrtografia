@@ -76,6 +76,7 @@ export class Competicao extends Model<InferAttributes<Competicao>, InferCreation
   declare email: string | null;
   declare encerra_em: Date;
   declare id_planilha: string | null;
+  declare apagar_em: CreationOptional<Date | null>;
   declare created_at: CreationOptional<Date>;
   declare updated_at: CreationOptional<Date>;
 }
@@ -91,6 +92,7 @@ Competicao.init({
   email: { type: DataTypes.STRING(120), allowNull: true },
   encerra_em: { type: DataTypes.DATE, allowNull: false },
   id_planilha: { type: DataTypes.STRING(30), allowNull: true },
+  apagar_em: { type: DataTypes.DATE, allowNull: true },   // criada sem login: some do banco nessa hora (24 h)
   ...datas
 }, opcoes("competicoes", "Competicao"));
 

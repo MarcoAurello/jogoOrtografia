@@ -914,6 +914,55 @@ s, r = chamar("/dados", "POST", {"acao": "resultadoCompeticao", "escola": slug, 
                                  "nome": "Aluno Quiz IA", "pontos": 800, "acertos": 8, "total": 10, "config": "Questionário"})
 confere("o aluno responde e entra no ranking", any(x.get("pontos") == 800 for x in r.get("ranking", [])))
 
+# ---------- 14. competição criada sem login: qualquer pessoa cria, link de 24 h, só apelido ----------
+print("14. Competição criada sem login")
+s, r = chamar("/dados", "POST", {"acao": "criarCompeticaoSemLogin", "nome": "Desafio da família", "jogo": "tiro", "jogoNome": "Tiro Certo"})
+if "muitas" in str(r.get("erro", "")):
+    print("  (o limite de 20 competições por hora deste IP foi atingido: espere 1 hora ou reinicie a API com docker compose restart api)")
+cl = r.get("competicao", {})
+confere("qualquer pessoa cria, sem login, e recebe o código do link", r.get("ok") and len(cl.get("codigo", "")) == 5 and cl.get("semLogin") is True)
+encerra_cl = datetime.fromisoformat(cl.get("encerra", agora.isoformat()).replace("Z", "+00:00"))
+confere("a competição sem login dura 24 horas", abs((encerra_cl - datetime.now(timezone.utc)).total_seconds() - 24 * 3600) < 120)
+s, r = chamar("/dados", "POST", {"acao": "criarCompeticaoSemLogin", "nome": "Turma do caralho", "jogo": "tiro", "jogoNome": "Tiro Certo"})
+confere("nome com palavrão é recusado", not r.get("ok"), r.get("erro", ""))
+s, r = chamar("/dados", "POST", {"acao": "criarCompeticaoSemLogin", "nome": "Sem jogo", "jogo": "../x", "jogoNome": "x"})
+confere("jogo inválido é recusado", r.get("erro") == "jogo")
+s, r = chamar(f"/dados?acao=competicaoSemLogin&codigo={cl.get('codigo', '')}&escola={slug}")
+confere("o link abre a competição (até no endereço de uma escola)", r.get("ok") and r["competicao"]["id"] == cl.get("id"))
+s, r = chamar(f"/dados?acao=competicoes&escola=")
+confere("NÃO aparece nas listas de competições", not any(x["id"] == cl.get("id") for x in r.get("lista", [])))
+entrar_cl = {"acao": "entrarCompeticao", "escola": "", "id": cl.get("id"), "codigo": cl.get("codigo")}
+for apelido, motivo in [("p0rr4", "palavrão com números no lugar das letras"), ("Ana 81999998888", "telefone"), ("A", "curto demais"),
+                        ("ana@mail.com", "e-mail"), ("x" * 17, "comprido demais")]:
+    s, r = chamar("/dados", "POST", {**entrar_cl, "nome": apelido})
+    confere(f"apelido recusado: {motivo}", not r.get("ok"), r.get("erro", ""))
+s, r = chamar("/dados", "POST", {**entrar_cl, "nome": "Tigrão"})
+confere("entra só com o apelido", r.get("ok") and r["competicao"]["aberta"])
+for nome, pontos, acertos in [("Tigrão", 500, 5), ("Estrela", 700, 7), ("tigrao", 900, 9), ("Tigrão", 100, 1)]:
+    s, r = chamar("/dados", "POST", {**entrar_cl, "acao": "resultadoCompeticao", "nome": nome, "pontos": pontos, "acertos": acertos,
+                                     "total": 10, "config": "Fácil"})
+ranking_cl = [(x["pontos"], x["partidas"]) for x in r.get("ranking", [])]
+confere("ranking: vale a melhor partida de cada um", ranking_cl == [(900, 3), (700, 1)], str(ranking_cl))
+s, r = chamar("/dados", "POST", {**entrar_cl, "acao": "resultadoCompeticao", "nome": "merda", "pontos": 1, "acertos": 1, "total": 1})
+confere("pontuação com apelido de palavrão não entra", r.get("erro") == "nome")
+s, r = chamar(f"/dados?acao=ranking&id={cl.get('id')}&escola={slug}")
+confere("a parcial é pública (pela página do link)", r.get("ok") and len(r.get("ranking", [])) == 2 and r["competicao"].get("semLogin"))
+
+# expiração: a hora de apagar volta 25 h no banco (direto no MySQL do Docker) e tudo tem que sumir de verdade
+def sql(comando):
+    import subprocess
+    p = subprocess.run(["docker", "compose", "exec", "-T", "mysql", "mysql", "-uroot", f"-p{ENV.get('DB_PASSWORD', '')}",
+                        ENV.get("DB_NAME", "games"), "-N", "-e", comando], cwd=RAIZ, capture_output=True, text=True, timeout=60)
+    return p.returncode, p.stdout.strip()
+ok, _ = sql(f"UPDATE competicoes SET encerra_em = encerra_em - INTERVAL 25 HOUR, apagar_em = apagar_em - INTERVAL 25 HOUR WHERE id = '{cl.get('id')}'")
+if ok != 0:
+    print("  (sem acesso ao MySQL pelo docker compose: a parte da expiração foi pulada)")
+else:
+    s, r = chamar(f"/dados?acao=competicaoSemLogin&codigo={cl.get('codigo', '')}")
+    confere("depois de 24 h, o link diz que a competição acabou", r.get("erro") == "competicao")
+    _, resto = sql(f"SELECT (SELECT COUNT(*) FROM competicoes WHERE id = '{cl.get('id')}') + (SELECT COUNT(*) FROM participacoes WHERE competicao_id = '{cl.get('id')}')")
+    confere("e os dados (competição, apelidos e pontos) foram apagados do banco", resto == "0", resto)
+
 # ---------- fim: a escola de teste fica desativada ----------
 chamar(f"/turmas/{turma['id']}", "PUT", {"ativa": False}, prof)
 chamar(f"/escolas/{escola['id']}", "PUT", {"ativa": False}, adm)

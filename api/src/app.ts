@@ -61,6 +61,10 @@ for (const caminho of ['/cadastro-familia/publico']) {
 // PIN errado), 20 por minuto por IP; o PIN ainda trava o aluno depois de 5 erros
 app.use('/familia-codigo', rateLimit({ windowMs: 60 * 1000, limit: 20, skipSuccessfulRequests: true, standardHeaders: true,
   legacyHeaders: false, message: { message: 'Muitas tentativas. Espere 1 minuto e tente de novo.' } }));
+// competição criada sem login: poucas por IP (20 por hora); o resto do /dados segue sem limite, como antes
+app.use('/dados', rateLimit({ windowMs: 60 * 60 * 1000, limit: 20, standardHeaders: true, legacyHeaders: false,
+  skip: (req) => req.method !== 'POST' || req.body?.acao !== 'criarCompeticaoSemLogin',
+  handler: (_req, res) => { res.json({ ok: false, erro: 'Você já criou muitas competições. Tente de novo daqui a 1 hora.' }); } }));
 app.use('/sessions', limitadorLogin);
 app.use('/usuarios/eu/senha', limitadorLogin);
 

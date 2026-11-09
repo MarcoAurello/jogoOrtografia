@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Robô Bip: programação com blocos em português (sequência, repetição e enquanto). */
 
-import { $ } from './util.js?v=246';
-import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=246';
-import { SOM, tocar } from './som.js?v=246';
-import { mascote, mostrar, telaJogos } from './telas.js?v=246';
-import { escolherProfessorE } from './professor.js?v=246';
-import { fimDaMissao } from './relatorio.js?v=246';
-import { BLOCOS, CONDICOES, MUNDOS_BIP } from './dados-bip.js?v=246';
+import { $ } from './util.js?v=252';
+import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=252';
+import { SOM, tocar } from './som.js?v=252';
+import { mascote, mostrar, telaJogos } from './telas.js?v=252';
+import { escolherProfessorE } from './professor.js?v=252';
+import { fimDaMissao } from './relatorio.js?v=252';
+import { BLOCOS, CONDICOES, MUNDOS_BIP } from './dados-bip.js?v=252';
 
 // ---------- Robô Bip ----------
 // A criança MONTA o programa (o roteiro) tocando nas peças e aperta ⚡ Executar: o Bip faz exatamente o que está

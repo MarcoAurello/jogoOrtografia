@@ -2985,6 +2985,25 @@ body.com-barra .acoes-menu { bottom: calc(70px + env(safe-area-inset-bottom)); }
 #form-comp-entrar { display: flex; flex-direction: column; gap: 6px; }
 .ranking-config { margin-top: 6px; padding: 4px 10px; border-radius: 8px; background: #efe7fb; color: #5b3aa0; font-weight: 800; font-size: 14px; }
 .ranking-config:first-child { margin-top: 0; }
+/* ---------- Competição criada sem login (link de 24 h): popup de criar, cartão do apelido e link no ranking ---------- */
+.cp-atalho { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; max-width: 560px; margin: 12px auto 0; }
+.cp-atalho small { font-size: 13px; font-weight: 700; opacity: 0.8; }
+.cp-cartao { border-left: 6px solid #c2185b; }
+.cp-explica { margin: 0 0 12px; line-height: 1.5; font-weight: 600; }
+.cp-form { display: flex; flex-direction: column; gap: 10px; }
+.cp-form .btn-grande, .cp-form .btn-sec { margin: 4px 0 0; }
+.cp-form input, .cp-form select { width: 100%; box-sizing: border-box; }
+.cp-dica { font-size: 13px; font-weight: 700; color: var(--cinza-texto); }
+.cp-minhas { margin-top: 6px; border-top: 2px dashed #e3edf0; padding-top: 12px; }
+.cp-minhas-titulo { margin: 0 0 8px; font-weight: 800; color: var(--cinza-texto); }
+.cp-minhas .quiz-item { width: 100%; text-align: left; }
+.cp-link { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0 0; }
+.cp-link input { flex: 1 1 220px; min-width: 0; font: inherit; font-size: 15px; font-weight: 700; padding: 9px 12px;
+  border: 2px solid #cfe3e7; border-radius: 12px; background: #f7f9fb; color: var(--primaria); }
+.cp-link .btn-sec { margin: 0; flex: 0 0 auto; }
+.cp-aviso { min-height: 1.2em; margin: 8px 0 0; font-weight: 700; text-align: center; }
+#comp-link .quiz-status { line-height: 1.45; }
+
 /* tela inicial: Jogos, Competições e Questionário lado a lado nas telas largas */
 .menu-inicio { max-width: 920px; }
 .menu-inicio { grid-template-columns: repeat(3, 1fr); }
