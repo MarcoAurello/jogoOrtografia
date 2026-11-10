@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Universo dos Conjuntos. */
 
-import { $, embaralhar, sortear } from './util.js?v=256';
-import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=256';
-import { SOM, tocar } from './som.js?v=256';
-import { mascote, mostrar, telaJogos } from './telas.js?v=256';
-import { escolherProfessorE } from './professor.js?v=256';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=256';
-import { OBJETOS, REGRAS } from './dados-conjuntos.js?v=256';
+import { $, embaralhar, sortear } from './util.js?v=260';
+import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=260';
+import { SOM, tocar } from './som.js?v=260';
+import { mascote, mostrar, telaJogos } from './telas.js?v=260';
+import { escolherProfessorE } from './professor.js?v=260';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=260';
+import { OBJETOS, REGRAS } from './dados-conjuntos.js?v=260';
 
 // ---------- Universo dos Conjuntos ----------
 // Matemática (4º ao 6º ano) com o diagrama de Venn como mecânica central: os objetos chegam um por vez (a "esteira") e

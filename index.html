@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=256">
+  <link rel="stylesheet" href="style.css?v=260">
 </head>
 <body>
   <!-- abertura: a logo Games Pedagógicos enquanto o app carrega (some sozinha quando o app fica pronto, ou em 6 s
@@ -1168,6 +1168,54 @@
       <svg class="conj-diagrama" id="conj-diagrama" viewBox="0 0 360 240" role="img" aria-label="Diagrama de Venn: toque no lugar do objeto"></svg>
       <p class="cores-msg conj-msg" id="conj-msg" role="status"></p>
       <div class="conj-acoes" id="conj-acoes"></div>
+    </section>
+
+    <!-- O Reino da Sintaxe: as páginas (fases), o traje do herói, o Livro das Crônicas e o Diário -->
+    <section class="tela" id="tela-reino-menu">
+      <h2 class="subtitulo">📖 O Reino da Sintaxe</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-reino"></div>
+        <div class="balao balao-esq">
+          Ajude o <b>Sintaxista</b> a salvar o reino das palavras! Complete as <b>frases</b>, descubra as <b>classes</b>
+          com o cajado e monte as <b>histórias</b> na ordem certa. Cada fase vale um <b>traje</b> novo.
+        </div>
+      </div>
+      <div class="reino-trajes" id="reino-trajes" aria-label="Traje do herói"></div>
+      <div class="grade-missoes" id="reino-fases"></div>
+      <div class="acoes-menu">
+        <button class="btn-sec" id="reino-voltar" type="button">← Jogos</button>
+        <button class="btn-sec" id="reino-btn-livro" type="button">📖 Livro das Crônicas</button>
+        <button class="btn-sec" id="reino-btn-diario" type="button">📔 Diário</button>
+      </div>
+    </section>
+
+    <section class="tela" id="tela-reino-livro">
+      <h2 class="subtitulo">📖 O Reino da Sintaxe</h2>
+      <div class="reino-abas" role="tablist">
+        <button class="reino-aba" id="reino-aba-livro" type="button" role="tab">📖 Livro das Crônicas</button>
+        <button class="reino-aba" id="reino-aba-diario" type="button" role="tab">📔 Diário do Lexicógrafo</button>
+      </div>
+      <div class="reino-livro" id="reino-livro"></div>
+      <div class="acoes-menu">
+        <button class="btn-sec" id="reino-livro-voltar" type="button">← Fases</button>
+      </div>
+    </section>
+
+    <!-- O Reino da Sintaxe: a fase (frase, mundo 2D no canvas, mensagem e controles do modo) -->
+    <section class="tela tela-jogo" id="tela-reino" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="reino-sair" type="button">← Fases</button>
+        <span class="barra-titulo" id="reino-titulo"></span>
+        <span class="chuva-placar"><span id="reino-pontos">0</span> pts</span>
+      </div>
+      <div class="conj-hud">
+        <span class="conj-progresso reino-progresso" id="reino-progresso" aria-hidden="true"></span>
+        <span class="conj-combo reino-orbe" id="reino-orbe" role="status" hidden></span>
+      </div>
+      <div class="reino-frase" id="reino-frase" aria-live="polite"></div>
+      <div class="reino-arena"><canvas id="reino-canvas" aria-label="Mundo do jogo: toque nas esferas de palavras"></canvas></div>
+      <p class="cores-msg reino-msg" id="reino-msg" role="status"></p>
+      <div class="reino-controles" id="reino-controles"></div>
     </section>
 
     <!-- Tetris da Tabuada: instruções -->
@@ -3063,6 +3111,11 @@
           <span class="jogo-card-nome">Classes de Palavras</span>
           <span class="jogo-card-texto">Toque na palavra e descubra a classe dela!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-reino" type="button" data-tema="portugues" style="--c:#7b4fc9">
+          <span class="jogo-card-capa reino-capa" id="reino-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">O Reino da Sintaxe</span>
+          <span class="jogo-card-texto">Complete frases, vença monstrinhos e monte histórias!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-mat" type="button" data-tema="matematica" style="--c:#0b3d91">
           <img class="jogo-card-capa" src="assets/capa-chuva-matematica.jpg" alt="" width="600" height="691">
           <span class="jogo-card-nome">Chuva de Matemática</span>
@@ -3493,9 +3546,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=256"></script>
-  <script src="dados.js?v=256"></script>
-  <script type="module" src="js/main.js?v=256"></script>
+  <script src="plenix.js?v=260"></script>
+  <script src="dados.js?v=260"></script>
+  <script type="module" src="js/main.js?v=260"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

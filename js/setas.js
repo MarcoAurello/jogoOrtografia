@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Setas e Cores. */
 
-import { $, embaralhar, sortear } from './util.js?v=256';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=256';
-import { SOM, tocar } from './som.js?v=256';
-import { mascote, mostrar, telaJogos } from './telas.js?v=256';
-import { escolherProfessorE } from './professor.js?v=256';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=256';
+import { $, embaralhar, sortear } from './util.js?v=260';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=260';
+import { SOM, tocar } from './som.js?v=260';
+import { mascote, mostrar, telaJogos } from './telas.js?v=260';
+import { escolherProfessorE } from './professor.js?v=260';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=260';
 
 // ---------- Setas e Cores ----------
 // Atenção, memória de trabalho e flexibilidade. Em cima, a legenda: cada seta tem uma cor (roxo = ↑, verde = ↓...).

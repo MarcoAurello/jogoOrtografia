@@ -2,16 +2,16 @@
 /* Competição: o professor cria para uma turma (jogo + hora de encerrar); o aluno entra com o código da turma e joga.
    Qualquer pessoa, até sem login, também cria uma (vale 24 h): manda o link /?comp=<código> e cada um entra com um apelido. */
 
-import { $, seguro } from './util.js?v=256';
-import { aluno, aoVoltarAoInicio, definirAluno } from './estado.js?v=256';
-import { api, lerTokenAluno } from './api.js?v=256';
-import { definirCompeticaoDaPartida } from './partidas.js?v=256';
-import { SOM } from './som.js?v=256';
-import { mostrar, telaJogos } from './telas.js?v=256';
-import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=256';
-import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=256';
-import { comecarQuiz } from './quiz.js?v=256';
-import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=256';
+import { $, seguro } from './util.js?v=260';
+import { aluno, aoVoltarAoInicio, definirAluno } from './estado.js?v=260';
+import { api, lerTokenAluno } from './api.js?v=260';
+import { definirCompeticaoDaPartida } from './partidas.js?v=260';
+import { SOM } from './som.js?v=260';
+import { mostrar, telaJogos } from './telas.js?v=260';
+import { definirEmailCompeticao, gravarComoProfessor, gravarNoScript, jogoDaMissao, JOGOS_DO_LINK, lerDoScript, listaEmails, parteProfessor, carregarEmails } from './professor.js?v=260';
+import { depoisDoFim, URL_RELATORIO } from './relatorio.js?v=260';
+import { comecarQuiz } from './quiz.js?v=260';
+import { criarPopup, ligarBusca, ligarFiltro, listaSemItens, mostrarContagem, semAcento } from './popup.js?v=260';
 
 // ---------- Competição ----------
 // Cada competição é de uma turma. O aluno entra com o código da turma (js/entrada.js) e a aba Competição lista as

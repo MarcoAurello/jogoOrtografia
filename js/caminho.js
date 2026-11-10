@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Caminho da Memória e Siga o Táxi (o mesmo mapa de estradas e cruzamentos). */
 
-import { $, sortear } from './util.js?v=256';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=256';
-import { SOM, tocar } from './som.js?v=256';
-import { mascote, mostrar, telaJogos } from './telas.js?v=256';
-import { escolherProfessorE } from './professor.js?v=256';
-import { segundos } from './luzes.js?v=256';
-import { fimDaMissao } from './relatorio.js?v=256';
+import { $, sortear } from './util.js?v=260';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=260';
+import { SOM, tocar } from './som.js?v=260';
+import { mascote, mostrar, telaJogos } from './telas.js?v=260';
+import { escolherProfessorE } from './professor.js?v=260';
+import { segundos } from './luzes.js?v=260';
+import { fimDaMissao } from './relatorio.js?v=260';
 
 // ---------- Caminho da Memória e Siga o Táxi ----------
 // Memória visual e de trabalho e orientação espacial, num mapa de cruzamentos ligados por estradas.

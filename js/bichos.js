@@ -1,12 +1,12 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Memória dos Bichos. */
 
-import { $, embaralhar } from './util.js?v=256';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=256';
-import { frase, pararVoz, SOM, tocar } from './som.js?v=256';
-import { mascote, mostrar, telaJogos } from './telas.js?v=256';
-import { escolherProfessorE } from './professor.js?v=256';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=256';
+import { $, embaralhar } from './util.js?v=260';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=260';
+import { frase, pararVoz, SOM, tocar } from './som.js?v=260';
+import { mascote, mostrar, telaJogos } from './telas.js?v=260';
+import { escolherProfessorE } from './professor.js?v=260';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=260';
 
 // ---------- Memória dos Bichos ----------
 // Memória de trabalho (associação par a par): aparece uma tabela com símbolos e o bicho de cada um, por um tempo

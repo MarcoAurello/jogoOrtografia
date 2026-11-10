@@ -84,6 +84,8 @@ export const JOGOS_HAB = {
     r: 'Cartas da história do Brasil com o ano escondido: encaixe cada acontecimento no lugar certo da linha do tempo.' },
   'btn-conjuntos': { h: ['matematica', 'logico', 'seletiva', 'flexibilidade'],
     r: 'Diagrama de Venn: coloque cada objeto no lugar certo (∈, ∉, ∩), responda ∪, ∩ e − e descubra a regra secreta.' },
+  'btn-reino': { h: ['linguagem', 'logico', 'planejamento', 'sustentada'],
+    r: 'Leitura e sintaxe num mundo 2D: complete frases para abrir pontes, use o cajado das classes de palavras contra os monstrinhos e monte histórias na ordem certa.' },
   'btn-bip': { h: ['logico', 'planejamento', 'espacial', 'flexibilidade'],
     r: 'Programação com blocos em português: monte o roteiro (sequência, repita, enquanto) e guie o robô até a estrela.' },
   'btn-cartografo': { h: ['espacial', 'logico', 'decisao', 'percepcao'],
@@ -212,6 +214,7 @@ export const INDICADO_PARA = {
   'btn-cartografo': ['visoespacial', 'executivas', 'aprendizagem'],
   'btn-bip': ['executivas', 'tdah', 'visoespacial'],
   'btn-conjuntos': ['discalculia', 'aprendizagem', 'executivas'],
+  'btn-reino': ['dislexia', 'linguagem', 'aprendizagem', 'tdah'],
   'btn-abc': ['dislexia', 'di', 'linguagem', 'aprendizagem'],
   'btn-ingles': ['linguagem', 'memoria'],
   'btn-luzes': ['memoria', 'tdah', 'tea'],
@@ -313,6 +316,7 @@ export const CARTAO_DO_JOGO = {
   cartografo: 'btn-cartografo',
   bip: 'btn-bip',
   conjuntos: 'btn-conjuntos',
+  reino: 'btn-reino',
 };
 // as habilidades que um jogo trabalha (pelo id do link)
 export const habilidadesDoJogo = (jogo) => JOGOS_HAB[CARTAO_DO_JOGO[jogo]]?.h || [];
