@@ -40,6 +40,7 @@ const ARQUIVOS = [
   './js/fracoes.js?v=260',
   './js/escola.js?v=260',
   './js/api.js?v=260',
+  './js/licenca.js?v=260',
   './js/usuarios.js?v=260',
   './js/popup.js?v=260',
   './js/alunos.js?v=260',
@@ -233,6 +234,8 @@ self.addEventListener('fetch', (e) => {
   }
 
   if (url.origin !== location.origin) return;
+  // o passe da licença nunca sai do cache: tem que vir do servidor (sem internet, o app usa o passe que já guardou)
+  if (url.pathname.startsWith('/api/licenca')) return;
   // a gestão (/gestao/) é outro app, só online: sem isso, sem internet ela cairia no index.html dos jogos
   if (url.pathname.startsWith('/gestao/') || url.pathname === '/gestao') return;
   // vídeo: o navegador pede em pedaços (Range) e o cache não guarda pedaços; vai direto ao servidor

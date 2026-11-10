@@ -76,6 +76,22 @@ if s != 200:
     print("\nA API não respondeu. Suba o sistema com: docker compose up -d")
     sys.exit(1)
 
+# ---------- 0b. licença dos jogos: o passe só sai para o site oficial (js/licenca.js, api/src/services/licenca.ts) ----------
+print("\n0b. Licença dos jogos")
+s, r = chamar("/licenca", extra={"Sec-Fetch-Site": "same-origin"})
+if r.get("desligada"):
+    confere("licença desligada (sem LICENCA_CHAVE_PRIVADA): o app deixa jogar", s == 200 and r.get("dias", 0) >= 1)
+else:
+    partes = str(r.get("passe", "")).split(".")
+    dados = json.loads(base64.urlsafe_b64decode(partes[1] + "==")) if len(partes) == 3 else {}
+    dias = (dados.get("exp", 0) - dados.get("iat", 0)) / 86400
+    confere("o site oficial recebe o passe assinado", s == 200 and len(partes) == 3 and dados.get("tipo") == "licenca", str(dados))
+    confere("o passe vale para este endereço e por poucos dias", dados.get("dom") == SITE.split("//")[1].split(":")[0] and 1 <= dias <= 30, f"{dias:.1f} dias")
+s, r = chamar("/licenca", extra={"Sec-Fetch-Site": "cross-site"})
+confere("cópia em outro site ou aberta do computador não recebe passe", s == 403, str(s))
+s, r = chamar("/licenca", extra={"Host": "copia-pirata.com"})
+confere("pedido com outro endereço (Host) não recebe passe", s == 403, str(s))
+
 # ---------- 1. administrador e escola (fase 1) ----------
 print("1. Administrador e escola")
 adm, r = entrar(ENV.get("ADMIN_EMAIL", ""), ENV.get("ADMIN_SENHA", ""))

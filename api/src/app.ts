@@ -65,6 +65,9 @@ app.use('/familia-codigo', rateLimit({ windowMs: 60 * 1000, limit: 20, skipSucce
 app.use('/dados', rateLimit({ windowMs: 60 * 60 * 1000, limit: 20, standardHeaders: true, legacyHeaders: false,
   skip: (req) => req.method !== 'POST' || req.body?.acao !== 'criarCompeticaoSemLogin',
   handler: (_req, res) => { res.json({ ok: false, erro: 'Você já criou muitas competições. Tente de novo daqui a 1 hora.' }); } }));
+// passe da licença dos jogos: cada aparelho pede ao abrir o app e a cada poucos dias; folgado (escola sai por um IP só)
+app.use('/licenca', rateLimit({ windowMs: 60 * 1000, limit: 300, standardHeaders: true, legacyHeaders: false,
+  message: { message: 'Muitos pedidos. Espere 1 minuto e tente de novo.' } }));
 app.use('/sessions', limitadorLogin);
 app.use('/usuarios/eu/senha', limitadorLogin);
 

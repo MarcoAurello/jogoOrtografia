@@ -1,6 +1,8 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Ponto de entrada: importa todos os módulos, liga o botão de instalar o app e abre a primeira tela. */
 
+// primeiro a proteção: fora do site oficial, ela interrompe o carregamento e nenhum jogo é ligado
+import './licenca.js?v=260';
 import { $ } from './util.js?v=260';
 import { mostrar, telaInicio } from './telas.js?v=260';
 import { carregarEmails, telaProfessor } from './professor.js?v=260';

@@ -18,6 +18,7 @@ import PlanoController from '../controllers/PlanoController';
 import SessaoController from '../controllers/SessaoController';
 import FamiliaController from '../controllers/FamiliaController';
 import IaQuestoesController from '../controllers/IaQuestoesController';
+import LicencaController from '../controllers/LicencaController';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import carregarUsuarioLogado, { carregarContaLogada } from '../middlewares/carregarUsuarioLogado';
 import carregarAlunoLogado from '../middlewares/carregarAlunoLogado';
@@ -28,6 +29,9 @@ const routes = Router();
 routes.get('/health', (_request, response) => {
   return response.json({ status: 'ok' });
 });
+
+// passe da licença dos jogos (sem login: só o site oficial recebe; ver services/licenca.ts)
+routes.get('/licenca', LicencaController.show);
 
 routes.use('/sessions', sessionRoutes);
 routes.use('/usuarios', usuarioRoutes);

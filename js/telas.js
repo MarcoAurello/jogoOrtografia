@@ -50,6 +50,7 @@ import { pararFita } from './fita.js?v=260';
 import { pararSimbolos } from './simbolos.js?v=260';
 import { pararConjuntos } from './conjuntos.js?v=260';
 import { pararReino } from './reino.js?v=260';
+import { licencaValida, pedirLicencaE } from './licenca.js?v=260';
 import { pararTabuada } from './tabuada.js?v=260';
 import { pararClasses } from './classes.js?v=260';
 import { pararGraficos } from './graficos.js?v=260';
@@ -86,6 +87,9 @@ function mascote(area, estado) {
 
 // ---------- Telas ----------
 function mostrar(id) {
+  // tela de jogo só abre com a licença em dia (js/licenca.js); sem ela, confere/renova e, se não der, para o jogo
+  const alvo = $(id);
+  if (alvo && alvo.classList.contains('tela-jogo') && !licencaValida()) { pedirLicencaE(() => mostrar(id), pararJogos); return; }
   document.querySelectorAll('.tela').forEach((t) => t.classList.toggle('ativa', t.id === id));
   window.scrollTo({ top: 0, behavior: 'smooth' });
   encaixarDepois();
