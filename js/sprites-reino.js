@@ -42,7 +42,7 @@ export function tons(cor) {
 }
 
 // ---------- a grade de pixels ----------
-function grade(w, h) {
+export function grade(w, h) {
   const px = new Array(w * h).fill(null);
   const g = {
     w, h, px,
@@ -70,7 +70,7 @@ function grade(w, h) {
   return g;
 }
 // vira canvas; com contorno, todo pixel vazio encostado (4 vizinhos) num pixel pintado recebe a cor do contorno
-function paraCanvas(gr, contorno = CONTORNO) {
+export function paraCanvas(gr, contorno = CONTORNO) {
   const { w, h } = gr, px = [...gr.px];
   if (contorno) {
     for (let y = 0; y < h; y++) {

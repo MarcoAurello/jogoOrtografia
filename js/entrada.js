@@ -4,14 +4,14 @@
    Jogar em casa: pela conta do responsável, "Quem vai jogar?" → o filho digita o PIN no mesmo teclado.
    O aluno cadastrado fica lembrado no aparelho (o token, nunca o PIN): no início aparece "Continuar como <nome>". */
 
-import { $, seguro } from './util.js?v=260';
-import { SOM } from './som.js?v=260';
-import { api, guardarTokenAluno, lerToken, lerTokenAluno } from './api.js?v=260';
-import { aoVoltarAoInicio } from './estado.js?v=260';
-import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio, telaJogos } from './telas.js?v=260';
-import { enviarPartidas } from './partidas.js?v=260';
-import { telaCompeticao } from './competicao.js?v=260';
-import { enderecoDaEscola } from './escola.js?v=260';
+import { $, seguro } from './util.js?v=277';
+import { SOM } from './som.js?v=277';
+import { api, guardarTokenAluno, lerToken, lerTokenAluno } from './api.js?v=277';
+import { aoVoltarAoInicio } from './estado.js?v=277';
+import { aoTrocarAluno, entrarComoAluno, mascote, mostrar, telaInicio, telaJogos } from './telas.js?v=277';
+import { enviarPartidas } from './partidas.js?v=277';
+import { telaCompeticao } from './competicao.js?v=277';
+import { enderecoDaEscola } from './escola.js?v=277';
 
 // ---------- Entrada pela turma ----------
 // A entrada do app pede só o nome, como sempre (e com o link, o aluno abre qualquer jogo). Para as competições, o aluno

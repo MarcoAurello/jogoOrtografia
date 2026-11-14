@@ -41,7 +41,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=260">
+  <link rel="stylesheet" href="style.css?v=277">
 </head>
 <body>
   <!-- abertura: a logo Games Pedagógicos enquanto o app carrega (some sozinha quando o app fica pronto, ou em 6 s
@@ -1216,6 +1216,68 @@
       <div class="reino-arena"><canvas id="reino-canvas" aria-label="Mundo do jogo: toque nas esferas de palavras"></canvas></div>
       <p class="cores-msg reino-msg" id="reino-msg" role="status"></p>
       <div class="reino-controles" id="reino-controles"></div>
+    </section>
+
+    <!-- Missão Digestão: os lanches e o mapa da viagem -->
+    <section class="tela" id="tela-dig-menu">
+      <h2 class="subtitulo">🍔 Missão Digestão</h2>
+      <div class="cena cena-regra">
+        <div class="davi-area" id="davi-dig"></div>
+        <div class="balao balao-esq">
+          Escolha um <b>lanche</b>, descubra os <b>nutrientes</b> que ele tem e guie um deles pela <b>viagem</b>
+          dentro do corpo humano!
+        </div>
+      </div>
+      <div class="grade-missoes" id="dig-lanches"></div>
+      <p class="dig-passo">A viagem do alimento</p>
+      <div class="dig-viagem" id="dig-viagem"></div>
+      <p class="dig-inicio" id="dig-inicio"></p>
+      <div class="acoes-menu">
+        <button class="btn-sec" id="dig-voltar" type="button">← Jogos</button>
+        <button class="btn-sec" id="dig-btn-album" type="button">📒 Álbum dos Nutrientes</button>
+      </div>
+    </section>
+
+    <!-- Missão Digestão: o lanche destrinchado nos nutrientes (a criança escolhe quem vai guiar) -->
+    <section class="tela" id="tela-dig-prato">
+      <h2 class="subtitulo" id="dig-prato-titulo"></h2>
+      <div class="reino-frase">
+        <button class="reino-ouvir" type="button" id="dig-prato-ouvir" aria-label="Ouvir">🔊</button>
+        <span class="reino-texto">O lanche foi destrinchado! Toque no <b>nutriente</b> que você vai guiar.</span>
+      </div>
+      <div class="dig-alimentos" id="dig-alimentos"></div>
+      <p class="dig-legenda">💚 Faz bem: todo dia · 🟡 Só um pouco · ⛔ Evitar</p>
+      <div class="acoes-menu">
+        <button class="btn-sec" id="dig-prato-voltar" type="button">← Lanches</button>
+      </div>
+    </section>
+
+    <section class="tela" id="tela-dig-album">
+      <h2 class="subtitulo">📒 Álbum dos Nutrientes</h2>
+      <div class="reino-livro" id="dig-album"></div>
+      <div class="acoes-menu">
+        <button class="btn-sec" id="dig-album-voltar" type="button">← Lanches</button>
+      </div>
+    </section>
+
+    <!-- Missão Digestão: a fase (pergunta, a boca no canvas, mensagem e respostas) -->
+    <section class="tela tela-jogo" id="tela-dig" data-girar="nao">
+      <div class="barra">
+        <button class="btn-sec btn-pequeno" id="dig-sair" type="button">← Nutrientes</button>
+        <span class="barra-titulo" id="dig-titulo"></span>
+        <span class="chuva-placar"><span id="dig-pontos">0</span> pts</span>
+      </div>
+      <div class="conj-hud">
+        <span class="conj-progresso" id="dig-progresso" aria-hidden="true"></span>
+        <span class="conj-combo reino-orbe" id="dig-orbe" role="status" hidden></span>
+      </div>
+      <div class="reino-arena dig-arena"><canvas id="dig-canvas" aria-label="Dentro do corpo: o nutriente viaja pelo sistema digestório"></canvas></div>
+      <!-- o painel: a pergunta, as respostas e a explicação juntas, embaixo do cenário -->
+      <div class="dig-quadro">
+        <div class="reino-frase" id="dig-frase" aria-live="polite"></div>
+        <p class="cores-msg reino-msg" id="dig-msg" role="status"></p>
+        <div class="reino-controles" id="dig-controles"></div>
+      </div>
     </section>
 
     <!-- Tetris da Tabuada: instruções -->
@@ -3116,6 +3178,11 @@
           <span class="jogo-card-nome">O Reino da Sintaxe</span>
           <span class="jogo-card-texto">Complete frases, vença monstrinhos e monte histórias!</span>
         </button>
+        <button class="jogo-card com-capa" id="btn-digestao" type="button" data-tema="ciencias" style="--c:#c2185b">
+          <span class="jogo-card-capa reino-capa" id="dig-capa" aria-hidden="true"></span>
+          <span class="jogo-card-nome">Missão Digestão</span>
+          <span class="jogo-card-texto">Escolha um lanche e guie um nutriente por dentro do corpo!</span>
+        </button>
         <button class="jogo-card com-capa" id="btn-mat" type="button" data-tema="matematica" style="--c:#0b3d91">
           <img class="jogo-card-capa" src="assets/capa-chuva-matematica.jpg" alt="" width="600" height="691">
           <span class="jogo-card-nome">Chuva de Matemática</span>
@@ -3546,9 +3613,9 @@
   </footer>
 
   <script src="vendor/jspdf.umd.min.js"></script>
-  <script src="plenix.js?v=260"></script>
-  <script src="dados.js?v=260"></script>
-  <script type="module" src="js/main.js?v=260"></script>
+  <script src="plenix.js?v=277"></script>
+  <script src="dados.js?v=277"></script>
+  <script type="module" src="js/main.js?v=277"></script>
   <script>
     // Instala o service worker (funcionar offline / virar app)
     if ('serviceWorker' in navigator) {

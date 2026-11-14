@@ -4527,6 +4527,65 @@ body:not(.com-escola) #tela-inicio .logo-games-inicio { width: clamp(150px, 42vw
 .reino-capa canvas, .reino-traje img { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
 .reino-traje img { width: 30px; height: 39px; margin: auto; }
 
+/* ---------- Missão Digestão (reaproveita a fase, o livro e os botões do Reino da Sintaxe) ---------- */
+.dig-lanche-itens { font-size: 22px; letter-spacing: 2px; }
+.dig-passo { margin: 16px 0 6px; text-align: center; font-family: 'Fredoka', sans-serif; font-size: 18px; font-weight: 700; color: var(--texto); }
+/* o mapa da viagem: as paradas em fila, quebrando linha no celular (sem rolagem lateral) */
+.dig-viagem { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; margin-bottom: 8px; }
+.dig-parada { display: flex; flex-direction: column; align-items: center; min-width: 76px; padding: 6px 8px; border-radius: 14px; background: #eceff1; color: #78909c; font-size: 13px; font-weight: 700; text-align: center; }
+.dig-parada.pronta { background: #fce4ec; color: #ad1457; box-shadow: 0 0 0 2px #f48fb1; }
+button.dig-parada { border: 0; font: inherit; cursor: pointer; }
+.dig-parada.escolhida { background: #c2185b; color: #fff; box-shadow: 0 0 0 3px #880e4f; }
+.dig-inicio { margin: 0 0 8px; text-align: center; font-size: 14px; font-weight: 700; color: #ad1457; }
+.dig-parada small { font-weight: 600; }
+.dig-parada-icone { font-size: 22px; line-height: 1.2; }
+.dig-seta { color: #b0bec5; font-size: 20px; font-weight: 800; }
+/* o lanche destrinchado */
+.dig-alimentos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 12px; }
+.dig-alimento { padding: 10px 12px; border-radius: 16px; background: #fff; box-shadow: var(--sombra); }
+.dig-alimento-nome { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-family: 'Fredoka', sans-serif; font-size: 19px; font-weight: 700; }
+.dig-alimento-icone { font-size: 28px; }
+.dig-nutris { display: flex; flex-direction: column; gap: 6px; }
+.dig-nutri { position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 10px; align-items: center; min-height: 54px; padding: 6px 12px; border-radius: 14px; background: #fff; border: 3px solid var(--c); border-left-width: 8px; text-align: left; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1); }
+.dig-nutri-icone { grid-row: span 2; font-size: 26px; }
+.dig-nutri-nome { font-size: 16px; font-weight: 800; color: var(--texto); }
+.dig-nutri-classe { font-size: 13px; font-weight: 700; color: var(--cl); }
+.dig-nutri-ok, .dig-nutri-novo { position: absolute; top: 6px; right: 8px; font-size: 12px; font-weight: 800; }
+.dig-nutri-ok { color: var(--verde); font-size: 16px; }
+.dig-nutri-novo { padding: 1px 7px; border-radius: 999px; background: #fff3e0; color: #b45309; }
+.dig-legenda { margin: 10px 0 0; text-align: center; font-size: 14px; font-weight: 700; color: #5b6b80; }
+.dig-album-classe { font-size: 14px; font-weight: 800; color: var(--cl); }
+.dig-selo { align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: #e8f5e9; color: #1b5e20; font-size: 13px; font-weight: 800; }
+/* o Painel do Corpo, na tela de fim */
+.dig-painel { flex: 1 1 100%; max-width: 520px; padding: 14px 16px; border-radius: 16px; background: #fffaf0; border: 2px solid #e6d3ad; text-align: left; }
+.dig-painel h3 { margin: 0 0 8px; font-family: 'Fredoka', sans-serif; font-size: 18px; color: #6d4c41; }
+.dig-barra { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 8px; margin: 4px 0; font-size: 14px; font-weight: 700; }
+.dig-barra i { display: block; height: 14px; border-radius: 999px; background: #efe6d6; overflow: hidden; }
+.dig-barra b { display: block; height: 100%; border-radius: 999px; background: var(--c); }
+.dig-painel p { margin: 8px 0 0; line-height: 1.45; }
+/* a fase: respostas em frase ficam uma por linha */
+.tela-jogo > .dig-arena { background: #6c1e3b; }
+.dig-opcao small.dig-sub { display: block; font-size: 12px; font-weight: 600; opacity: 0.8; }
+.reino-sintonias.dig-opcoes-longas { grid-template-columns: 1fr; gap: 6px; }
+.reino-sintonias.dig-opcoes-dentes { grid-template-columns: repeat(3, 1fr); }
+/* o painel embaixo do cenário: pergunta, respostas e explicação juntas e menores (o cenário fica maior) */
+.dig-quadro { flex: none; align-self: stretch; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; margin-top: 6px; padding: 8px 10px; border-radius: 16px; background: #fffaf0; border: 2px solid #e6d3ad; box-shadow: var(--sombra); }
+.dig-quadro .reino-frase { min-height: 0; padding: 0; border: 0; border-radius: 0; background: none; justify-content: flex-start; gap: 8px; }
+.dig-quadro .reino-texto { font-size: clamp(15px, 2.4dvh, 18px); text-align: left; }
+.dig-quadro .reino-ouvir { width: 34px; height: 34px; font-size: 16px; }
+.dig-quadro .reino-msg { margin: 0; font-size: 14px; line-height: 1.35; text-align: left; }
+.dig-quadro .reino-msg:empty { display: none; }
+.dig-quadro .reino-sintonias { gap: 6px; }
+.dig-quadro .reino-sintonia { min-height: 44px; padding: 4px 8px; font-size: 14px; }
+.dig-quadro .reino-sint-icone { font-size: 18px; }
+.dig-quadro .dig-opcoes-longas .dig-opcao { min-height: 38px; padding: 4px 10px; font-size: 14px; }
+.dig-feedback { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.dig-continuar { min-width: 180px; min-height: 44px; margin: 0; font-size: 17px; }
+.dig-continuar:disabled { opacity: 0.6; }
+.dig-opcoes-longas .dig-opcao { flex-direction: row; justify-content: flex-start; gap: 10px; min-height: 48px; padding: 6px 12px; text-align: left; font-size: 15px; }
+.dig-opcoes-longas .reino-sint-icone { font-size: 22px; }
+.dig-opcao.certa small.dig-sub { opacity: 1; }
+
 /* ---------- Licença dos jogos (js/licenca.js): aviso por cima de tudo ---------- */
 .licenca-aviso { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(13, 42, 74, 0.72); }
 .licenca-aviso[hidden] { display: none; }

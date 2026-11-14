@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Cronologia da História Brasileira. */
 
-import { $, embaralhar, seguro } from './util.js?v=260';
-import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=260';
-import { SOM, tocar } from './som.js?v=260';
-import { mascote, mostrar, telaJogos } from './telas.js?v=260';
-import { escolherProfessorE } from './professor.js?v=260';
-import { fimDaMissao } from './relatorio.js?v=260';
-import { CONJUNTURA_HISTORIA, ERAS_HISTORIA, EVENTOS_HISTORIA, FASES_HISTORIA } from './dados-historia.js?v=260';
+import { $, embaralhar, seguro } from './util.js?v=277';
+import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=277';
+import { SOM, tocar } from './som.js?v=277';
+import { mascote, mostrar, telaJogos } from './telas.js?v=277';
+import { escolherProfessorE } from './professor.js?v=277';
+import { fimDaMissao } from './relatorio.js?v=277';
+import { CONJUNTURA_HISTORIA, ERAS_HISTORIA, EVENTOS_HISTORIA, FASES_HISTORIA } from './dados-historia.js?v=277';
 
 // ---------- Cronologia da História Brasileira ----------
 // A linha do tempo já vem com 2 acontecimentos (as âncoras, com o ano à mostra). Na mão ficam de 3 a 5 cartas com
