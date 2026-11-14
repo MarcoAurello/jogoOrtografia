@@ -1,14 +1,14 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* O Reino da Sintaxe. */
 
-import { $, embaralhar } from './util.js?v=277';
-import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=277';
-import { frase, SOM, tocar } from './som.js?v=277';
-import { mascote, mostrar, telaJogos } from './telas.js?v=277';
-import { escolherProfessorE } from './professor.js?v=277';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=277';
-import { CLASSES, CRONICAS, HISTORIAS, LACUNAS, TIPOS_REINO } from './dados-reino.js?v=277';
-import { ART, desenharSprite, iconeHeroi, spriteDragao, spriteHeroi, spriteMonstro, SPR } from './sprites-reino.js?v=277';
+import { $, embaralhar } from './util.js?v=287';
+import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=287';
+import { frase, SOM, tocar } from './som.js?v=287';
+import { mascote, mostrar, telaJogos } from './telas.js?v=287';
+import { escolherProfessorE } from './professor.js?v=287';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=287';
+import { CLASSES, CRONICAS, HISTORIAS, LACUNAS, TIPOS_REINO } from './dados-reino.js?v=287';
+import { ART, desenharSprite, iconeHeroi, spriteDragao, spriteHeroi, spriteMonstro, SPR } from './sprites-reino.js?v=287';
 
 // ---------- O Reino da Sintaxe ----------
 // Leitura e sintaxe (3º ao 6º ano) num mundo 2D desenhado no canvas, com o herói Sintaxista e o Cajado da Coesão.

@@ -1,7 +1,7 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Sprites em pixel art do jogo Missão Digestão (desenhados por código, sem arquivos de imagem). */
 
-import { grade, paraCanvas, tons } from './sprites-reino.js?v=277';
+import { grade, paraCanvas, tons } from './sprites-reino.js?v=287';
 
 // Mesmas regras de arte do Reino da Sintaxe (1 pixel da arte = 2 unidades do mundo, sombra puxando para o azul,
 // luz para o amarelo, luz vindo do alto à esquerda, contorno automático). Os nutrientes são bolinhas com rostinho,

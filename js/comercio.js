@@ -1,15 +1,15 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Conexão Global: importação e exportação entre os países. */
 
-import { $, embaralhar, sortear } from './util.js?v=277';
-import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=277';
-import { SOM, tocar } from './som.js?v=277';
-import { mascote, mostrar, telaJogos } from './telas.js?v=277';
-import { escolherProfessorE } from './professor.js?v=277';
-import { fimDaMissao } from './relatorio.js?v=277';
-import { CATEGORIAS, MODOS_COMERCIO, PAISES, PERGUNTAS_COMERCIO, PRODUTOS } from './dados-comercio.js?v=277';
-import { bandeira } from './bandeiras.js?v=277';
-import { animarNavio, desenharMapa } from './mapa-comercio.js?v=277';
+import { $, embaralhar, sortear } from './util.js?v=287';
+import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=287';
+import { SOM, tocar } from './som.js?v=287';
+import { mascote, mostrar, telaJogos } from './telas.js?v=287';
+import { escolherProfessorE } from './professor.js?v=287';
+import { fimDaMissao } from './relatorio.js?v=287';
+import { CATEGORIAS, MODOS_COMERCIO, PAISES, PERGUNTAS_COMERCIO, PRODUTOS } from './dados-comercio.js?v=287';
+import { bandeira } from './bandeiras.js?v=287';
+import { animarNavio, desenharMapa } from './mapa-comercio.js?v=287';
 
 // ---------- Conexão Global ----------
 // A criança é comandante de um navio cargueiro. Cinco modos, todos abertos desde o começo:

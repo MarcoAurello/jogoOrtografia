@@ -4582,6 +4582,17 @@ button.dig-parada { border: 0; font: inherit; cursor: pointer; }
 .dig-feedback { display: flex; align-items: center; justify-content: center; gap: 10px; }
 .dig-continuar { min-width: 180px; min-height: 44px; margin: 0; font-size: 17px; }
 .dig-continuar:disabled { opacity: 0.6; }
+/* Missão Respiração: o menu com poucas etapas (um botão grande começa; as outras partículas, pequenas, embaixo) */
+.resp-comecar { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 6px 0 4px; }
+.resp-comecar-btn { display: flex; flex-direction: column; align-items: center; min-width: 260px; min-height: 64px; font-size: 22px; background: #0277bd; }
+.resp-comecar-btn small { font-size: 14px; font-weight: 600; opacity: 0.9; }
+.resp-outras-titulo { margin: 6px 0 0; font-size: 14px; font-weight: 700; color: #5b6b80; }
+.resp-outras { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.resp-outra { min-width: 150px; }
+/* o Painel do Fôlego: a roda do ciclo do ar (os passos em sequência, com setinhas) */
+.resp-ciclo { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 0; padding: 0; list-style: none; counter-reset: ciclo; }
+.resp-ciclo li { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; background: #e1f5fe; color: #01579b; font-size: 14px; font-weight: 700; }
+.resp-ciclo li:not(:last-child)::after { content: '→'; margin-left: 4px; color: #0277bd; }
 .dig-opcoes-longas .dig-opcao { flex-direction: row; justify-content: flex-start; gap: 10px; min-height: 48px; padding: 6px 12px; text-align: left; font-size: 15px; }
 .dig-opcoes-longas .reino-sint-icone { font-size: 22px; }
 .dig-opcao.certa small.dig-sub { opacity: 1; }

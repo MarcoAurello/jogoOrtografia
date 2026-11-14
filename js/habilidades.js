@@ -88,6 +88,8 @@ export const JOGOS_HAB = {
     r: 'Leitura e sintaxe num mundo 2D: complete frases para abrir pontes, use o cajado das classes de palavras contra os monstrinhos e monte histórias na ordem certa.' },
   'btn-digestao': { h: ['logico', 'memoria', 'linguagem', 'sustentada'],
     r: 'Ciências por dentro do corpo: escolha um lanche, descubra os nutrientes e guie um deles pela boca (dentes, saliva, sabor e epiglote).' },
+  'btn-respiracao': { h: ['logico', 'memoria', 'linguagem', 'sustentada'],
+    r: 'Ciências por dentro do corpo: escolha onde respira, descubra as partículas do ar e guie uma delas pelo nariz e pela garganta.' },
   'btn-bip': { h: ['logico', 'planejamento', 'espacial', 'flexibilidade'],
     r: 'Programação com blocos em português: monte o roteiro (sequência, repita, enquanto) e guie o robô até a estrela.' },
   'btn-cartografo': { h: ['espacial', 'logico', 'decisao', 'percepcao'],
@@ -218,6 +220,7 @@ export const INDICADO_PARA = {
   'btn-conjuntos': ['discalculia', 'aprendizagem', 'executivas'],
   'btn-reino': ['dislexia', 'linguagem', 'aprendizagem', 'tdah'],
   'btn-digestao': ['aprendizagem', 'memoria', 'tdah'],
+  'btn-respiracao': ['aprendizagem', 'memoria', 'tdah'],
   'btn-abc': ['dislexia', 'di', 'linguagem', 'aprendizagem'],
   'btn-ingles': ['linguagem', 'memoria'],
   'btn-luzes': ['memoria', 'tdah', 'tea'],
@@ -321,6 +324,7 @@ export const CARTAO_DO_JOGO = {
   conjuntos: 'btn-conjuntos',
   reino: 'btn-reino',
   digestao: 'btn-digestao',
+  respiracao: 'btn-respiracao',
 };
 // as habilidades que um jogo trabalha (pelo id do link)
 export const habilidadesDoJogo = (jogo) => JOGOS_HAB[CARTAO_DO_JOGO[jogo]]?.h || [];

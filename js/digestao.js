@@ -1,15 +1,15 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Missão Digestão. */
 
-import { $, embaralhar } from './util.js?v=277';
-import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=277';
-import { frase, SOM, tocar } from './som.js?v=277';
-import { mascote, mostrar, telaJogos } from './telas.js?v=277';
-import { escolherProfessorE } from './professor.js?v=277';
-import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=277';
-import { CLASSES_DIG, LANCHES, NUTRIENTES, PARADAS, perguntasBoca, perguntasEstomago, perguntasGrosso, perguntasIntestino, TIPOS_DIG } from './dados-digestao.js?v=277';
-import { desenharSprite } from './sprites-reino.js?v=277';
-import { spriteAnus, spriteBacteria, spriteDente, spriteNutriente, spritePapila } from './sprites-digestao.js?v=277';
+import { $, embaralhar } from './util.js?v=287';
+import { aluno, definirMissao, definirResultados, estrelasTexto, lerEstrelas, missao, resultados } from './estado.js?v=287';
+import { frase, SOM, tocar } from './som.js?v=287';
+import { mascote, mostrar, telaJogos } from './telas.js?v=287';
+import { escolherProfessorE } from './professor.js?v=287';
+import { fimDaMissao, ultimoRelatorio } from './relatorio.js?v=287';
+import { CLASSES_DIG, LANCHES, NUTRIENTES, PARADAS, perguntasBoca, perguntasEstomago, perguntasGrosso, perguntasIntestino, TIPOS_DIG } from './dados-digestao.js?v=287';
+import { desenharSprite } from './sprites-reino.js?v=287';
+import { spriteAnus, spriteBacteria, spriteDente, spriteNutriente, spritePapila } from './sprites-digestao.js?v=287';
 
 // ---------- Missão Digestão ----------
 // Ciências (4º e 5º ano, BNCC EF05CI06 e EF05CI08): a criança escolhe um lanche, vê o lanche "destrinchado" nos
@@ -1553,7 +1553,8 @@ function miniMapa(g, W) {
   g.scale(esc, esc);
   g.fillStyle = 'rgba(255,250,240,.92)'; g.fillRect(ox, oy, 60, 62);
   g.strokeStyle = '#c8a879'; g.lineWidth = 1; g.strokeRect(ox + 0.5, oy + 0.5, 59, 61);
-  if (j.cena === 'esofago' || j.cena === 'estomago') { miniTronco(g, j); g.restore(); return; }
+  // da boca em diante (esôfago, estômago, duodeno, intestino delgado e grosso), o mini-mapa mostra o tronco
+  if (j.cena !== 'frente' && j.cena !== 'fundo') { miniTronco(g, j); g.restore(); return; }
   g.fillStyle = '#f2c28b';
   g.beginPath(); g.ellipse(ox + 36, oy + 22, 16, 16, 0, 0, 7); g.fill();
   g.beginPath(); g.moveTo(ox + 22, oy + 14); g.lineTo(ox + 14, oy + 26); g.lineTo(ox + 22, oy + 28); g.fill();

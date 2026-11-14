@@ -1,65 +1,66 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Telas e navegação: moldura, mascote, troca de telas, encaixe na tela, login, menu do topo, barra inferior e filtro dos jogos. */
 
-import { $, embaralhar } from './util.js?v=277';
-import { lerTokenAluno } from './api.js?v=277';
-import { aluno, aoVoltarAoInicio, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=277';
-import { frase, pararVoz, SOM } from './som.js?v=277';
-import { escolherProfessorE, irParaGestao, JOGOS_DO_LINK } from './professor.js?v=277';
-import { pararChuva } from './chuva.js?v=277';
-import { pararMat } from './matematica.js?v=277';
-import { desenharTiro, pararTiro, tiro } from './tiro.js?v=277';
-import { pararPeso } from './peso.js?v=277';
-import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=277';
-import { pararLuz } from './luzes.js?v=277';
-import { pararRotina } from './rotina.js?v=277';
-import { pararFichas } from './fichas.js?v=277';
-import { pararEscondida } from './escondida.js?v=277';
-import { pararCopia } from './copia.js?v=277';
-import { pararBarcos } from './barcos.js?v=277';
-import { pararGiro } from './giro.js?v=277';
-import { pararHora } from './hora.js?v=277';
-import { pararSomando } from './somando.js?v=277';
-import { pararDescobrir } from './descobrir.js?v=277';
-import { pararChaves } from './chaves.js?v=277';
-import { pararCaminho } from './caminho.js?v=277';
-import { pararPolicia } from './policia.js?v=277';
-import { pararPontos } from './pontos.js?v=277';
-import { pararPixels } from './pixels.js?v=277';
-import { pararFracoes } from './fracoes.js?v=277';
-import { telaCompeticao } from './competicao.js?v=277';
-import { pararCores } from './cores.js?v=277';
-import { pararLados } from './lados.js?v=277';
-import { pararSetas } from './setas.js?v=277';
-import { pararVistas } from './vistas.js?v=277';
-import { pararDinos } from './dinos.js?v=277';
-import { pararPilhas } from './pilhas.js?v=277';
-import { pararBlocos } from './blocos.js?v=277';
-import { pararLugar } from './lugar.js?v=277';
-import { pararMalha } from './malha.js?v=277';
-import { pararFila } from './fila.js?v=277';
-import { pararLoja } from './loja.js?v=277';
-import { pararPalitos } from './palitos.js?v=277';
-import { pararBordas } from './bordas.js?v=277';
-import { pararCadeado } from './cadeado.js?v=277';
-import { pararTatu } from './tatu.js?v=277';
-import { pararFlores } from './flores.js?v=277';
-import { pararBichos } from './bichos.js?v=277';
-import { pararIntervalo } from './intervalo.js?v=277';
-import { pararFita } from './fita.js?v=277';
-import { pararSimbolos } from './simbolos.js?v=277';
-import { pararConjuntos } from './conjuntos.js?v=277';
-import { pararReino } from './reino.js?v=277';
-import { pararDigestao } from './digestao.js?v=277';
-import { licencaValida, pedirLicencaE } from './licenca.js?v=277';
-import { pararTabuada } from './tabuada.js?v=277';
-import { pararClasses } from './classes.js?v=277';
-import { pararGraficos } from './graficos.js?v=277';
-import { pararHistoria } from './historia.js?v=277';
-import { pararComercio } from './comercio.js?v=277';
-import { pararCartografo } from './cartografo.js?v=277';
-import { pararBip } from './bip.js?v=277';
-import { HAB_CRIANCA, JOGOS_HAB, NOME_HAB } from './habilidades.js?v=277';
+import { $, embaralhar } from './util.js?v=287';
+import { lerTokenAluno } from './api.js?v=287';
+import { aluno, aoVoltarAoInicio, CHAVE_ALUNO, definirAluno, definirUltimoNome, PEDIR_SENHA, SENHA_TURMA, ultimoNome } from './estado.js?v=287';
+import { frase, pararVoz, SOM } from './som.js?v=287';
+import { escolherProfessorE, irParaGestao, JOGOS_DO_LINK } from './professor.js?v=287';
+import { pararChuva } from './chuva.js?v=287';
+import { pararMat } from './matematica.js?v=287';
+import { desenharTiro, pararTiro, tiro } from './tiro.js?v=287';
+import { pararPeso } from './peso.js?v=287';
+import { JOGO_DO_LINK, QUIZ_DO_LINK, telaQuizMenu } from './quiz.js?v=287';
+import { pararLuz } from './luzes.js?v=287';
+import { pararRotina } from './rotina.js?v=287';
+import { pararFichas } from './fichas.js?v=287';
+import { pararEscondida } from './escondida.js?v=287';
+import { pararCopia } from './copia.js?v=287';
+import { pararBarcos } from './barcos.js?v=287';
+import { pararGiro } from './giro.js?v=287';
+import { pararHora } from './hora.js?v=287';
+import { pararSomando } from './somando.js?v=287';
+import { pararDescobrir } from './descobrir.js?v=287';
+import { pararChaves } from './chaves.js?v=287';
+import { pararCaminho } from './caminho.js?v=287';
+import { pararPolicia } from './policia.js?v=287';
+import { pararPontos } from './pontos.js?v=287';
+import { pararPixels } from './pixels.js?v=287';
+import { pararFracoes } from './fracoes.js?v=287';
+import { telaCompeticao } from './competicao.js?v=287';
+import { pararCores } from './cores.js?v=287';
+import { pararLados } from './lados.js?v=287';
+import { pararSetas } from './setas.js?v=287';
+import { pararVistas } from './vistas.js?v=287';
+import { pararDinos } from './dinos.js?v=287';
+import { pararPilhas } from './pilhas.js?v=287';
+import { pararBlocos } from './blocos.js?v=287';
+import { pararLugar } from './lugar.js?v=287';
+import { pararMalha } from './malha.js?v=287';
+import { pararFila } from './fila.js?v=287';
+import { pararLoja } from './loja.js?v=287';
+import { pararPalitos } from './palitos.js?v=287';
+import { pararBordas } from './bordas.js?v=287';
+import { pararCadeado } from './cadeado.js?v=287';
+import { pararTatu } from './tatu.js?v=287';
+import { pararFlores } from './flores.js?v=287';
+import { pararBichos } from './bichos.js?v=287';
+import { pararIntervalo } from './intervalo.js?v=287';
+import { pararFita } from './fita.js?v=287';
+import { pararSimbolos } from './simbolos.js?v=287';
+import { pararConjuntos } from './conjuntos.js?v=287';
+import { pararReino } from './reino.js?v=287';
+import { pararDigestao } from './digestao.js?v=287';
+import { pararRespiracao } from './respiracao.js?v=287';
+import { licencaValida, pedirLicencaE } from './licenca.js?v=287';
+import { pararTabuada } from './tabuada.js?v=287';
+import { pararClasses } from './classes.js?v=287';
+import { pararGraficos } from './graficos.js?v=287';
+import { pararHistoria } from './historia.js?v=287';
+import { pararComercio } from './comercio.js?v=287';
+import { pararCartografo } from './cartografo.js?v=287';
+import { pararBip } from './bip.js?v=287';
+import { HAB_CRIANCA, JOGOS_HAB, NOME_HAB } from './habilidades.js?v=287';
 
 // ---------- Moldura: lápis, livros, estrelas e bolinhas ----------
 const ENFEITES = {
@@ -107,7 +108,7 @@ const ABA_DA_TELA = {
   'tela-turma': 'inicio',
   'tela-inicio': 'inicio', 'tela-jogos': 'jogos', 'tela-missoes': 'jogos', 'tela-regra': 'jogos', 'tela-chuva-menu': 'jogos',
   'tela-mat-menu': 'jogos', 'tela-tiro-menu': 'jogos', 'tela-peso-menu': 'jogos', 'tela-luzes-menu': 'jogos', 'tela-fim': 'jogos',
-  'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-escondida-menu': 'jogos', 'tela-copia-menu': 'jogos', 'tela-barcos-menu': 'jogos', 'tela-giro-menu': 'jogos', 'tela-hora-menu': 'jogos', 'tela-somando-menu': 'jogos', 'tela-descobrir-menu': 'jogos', 'tela-chaves-menu': 'jogos', 'tela-caminho-menu': 'jogos', 'tela-policia-menu': 'jogos', 'tela-pontos-menu': 'jogos', 'tela-pixels-menu': 'jogos', 'tela-fracoes-menu': 'jogos', 'tela-taxi-menu': 'jogos', 'tela-cores-menu': 'jogos', 'tela-lados-menu': 'jogos', 'tela-setas-menu': 'jogos', 'tela-vistas-menu': 'jogos', 'tela-dinos-menu': 'jogos', 'tela-pilhas-menu': 'jogos', 'tela-blocos-menu': 'jogos', 'tela-lugar-menu': 'jogos', 'tela-malha-menu': 'jogos', 'tela-fila-menu': 'jogos', 'tela-loja-menu': 'jogos', 'tela-palitos-menu': 'jogos', 'tela-bordas-menu': 'jogos', 'tela-cadeado-menu': 'jogos', 'tela-tatu-menu': 'jogos', 'tela-flores-menu': 'jogos', 'tela-bichos-menu': 'jogos', 'tela-intervalo-menu': 'jogos', 'tela-fita-menu': 'jogos', 'tela-simbolos-menu': 'jogos', 'tela-tabuada-menu': 'jogos', 'tela-classes-menu': 'jogos', 'tela-graficos-menu': 'jogos', 'tela-historia-menu': 'jogos', 'tela-historia-arquivo': 'jogos', 'tela-comercio-menu': 'jogos', 'tela-comercio-passaporte': 'jogos', 'tela-cartografo-menu': 'jogos', 'tela-cartografo-diario': 'jogos', 'tela-bip-menu': 'jogos', 'tela-conjuntos-menu': 'jogos', 'tela-reino-menu': 'jogos', 'tela-reino-livro': 'jogos', 'tela-dig-menu': 'jogos', 'tela-dig-prato': 'jogos', 'tela-dig-album': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-competicao': 'competicao', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
+  'tela-rotina-menu': 'jogos', 'tela-fichas-menu': 'jogos', 'tela-escondida-menu': 'jogos', 'tela-copia-menu': 'jogos', 'tela-barcos-menu': 'jogos', 'tela-giro-menu': 'jogos', 'tela-hora-menu': 'jogos', 'tela-somando-menu': 'jogos', 'tela-descobrir-menu': 'jogos', 'tela-chaves-menu': 'jogos', 'tela-caminho-menu': 'jogos', 'tela-policia-menu': 'jogos', 'tela-pontos-menu': 'jogos', 'tela-pixels-menu': 'jogos', 'tela-fracoes-menu': 'jogos', 'tela-taxi-menu': 'jogos', 'tela-cores-menu': 'jogos', 'tela-lados-menu': 'jogos', 'tela-setas-menu': 'jogos', 'tela-vistas-menu': 'jogos', 'tela-dinos-menu': 'jogos', 'tela-pilhas-menu': 'jogos', 'tela-blocos-menu': 'jogos', 'tela-lugar-menu': 'jogos', 'tela-malha-menu': 'jogos', 'tela-fila-menu': 'jogos', 'tela-loja-menu': 'jogos', 'tela-palitos-menu': 'jogos', 'tela-bordas-menu': 'jogos', 'tela-cadeado-menu': 'jogos', 'tela-tatu-menu': 'jogos', 'tela-flores-menu': 'jogos', 'tela-bichos-menu': 'jogos', 'tela-intervalo-menu': 'jogos', 'tela-fita-menu': 'jogos', 'tela-simbolos-menu': 'jogos', 'tela-tabuada-menu': 'jogos', 'tela-classes-menu': 'jogos', 'tela-graficos-menu': 'jogos', 'tela-historia-menu': 'jogos', 'tela-historia-arquivo': 'jogos', 'tela-comercio-menu': 'jogos', 'tela-comercio-passaporte': 'jogos', 'tela-cartografo-menu': 'jogos', 'tela-cartografo-diario': 'jogos', 'tela-bip-menu': 'jogos', 'tela-conjuntos-menu': 'jogos', 'tela-reino-menu': 'jogos', 'tela-reino-livro': 'jogos', 'tela-dig-menu': 'jogos', 'tela-dig-prato': 'jogos', 'tela-dig-album': 'jogos', 'tela-resp-menu': 'jogos', 'tela-quiz-menu': 'quiz', 'tela-competicao': 'competicao', 'tela-professor': 'professor', 'tela-instalar': 'inicio',
 };
 function encaixarTela() {
   const tela = document.querySelector('.tela.ativa');
@@ -241,7 +242,7 @@ $('menu-fechar').onclick = () => { SOM.clique(); abrirMenu(false); };
 $('menu-app-fundo').onclick = () => abrirMenu(false);
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('menu-app-lista').hidden) abrirMenu(false); });
 
-function pararJogos() { pararDigestao(); pararFracoes(); pararPixels(); pararPontos(); pararPolicia(); pararCaminho(); pararChaves(); pararDescobrir(); pararSomando(); pararHora(); pararGiro(); pararBarcos(); pararCopia(); pararEscondida(); pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararSetas(); pararVistas(); pararDinos(); pararPilhas(); pararBlocos(); pararLugar(); pararMalha(); pararFila(); pararLoja(); pararPalitos(); pararBordas(); pararCadeado(); pararTatu(); pararFlores(); pararBichos(); pararIntervalo(); pararFita(); pararSimbolos(); pararTabuada(); pararClasses(); pararGraficos(); pararHistoria(); pararComercio(); pararCartografo(); pararBip(); pararConjuntos(); pararReino(); pararVoz(); }
+function pararJogos() { pararDigestao(); pararRespiracao(); pararFracoes(); pararPixels(); pararPontos(); pararPolicia(); pararCaminho(); pararChaves(); pararDescobrir(); pararSomando(); pararHora(); pararGiro(); pararBarcos(); pararCopia(); pararEscondida(); pararChuva(); pararMat(); pararTiro(); pararPeso(); pararLuz(); pararRotina(); pararFichas(); pararCores(); pararLados(); pararSetas(); pararVistas(); pararDinos(); pararPilhas(); pararBlocos(); pararLugar(); pararMalha(); pararFila(); pararLoja(); pararPalitos(); pararBordas(); pararCadeado(); pararTatu(); pararFlores(); pararBichos(); pararIntervalo(); pararFita(); pararSimbolos(); pararTabuada(); pararClasses(); pararGraficos(); pararHistoria(); pararComercio(); pararCartografo(); pararBip(); pararConjuntos(); pararReino(); pararVoz(); }
 const irParaInicio = () => { pararJogos(); $('escolha-prof').hidden = true; telaInicio(); };
 $('btn-logo-inicio').onclick = irParaInicio;
 $('btn-menu-inicio').onclick = irParaInicio;

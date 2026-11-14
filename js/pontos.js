@@ -1,13 +1,13 @@
 /* Jogos Educacionais — © Davi e Marco. Todos os direitos reservados. */
 /* Ponto a Ponto. */
 
-import { $ } from './util.js?v=277';
-import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=277';
-import { SOM, tocar } from './som.js?v=277';
-import { mascote, mostrar, telaJogos } from './telas.js?v=277';
-import { escolherProfessorE } from './professor.js?v=277';
-import { segundos } from './luzes.js?v=277';
-import { fimDaMissao } from './relatorio.js?v=277';
+import { $ } from './util.js?v=287';
+import { aluno, definirMissao, definirResultados, missao, resultados } from './estado.js?v=287';
+import { SOM, tocar } from './som.js?v=287';
+import { mascote, mostrar, telaJogos } from './telas.js?v=287';
+import { escolherProfessorE } from './professor.js?v=287';
+import { segundos } from './luzes.js?v=287';
+import { fimDaMissao } from './relatorio.js?v=287';
 
 // ---------- Ponto a Ponto ----------
 // Memória visual e percepção espacial. Uma moldura quadrada com 6 pontos em cada lado. Aparece um modelo com linhas
